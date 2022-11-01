@@ -1,0 +1,14 @@
+services:
+  auth:
+    build:
+      context: .
+      dockerfile: ./apps/auth/Dockerfile
+      target: develoment
+    command: yarn start:dev auth
+    env_file:
+      - ./apps/auth/.env
+    volumes:
+      - .:/usr/src/app
+      - ./usr/src/app/node_modules
+    ports:
+      - 4000:4000
