@@ -20,8 +20,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./apps/rigtch-music-api/test/jest-e2e.json",
-    "test:e2e:watch": "jest --config ./apps/rigtch-music-api/test/jest-e2e.json --watch",
+    "test:e2e": "jest --config ./apps/auth/test/jest-e2e.json",
+    "test:e2e:watch": "jest --config ./apps/auth/test/jest-e2e.json --watch",
     "prepare": "husky install"
   },
   "lint-staged": {
@@ -39,6 +39,9 @@
     "@nestjs/core": "^9.0.0",
     "@nestjs/graphql": "10.1.5",
     "@nestjs/platform-express": "^9.0.0",
+    "apollo-server-core": "3.11.0",
+    "apollo-server-express": "3.11.0",
+    "graphql": "16.6.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0"
