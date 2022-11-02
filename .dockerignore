@@ -3,6 +3,7 @@
 .vscode
 coverage
 docker-compose.yml
+reports
 README.md
 
 # Node Files #
