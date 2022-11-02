@@ -49,7 +49,12 @@ module.exports = {
       },
     },
   ],
-  ignorePatterns: ['**/node_modules/**', '**/dist/**', 'README.md'],
+  ignorePatterns: [
+    '**/node_modules/**',
+    '**/dist/**',
+    'README.md',
+    'webpack.config.js',
+  ],
   rules: {
     'prettier/prettier': 'warn',
     'prefer-const': 'warn',
