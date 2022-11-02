@@ -1,9 +1,10 @@
-import { ObjectType, Resolver, Query } from '@nestjs/graphql'
+import { ObjectType, Resolver, Query, Field } from '@nestjs/graphql'
 
 import { AuthService } from './auth.service'
 
 @ObjectType()
 export abstract class Hello {
+  @Field()
   hello: string
 }
 
