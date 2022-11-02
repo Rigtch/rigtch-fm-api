@@ -54,6 +54,7 @@ module.exports = {
     '**/dist/**',
     'README.md',
     'webpack.config.js',
+    'stryker.conf.mjs',
   ],
   rules: {
     'prettier/prettier': 'warn',

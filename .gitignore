@@ -16,6 +16,7 @@ lerna-debug.log*
 
 # Tests
 /coverage
+/reports
 /.nyc_output
 
 # Cache
@@ -36,3 +37,5 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+# stryker temp files
+.stryker-tmp

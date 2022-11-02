@@ -7,6 +7,7 @@ npm-debug.log.*
 /build
 /public/build
 /dist
+/reports
 
 # Enviroment Files
 .env
