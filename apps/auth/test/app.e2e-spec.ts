@@ -4,7 +4,16 @@ import * as request from 'supertest'
 
 import { AuthModule } from './../src/auth.module'
 
-describe('AuthController (e2e)', () => {
+const HELLO_QUERY_NAME = 'hello'
+const HELLO_QUERY = `
+  query hello {
+    hello {
+      hello
+    }
+  }
+`
+
+describe('AuthResolver (e2e)', () => {
   let app: INestApplication
 
   beforeEach(async () => {
@@ -16,10 +25,22 @@ describe('AuthController (e2e)', () => {
     await app.init()
   })
 
-  it('/ (GET)', () => {
+  it('hello (QUERY)', () => {
     return request(app.getHttpServer())
-      .get('/')
+      .post('/graphql')
+      .send({
+        operationName: HELLO_QUERY_NAME,
+        query: HELLO_QUERY,
+      })
       .expect(200)
-      .expect('Hello World!')
+      .expect(
+        ({
+          body: {
+            data: { hello },
+          },
+        }) => {
+          expect(hello.hello).toEqual('Hello World!')
+        }
+      )
   })
 })

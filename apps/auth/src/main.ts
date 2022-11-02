@@ -8,4 +8,4 @@ const app = await NestFactory.create(AuthModule)
 const configService = app.get(ConfigService)
 
 app.enableCors()
-await app.listen(+configService.get(Environment.PORT) ?? 4000)
+await app.listen(+configService.get(Environment.PORT) || 4000)
