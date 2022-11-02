@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common'
 import { GraphQLModule } from '@nestjs/graphql'
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
+import { ConfigModule } from '@nestjs/config'
 
 import { AuthService } from './auth.service'
 import { AuthResolver } from './auth.resolver'
@@ -21,6 +22,10 @@ import { AuthResolver } from './auth.resolver'
           origin: true,
         },
       }),
+    }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: './apps/auth/.env',
     }),
   ],
   providers: [AuthService, AuthResolver],
