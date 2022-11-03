@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common'
 import { GraphQLModule } from '@nestjs/graphql'
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
 import { ConfigModule } from '@nestjs/config'
+import * as Joi from 'joi'
 
 import { AuthService } from './auth.service'
 import { AuthResolver } from './auth.resolver'
@@ -26,6 +27,12 @@ import { AuthResolver } from './auth.resolver'
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: './apps/auth/.env',
+      validationSchema: Joi.object({
+        PORT: Joi.number().default(4000),
+        SPOTIFY_CLIENT_ID: Joi.string().required(),
+        SPOTIFY_CLIENT_SECRET: Joi.string().required(),
+        SPOTIFY_CALLBACK_URL: Joi.string().required(),
+      }),
     }),
   ],
   providers: [AuthService, AuthResolver],
