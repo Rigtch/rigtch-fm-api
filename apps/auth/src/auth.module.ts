@@ -32,6 +32,7 @@ import { AuthResolver } from './auth.resolver'
         SPOTIFY_CLIENT_ID: Joi.string().required(),
         SPOTIFY_CLIENT_SECRET: Joi.string().required(),
         SPOTIFY_CALLBACK_URL: Joi.string().required(),
+        JWT_SECRET: Joi.string().required(),
       }),
     }),
   ],
