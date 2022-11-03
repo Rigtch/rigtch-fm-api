@@ -4,10 +4,13 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import * as Joi from 'joi'
 import { JwtModule } from '@nestjs/jwt'
+import { PassportModule } from '@nestjs/passport'
 
 import { AuthService } from './auth.service'
 import { AuthResolver } from './auth.resolver'
 import { Environment } from './config'
+import { AuthController } from './auth.controller'
+import { JwtStrategy, SpotifyStrategy } from './strategies'
 
 @Module({
   imports: [
@@ -37,6 +40,7 @@ import { Environment } from './config'
         JWT_SECRET: Joi.string().required(),
       }),
     }),
+    PassportModule,
     JwtModule.registerAsync({
       useFactory: async (configService: ConfigService) => {
         return {
@@ -49,6 +53,7 @@ import { Environment } from './config'
       inject: [ConfigService],
     }),
   ],
-  providers: [AuthService, AuthResolver],
+  providers: [AuthService, AuthResolver, JwtStrategy, SpotifyStrategy],
+  controllers: [AuthController],
 })
 export class AuthModule {}
