@@ -12,6 +12,8 @@ import { Environment } from './config'
 import { AuthController } from './auth.controller'
 import { JwtStrategy, SpotifyStrategy } from './strategies'
 
+import { RmqModule } from '@app/common'
+
 @Module({
   imports: [
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
@@ -40,6 +42,7 @@ import { JwtStrategy, SpotifyStrategy } from './strategies'
         JWT_SECRET: Joi.string().required(),
       }),
     }),
+    RmqModule,
     PassportModule,
     JwtModule.registerAsync({
       useFactory: async (configService: ConfigService) => {
