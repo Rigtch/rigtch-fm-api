@@ -43,6 +43,7 @@
     "apollo-server-core": "3.11.0",
     "apollo-server-express": "3.11.0",
     "graphql": "16.6.0",
+    "joi": "17.7.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0"
