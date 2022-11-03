@@ -12,3 +12,8 @@ services:
       - ./usr/src/app/node_modules
     ports:
       - 4000:4000
+
+  rabbitmq:
+    image: rabbitmq
+    ports:
+      - '5672:5672'
