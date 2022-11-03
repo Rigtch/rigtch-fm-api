@@ -1,11 +1,13 @@
 import { Module } from '@nestjs/common'
 import { GraphQLModule } from '@nestjs/graphql'
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
-import { ConfigModule } from '@nestjs/config'
+import { ConfigModule, ConfigService } from '@nestjs/config'
 import * as Joi from 'joi'
+import { JwtModule } from '@nestjs/jwt'
 
 import { AuthService } from './auth.service'
 import { AuthResolver } from './auth.resolver'
+import { Environment } from './config'
 
 @Module({
   imports: [
@@ -34,6 +36,17 @@ import { AuthResolver } from './auth.resolver'
         SPOTIFY_CALLBACK_URL: Joi.string().required(),
         JWT_SECRET: Joi.string().required(),
       }),
+    }),
+    JwtModule.registerAsync({
+      useFactory: async (configService: ConfigService) => {
+        return {
+          secret: configService.get(Environment.JWT_SECRET),
+          signOptions: {
+            expiresIn: '3600s',
+          },
+        }
+      },
+      inject: [ConfigService],
     }),
   ],
   providers: [AuthService, AuthResolver],
