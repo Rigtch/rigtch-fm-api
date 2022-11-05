@@ -1,3 +1,4 @@
+import { HttpService } from '@nestjs/axios'
 import { Test, TestingModule } from '@nestjs/testing'
 
 import { StatisticsController } from './statistics.controller'
@@ -9,7 +10,15 @@ describe('StatisticsController', () => {
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [StatisticsController],
-      providers: [StatisticsService],
+      providers: [
+        StatisticsService,
+        {
+          provide: HttpService,
+          useValue: {
+            get: jest.fn(),
+          },
+        },
+      ],
     }).compile()
 
     statisticsController = app.get<StatisticsController>(StatisticsController)
