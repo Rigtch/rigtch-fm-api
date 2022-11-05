@@ -12,7 +12,7 @@ import { Environment } from './config'
 import { AuthController } from './auth.controller'
 import { JwtStrategy, SpotifyStrategy } from './strategies'
 
-import { RmqModule } from '@app/common'
+import { RmqModule } from '@lib/common'
 
 @Module({
   imports: [
