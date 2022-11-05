@@ -1,9 +1,14 @@
 import { Module } from '@nestjs/common'
-import { ConfigModule } from '@nestjs/config'
+import { ConfigModule, ConfigService } from '@nestjs/config'
+import { HttpModule } from '@nestjs/axios'
 import * as Joi from 'joi'
+import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo'
+import { GraphQLModule } from '@nestjs/graphql'
 
 import { StatisticsController } from './statistics.controller'
 import { StatisticsService } from './statistics.service'
+import { Environment } from './config'
+import { StatisticsResolver } from './statistics.resolver'
 
 import { AuthModule, RmqModule } from '@lib/common'
 
@@ -13,12 +18,38 @@ import { AuthModule, RmqModule } from '@lib/common'
       isGlobal: true,
       validationSchema: Joi.object({
         PORT: Joi.number().default(4000),
+        SPOTIFY_BASE_URL: Joi.string().required(),
       }),
+    }),
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      useFactory: () => ({
+        autoSchemaFile: true,
+        playground: {
+          settings: {
+            'request.credentials': 'include',
+          },
+        },
+        cors: {
+          credentials: true,
+          origin: true,
+        },
+      }),
+    }),
+    HttpModule.registerAsync({
+      useFactory: (configService: ConfigService) => ({
+        baseURL: configService.get(Environment.SPOTIFY_BASE_URL),
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+      }),
+      inject: [ConfigService],
     }),
     RmqModule,
     AuthModule,
   ],
   controllers: [StatisticsController],
-  providers: [StatisticsService],
+  providers: [StatisticsService, StatisticsResolver],
 })
 export class StatisticsModule {}
