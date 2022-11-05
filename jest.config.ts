@@ -16,7 +16,7 @@ const Configuration = {
   ],
   coverageDirectory: './coverage',
   testEnvironment: 'node',
-  roots: ['<rootDir>/apps'],
+  roots: ['<rootDir>/apps', '<rootDir>/libs'],
 }
 
 export default Configuration
