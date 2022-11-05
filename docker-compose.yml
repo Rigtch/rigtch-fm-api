@@ -1,17 +1,36 @@
 services:
-  auth:
+  statistics:
     build:
       context: .
-      dockerfile: ./apps/auth/Dockerfile
-      target: develoment
-    command: yarn start:dev auth
+      dockerfile: ./apps/statistics/Dockerfile
+      target: development
+    command: yarn start:dev statistics
     env_file:
-      - ./apps/auth/.env
+      - ./apps/statistics/.env
+    depends_on:
+      - rabbitmq
+      - auth
     volumes:
       - .:/usr/src/app
       - ./usr/src/app/node_modules
     ports:
       - 4000:4000
+
+  auth:
+    build:
+      context: .
+      dockerfile: ./apps/auth/Dockerfile
+      target: development
+    command: yarn start:dev auth
+    env_file:
+      - ./apps/auth/.env
+    depends_on:
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - ./usr/src/app/node_modules
+    ports:
+      - 4001:4001
 
   rabbitmq:
     image: rabbitmq
