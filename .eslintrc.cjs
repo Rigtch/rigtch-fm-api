@@ -15,13 +15,14 @@ module.exports = {
     settings: {
       'import/resolver': {
         node: {
-          paths: ['~/', '@lib/common'],
+          paths: ['~/', '@lib/common', '@lib/utils'],
           extensions: ['.js', '.ts'],
         },
         alias: {
           map: [
             ['~', './'],
             ['@lib/common', './libs/common/src'],
+            ['@lib/utils', './libs/utils/src'],
           ],
           extensions: ['.ts', '.js'],
         },
