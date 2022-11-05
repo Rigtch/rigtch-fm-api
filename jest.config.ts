@@ -8,6 +8,8 @@ const Configuration = {
   collectCoverageFrom: ['**/*.(t|j)s'],
   moduleNameMapper: {
     '^~/(.*)$': '<rootDir>/$1',
+    '^@lib/common(.*)$': '<rootDir>/libs/common/src/$1',
+    '^@lib/utils(.*)$': '<rootDir>/libs/utils/src/$1',
   },
   coveragePathIgnorePatterns: [
     '.*\\.(interface|module|schema|entity|repository|dto).ts',

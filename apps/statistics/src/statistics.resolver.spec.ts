@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing'
 
+import { StatisticsService } from './statistics.service'
 import { StatisticsResolver } from './statistics.resolver'
 
 describe('StatisticsResolver', () => {
@@ -7,7 +8,13 @@ describe('StatisticsResolver', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [StatisticsResolver],
+      providers: [
+        StatisticsResolver,
+        {
+          provide: StatisticsService,
+          useValue: {},
+        },
+      ],
     }).compile()
 
     resolver = module.get<StatisticsResolver>(StatisticsResolver)
