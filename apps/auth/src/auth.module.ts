@@ -4,7 +4,6 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import * as Joi from 'joi'
 import { JwtModule } from '@nestjs/jwt'
-import { PassportModule } from '@nestjs/passport'
 
 import { AuthService } from './auth.service'
 import { AuthResolver } from './auth.resolver'
@@ -35,7 +34,7 @@ import { RmqModule } from '@lib/common'
       isGlobal: true,
       envFilePath: './apps/auth/.env',
       validationSchema: Joi.object({
-        PORT: Joi.number().default(4000),
+        PORT: Joi.number().default(4001),
         SPOTIFY_CLIENT_ID: Joi.string().required(),
         SPOTIFY_CLIENT_SECRET: Joi.string().required(),
         SPOTIFY_CALLBACK_URL: Joi.string().required(),
@@ -43,7 +42,6 @@ import { RmqModule } from '@lib/common'
       }),
     }),
     RmqModule,
-    PassportModule,
     JwtModule.registerAsync({
       useFactory: async (configService: ConfigService) => {
         return {
