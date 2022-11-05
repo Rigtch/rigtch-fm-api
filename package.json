@@ -25,6 +25,7 @@
     "stryker": "stryker run",
     "prepare": "husky install"
   },
+  "sideEffects": false,
   "lint-staged": {
     "*.{js,ts}": "eslint --cache --fix"
   },
