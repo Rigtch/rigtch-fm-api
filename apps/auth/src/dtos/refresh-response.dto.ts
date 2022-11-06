@@ -4,8 +4,10 @@ import { Field, ObjectType } from '@nestjs/graphql'
 export abstract class RefreshResponse {
   @Field()
   accessToken: string
-  @Field()
-  refreshToken: string
+
+  @Field({ nullable: true })
+  refreshToken?: string
+
   @Field()
   expiresIn: number
 }
