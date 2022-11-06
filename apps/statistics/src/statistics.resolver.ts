@@ -1,12 +1,11 @@
 import { UseGuards } from '@nestjs/common'
-import { Context, Query, Resolver } from '@nestjs/graphql'
+import { Query, Resolver } from '@nestjs/graphql'
 import { firstValueFrom } from 'rxjs'
 
 import { Track } from './dtos'
 import { StatisticsService } from './statistics.service'
 
-import { getAccessToken } from '@lib/utils'
-import { JwtAuthGuard } from '@lib/common'
+import { AccessToken, JwtAuthGuard } from '@lib/common'
 
 @Resolver()
 export class StatisticsResolver {
@@ -14,25 +13,25 @@ export class StatisticsResolver {
 
   @UseGuards(JwtAuthGuard)
   @Query(() => [Track], { name: 'lastTracks' })
-  async getLastTracks(@Context() { req: request }) {
+  async getLastTracks(@AccessToken() accessToken: string) {
     return await firstValueFrom(
-      this.statisticsService.getlastTracks(getAccessToken(request))
+      this.statisticsService.getlastTracks(accessToken)
     )
   }
 
   @UseGuards(JwtAuthGuard)
   @Query(() => [Track], { name: 'topTracks' })
-  async getTopTracks(@Context() { req: request }) {
+  async getTopTracks(@AccessToken() accessToken: string) {
     return await firstValueFrom(
-      this.statisticsService.getTopTracks(getAccessToken(request))
+      this.statisticsService.getTopTracks(accessToken)
     )
   }
 
   @UseGuards(JwtAuthGuard)
   @Query(() => [Track], { name: 'topArtists' })
-  async getTopArtists(@Context() { req: request }) {
+  async getTopArtists(@AccessToken() accessToken: string) {
     return await firstValueFrom(
-      this.statisticsService.getTopArtists(getAccessToken(request))
+      this.statisticsService.getTopArtists(accessToken)
     )
   }
 }
