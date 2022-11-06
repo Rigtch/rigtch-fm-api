@@ -4,6 +4,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import * as Joi from 'joi'
 import { JwtModule } from '@nestjs/jwt'
+import { HttpModule } from '@nestjs/axios'
 
 import { AuthService } from './auth.service'
 import { AuthResolver } from './auth.resolver'
@@ -38,8 +39,19 @@ import { RmqModule } from '@lib/common'
         SPOTIFY_CLIENT_ID: Joi.string().required(),
         SPOTIFY_CLIENT_SECRET: Joi.string().required(),
         SPOTIFY_CALLBACK_URL: Joi.string().required(),
+        SPOTIFY_BASE_URL: Joi.string().required(),
         JWT_SECRET: Joi.string().required(),
       }),
+    }),
+    HttpModule.registerAsync({
+      useFactory: (configService: ConfigService) => ({
+        baseURL: configService.get(Environment.SPOTIFY_BASE_URL),
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+      }),
+      inject: [ConfigService],
     }),
     RmqModule,
     JwtModule.registerAsync({
