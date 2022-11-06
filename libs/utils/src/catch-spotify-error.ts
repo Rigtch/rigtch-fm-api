@@ -9,8 +9,8 @@ export const catchSpotifyError = ({
   },
 }) => {
   if (error.status === 401) throw new UnauthorizedException(error.message)
-
-  console.log(error)
+  if (error === 'invalid_grant')
+    throw new UnauthorizedException('Invalid token')
 
   throw new InternalServerErrorException(
     `Something went wrong with fetching data from spotify API`

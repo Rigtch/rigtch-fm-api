@@ -20,6 +20,19 @@ describe('catchSpotifyError', () => {
       })
     ).toThrowError(UnauthorizedException)
   })
+
+  it('should throw UnauthorizedException as invalid grant', () => {
+    expect(() =>
+      catchSpotifyError({
+        response: {
+          data: {
+            error: 'invalid_grant',
+          },
+        },
+      })
+    ).toThrowError(UnauthorizedException)
+  })
+
   it('should throw InternalServerErrorException', () => {
     expect(() =>
       catchSpotifyError({
