@@ -1,3 +1,5 @@
 export * from './jwt-payload.dto'
 export * from './auth-info.dto'
 export * from './spotify-auth.dto'
+export * from './spotify-token-response.dto'
+export * from './refresh-response.dto'
