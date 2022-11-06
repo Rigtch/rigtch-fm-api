@@ -1,8 +1,8 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { HttpService } from '@nestjs/axios'
-import { firstValueFrom } from 'rxjs'
+import { catchError, map, Observable } from 'rxjs'
 
-import { formatArtists, formatTracks } from './utils'
+import { formatArtists, formatTracks, catchSpotifyError } from './utils'
 import {
   FormattedTrack,
   FormattedArtist,
@@ -10,9 +10,6 @@ import {
   SpotifyResponse,
   SpotifyTrack,
 } from './types'
-
-const spotifyErrorMessage =
-  'Something went wrong with fetching data from spotify API'
 
 @Injectable()
 export class StatisticsService {
@@ -22,61 +19,49 @@ export class StatisticsService {
     return 'Hello World!'
   }
 
-  async getlastTracks(accessToken: string): Promise<FormattedTrack[]> {
-    try {
-      return firstValueFrom(
-        this.httpService.get<SpotifyResponse<{ track: SpotifyTrack }>>(
-          '/me/player/recently-played?limit=50&after=604800000',
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        )
+  getlastTracks(accessToken: string): Observable<FormattedTrack[]> {
+    return this.httpService
+      .get<SpotifyResponse<{ track: SpotifyTrack }>>(
+        '/me/player/recently-played?limit=50&after=604800000',
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
       )
-        .then(response => response.data.items)
-        .then(items => items.map(item => item.track))
-        .then(formatTracks)
-    } catch {
-      throw new InternalServerErrorException(spotifyErrorMessage)
-    }
+      .pipe(
+        map(response => response.data.items),
+        map(items => items.map(item => item.track)),
+        map(formatTracks),
+        catchError(catchSpotifyError)
+      )
   }
 
-  async getTopArtists(accessToken: string): Promise<FormattedArtist[]> {
-    try {
-      return firstValueFrom(
-        this.httpService.get<SpotifyResponse<SpotifyArtist>>(
-          '/me/top/artists?limit=10',
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        )
+  getTopArtists(accessToken: string): Observable<FormattedArtist[]> {
+    return this.httpService
+      .get<SpotifyResponse<SpotifyArtist>>('/me/top/artists?limit=10', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+      .pipe(
+        map(response => response.data.items),
+        map(formatArtists),
+        catchError(catchSpotifyError)
       )
-        .then(response => response.data.items)
-        .then(formatArtists)
-    } catch {
-      throw new InternalServerErrorException(spotifyErrorMessage)
-    }
   }
 
-  async getTopTracks(accessToken: string): Promise<FormattedTrack[]> {
-    try {
-      return firstValueFrom(
-        this.httpService.get<SpotifyResponse<SpotifyTrack>>(
-          '/me/top/artists?limit=10',
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        )
+  getTopTracks(accessToken: string): Observable<FormattedTrack[]> {
+    return this.httpService
+      .get<SpotifyResponse<SpotifyTrack>>('/me/top/tracks?limit=10', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+      .pipe(
+        map(response => response.data.items),
+        map(formatTracks),
+        catchError(catchSpotifyError)
       )
-        .then(response => response.data.items)
-        .then(formatTracks)
-    } catch {
-      throw new InternalServerErrorException(spotifyErrorMessage)
-    }
   }
 }
