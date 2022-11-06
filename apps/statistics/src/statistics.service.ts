@@ -21,7 +21,7 @@ export class StatisticsService {
     return 'Hello World!'
   }
 
-  getlastTracks(accessToken: string): Observable<FormattedTrack[]> {
+  getLastTracks(accessToken: string): Observable<FormattedTrack[]> {
     return this.httpService
       .get<SpotifyResponse<{ track: SpotifyTrack }>>(
         '/me/player/recently-played?limit=50&after=604800000',
