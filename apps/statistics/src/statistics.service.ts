@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { HttpService } from '@nestjs/axios'
 import { catchError, map, Observable } from 'rxjs'
 
-import { formatArtists, formatTracks, catchSpotifyError } from './utils'
+import { formatArtists, formatTracks } from './utils'
 import {
   FormattedTrack,
   FormattedArtist,
@@ -10,6 +10,8 @@ import {
   SpotifyResponse,
   SpotifyTrack,
 } from './types'
+
+import { catchSpotifyError } from '@lib/utils'
 
 @Injectable()
 export class StatisticsService {
