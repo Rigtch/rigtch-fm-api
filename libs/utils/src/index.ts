@@ -1,1 +1,1 @@
-export * from './get-access-token'
+export * from './catch-spotify-error'

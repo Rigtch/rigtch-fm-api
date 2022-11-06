@@ -10,7 +10,9 @@ export const catchSpotifyError = ({
 }) => {
   if (error.status === 401) throw new UnauthorizedException(error.message)
 
+  console.log(error)
+
   throw new InternalServerErrorException(
-    'Something went wrong with fetching data from spotify API'
+    `Something went wrong with fetching data from spotify API`
   )
 }
