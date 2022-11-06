@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common'
 
 import { RmqModule } from '..'
-import { Services } from '../services'
+import { Service } from '../services'
 
 @Module({
-  imports: [RmqModule.register({ name: Services.AUTH })],
+  imports: [RmqModule.register({ name: Service.AUTH })],
   exports: [RmqModule],
 })
 export class AuthModule {}

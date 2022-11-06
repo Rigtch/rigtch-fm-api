@@ -1,4 +1,4 @@
-export enum Services {
+export enum Service {
   AUTH = 'AUTH',
   STATISTICS = 'STATISTICS',
 }
