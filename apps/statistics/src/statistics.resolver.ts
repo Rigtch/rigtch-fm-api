@@ -15,7 +15,7 @@ export class StatisticsResolver {
   @Query(() => [Track], { name: 'lastTracks' })
   async getLastTracks(@AccessToken() accessToken: string) {
     return await firstValueFrom(
-      this.statisticsService.getlastTracks(accessToken)
+      this.statisticsService.getLastTracks(accessToken)
     )
   }
 
