@@ -112,6 +112,7 @@ jobs:
           SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
           SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
           SPOTIFY_CALLBACK_URL: ${{ secrets.SPOTIFY_CALLBACK_URL }}
+          SPOTIFY_BASE_URL: https://accounts.spotify.com
           JWT_SECRET: secret
 
       - name: Collect coverage

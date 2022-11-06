@@ -4,7 +4,8 @@
   "testEnvironment": "node",
   "testRegex": ".e2e-spec.ts$",
   "moduleNameMapper": {
-    "^@lib/common(.*)$": "<rootDir>/../../../libs/common/src/$1"
+    "^@lib/common(.*)$": "<rootDir>/../../../libs/common/src/$1",
+    "^@lib/utils(.*)$": "<rootDir>/../../../libs/utils/src/$1"
   },
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
