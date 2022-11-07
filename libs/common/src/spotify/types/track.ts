@@ -1,10 +1,8 @@
-import { Image } from '../dtos'
-
-import { TrackAlbum, TrackArtist } from '.'
+import { SpotifyImage, TrackAlbum, TrackArtist } from '.'
 
 export interface FormattedTrack {
   name: string
-  album: { name: string; images: Image[] }
+  album: { name: string; images: SpotifyImage[] }
   artists: string[]
   href: string
 }

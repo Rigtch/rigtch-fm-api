@@ -12,7 +12,7 @@ import { Response } from 'express'
 
 import { SpotifyAuthGuard } from './guards/spotify.guard'
 import { AuthService } from './auth.service'
-import { SpotifyAuthRequest, SpotifyAuth } from './dtos'
+import { SpotifyAuthRequest, SpotifyAuth } from './types'
 
 @Controller('auth/spotify')
 export class AuthController {

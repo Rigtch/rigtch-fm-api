@@ -4,6 +4,8 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { StatisticsController } from './statistics.controller'
 import { StatisticsService } from './statistics.service'
 
+import { SpotifyService } from '@lib/common'
+
 describe('StatisticsController', () => {
   let statisticsController: StatisticsController
 
@@ -12,6 +14,7 @@ describe('StatisticsController', () => {
       controllers: [StatisticsController],
       providers: [
         StatisticsService,
+        SpotifyService,
         {
           provide: HttpService,
           useValue: {

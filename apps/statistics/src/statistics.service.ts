@@ -2,20 +2,22 @@ import { Injectable } from '@nestjs/common'
 import { HttpService } from '@nestjs/axios'
 import { catchError, map, Observable } from 'rxjs'
 
-import { formatArtists, formatTracks } from './utils'
 import {
   FormattedTrack,
   FormattedArtist,
   SpotifyArtist,
   SpotifyResponse,
   SpotifyTrack,
-} from './types'
-
+  SpotifyService,
+} from '@lib/common'
 import { catchSpotifyError } from '@lib/utils'
 
 @Injectable()
 export class StatisticsService {
-  constructor(private readonly httpService: HttpService) {}
+  constructor(
+    private readonly httpService: HttpService,
+    private readonly spotifyService: SpotifyService
+  ) {}
 
   getHello(): string {
     return 'Hello World!'
@@ -34,7 +36,7 @@ export class StatisticsService {
       .pipe(
         map(response => response.data.items),
         map(items => items.map(item => item.track)),
-        map(formatTracks),
+        map(this.spotifyService.formatTracks),
         catchError(catchSpotifyError)
       )
   }
@@ -48,7 +50,7 @@ export class StatisticsService {
       })
       .pipe(
         map(response => response.data.items),
-        map(formatArtists),
+        map(this.spotifyService.formatArtists),
         catchError(catchSpotifyError)
       )
   }
@@ -62,7 +64,7 @@ export class StatisticsService {
       })
       .pipe(
         map(response => response.data.items),
-        map(formatTracks),
+        map(this.spotifyService.formatTracks),
         catchError(catchSpotifyError)
       )
   }

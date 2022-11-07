@@ -1,6 +1,4 @@
-import { Image } from '../dtos'
-
-import { TrackArtist } from '.'
+import { SpotifyImage, TrackArtist } from '.'
 
 export interface TrackAlbum {
   album_type: string
@@ -9,7 +7,7 @@ export interface TrackAlbum {
   external_urls: { spotify: string }
   href: string
   id: string
-  images: Image[]
+  images: SpotifyImage[]
   name: string
   type: string
   uri: string

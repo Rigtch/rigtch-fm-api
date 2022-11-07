@@ -1,4 +1,4 @@
-export interface SpotifyTokenResponse {
+export interface SpotifyToken {
   access_token: string
   token_type: string
   scope: string
