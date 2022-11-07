@@ -35,6 +35,9 @@ export class AuthService {
   }
 
   refresh(refreshToken: string): Observable<RefreshResponse> {
+    const url = `${this.configService.get(
+      Environment.SPOTIFY_ACCOUNTS_URL
+    )}/api/token`
     const cliendId = this.configService.get(Environment.SPOTIFY_CLIENT_ID)
     const clientSecret = this.configService.get(
       Environment.SPOTIFY_CLIENT_SECRET
@@ -48,7 +51,7 @@ export class AuthService {
     parameters.append('refresh_token', refreshToken)
 
     return this.httpService
-      .post<SpotifyToken>('/api/token', parameters, {
+      .post<SpotifyToken>(url, parameters, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
           Authorization: `Basic ${bufferedCredentials}`,
