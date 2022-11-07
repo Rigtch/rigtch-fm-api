@@ -1,7 +1,7 @@
 import { Profile } from 'passport-spotify'
 import { Request } from 'express'
 
-import { AuthInfo } from '../dtos/auth-info.dto'
+import { AuthInfo } from '@app/auth/dtos'
 
 export interface SpotifyAuth {
   user: Profile
