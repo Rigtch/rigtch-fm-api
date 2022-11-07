@@ -1,9 +1,9 @@
 import { Field, ObjectType } from '@nestjs/graphql'
 
-import { SpotifyImage } from '@lib/common'
+import { SpotifyImage } from '../types'
 
 @ObjectType()
-export abstract class Image implements SpotifyImage {
+export abstract class ImageDto implements SpotifyImage {
   @Field(() => Number)
   height: number
 
