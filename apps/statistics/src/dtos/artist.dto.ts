@@ -1,8 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql'
 
-import { Image } from '.'
-
-import { FormattedArtist } from '@lib/common'
+import { FormattedArtist, ImageDto } from '@lib/common'
 
 @ObjectType()
 export abstract class Artist implements FormattedArtist {
@@ -16,5 +14,5 @@ export abstract class Artist implements FormattedArtist {
   href: string
 
   @Field(() => [Image])
-  images: Image[]
+  images: ImageDto[]
 }
