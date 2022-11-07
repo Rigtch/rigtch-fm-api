@@ -13,6 +13,6 @@ export abstract class Artist implements FormattedArtist {
   @Field(() => String)
   href: string
 
-  @Field(() => [Image])
+  @Field(() => [ImageDto])
   images: ImageDto[]
 }
