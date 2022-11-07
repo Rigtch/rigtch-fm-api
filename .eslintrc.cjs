@@ -23,6 +23,8 @@ module.exports = {
             ['~', './'],
             ['@lib/common', './libs/common/src'],
             ['@lib/utils', './libs/utils/src'],
+            ['@app/auth', './apps/auth/src'],
+            ['@app/statistics', './apps/statistics/src'],
           ],
           extensions: ['.ts', '.js'],
         },

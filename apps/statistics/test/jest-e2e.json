@@ -3,6 +3,12 @@
   "rootDir": ".",
   "testEnvironment": "node",
   "testRegex": ".e2e-spec.ts$",
+  "moduleNameMapper": {
+    "^@lib/common(.*)$": "<rootDir>/../../../libs/common/src/$1",
+    "^@lib/utils(.*)$": "<rootDir>/../../../libs/utils/src/$1",
+    "^@app/statistics(.*)$": "<rootDir>/../src/$1",
+    "^@app/auth(.*)$": "<rootDir>/../../../apps/auth/src/$1"
+  },
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   }
