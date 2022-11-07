@@ -7,6 +7,12 @@ import { firstValueFrom, of } from 'rxjs'
 
 import { AuthService } from './auth.service'
 
+import {
+  formattedProfileMock,
+  spotifyProfileMock,
+  SpotifyService,
+} from '@lib/common'
+
 describe('AuthService', () => {
   let authService: AuthService
   let jwtService: JwtService
@@ -17,6 +23,7 @@ describe('AuthService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthService,
+        SpotifyService,
         {
           provide: JwtService,
           useValue: {
@@ -27,6 +34,7 @@ describe('AuthService', () => {
           provide: HttpService,
           useValue: {
             post: jest.fn(),
+            get: jest.fn(),
           },
         },
         {
@@ -68,7 +76,7 @@ describe('AuthService', () => {
     expect(authService.login(profile)).toEqual('token')
   })
 
-  it('should refresh', async () => {
+  it('should refresh token', async () => {
     configService.get = jest.fn().mockReturnValue('value')
 
     const response = {
@@ -89,6 +97,18 @@ describe('AuthService', () => {
 
     expect(await firstValueFrom(authService.refresh('refresh'))).toEqual(
       expectedResponse
+    )
+  })
+
+  it('should return profile', async () => {
+    const response = {
+      data: spotifyProfileMock,
+    }
+
+    httpService.get = jest.fn().mockReturnValue(of(response))
+
+    expect(await firstValueFrom(authService.profile('token'))).toEqual(
+      formattedProfileMock
     )
   })
 })
