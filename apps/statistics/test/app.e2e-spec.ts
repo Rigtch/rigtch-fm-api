@@ -1,11 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { INestApplication } from '@nestjs/common'
-import * as request from 'supertest'
+import * as pactum from 'pactum'
 
 import { StatisticsModule } from './../src/statistics.module'
 
 describe('StatisticsController (e2e)', () => {
   let app: INestApplication
+  let url: string
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -13,13 +14,18 @@ describe('StatisticsController (e2e)', () => {
     }).compile()
 
     app = moduleFixture.createNestApplication()
-    await app.init()
+    await app.listen(0)
+
+    url = await app.getUrl()
+
+    pactum.request.setBaseUrl(url.replace('[::1]', 'localhost'))
+  })
+
+  afterAll(async () => {
+    await app.close()
   })
 
   it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!')
+    return pactum.spec().get('/').expectStatus(200).expectBody('Hello World!')
   })
 })

@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { INestApplication } from '@nestjs/common'
-import * as request from 'supertest'
+import * as pactum from 'pactum'
 
 import { AuthModule } from './../src/auth.module'
 
@@ -15,6 +15,7 @@ const HELLO_QUERY = `
 
 describe('AuthResolver (e2e)', () => {
   let app: INestApplication
+  let url: string
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -22,25 +23,32 @@ describe('AuthResolver (e2e)', () => {
     }).compile()
 
     app = moduleFixture.createNestApplication()
-    await app.init()
+    await app.listen(0)
+
+    url = await app.getUrl()
+
+    pactum.request.setBaseUrl(url.replace('[::1]', 'localhost'))
+  })
+
+  afterAll(async () => {
+    await app.close()
   })
 
   it('hello (QUERY)', () => {
-    return request(app.getHttpServer())
+    return pactum
+      .spec()
       .post('/graphql')
-      .send({
+      .withJson({
         operationName: HELLO_QUERY_NAME,
         query: HELLO_QUERY,
       })
-      .expect(200)
-      .expect(
-        ({
-          body: {
-            data: { hello },
+      .expectStatus(200)
+      .expectBody({
+        data: {
+          hello: {
+            hello: 'Hello World!',
           },
-        }) => {
-          expect(hello.hello).toEqual('Hello World!')
-        }
-      )
+        },
+      })
   })
 })
