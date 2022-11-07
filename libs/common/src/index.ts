@@ -1,4 +1,4 @@
 export * from './rmq'
 export * from './auth'
-export * from './services'
+export * from './services.enum'
 export * from './spotify'

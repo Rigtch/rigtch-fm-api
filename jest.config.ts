@@ -13,7 +13,7 @@ const Configuration = {
   },
   coveragePathIgnorePatterns: [
     '.*\\.(interface|module|schema|entity|repository|dto|enum).ts',
-    '*.*spec.ts',
+    '.*\\.e2e-spec.ts',
     'index.ts',
     'main.ts',
   ],
