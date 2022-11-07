@@ -12,7 +12,8 @@ const Configuration = {
     '^@lib/utils(.*)$': '<rootDir>/libs/utils/src/$1',
   },
   coveragePathIgnorePatterns: [
-    '.*\\.(interface|module|schema|entity|repository|dto).ts',
+    '.*\\.(interface|module|schema|entity|repository|dto|enum).ts',
+    '*.*spec.ts',
     'index.ts',
     'main.ts',
   ],
