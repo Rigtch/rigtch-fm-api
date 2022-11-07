@@ -10,6 +10,6 @@ export abstract class Album {
   @Field(() => String)
   artist: string
 
-  @Field(() => [Image])
+  @Field(() => [ImageDto])
   images: ImageDto[]
 }
