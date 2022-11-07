@@ -10,6 +10,8 @@ const Configuration = {
     '^~/(.*)$': '<rootDir>/$1',
     '^@lib/common(.*)$': '<rootDir>/libs/common/src/$1',
     '^@lib/utils(.*)$': '<rootDir>/libs/utils/src/$1',
+    '^@app/auth(.*)$': '<rootDir>/apps/auth/src/$1',
+    '^@app/statistics(.*)$': '<rootDir>/apps/statistics/src/$1',
   },
   coveragePathIgnorePatterns: [
     '.*\\.(interface|module|schema|entity|repository|dto|enum).ts',
