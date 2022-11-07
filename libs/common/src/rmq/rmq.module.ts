@@ -2,7 +2,7 @@ import { DynamicModule, Module } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { ClientsModule, Transport } from '@nestjs/microservices'
 
-import { RmqEnvironment } from './environment'
+import { RmqEnvironment } from './environment.enum'
 import { RmqService } from './rmq.service'
 
 interface RmqModuleOptions {
