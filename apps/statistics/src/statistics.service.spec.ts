@@ -2,14 +2,16 @@ import { HttpService } from '@nestjs/axios'
 import { TestingModule, Test } from '@nestjs/testing'
 import { firstValueFrom, of } from 'rxjs'
 
-import { spotifyArtistsMock } from './mocks/spotify-artist.mock'
-import { formattedTracksMock } from './mocks/formatted-track.mock'
+import { StatisticsService } from './statistics.service'
+
 import {
   spotifyTrackMock,
   spotifyTracksMock,
   formattedArtistsMock,
-} from './mocks'
-import { StatisticsService } from './statistics.service'
+  formattedTracksMock,
+  spotifyArtistsMock,
+  SpotifyService,
+} from '@lib/common'
 
 describe('StatisticsService', () => {
   let statisticsService: StatisticsService
@@ -19,7 +21,7 @@ describe('StatisticsService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         StatisticsService,
-
+        SpotifyService,
         {
           provide: HttpService,
           useValue: {

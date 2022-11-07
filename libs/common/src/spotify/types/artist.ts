@@ -1,10 +1,10 @@
-import { Image } from '../dtos'
+import { SpotifyImage } from '.'
 
 export interface FormattedArtist {
   name: string
   genres: string[]
   href: string
-  images: Image[]
+  images: SpotifyImage[]
 }
 
 export interface TrackArtist {
@@ -22,7 +22,7 @@ export interface SpotifyArtist {
   genres: string[]
   href: string
   id: string
-  images: Image[]
+  images: SpotifyImage[]
   name: string
   popularity: number
   type: string

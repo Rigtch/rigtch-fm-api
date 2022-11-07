@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { of } from 'rxjs'
 
-import { formattedArtistsMock } from './mocks/formatted-artist.mock'
-import { formattedTracksMock } from './mocks/formatted-track.mock'
 import { StatisticsService } from './statistics.service'
 import { StatisticsResolver } from './statistics.resolver'
+
+import { formattedArtistsMock, formattedTracksMock } from '@lib/common'
 
 describe('StatisticsResolver', () => {
   let statisticsResolver: StatisticsResolver

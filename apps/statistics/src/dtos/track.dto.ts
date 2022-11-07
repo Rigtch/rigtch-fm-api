@@ -1,8 +1,8 @@
 import { Field, ObjectType } from '@nestjs/graphql'
 
-import { FormattedTrack } from '../types'
-
 import { Album } from '.'
+
+import { FormattedTrack } from '@lib/common'
 
 @ObjectType()
 export abstract class Track implements FormattedTrack {

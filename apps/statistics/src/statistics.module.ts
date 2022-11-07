@@ -10,7 +10,7 @@ import { StatisticsService } from './statistics.service'
 import { Environment } from './config'
 import { StatisticsResolver } from './statistics.resolver'
 
-import { AuthModule, RmqModule } from '@lib/common'
+import { AuthModule, RmqModule, SpotifyModule } from '@lib/common'
 
 @Module({
   imports: [
@@ -47,6 +47,7 @@ import { AuthModule, RmqModule } from '@lib/common'
       inject: [ConfigService],
     }),
     RmqModule,
+    SpotifyModule,
     AuthModule,
   ],
   controllers: [StatisticsController],

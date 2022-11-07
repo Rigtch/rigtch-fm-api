@@ -6,9 +6,10 @@ import { Profile } from 'passport-spotify'
 import { catchError, map, Observable } from 'rxjs'
 
 import { Environment } from './config'
-import { RefreshResponse, SpotifyTokenResponse } from './dtos'
+import { RefreshResponse } from './dtos'
 
 import { catchSpotifyError } from '@lib/utils'
+import { SpotifyToken } from '@lib/common'
 
 @Injectable()
 export class AuthService {
@@ -41,7 +42,7 @@ export class AuthService {
     parameters.append('refresh_token', refreshToken)
 
     return this.httpService
-      .post<SpotifyTokenResponse>('/api/token', parameters, {
+      .post<SpotifyToken>('/api/token', parameters, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
           Authorization: `Basic ${bufferedCredentials}`,
