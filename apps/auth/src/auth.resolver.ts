@@ -2,9 +2,9 @@ import { ObjectType, Resolver, Query, Field } from '@nestjs/graphql'
 import { firstValueFrom } from 'rxjs'
 
 import { AuthService } from './auth.service'
-import { RefreshResponse } from './dtos'
+import { ProfileDto, RefreshResponse } from './dtos'
 
-import { RefreshToken } from '@lib/common'
+import { AccessToken, RefreshToken } from '@lib/common'
 
 @ObjectType()
 export abstract class Hello {
@@ -26,5 +26,10 @@ export class AuthResolver {
   @Query(() => RefreshResponse, { name: 'refresh' })
   async refresh(@RefreshToken() refreshToken: string) {
     return await firstValueFrom(this.authService.refresh(refreshToken))
+  }
+
+  @Query(() => ProfileDto, { name: 'profile' })
+  async getProfile(@AccessToken() accessToken: string) {
+    return await firstValueFrom(this.authService.profile(accessToken))
   }
 }

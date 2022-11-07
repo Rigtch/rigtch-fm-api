@@ -9,14 +9,20 @@ import { Environment } from './config'
 import { RefreshResponse } from './dtos'
 
 import { catchSpotifyError } from '@lib/utils'
-import { SpotifyToken } from '@lib/common'
+import {
+  FormattedProfile,
+  SpotifyProfile,
+  SpotifyService,
+  SpotifyToken,
+} from '@lib/common'
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly httpService: HttpService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
+    private readonly spotifyService: SpotifyService
   ) {}
 
   login({ id, username }: Profile) {
@@ -56,6 +62,20 @@ export class AuthService {
           refreshToken: refresh_token,
           expiresIn: expires_in,
         })),
+        catchError(catchSpotifyError)
+      )
+  }
+
+  profile(accessToken: string): Observable<FormattedProfile> {
+    return this.httpService
+      .get<SpotifyProfile>('/me', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+      .pipe(
+        map(response => response.data),
+        map(this.spotifyService.formatProfile),
         catchError(catchSpotifyError)
       )
   }

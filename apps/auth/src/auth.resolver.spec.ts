@@ -9,6 +9,16 @@ describe('AuthResolver', () => {
   let authResolver: AuthResolver
   let authService: AuthService
 
+  const refreshToken = '123'
+  const accessToken = '456'
+  const expiresIn = 3600
+
+  const refreshResponse: RefreshResponse = {
+    accessToken,
+    expiresIn,
+    refreshToken,
+  }
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -17,6 +27,7 @@ describe('AuthResolver', () => {
           provide: AuthService,
           useValue: {
             refresh: jest.fn(),
+            profile: jest.fn(),
           },
         },
       ],
@@ -31,19 +42,19 @@ describe('AuthResolver', () => {
   })
 
   it('should refresh', async () => {
-    const refreshToken = '123'
-    const accessToken = '456'
-    const expiresIn = 3600
-
-    const refreshResponse: RefreshResponse = {
-      accessToken,
-      expiresIn,
-      refreshToken,
-    }
-
     authService.refresh = jest.fn().mockReturnValueOnce(of(refreshResponse))
 
     expect(await authResolver.refresh(refreshToken)).toEqual({
+      accessToken,
+      refreshToken,
+      expiresIn,
+    })
+  })
+
+  it('should get profile', async () => {
+    authService.profile = jest.fn().mockReturnValueOnce(of(refreshResponse))
+
+    expect(await authResolver.getProfile(refreshToken)).toEqual({
       accessToken,
       refreshToken,
       expiresIn,

@@ -12,7 +12,7 @@ import { Environment } from './config'
 import { AuthController } from './auth.controller'
 import { JwtStrategy, SpotifyStrategy } from './strategies'
 
-import { RmqModule } from '@lib/common'
+import { RmqModule, SpotifyModule } from '@lib/common'
 
 @Module({
   imports: [
@@ -53,7 +53,6 @@ import { RmqModule } from '@lib/common'
       }),
       inject: [ConfigService],
     }),
-    RmqModule,
     JwtModule.registerAsync({
       useFactory: async (configService: ConfigService) => {
         return {
@@ -65,6 +64,8 @@ import { RmqModule } from '@lib/common'
       },
       inject: [ConfigService],
     }),
+    RmqModule,
+    SpotifyModule,
   ],
   providers: [AuthService, AuthResolver, JwtStrategy, SpotifyStrategy],
   controllers: [AuthController],
