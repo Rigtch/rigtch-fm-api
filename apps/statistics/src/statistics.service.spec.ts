@@ -53,7 +53,7 @@ describe('StatisticsService', () => {
     ).toEqual(formattedTracksMock)
   })
 
-  it('should top top artists', async () => {
+  it('should get top artists', async () => {
     httpService.get = jest.fn().mockReturnValueOnce(
       of({
         data: {
