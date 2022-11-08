@@ -23,10 +23,10 @@ export class StatisticsService {
     return 'Hello World!'
   }
 
-  getLastTracks(accessToken: string): Observable<FormattedTrack[]> {
+  getLastTracks(accessToken: string, limit = 20): Observable<FormattedTrack[]> {
     return this.httpService
       .get<SpotifyResponse<{ track: SpotifyTrack }>>(
-        '/me/player/recently-played?limit=50&after=604800000',
+        `/me/player/recently-played?limit=${limit}&after=604800000`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -41,9 +41,12 @@ export class StatisticsService {
       )
   }
 
-  getTopArtists(accessToken: string): Observable<FormattedArtist[]> {
+  getTopArtists(
+    accessToken: string,
+    limit = 10
+  ): Observable<FormattedArtist[]> {
     return this.httpService
-      .get<SpotifyResponse<SpotifyArtist>>('/me/top/artists?limit=10', {
+      .get<SpotifyResponse<SpotifyArtist>>(`/me/top/artists?limit=${limit}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -55,9 +58,9 @@ export class StatisticsService {
       )
   }
 
-  getTopTracks(accessToken: string): Observable<FormattedTrack[]> {
+  getTopTracks(accessToken: string, limit = 10): Observable<FormattedTrack[]> {
     return this.httpService
-      .get<SpotifyResponse<SpotifyTrack>>('/me/top/tracks?limit=10', {
+      .get<SpotifyResponse<SpotifyTrack>>(`/me/top/tracks?limit=${limit}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
