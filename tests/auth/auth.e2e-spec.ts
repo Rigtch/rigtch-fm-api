@@ -1,8 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing'
 import { INestApplication } from '@nestjs/common'
-import * as pactum from 'pactum'
+import { TestingModule, Test } from '@nestjs/testing'
+import { request, spec } from 'pactum'
 
-import { AuthModule } from './../src/auth.module'
+import { AuthModule } from '@app/auth'
 
 const HELLO_QUERY_NAME = 'hello'
 const HELLO_QUERY = `
@@ -27,7 +27,7 @@ describe('AuthResolver (e2e)', () => {
 
     url = await app.getUrl()
 
-    pactum.request.setBaseUrl(url.replace('[::1]', 'localhost'))
+    request.setBaseUrl(url.replace('[::1]', 'localhost'))
   })
 
   afterAll(async () => {
@@ -35,8 +35,7 @@ describe('AuthResolver (e2e)', () => {
   })
 
   it('hello (QUERY)', () => {
-    return pactum
-      .spec()
+    return spec()
       .post('/graphql')
       .withJson({
         operationName: HELLO_QUERY_NAME,

@@ -1,4 +1,6 @@
-const Configuration = {
+import type { Config } from 'jest'
+
+const configuration: Config = {
   moduleFileExtensions: ['js', 'json', 'ts'],
   rootDir: '.',
   testRegex: '.*\\.spec\\.ts$',
@@ -6,6 +8,11 @@ const Configuration = {
     '^.+\\.(t|j)s$': 'ts-jest',
   },
   collectCoverageFrom: ['**/*.(t|j)s'],
+  testPathIgnorePatterns: [
+    '<rootDir>/node_modules/',
+    '<rootDir>/dist/',
+    '<rootDir>/.stryker-tmp/',
+  ],
   moduleNameMapper: {
     '^~/(.*)$': '<rootDir>/$1',
     '^@lib/common(.*)$': '<rootDir>/libs/common/src/$1',
@@ -24,4 +31,4 @@ const Configuration = {
   roots: ['<rootDir>/apps', '<rootDir>/libs'],
 }
 
-export default Configuration
+export default configuration

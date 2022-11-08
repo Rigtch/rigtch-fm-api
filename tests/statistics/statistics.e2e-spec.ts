@@ -1,14 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { INestApplication } from '@nestjs/common'
-import * as pactum from 'pactum'
+import { request, spec } from 'pactum'
 
-import { StatisticsModule } from './../src/statistics.module'
+import { StatisticsEnvironment, StatisticsModule } from '@app/statistics'
 
 describe('StatisticsController (e2e)', () => {
   let app: INestApplication
   let url: string
 
+  process.env[StatisticsEnvironment.SPOTIFY_BASE_URL] = 'test'
+
   beforeEach(async () => {
+    // jest.resetModules()
+
+    process.env.SPOTIFY_BASE_URL = 'test'
+
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [StatisticsModule],
     }).compile()
@@ -18,7 +24,7 @@ describe('StatisticsController (e2e)', () => {
 
     url = await app.getUrl()
 
-    pactum.request.setBaseUrl(url.replace('[::1]', 'localhost'))
+    request.setBaseUrl(url.replace('[::1]', 'localhost'))
   })
 
   afterAll(async () => {
@@ -26,6 +32,6 @@ describe('StatisticsController (e2e)', () => {
   })
 
   it('/ (GET)', () => {
-    return pactum.spec().get('/').expectStatus(200).expectBody('Hello World!')
+    return spec().get('/').expectStatus(200).expectBody('Hello World!')
   })
 })
