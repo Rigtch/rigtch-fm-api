@@ -20,8 +20,8 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./apps/auth/test/jest-e2e.json",
-    "test:e2e:watch": "jest --config ./apps/auth/test/jest-e2e.json --watch",
+    "test:e2e": "jest --config jest-e2e.config.ts",
+    "test:e2e:watch": "jest --config jest-e2e.config.ts --watch",
     "stryker": "stryker run",
     "prepare": "husky install"
   },

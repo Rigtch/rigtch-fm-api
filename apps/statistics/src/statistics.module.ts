@@ -16,6 +16,7 @@ import { AuthModule, RmqModule, SpotifyModule } from '@lib/common'
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: './apps/statistics/.env',
       validationSchema: Joi.object({
         PORT: Joi.number().default(4000),
         SPOTIFY_BASE_URL: Joi.string().required(),
