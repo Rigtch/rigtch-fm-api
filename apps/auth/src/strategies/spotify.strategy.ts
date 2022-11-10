@@ -19,6 +19,9 @@ export class SpotifyStrategy extends PassportStrategy(Strategy, 'spotify') {
         scope: [
           'user-follow-read',
           'user-read-recently-played',
+          'user-modify-playback-state',
+          'user-read-playback-state',
+          'user-read-currently-playing',
           'user-read-playback-position',
           'user-top-read',
           'playlist-read-collaborative',
