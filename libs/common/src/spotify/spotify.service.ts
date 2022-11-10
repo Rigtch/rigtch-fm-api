@@ -7,6 +7,8 @@ import {
   SpotifyTrack,
   FormattedProfile,
   SpotifyProfile,
+  SpotifyDevice,
+  FormattedDevice,
 } from './types'
 
 @Injectable()
@@ -47,5 +49,27 @@ export class SpotifyService {
       uri,
       followers: followers.total,
     }
+  }
+
+  formatDevices(devices: SpotifyDevice[]): FormattedDevice[] {
+    return devices.map(
+      ({
+        id,
+        name,
+        type,
+        is_active: isActive,
+        is_private_session: isPrivateSession,
+        is_restricted: isRestricted,
+        volume_percent: volumePercent,
+      }) => ({
+        id,
+        name,
+        type,
+        isActive,
+        isPrivateSession,
+        isRestricted,
+        volumePercent,
+      })
+    )
   }
 }

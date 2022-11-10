@@ -1,5 +1,6 @@
 import { TestingModule, Test } from '@nestjs/testing'
 
+import { formattedDevicesMock } from './mocks/formatted-device.mock'
 import {
   formattedTracksMock,
   spotifyArtistsMock,
@@ -7,6 +8,7 @@ import {
   formattedArtistsMock,
   spotifyProfileMock,
   formattedProfileMock,
+  spotifyDevicesMock,
 } from './mocks'
 import { SpotifyService } from './spotify.service'
 
@@ -40,6 +42,12 @@ describe('AuthService', () => {
   it('should format profile', () => {
     expect(spotifyService.formatProfile(spotifyProfileMock)).toEqual(
       formattedProfileMock
+    )
+  })
+
+  it('should format devices', () => {
+    expect(spotifyService.formatDevices(spotifyDevicesMock)).toEqual(
+      formattedDevicesMock
     )
   })
 })
