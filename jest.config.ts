@@ -7,11 +7,13 @@ const configuration: Config = {
   transform: {
     '^.+\\.(t|j)s$': 'ts-jest',
   },
+  verbose: true,
   collectCoverageFrom: ['**/*.(t|j)s'],
   testPathIgnorePatterns: [
     '<rootDir>/node_modules/',
     '<rootDir>/dist/',
     '<rootDir>/.stryker-tmp/',
+    '.js',
   ],
   moduleNameMapper: {
     '^~/(.*)$': '<rootDir>/$1',
