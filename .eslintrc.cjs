@@ -25,6 +25,7 @@ module.exports = {
             ['@lib/utils', './libs/utils/src'],
             ['@app/auth', './apps/auth/src'],
             ['@app/statistics', './apps/statistics/src'],
+            ['@app/player', './apps/player/src'],
           ],
           extensions: ['.ts', '.js'],
         },
