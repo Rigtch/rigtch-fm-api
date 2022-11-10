@@ -2,10 +2,13 @@ import { HttpService } from '@nestjs/axios'
 import { TestingModule, Test } from '@nestjs/testing'
 import { of, firstValueFrom } from 'rxjs'
 
-import { formattedDevicesMock } from './../../../libs/common/src/spotify/mocks/formatted-device.mock'
 import { PlayerService } from './player.service'
 
-import { spotifyDevicesMock, SpotifyService } from '@lib/common'
+import {
+  formattedDevicesMock,
+  spotifyDevicesMock,
+  SpotifyService,
+} from '@lib/common'
 
 describe('PlayerService', () => {
   let playerService: PlayerService
@@ -20,6 +23,7 @@ describe('PlayerService', () => {
           provide: HttpService,
           useValue: {
             get: jest.fn(),
+            put: jest.fn().mockReturnValue(of('')),
           },
         },
       ],
@@ -45,5 +49,25 @@ describe('PlayerService', () => {
     expect(await firstValueFrom(playerService.avaibleDevices('awd'))).toEqual(
       formattedDevicesMock
     )
+  })
+
+  describe('pausePlayer', () => {
+    it('should pause player', async () => {
+      httpService.get = jest.fn().mockReturnValue(
+        of({
+          data: {
+            devices: spotifyDevicesMock,
+          },
+        })
+      )
+
+      expect(
+        await firstValueFrom(
+          await firstValueFrom(playerService.pausePlayer('awd'))
+        )
+      ).toEqual({
+        success: true,
+      })
+    })
   })
 })
