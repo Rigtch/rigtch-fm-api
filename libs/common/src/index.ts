@@ -1,3 +1,4 @@
+export * from './dtos'
 export * from './rmq'
 export * from './auth'
 export * from './services.enum'
