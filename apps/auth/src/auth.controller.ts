@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common'
 import { Response } from 'express'
 
-import { SpotifyAuthGuard } from './guards/spotify.guard'
+import { SpotifyAuthGuard } from './guards/spotify-auth.guard'
 import { AuthService } from './auth.service'
 import { SpotifyAuthRequest, SpotifyAuth } from './types'
 
