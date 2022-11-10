@@ -1,4 +1,5 @@
-import { UnauthorizedException } from '@nestjs/common'
+import { ExecutionContext, UnauthorizedException } from '@nestjs/common'
+import { createMock } from '@golevelup/ts-jest'
 
 import { AccessToken } from './access-token.decorator'
 
@@ -11,30 +12,50 @@ describe('AccessToken', () => {
     expect(AccessToken).toBeDefined()
   })
 
-  it('should return the access token', () => {
+  it('should return the access token from http context type', () => {
     const accessToken = 'test'
-    const context = {
-      switchToHttp: () => ({
-        getRequest: () => ({
-          headers: {
-            authorization: `Bearer ${accessToken}`,
-          },
-        }),
-      }),
-      getType: () => 'http',
-    }
 
-    expect(factory(undefined, context)).toEqual(accessToken)
+    expect(
+      factory(
+        undefined,
+        createMock<ExecutionContext>({
+          switchToHttp: () => ({
+            getRequest: () => ({
+              headers: {
+                authorization: `Bearer ${accessToken}`,
+              },
+            }),
+          }),
+          getType: () => 'http',
+        })
+      )
+    ).toEqual(accessToken)
   })
 
   it('should throw unauthorized exception if no access token is provided', () => {
-    const context = {
-      switchToHttp: () => ({
-        getRequest: () => ({}),
-      }),
-      getType: () => 'http',
-    }
+    expect(() =>
+      factory(
+        undefined,
+        createMock<ExecutionContext>({ getType: () => 'http' })
+      )
+    ).toThrow(UnauthorizedException)
+  })
 
-    expect(() => factory(undefined, context)).toThrow(UnauthorizedException)
+  it('should throw unauthorized exception when authentication type is wrong', () => {
+    expect(() =>
+      factory(
+        undefined,
+        createMock<ExecutionContext>({
+          switchToHttp: () => ({
+            getRequest: () => ({
+              headers: {
+                authorization: 'Basic test',
+              },
+            }),
+          }),
+          getType: () => 'http',
+        })
+      )
+    ).toThrow(UnauthorizedException)
   })
 })

@@ -20,7 +20,9 @@ export const RefreshToken = createParamDecorator(
         'No value was provided for Authentication'
       )
 
-    if (authorization?.slice(0, 5).toLowerCase() === 'basic')
-      return authorization?.slice(6)
+    if (authorization?.slice(0, 5).toLowerCase() !== 'basic')
+      throw new UnauthorizedException('Invalid Authentication Type')
+
+    return authorization?.slice(6)
   }
 )

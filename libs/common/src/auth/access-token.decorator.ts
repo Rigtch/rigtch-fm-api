@@ -20,7 +20,9 @@ export const AccessToken = createParamDecorator(
         'No value was provided for Authentication'
       )
 
-    if (authorization?.slice(0, 6).toLowerCase() === 'bearer')
-      return authorization?.slice(7)
+    if (authorization?.slice(0, 6).toLowerCase() !== 'bearer')
+      throw new UnauthorizedException('Invalid Authentication Type')
+
+    return authorization?.slice(7)
   }
 )

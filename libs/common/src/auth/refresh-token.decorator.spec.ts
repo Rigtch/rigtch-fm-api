@@ -1,4 +1,5 @@
-import { UnauthorizedException } from '@nestjs/common'
+import { createMock } from '@golevelup/ts-jest'
+import { ExecutionContext, UnauthorizedException } from '@nestjs/common'
 
 import { RefreshToken } from './refresh-token.decorator'
 
@@ -13,28 +14,48 @@ describe('RefreshToken', () => {
 
   it('should return the refresh token', () => {
     const refreshToken = 'test'
-    const context = {
-      switchToHttp: () => ({
-        getRequest: () => ({
-          headers: {
-            authorization: `Basic ${refreshToken}`,
-          },
-        }),
-      }),
-      getType: () => 'http',
-    }
 
-    expect(factory(undefined, context)).toEqual(refreshToken)
+    expect(
+      factory(
+        undefined,
+        createMock<ExecutionContext>({
+          switchToHttp: () => ({
+            getRequest: () => ({
+              headers: {
+                authorization: `Basic ${refreshToken}`,
+              },
+            }),
+          }),
+          getType: () => 'http',
+        })
+      )
+    ).toEqual(refreshToken)
   })
 
   it('should throw unauthorized exception if no refresh token is provided', () => {
-    const context = {
-      switchToHttp: () => ({
-        getRequest: () => ({}),
-      }),
-      getType: () => 'http',
-    }
+    expect(() =>
+      factory(
+        undefined,
+        createMock<ExecutionContext>({ getType: () => 'http' })
+      )
+    ).toThrow(UnauthorizedException)
+  })
 
-    expect(() => factory(undefined, context)).toThrow(UnauthorizedException)
+  it('should throw unauthorized exception when authentication type is wrong', () => {
+    expect(() =>
+      factory(
+        undefined,
+        createMock<ExecutionContext>({
+          switchToHttp: () => ({
+            getRequest: () => ({
+              headers: {
+                authorization: 'Bearer test',
+              },
+            }),
+          }),
+          getType: () => 'http',
+        })
+      )
+    ).toThrow(UnauthorizedException)
   })
 })
