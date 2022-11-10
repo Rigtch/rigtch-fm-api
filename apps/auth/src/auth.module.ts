@@ -10,7 +10,7 @@ import { AuthService } from './auth.service'
 import { AuthResolver } from './auth.resolver'
 import { Environment } from './config'
 import { AuthController } from './auth.controller'
-import { JwtStrategy, SpotifyStrategy } from './strategies'
+import { SpotifyStrategy } from './strategies'
 
 import { RmqModule, SpotifyModule } from '@lib/common'
 
@@ -67,7 +67,7 @@ import { RmqModule, SpotifyModule } from '@lib/common'
     RmqModule,
     SpotifyModule,
   ],
-  providers: [AuthService, AuthResolver, JwtStrategy, SpotifyStrategy],
+  providers: [AuthService, AuthResolver, SpotifyStrategy],
   controllers: [AuthController],
 })
 export class AuthModule {}
