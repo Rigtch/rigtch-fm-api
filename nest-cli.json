@@ -44,6 +44,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/utils/tsconfig.lib.json"
       }
+    },
+    "player": {
+      "type": "application",
+      "root": "apps/player",
+      "entryFile": "main",
+      "sourceRoot": "apps/player/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/player/tsconfig.app.json"
+      }
     }
   }
 }

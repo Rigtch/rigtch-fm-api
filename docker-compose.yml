@@ -32,6 +32,23 @@ services:
     ports:
       - 4001:4001
 
+  player:
+    build:
+      context: .
+      dockerfile: ./apps/player/Dockerfile
+      target: development
+    command: yarn start:dev player
+    env_file:
+      - ./apps/player/.env
+    depends_on:
+      - rabbitmq
+      - auth
+    volumes:
+      - .:/usr/src/app
+      - ./usr/src/app/node_modules
+    ports:
+      - 4002:4002
+
   rabbitmq:
     image: rabbitmq
     ports:
