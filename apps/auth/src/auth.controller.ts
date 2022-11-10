@@ -33,7 +33,6 @@ export class AuthController {
   ): Promise<Response<unknown, SpotifyAuth>> {
     const { user, authInfo } = request
 
-    console.log(user, authInfo)
     if (!user) throw new ForbiddenException('User not found')
 
     request.user = undefined
