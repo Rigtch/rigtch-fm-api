@@ -2,6 +2,7 @@ import { Args, Query, Resolver } from '@nestjs/graphql'
 import { firstValueFrom } from 'rxjs'
 
 import { StatisticsService } from './statistics.service'
+import { LimitArguments } from './dtos'
 
 import { Artist, Track, AccessToken } from '@lib/common'
 
@@ -12,7 +13,7 @@ export class StatisticsResolver {
   @Query(() => [Track])
   async lastTracks(
     @AccessToken() accessToken: string,
-    @Args('limit', { nullable: true }) limit?: number
+    @Args() { limit }: LimitArguments
   ) {
     return await firstValueFrom(
       this.statisticsService.lastTracks(accessToken, limit)
@@ -22,7 +23,7 @@ export class StatisticsResolver {
   @Query(() => [Track])
   async topTracks(
     @AccessToken() accessToken: string,
-    @Args('limit', { nullable: true }) limit?: number
+    @Args() { limit }: LimitArguments
   ) {
     return await firstValueFrom(
       this.statisticsService.topTracks(accessToken, limit)
@@ -32,7 +33,7 @@ export class StatisticsResolver {
   @Query(() => [Artist])
   async topArtists(
     @AccessToken() accessToken: string,
-    @Args('limit', { nullable: true }) limit?: number
+    @Args() { limit }: LimitArguments
   ) {
     return await firstValueFrom(
       this.statisticsService.topArtists(accessToken, limit)
