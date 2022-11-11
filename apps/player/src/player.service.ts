@@ -1,10 +1,18 @@
 import { HttpService } from '@nestjs/axios'
-import { BadRequestException, Injectable } from '@nestjs/common'
-import { catchError, map, Observable, tap, timer } from 'rxjs'
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common'
+import { catchError, exhaustMap, map, Observable, tap, timer } from 'rxjs'
+
+import { PlayerMessage } from './messages/index'
 
 import {
   FormattedDevice,
+  FormattedPlaybackState,
   SpotifyDevice,
+  SpotifyPlaybackState,
   SpotifyService,
   Success,
 } from '@lib/common'
@@ -26,7 +34,27 @@ export class PlayerService {
       })
       .pipe(
         map(response => response.data.devices),
+        tap(devices => {
+          if (devices.length <= 0)
+            throw new BadRequestException(PlayerMessage.NO_AVAIBLE_DEVICES)
+        }),
         map(this.spotifyService.formatDevices),
+        catchError(catchSpotifyError)
+      )
+  }
+
+  currentPlaybackState(
+    accessToken: string
+  ): Observable<FormattedPlaybackState> {
+    return this.httpService
+      .get<SpotifyPlaybackState>('/me/player', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+      .pipe(
+        map(response => response.data),
+        map(this.spotifyService.formatPlaybackState),
         catchError(catchSpotifyError)
       )
   }
@@ -34,36 +62,16 @@ export class PlayerService {
   pausePlayer(
     accessToken: string,
     afterTime = 0,
-    _deviceId?: string
-  ): Observable<Observable<Success>> {
-    let deviceId = _deviceId
-
-    if (!deviceId) {
-      this.avaibleDevices(accessToken).pipe(
-        tap(avaibleDevices => {
-          console.log(avaibleDevices)
-
-          if (avaibleDevices.length <= 0)
-            throw new BadRequestException('No device is avaible')
-
-          const activeDevice = avaibleDevices.find(({ isActive }) => !!isActive)
-
-          if (!activeDevice)
-            throw new BadRequestException('No device is currently playing')
-
-          deviceId = activeDevice.id
-        })
-      )
-    }
+    deviceId?: string
+  ): Observable<Success> {
+    const deviceIdQuery = `?device_id=${deviceId}`
 
     return timer(afterTime).pipe(
-      map(() => {
+      exhaustMap(() => {
         return this.httpService
           .put(
-            '/me/player/pause',
-            {
-              device_id: deviceId,
-            },
+            `/me/player/pause${deviceId ? deviceIdQuery : ''}`,
+            {},
             {
               headers: {
                 Authorization: `Bearer ${accessToken}`,
@@ -76,12 +84,38 @@ export class PlayerService {
             })),
             catchError(error => {
               if (error.response.data.error.status === 403)
-                throw new BadRequestException('No device is currently playing')
+                throw new ForbiddenException(PlayerMessage.NO_PLAYING_DEVICE)
 
               return catchSpotifyError(error)
             })
           )
       })
     )
+  }
+
+  resumePlayer(accessToken: string, deviceId?: string): Observable<Success> {
+    const deviceIdQuery = `?device_id=${deviceId}`
+
+    return this.httpService
+      .put(
+        `/me/player/play${deviceId ? deviceIdQuery : ''}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      )
+      .pipe(
+        map(() => ({
+          success: true,
+        })),
+        catchError(error => {
+          if (error.response.data.error.status === 403)
+            throw new ForbiddenException(PlayerMessage.DEVICE_ALREADY_PLAYING)
+
+          return catchSpotifyError(error)
+        })
+      )
   }
 }
