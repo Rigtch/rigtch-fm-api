@@ -9,6 +9,8 @@ import {
   spotifyProfileMock,
   formattedProfileMock,
   spotifyDevicesMock,
+  spotifyPlaybackStateMock,
+  formattedPlaybackStateMock,
 } from './mocks'
 import { SpotifyService } from './spotify.service'
 
@@ -49,5 +51,11 @@ describe('AuthService', () => {
     expect(spotifyService.formatDevices(spotifyDevicesMock)).toEqual(
       formattedDevicesMock
     )
+  })
+
+  it('should format playback state', () => {
+    expect(
+      spotifyService.formatPlaybackState(spotifyPlaybackStateMock)
+    ).toEqual(formattedPlaybackStateMock)
   })
 })

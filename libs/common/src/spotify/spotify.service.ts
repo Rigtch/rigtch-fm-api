@@ -9,6 +9,8 @@ import {
   SpotifyProfile,
   SpotifyDevice,
   FormattedDevice,
+  SpotifyPlaybackState,
+  FormattedPlaybackState,
 } from './types'
 
 @Injectable()
@@ -23,12 +25,16 @@ export class SpotifyService {
   }
 
   formatTracks(tracks: SpotifyTrack[]): FormattedTrack[] {
-    return tracks.map(({ name, album, artists, href }) => ({
-      name,
-      album: { name: album.name, images: album.images },
-      artists: artists.map(({ name }) => name),
-      href,
-    }))
+    return tracks.map(
+      ({ name, album, artists, href, duration_ms, progress_ms }) => ({
+        name,
+        album: { name: album.name, images: album.images },
+        artists: artists.map(({ name }) => name),
+        href,
+        duration: duration_ms,
+        ...(progress_ms && { progress: progress_ms }),
+      })
+    )
   }
 
   formatProfile({
@@ -71,5 +77,24 @@ export class SpotifyService {
         volumePercent,
       })
     )
+  }
+
+  formatPlaybackState = ({
+    device,
+    repeat_state,
+    shuffle_state,
+    is_playing,
+    item,
+  }: SpotifyPlaybackState): FormattedPlaybackState => {
+    const [formattedDevice] = this.formatDevices([device])
+    const [formattedTrack] = this.formatTracks([item])
+
+    return {
+      device: formattedDevice,
+      repeatState: repeat_state,
+      shuffleState: shuffle_state,
+      isPlaying: is_playing,
+      track: formattedTrack,
+    }
   }
 }
