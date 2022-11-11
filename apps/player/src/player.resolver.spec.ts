@@ -1,9 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { of } from 'rxjs'
 
-import { formattedDevicesMock } from './../../../libs/common/src/spotify/mocks/formatted-device.mock'
 import { PlayerResolver } from './player.resolver'
 import { PlayerService } from './player.service'
+
+import { formattedPlaybackStateMock, formattedDevicesMock } from '@lib/common'
 
 describe('PlayerResolver', () => {
   let playerResolver: PlayerResolver
@@ -41,13 +42,27 @@ describe('PlayerResolver', () => {
     )
   })
 
-  describe('pausePlayer', () => {
-    it('should pause player', async () => {
-      playerService.pausePlayer = jest
-        .fn()
-        .mockReturnValue(of({ success: true }))
+  it('should get currentPlaybackState', async () => {
+    playerService.currentPlaybackState = jest
+      .fn()
+      .mockReturnValue(of(formattedPlaybackStateMock))
 
-      expect(await playerResolver.pausePlayer('awd')).toEqual({ success: true })
-    })
+    expect(await playerResolver.currentPlaybackState('awd')).toEqual(
+      formattedPlaybackStateMock
+    )
+  })
+
+  it('should pause player', async () => {
+    playerService.pausePlayer = jest.fn().mockReturnValue(of({ success: true }))
+
+    expect(await playerResolver.pausePlayer('awd')).toEqual({ success: true })
+  })
+
+  it('should resume player', async () => {
+    playerService.resumePlayer = jest
+      .fn()
+      .mockReturnValue(of({ success: true }))
+
+    expect(await playerResolver.resumePlayer('awd')).toEqual({ success: true })
   })
 })
