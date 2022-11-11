@@ -13,7 +13,11 @@
 
 Rigtch Music is a web application that allows you to check your statistics that are always up to date.
 
-### Stack
+### Related repositories
+
+- [rigtch-music-website](https://github.com/Rigtch/rigtch-music-website)
+
+## Stack
 
 ![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white)
 ![Codecov](https://img.shields.io/badge/codecov-%23ff0077.svg?style=for-the-badge&logo=codecov&logoColor=white)
