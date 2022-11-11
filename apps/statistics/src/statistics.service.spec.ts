@@ -50,9 +50,9 @@ describe('StatisticsService', () => {
       })
     )
 
-    expect(
-      await firstValueFrom(statisticsService.getLastTracks('awd'))
-    ).toEqual(formattedTracksMock)
+    expect(await firstValueFrom(statisticsService.lastTracks('awd'))).toEqual(
+      formattedTracksMock
+    )
   })
 
   it('should get top artists', async () => {
@@ -64,9 +64,9 @@ describe('StatisticsService', () => {
       })
     )
 
-    expect(
-      await firstValueFrom(statisticsService.getTopArtists('awd'))
-    ).toEqual(formattedArtistsMock)
+    expect(await firstValueFrom(statisticsService.topArtists('awd'))).toEqual(
+      formattedArtistsMock
+    )
   })
 
   it('should get top tracks', async () => {
@@ -78,7 +78,7 @@ describe('StatisticsService', () => {
       })
     )
 
-    expect(await firstValueFrom(statisticsService.getTopTracks('awd'))).toEqual(
+    expect(await firstValueFrom(statisticsService.topTracks('awd'))).toEqual(
       formattedTracksMock
     )
   })

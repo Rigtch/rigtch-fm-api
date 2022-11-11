@@ -43,11 +43,11 @@ describe('StatisticsResolver', () => {
 
   describe('TopTracks', () => {
     it('should query last tracks', async () => {
-      statisticsService.getLastTracks = jest
+      statisticsService.lastTracks = jest
         .fn()
         .mockReturnValue(of(formattedTracksMock))
 
-      expect(await statisticsResolver.getLastTracks('awd')).toEqual(
+      expect(await statisticsResolver.lastTracks('awd')).toEqual(
         formattedTracksMock
       )
     })
@@ -55,13 +55,13 @@ describe('StatisticsResolver', () => {
     it('should query last tracks with limit argument', async () => {
       const limit = 20
 
-      statisticsService.getLastTracks = jest
+      statisticsService.lastTracks = jest
         .fn()
         .mockImplementation((accessToken, limit) =>
           of(mockArrayFactory(formattedTrackMock, limit))
         )
 
-      const result = await statisticsResolver.getLastTracks('awd', limit)
+      const result = await statisticsResolver.lastTracks('awd', limit)
 
       expect(result.length).toEqual(limit)
     })
@@ -69,11 +69,11 @@ describe('StatisticsResolver', () => {
 
   describe('topArtists', () => {
     it('should query top artists', async () => {
-      statisticsService.getTopArtists = jest
+      statisticsService.topArtists = jest
         .fn()
         .mockReturnValue(of(formattedArtistsMock))
 
-      expect(await statisticsResolver.getTopArtists('awd')).toEqual(
+      expect(await statisticsResolver.topArtists('awd')).toEqual(
         formattedArtistsMock
       )
     })
@@ -81,13 +81,13 @@ describe('StatisticsResolver', () => {
     it('should query top artists with limit argument', async () => {
       const limit = 20
 
-      statisticsService.getTopTracks = jest
+      statisticsService.topTracks = jest
         .fn()
         .mockImplementation((accessToken, limit) =>
           of(mockArrayFactory(formattedArtistMock, limit))
         )
 
-      const result = await statisticsResolver.getTopTracks('awd', limit)
+      const result = await statisticsResolver.topTracks('awd', limit)
 
       expect(result.length).toEqual(limit)
     })
@@ -95,11 +95,11 @@ describe('StatisticsResolver', () => {
 
   describe('topTracks', () => {
     it('should query top tracks', async () => {
-      statisticsService.getTopTracks = jest
+      statisticsService.topTracks = jest
         .fn()
         .mockReturnValue(of(formattedTracksMock))
 
-      expect(await statisticsResolver.getTopTracks('awd')).toEqual(
+      expect(await statisticsResolver.topTracks('awd')).toEqual(
         formattedTracksMock
       )
     })
@@ -107,13 +107,13 @@ describe('StatisticsResolver', () => {
     it('should query top tracks with limit argument', async () => {
       const limit = 20
 
-      statisticsService.getTopTracks = jest
+      statisticsService.topTracks = jest
         .fn()
         .mockImplementation((accessToken, limit) =>
           of(mockArrayFactory(formattedTrackMock, limit))
         )
 
-      const result = await statisticsResolver.getTopTracks('awd', limit)
+      const result = await statisticsResolver.topTracks('awd', limit)
 
       expect(result.length).toEqual(limit)
     })

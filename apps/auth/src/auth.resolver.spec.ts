@@ -54,7 +54,7 @@ describe('AuthResolver', () => {
   it('should get profile', async () => {
     authService.profile = jest.fn().mockReturnValueOnce(of(refreshResponse))
 
-    expect(await authResolver.getProfile(refreshToken)).toEqual({
+    expect(await authResolver.profile(refreshToken)).toEqual({
       accessToken,
       refreshToken,
       expiresIn,

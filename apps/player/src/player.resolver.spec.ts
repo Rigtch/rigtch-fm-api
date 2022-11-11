@@ -36,7 +36,7 @@ describe('PlayerResolver', () => {
       .fn()
       .mockReturnValue(of(formattedDevicesMock))
 
-    expect(await playerResolver.getAvaibleDevices('awd')).toEqual(
+    expect(await playerResolver.avaibleDevices('awd')).toEqual(
       formattedDevicesMock
     )
   })

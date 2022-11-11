@@ -10,33 +10,33 @@ import { AccessToken } from '@lib/common'
 export class StatisticsResolver {
   constructor(private readonly statisticsService: StatisticsService) {}
 
-  @Query(() => [Track], { name: 'lastTracks' })
-  async getLastTracks(
+  @Query(() => [Track])
+  async lastTracks(
     @AccessToken() accessToken: string,
     @Args('limit', { nullable: true }) limit?: number
   ) {
     return await firstValueFrom(
-      this.statisticsService.getLastTracks(accessToken, limit)
+      this.statisticsService.lastTracks(accessToken, limit)
     )
   }
 
-  @Query(() => [Track], { name: 'topTracks' })
-  async getTopTracks(
+  @Query(() => [Track])
+  async topTracks(
     @AccessToken() accessToken: string,
     @Args('limit', { nullable: true }) limit?: number
   ) {
     return await firstValueFrom(
-      this.statisticsService.getTopTracks(accessToken, limit)
+      this.statisticsService.topTracks(accessToken, limit)
     )
   }
 
-  @Query(() => [Track], { name: 'topArtists' })
-  async getTopArtists(
+  @Query(() => [Track])
+  async topArtists(
     @AccessToken() accessToken: string,
     @Args('limit', { nullable: true }) limit?: number
   ) {
     return await firstValueFrom(
-      this.statisticsService.getTopArtists(accessToken, limit)
+      this.statisticsService.topArtists(accessToken, limit)
     )
   }
 }
