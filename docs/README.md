@@ -116,7 +116,7 @@ Returns:
 
 `SpotifyAuth`
 
-### GraphQL Queries
+#### GraphQL Queries
 
 - refresh
 
