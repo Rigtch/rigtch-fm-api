@@ -17,4 +17,10 @@ export abstract class Track implements FormattedTrack {
 
   @Field(() => Album)
   album: Album
+
+  @Field(() => Number)
+  duration: number
+
+  @Field(() => Number, { nullable: true })
+  progress?: number
 }
