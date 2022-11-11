@@ -29,6 +29,7 @@ const configuration: Config = {
     'index.ts',
     'main.ts',
   ],
+  coverageReporters: ['clover', 'json', 'lcov'],
   coverageDirectory: './coverage',
   testEnvironment: 'node',
   roots: ['<rootDir>/apps', '<rootDir>/libs'],
