@@ -23,13 +23,13 @@ export class AuthResolver {
     }
   }
 
-  @Query(() => RefreshResponse, { name: 'refresh' })
+  @Query(() => RefreshResponse)
   async refresh(@RefreshToken() refreshToken: string) {
     return await firstValueFrom(this.authService.refresh(refreshToken))
   }
 
-  @Query(() => ProfileDto, { name: 'profile' })
-  async getProfile(@AccessToken() accessToken: string) {
+  @Query(() => ProfileDto)
+  async profile(@AccessToken() accessToken: string) {
     return await firstValueFrom(this.authService.profile(accessToken))
   }
 }

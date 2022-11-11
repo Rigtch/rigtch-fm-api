@@ -10,12 +10,12 @@ import { AccessToken, Success } from '@lib/common'
 export class PlayerResolver {
   constructor(private readonly playerService: PlayerService) {}
 
-  @Query(() => [Device], { name: 'avaibleDevices' })
-  async getAvaibleDevices(@AccessToken() accessToken: string) {
+  @Query(() => [Device])
+  async avaibleDevices(@AccessToken() accessToken: string) {
     return await firstValueFrom(this.playerService.avaibleDevices(accessToken))
   }
 
-  @Query(() => Success, { name: 'pausePlayer' })
+  @Query(() => Success)
   async pausePlayer(
     @AccessToken() accessToken: string,
     @Args('afterTime', { nullable: true }) afterTime?: number,
