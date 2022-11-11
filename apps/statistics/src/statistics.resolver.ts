@@ -1,7 +1,7 @@
 import { Args, Query, Resolver } from '@nestjs/graphql'
 import { firstValueFrom } from 'rxjs'
 
-import { Track } from './dtos'
+import { Artist, Track } from './dtos'
 import { StatisticsService } from './statistics.service'
 
 import { AccessToken } from '@lib/common'
@@ -30,7 +30,7 @@ export class StatisticsResolver {
     )
   }
 
-  @Query(() => [Track])
+  @Query(() => [Artist])
   async topArtists(
     @AccessToken() accessToken: string,
     @Args('limit', { nullable: true }) limit?: number
