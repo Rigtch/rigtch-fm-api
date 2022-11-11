@@ -97,7 +97,7 @@ export const spotifyTrackMock: SpotifyTrack = {
     'BI',
   ],
   disc_number: 1,
-  duration_ms: 432_600,
+  duration_ms: 1000,
   explicit: false,
   external_ids: {
     isrc: 'NOBIP1701070',

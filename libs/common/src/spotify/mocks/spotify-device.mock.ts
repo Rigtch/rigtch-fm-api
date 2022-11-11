@@ -1,6 +1,6 @@
 import { SpotifyDevice } from '../types'
 
-const spotifyDeviceMock: SpotifyDevice = {
+export const spotifyDeviceMock: SpotifyDevice = {
   id: 'id',
   is_active: true,
   is_private_session: false,

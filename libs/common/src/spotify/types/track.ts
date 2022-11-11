@@ -5,6 +5,8 @@ export interface FormattedTrack {
   album: { name: string; images: SpotifyImage[] }
   artists: string[]
   href: string
+  duration: number
+  progress?: number
 }
 
 export interface SpotifyTrack {
@@ -15,6 +17,7 @@ export interface SpotifyTrack {
   available_markets: string[]
   disc_number: number
   duration_ms: number
+  progress_ms?: number
   explicit: boolean
   external_urls: { spotify: string }
   external_ids: { isrc: string }

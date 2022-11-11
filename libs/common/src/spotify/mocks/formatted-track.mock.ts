@@ -23,6 +23,7 @@ export const formattedTrackMock: FormattedTrack = {
   },
   artists: ['Biosphere'],
   name: 'Kobresia',
+  duration: 1000,
   href: 'https://api.spotify.com/v1/tracks/5O6MFTh1rd9PeN8XEn1yCS',
 }
 
