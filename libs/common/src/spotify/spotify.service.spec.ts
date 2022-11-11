@@ -1,6 +1,5 @@
 import { TestingModule, Test } from '@nestjs/testing'
 
-import { formattedDevicesMock } from './mocks/formatted-device.mock'
 import {
   formattedTracksMock,
   spotifyArtistsMock,
@@ -11,6 +10,7 @@ import {
   spotifyDevicesMock,
   spotifyPlaybackStateMock,
   formattedPlaybackStateMock,
+  formattedDevicesMock,
 } from './mocks'
 import { SpotifyService } from './spotify.service'
 
