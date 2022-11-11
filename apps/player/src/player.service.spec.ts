@@ -13,6 +13,16 @@ import {
   SpotifyService,
 } from '@lib/common'
 
+const forbiddenExceptionObserver = throwError(() => ({
+  response: {
+    data: {
+      error: {
+        status: 403,
+      },
+    },
+  },
+}))
+
 describe('PlayerService', () => {
   let playerService: PlayerService
   let httpService: HttpService
@@ -74,17 +84,7 @@ describe('PlayerService', () => {
     })
 
     it('should throw Forbidden expception because No device is currently playing', async () => {
-      httpService.put = jest.fn().mockReturnValue(
-        throwError(() => ({
-          response: {
-            data: {
-              error: {
-                status: 403,
-              },
-            },
-          },
-        }))
-      )
+      httpService.put = jest.fn().mockReturnValue(forbiddenExceptionObserver)
 
       expect(
         await firstValueFrom(
@@ -102,17 +102,7 @@ describe('PlayerService', () => {
     })
 
     it('should throw Forbidden expception because No device is currently playing', async () => {
-      httpService.put = jest.fn().mockReturnValue(
-        throwError(() => ({
-          response: {
-            data: {
-              error: {
-                status: 403,
-              },
-            },
-          },
-        }))
-      )
+      httpService.put = jest.fn().mockReturnValue(forbiddenExceptionObserver)
 
       expect(
         await firstValueFrom(
