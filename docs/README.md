@@ -186,6 +186,14 @@ Returns:
 
 `Device[]`
 
+- `currentPlayback`
+
+Requires Authentication Bearer as authorization header.
+
+Returns:
+
+`Playback`
+
 - `pausePlayer`
 
 Requires Authentication Bearer as authorization header.
@@ -196,7 +204,20 @@ Accepts:
 [type: `Float`, default: `0`]
 
 `deviceId` - id of device to pause
-[type: `String`, default: `undefined` but auto getting currently playing device)]
+[type: `String`, default: `currentDevice`)]
+
+Returns:
+
+`Success`
+
+- `playPlayer`
+
+Requires Authentication Bearer as authorization header.
+
+Accepts:
+
+`deviceId` - id of device to pause
+[type: `String`, default: `currentDevice`)]
 
 Returns:
 
@@ -259,6 +280,8 @@ type Track {
   href: String!
   artists: [String!]!
   album: Album!
+  duration: Float!
+  progress: Float
 }
 ```
 
@@ -304,6 +327,18 @@ type Device {
   isPrivateSession: Boolean!
   isRestricted: Boolean!
   volumePercent: Float!
+}
+```
+
+- `PlaybackState`
+
+```graphql
+type PlaybackState {
+  device: Device!
+  repeatState: String!
+  shuffleState: String!
+  isPlaying: Boolean!
+  track: Track!
 }
 ```
 
