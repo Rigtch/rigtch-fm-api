@@ -25,9 +25,9 @@ describe('StatisticsResolver', () => {
         {
           provide: StatisticsService,
           useValue: {
-            getLastTracks: jest.fn(),
-            getTopArtists: jest.fn(),
-            getTopTracks: jest.fn(),
+            lastTracks: jest.fn(),
+            topArtists: jest.fn(),
+            topTracks: jest.fn(),
           },
         },
       ],
@@ -47,7 +47,7 @@ describe('StatisticsResolver', () => {
         .fn()
         .mockReturnValue(of(formattedTracksMock))
 
-      expect(await statisticsResolver.lastTracks('awd')).toEqual(
+      expect(await statisticsResolver.lastTracks('awd', {})).toEqual(
         formattedTracksMock
       )
     })
@@ -61,7 +61,7 @@ describe('StatisticsResolver', () => {
           of(mockArrayFactory(formattedTrackMock, limit))
         )
 
-      const result = await statisticsResolver.lastTracks('awd', limit)
+      const result = await statisticsResolver.lastTracks('awd', { limit })
 
       expect(result.length).toEqual(limit)
     })
@@ -73,7 +73,7 @@ describe('StatisticsResolver', () => {
         .fn()
         .mockReturnValue(of(formattedArtistsMock))
 
-      expect(await statisticsResolver.topArtists('awd')).toEqual(
+      expect(await statisticsResolver.topArtists('awd', {})).toEqual(
         formattedArtistsMock
       )
     })
@@ -87,7 +87,7 @@ describe('StatisticsResolver', () => {
           of(mockArrayFactory(formattedArtistMock, limit))
         )
 
-      const result = await statisticsResolver.topTracks('awd', limit)
+      const result = await statisticsResolver.topTracks('awd', { limit })
 
       expect(result.length).toEqual(limit)
     })
@@ -99,7 +99,7 @@ describe('StatisticsResolver', () => {
         .fn()
         .mockReturnValue(of(formattedTracksMock))
 
-      expect(await statisticsResolver.topTracks('awd')).toEqual(
+      expect(await statisticsResolver.topTracks('awd', {})).toEqual(
         formattedTracksMock
       )
     })
@@ -113,7 +113,7 @@ describe('StatisticsResolver', () => {
           of(mockArrayFactory(formattedTrackMock, limit))
         )
 
-      const result = await statisticsResolver.topTracks('awd', limit)
+      const result = await statisticsResolver.topTracks('awd', { limit })
 
       expect(result.length).toEqual(limit)
     })
