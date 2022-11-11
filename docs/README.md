@@ -118,7 +118,7 @@ Returns:
 
 #### GraphQL Queries
 
-- refresh
+- `refresh`
 
 Requires Authentication Basic as authorization header.
 
@@ -126,7 +126,7 @@ Returns:
 
 `RefreshResponse`
 
-- profile
+- `profile`
 
 Requires Authentication Bearer as authorization header.
 
@@ -138,7 +138,7 @@ Returns:
 
 #### GraphQL Queries
 
-- lastTracks
+- `lastTracks`
 
 Requires Authentication Bearer as authorization header.
 
@@ -150,7 +150,7 @@ Returns:
 
 `Track[]`
 
-- topTracks
+- `topTracks`
 
 Requires Authentication Bearer as authorization header.
 
@@ -162,7 +162,7 @@ Returns:
 
 `Track[]`
 
-- topArtists
+- `topArtists`
 
 Requires Authentication Bearer as authorization header.
 
@@ -178,7 +178,7 @@ Returns:
 
 #### GraphQL Queries
 
-- avaibleDevices
+- `avaibleDevices`
 
 Requires Authentication Bearer as authorization header.
 
@@ -186,7 +186,7 @@ Returns:
 
 `Device[]`
 
-- pausePlayer
+- `pausePlayer`
 
 Requires Authentication Bearer as authorization header.
 
