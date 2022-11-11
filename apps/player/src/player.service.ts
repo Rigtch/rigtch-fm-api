@@ -1,9 +1,5 @@
 import { HttpService } from '@nestjs/axios'
-import {
-  BadRequestException,
-  ForbiddenException,
-  Injectable,
-} from '@nestjs/common'
+import { ForbiddenException, Injectable } from '@nestjs/common'
 import { catchError, exhaustMap, map, Observable, tap, timer } from 'rxjs'
 
 import { PlayerMessage } from './messages/index'
@@ -36,7 +32,7 @@ export class PlayerService {
         map(response => response.data.devices),
         tap(devices => {
           if (devices.length <= 0)
-            throw new BadRequestException(PlayerMessage.NO_AVAIBLE_DEVICES)
+            throw new ForbiddenException(PlayerMessage.NO_AVAIBLE_DEVICES)
         }),
         map(this.spotifyService.formatDevices),
         catchError(catchSpotifyError)
