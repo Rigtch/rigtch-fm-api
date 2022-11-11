@@ -1,10 +1,9 @@
 import { Args, Query, Resolver } from '@nestjs/graphql'
 import { firstValueFrom } from 'rxjs'
 
-import { Artist, Track } from './dtos'
 import { StatisticsService } from './statistics.service'
 
-import { AccessToken } from '@lib/common'
+import { Artist, Track, AccessToken } from '@lib/common'
 
 @Resolver()
 export class StatisticsResolver {

@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { of } from 'rxjs'
 
-import { formattedArtistMock } from './../../../libs/common/src/spotify/mocks/formatted-artist.mock'
 import { StatisticsService } from './statistics.service'
 import { StatisticsResolver } from './statistics.resolver'
 
 import {
+  formattedArtistMock,
   formattedArtistsMock,
   formattedTrackMock,
   formattedTracksMock,
