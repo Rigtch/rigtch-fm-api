@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core'
 import { ConfigService } from '@nestjs/config'
 import { RmqOptions } from '@nestjs/microservices'
+import { ValidationPipe } from '@nestjs/common'
 
 import { StatisticsModule } from './statistics.module'
 import { Environment } from './config'
@@ -12,6 +13,7 @@ const configService = app.get(ConfigService)
 const rmqService = app.get(RmqService)
 
 app.enableCors()
+app.useGlobalPipes(new ValidationPipe())
 app.connectMicroservice<RmqOptions>(
   rmqService.getOptions(Service.STATISTICS, true)
 )
