@@ -10,9 +10,10 @@ import {
 } from '@nestjs/common'
 import { Response } from 'express'
 
-import { SpotifyAuthGuard } from './guards/spotify-auth.guard'
+import { SpotifyAuthGuard } from './guards'
 import { AuthService } from './auth.service'
-import { SpotifyAuthRequest, SpotifyAuth } from './types'
+import { SpotifyAuth } from './dtos'
+import { SpotifyAuthRequest } from './types'
 
 @Controller('auth/spotify')
 export class AuthController {

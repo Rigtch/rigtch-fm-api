@@ -107,7 +107,7 @@ jobs:
         run: yarn test:coverage --ci --maxWorkers=2 --detectOpenHandles
 
       - name: Run e2e tests
-        run: yarn test:e2e
+        run: yarn test:e2e --ci --maxWorkers=2 --detectOpenHandles
         env:
           SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
           SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
