@@ -4,6 +4,10 @@ services:
     env: docker
     dockerfilePath: ./apps/statistics/Dockerfile
     pullRequestPreviewsEnabled: true
+    buildFilter:
+      ignoredPaths:
+        - apps/player
+        - apps/auth
     envVars:
       - key: NODE_ENV
         value: production
@@ -14,6 +18,10 @@ services:
     env: docker
     dockerfilePath: ./apps/auth/Dockerfile
     pullRequestPreviewsEnabled: true
+    buildFilter:
+      ignoredPaths:
+        - apps/player
+        - apps/statistics
     envVars:
       - key: NODE_ENV
         value: production
@@ -26,6 +34,10 @@ services:
     env: docker
     dockerfilePath: ./apps/player/Dockerfile
     pullRequestPreviewsEnabled: true
+    buildFilter:
+      ignoredPaths:
+        - apps/statistics
+        - apps/auth
     envVars:
       - key: NODE_ENV
         value: production
