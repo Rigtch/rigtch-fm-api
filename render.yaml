@@ -8,6 +8,7 @@ services:
       - key: NODE_ENV
         value: production
         previewValue: development
+
   - type: web
     name: rigtch-music-auth
     env: docker
@@ -17,6 +18,9 @@ services:
       - key: NODE_ENV
         value: production
         previewValue: development
+      - key: JWT_SECRET
+        generateValue: true
+
   - type: web
     name: rigtch-music-player
     env: docker
