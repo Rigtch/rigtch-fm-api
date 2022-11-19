@@ -19,6 +19,7 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 
+RUN npm pkg delete scripts.prepare
 RUN npm install --only=production
 
 COPY . .
