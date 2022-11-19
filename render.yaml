@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: rigtch-music-statistics
+    env: docker
+    dockerfilePath: ./apps/statistics/Dockerfile
+    pullRequestPreviewsEnabled: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+        previewValue: development
+  - type: web
+    name: rigtch-music-auth
+    env: docker
+    dockerfilePath: ./apps/auth/Dockerfile
+    pullRequestPreviewsEnabled: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+        previewValue: development
+  - type: web
+    name: rigtch-music-player
+    env: docker
+    dockerfilePath: ./apps/player/Dockerfile
+    pullRequestPreviewsEnabled: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+        previewValue: development
