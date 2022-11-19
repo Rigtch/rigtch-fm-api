@@ -39,6 +39,7 @@ import { AuthModule, SpotifyModule } from '@lib/common'
           origin: true,
         },
       }),
+      inject: [ConfigService],
     }),
     HttpModule.registerAsync({
       useFactory: (configService: ConfigService) => ({

@@ -12,24 +12,28 @@ import { Environment } from './config'
 import { AuthController } from './auth.controller'
 import { SpotifyStrategy } from './strategies'
 
-import { RmqModule, SpotifyModule } from '@lib/common'
+import { SpotifyModule } from '@lib/common'
 
 @Module({
   imports: [
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
-      useFactory: () => ({
+      useFactory: (configService: ConfigService) => ({
         autoSchemaFile: true,
-        playground: {
-          settings: {
-            'request.credentials': 'include',
-          },
-        },
+        playground:
+          configService.get(Environment.NODE_ENV) === 'production'
+            ? false
+            : {
+                settings: {
+                  'request.credentials': 'include',
+                },
+              },
         cors: {
           credentials: true,
           origin: true,
         },
       }),
+      inject: [ConfigService],
     }),
     ConfigModule.forRoot({
       isGlobal: true,
@@ -64,7 +68,6 @@ import { RmqModule, SpotifyModule } from '@lib/common'
       },
       inject: [ConfigService],
     }),
-    RmqModule,
     SpotifyModule,
   ],
   providers: [AuthService, AuthResolver, SpotifyStrategy],
