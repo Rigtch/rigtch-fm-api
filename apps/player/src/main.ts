@@ -7,5 +7,7 @@ import { Environment } from './config'
 const app = await NestFactory.create(PlayerModule)
 const configService = app.get(ConfigService)
 
+app.enableCors()
+
 await app.startAllMicroservices()
 await app.listen(+configService.get(Environment.PORT) || 4002)
