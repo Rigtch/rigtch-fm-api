@@ -11,11 +11,18 @@
 
 ## Description
 
-Rigtch Music is a web application that allows you to check your statistics that are always up to date.
+Rigtch Music is a web application that allows you to check your statistics that
+are always up to date.
+
+## Deployment
+
+- [Statistics](https://rigtch-music-statistics.onrender.com)
+- [Auth](https://rigtch-music-auth.onrender.com)
+- [Player](https://rigtch-music-player.onrender.com)
 
 ### Related repositories
 
-- [rigtch-music-website](https://github.com/Rigtch/rigtch-music-website)
+- [rigtch-music-www](https://github.com/Rigtch/rigtch-music-www)
 
 ## Stack
 
