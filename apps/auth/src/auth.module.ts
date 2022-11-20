@@ -28,6 +28,7 @@ import { SpotifyModule } from '@lib/common'
                   'request.credentials': 'include',
                 },
               },
+        introspection: true,
         cors: {
           credentials: true,
           origin: true,
