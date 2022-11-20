@@ -50,6 +50,10 @@ describe('AuthController', () => {
     expect(authController).toBeDefined()
   })
 
+  it('login should return undefined', () => {
+    expect(authController.login()).toBeUndefined()
+  })
+
   describe('callback', () => {
     it('should return valid redirect path', async () => {
       expect(await authController.callback(request, response)).toEqual({
