@@ -43,7 +43,7 @@ export class SpotifyService {
     email,
     images,
     country,
-    uri,
+    external_urls: { spotify: href },
     followers,
   }: SpotifyProfile): FormattedProfile {
     return {
@@ -52,7 +52,7 @@ export class SpotifyService {
       email,
       images,
       country,
-      uri,
+      href,
       followers: followers.total,
     }
   }
