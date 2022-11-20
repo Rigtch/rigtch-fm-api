@@ -38,7 +38,7 @@ describe('AuthResolver', () => {
   })
 
   it('should be defined', () => {
-    expect(authService).toBeDefined()
+    expect(authResolver).toBeDefined()
   })
 
   it('should refresh', async () => {
