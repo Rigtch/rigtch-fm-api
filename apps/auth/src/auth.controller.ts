@@ -2,22 +2,27 @@ import {
   Controller,
   ForbiddenException,
   Get,
-  HttpCode,
   HttpStatus,
+  Redirect,
   Req,
   Res,
   UseGuards,
 } from '@nestjs/common'
 import { Response } from 'express'
+import { ConfigService } from '@nestjs/config'
+import { stringify } from 'query-string'
 
 import { SpotifyAuthGuard } from './guards'
 import { AuthService } from './auth.service'
-import { SpotifyAuth } from './dtos'
-import { SpotifyAuthRequest } from './types'
+import { RedirectResponse, SpotifyAuthRequest } from './types'
+import { Environment } from './config'
 
 @Controller('auth/spotify')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly configService: ConfigService
+  ) {}
 
   @Get('login')
   @UseGuards(SpotifyAuthGuard)
@@ -27,21 +32,30 @@ export class AuthController {
 
   @Get('callback')
   @UseGuards(SpotifyAuthGuard)
-  @HttpCode(HttpStatus.CREATED)
+  @Redirect()
   async callback(
     @Req() request: SpotifyAuthRequest,
     @Res() response: Response
-  ): Promise<Response<unknown, SpotifyAuth>> {
-    const { user, authInfo } = request
+  ): Promise<RedirectResponse> {
+    const {
+      user,
+      authInfo: { accessToken, refreshToken },
+    } = request
 
     if (!user) throw new ForbiddenException('User not found')
-
-    request.user = undefined
 
     const jwt = this.authService.login(user)
 
     response.set('Authorization', `Bearer ${jwt}`)
 
-    return response.json({ authInfo, user }) as Response<unknown, SpotifyAuth>
+    return {
+      url: `${this.configService.get(Environment.CLIENT_URL)}/about?${stringify(
+        {
+          accessToken,
+          refreshToken,
+        }
+      )}`,
+      statusCode: HttpStatus.PERMANENT_REDIRECT,
+    }
   }
 }

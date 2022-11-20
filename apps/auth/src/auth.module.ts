@@ -45,6 +45,7 @@ import { SpotifyModule } from '@lib/common'
         SPOTIFY_CALLBACK_URL: Joi.string().required(),
         SPOTIFY_BASE_URL: Joi.string().required(),
         SPOTIFY_ACCOUNTS_URL: Joi.string().required(),
+        CLIENT_URL: Joi.string().required(),
         JWT_SECRET: Joi.string().required(),
       }),
     }),
