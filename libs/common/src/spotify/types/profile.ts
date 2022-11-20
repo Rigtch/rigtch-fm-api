@@ -7,7 +7,7 @@ export interface FormattedProfile {
   followers: number
   country?: string
   email?: string
-  uri: string
+  href: string
 }
 
 export interface SpotifyProfile {

@@ -23,5 +23,5 @@ export abstract class ProfileDto implements FormattedProfile {
   email?: string
 
   @Field(() => String)
-  uri: string
+  href: string
 }
