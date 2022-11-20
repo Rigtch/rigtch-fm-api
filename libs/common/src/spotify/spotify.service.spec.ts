@@ -35,10 +35,20 @@ describe('AuthService', () => {
     )
   })
 
-  it('should format tracks', () => {
-    expect(spotifyService.formatTracks(spotifyTracksMock)).toEqual(
-      formattedTracksMock
-    )
+  describe('formatTracks', () => {
+    it('should format tracks', () => {
+      expect(spotifyService.formatTracks(spotifyTracksMock)).toEqual(
+        formattedTracksMock
+      )
+    })
+
+    it('should format tracks without duration', () => {
+      expect(
+        spotifyService.formatTracks(
+          spotifyTracksMock.map(({ progress_ms, ...rest }) => rest)
+        )
+      ).toEqual(formattedTracksMock.map(({ progress, ...rest }) => rest))
+    })
   })
 
   it('should format profile', () => {
