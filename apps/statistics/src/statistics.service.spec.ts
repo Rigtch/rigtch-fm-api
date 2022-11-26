@@ -45,6 +45,7 @@ describe('StatisticsService', () => {
         data: {
           items: Array.from({ length: 5 }).map(() => ({
             track: spotifyTrackMock,
+            played_at: '2022-11-26T11:01:10.040Z',
           })),
         },
       })

@@ -115,6 +115,7 @@ export const spotifyTrackMock: SpotifyTrack = {
   track_number: 7,
   type: 'track',
   uri: 'spotify:track:5O6MFTh1rd9PeN8XEn1yCS',
+  played_at: '2022-11-26T11:01:10.040Z',
 }
 
 export const spotifyTracksMock = Array.from({ length: 5 }).map(
@@ -146,6 +147,7 @@ export const formattedTrackMock: FormattedTrack = {
   name: 'Kobresia',
   duration: 1000,
   href: 'https://api.spotify.com/v1/tracks/5O6MFTh1rd9PeN8XEn1yCS',
+  playedAt: '2022-11-26T11:01:10.040Z',
 }
 
 export const formattedTracksMock = Array.from({ length: 5 }).map(

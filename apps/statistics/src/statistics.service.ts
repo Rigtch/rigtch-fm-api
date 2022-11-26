@@ -25,8 +25,8 @@ export class StatisticsService {
 
   lastTracks(accessToken: string, limit = 20): Observable<FormattedTrack[]> {
     return this.httpService
-      .get<SpotifyResponse<{ track: SpotifyTrack }>>(
-        `/me/player/recently-played?limit=${limit}&after=604800000`,
+      .get<SpotifyResponse<{ track: SpotifyTrack; played_at: string }>>(
+        `/me/player/recently-played?limit=${limit}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -35,7 +35,12 @@ export class StatisticsService {
       )
       .pipe(
         map(response => response.data.items),
-        map(items => items.map(item => item.track)),
+        map(items =>
+          items.map(({ track, played_at }) => ({
+            ...track,
+            played_at,
+          }))
+        ),
         map(this.spotifyService.formatTracks),
         catchError(catchSpotifyError)
       )
@@ -43,11 +48,14 @@ export class StatisticsService {
 
   topArtists(accessToken: string, limit = 10): Observable<FormattedArtist[]> {
     return this.httpService
-      .get<SpotifyResponse<SpotifyArtist>>(`/me/top/artists?limit=${limit}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
+      .get<SpotifyResponse<SpotifyArtist>>(
+        `/me/top/artists?limit=${limit}&time_range=long_term`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      )
       .pipe(
         map(response => response.data.items),
         map(this.spotifyService.formatArtists),
@@ -57,11 +65,14 @@ export class StatisticsService {
 
   topTracks(accessToken: string, limit = 10): Observable<FormattedTrack[]> {
     return this.httpService
-      .get<SpotifyResponse<SpotifyTrack>>(`/me/top/tracks?limit=${limit}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
+      .get<SpotifyResponse<SpotifyTrack>>(
+        `/me/top/tracks?limit=${limit}&time_range=long_term`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      )
       .pipe(
         map(response => response.data.items),
         map(this.spotifyService.formatTracks),

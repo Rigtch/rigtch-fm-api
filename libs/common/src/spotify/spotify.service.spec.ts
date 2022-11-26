@@ -49,6 +49,14 @@ describe('AuthService', () => {
         )
       ).toEqual(formattedTracksMock.map(({ progress, ...rest }) => rest))
     })
+
+    it('should format tracks without playedAt field', () => {
+      expect(
+        spotifyService.formatTracks(
+          spotifyTracksMock.map(({ played_at, ...rest }) => rest)
+        )
+      ).toEqual(formattedTracksMock.map(({ playedAt, ...rest }) => rest))
+    })
   })
 
   it('should format profile', () => {

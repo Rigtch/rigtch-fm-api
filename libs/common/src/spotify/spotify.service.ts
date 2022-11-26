@@ -26,13 +26,22 @@ export class SpotifyService {
 
   formatTracks(tracks: SpotifyTrack[]): FormattedTrack[] {
     return tracks.map(
-      ({ name, album, artists, href, duration_ms, progress_ms }) => ({
+      ({
+        name,
+        album,
+        artists,
+        href,
+        duration_ms,
+        progress_ms,
+        played_at,
+      }) => ({
         name,
         album: { name: album.name, images: album.images },
         artists: artists.map(({ name }) => name),
         href,
         duration: duration_ms,
         ...(progress_ms && { progress: progress_ms }),
+        ...(played_at && { playedAt: played_at }),
       })
     )
   }

@@ -7,6 +7,7 @@ export interface FormattedTrack {
   href: string
   duration: number
   progress?: number
+  playedAt?: string
 }
 
 export interface SpotifyTrack {
@@ -28,4 +29,5 @@ export interface SpotifyTrack {
   track_number: number
   artists: TrackArtist[]
   album: TrackAlbum
+  played_at?: string
 }

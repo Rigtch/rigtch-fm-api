@@ -23,4 +23,7 @@ export abstract class Track implements FormattedTrack {
 
   @Field(() => Number, { nullable: true })
   progress?: number
+
+  @Field(() => String, { nullable: true })
+  playedAt?: string
 }
