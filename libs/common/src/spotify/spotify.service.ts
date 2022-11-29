@@ -37,7 +37,7 @@ export class SpotifyService {
       }) => ({
         name,
         album: { name: album.name, images: album.images },
-        artists: artists.map(({ name }) => name),
+        artists: artists.map(({ name, id, href }) => ({ name, id, href })),
         href,
         duration: duration_ms,
         ...(progress_ms && { progress: progress_ms }),

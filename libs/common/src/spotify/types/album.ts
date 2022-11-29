@@ -1,8 +1,8 @@
-import { SpotifyImage, TrackArtist } from '.'
+import { SpotifyImage, SpotifyTrackArtist } from '.'
 
 export interface TrackAlbum {
   album_type: string
-  artists: TrackArtist[]
+  artists: SpotifyTrackArtist[]
   available_markets: string[]
   external_urls: { spotify: string }
   href: string
