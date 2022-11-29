@@ -2,6 +2,10 @@ import { HttpService } from '@nestjs/axios'
 import { TestingModule, Test } from '@nestjs/testing'
 import { firstValueFrom, of } from 'rxjs'
 
+import {
+  spotifyArtistMock,
+  formattedArtistMock,
+} from './../../../libs/common/src/spotify/mocks/artist.mock'
 import { StatisticsService } from './statistics.service'
 
 import {
@@ -82,5 +86,17 @@ describe('StatisticsService', () => {
     expect(await firstValueFrom(statisticsService.topTracks('awd'))).toEqual(
       formattedTracksMock
     )
+  })
+
+  it('should get artist with given id', async () => {
+    httpService.get = jest.fn().mockReturnValueOnce(
+      of({
+        data: spotifyArtistMock,
+      })
+    )
+
+    expect(
+      await firstValueFrom(statisticsService.artist('awd', 'some id'))
+    ).toEqual(formattedArtistMock)
   })
 })
