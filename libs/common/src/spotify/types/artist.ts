@@ -7,13 +7,19 @@ export interface FormattedArtist {
   images: SpotifyImage[]
 }
 
-export interface TrackArtist {
+export interface SpotifyTrackArtist {
   name: string
   href: string
   external_urls: { spotify: string }
   id: string
   type: string
   uri: string
+}
+
+export interface FormattedTrackArtist {
+  name: string
+  id: string
+  href: string
 }
 
 export interface SpotifyArtist {

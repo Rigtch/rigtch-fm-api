@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-duplicate-string */
 import { FormattedTrack, SpotifyTrack } from '../types'
 
 export const spotifyTrackMock: SpotifyTrack = {
@@ -143,7 +144,13 @@ export const formattedTrackMock: FormattedTrack = {
       },
     ],
   },
-  artists: ['Biosphere'],
+  artists: [
+    {
+      href: 'https://api.spotify.com/v1/artists/2rcnAZ6DvORQ365X3zVYpr',
+      id: '2rcnAZ6DvORQ365X3zVYpr',
+      name: 'Biosphere',
+    },
+  ],
   name: 'Kobresia',
   duration: 1000,
   href: 'https://api.spotify.com/v1/tracks/5O6MFTh1rd9PeN8XEn1yCS',
@@ -153,3 +160,4 @@ export const formattedTrackMock: FormattedTrack = {
 export const formattedTracksMock = Array.from({ length: 5 }).map(
   () => formattedTrackMock
 )
+/* eslint-enable sonarjs/no-duplicate-string */

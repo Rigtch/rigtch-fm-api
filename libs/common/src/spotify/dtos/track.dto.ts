@@ -1,6 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql'
 
-import { Album } from '.'
+import { Album, TrackArtist } from '.'
 
 import { FormattedTrack } from '@lib/common'
 
@@ -12,8 +12,8 @@ export abstract class Track implements FormattedTrack {
   @Field(() => String)
   href: string
 
-  @Field(() => [String])
-  artists: string[]
+  @Field(() => [TrackArtist])
+  artists: TrackArtist[]
 
   @Field(() => Album)
   album: Album
