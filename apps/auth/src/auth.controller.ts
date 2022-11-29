@@ -3,6 +3,7 @@ import {
   ForbiddenException,
   Get,
   HttpStatus,
+  Logger,
   Redirect,
   Req,
   Res,
@@ -24,6 +25,8 @@ export class AuthController {
     private readonly configService: ConfigService
   ) {}
 
+  authLogger = new Logger('AuthController')
+
   @Get('login')
   @UseGuards(SpotifyAuthGuard)
   login() {
@@ -37,25 +40,29 @@ export class AuthController {
     @Req() request: SpotifyAuthRequest,
     @Res() response: Response
   ): Promise<RedirectResponse> {
-    const {
-      user,
-      authInfo: { accessToken, refreshToken },
-    } = request
+    try {
+      const {
+        user,
+        authInfo: { accessToken, refreshToken },
+      } = request
 
-    if (!user) throw new ForbiddenException('User not found')
+      if (!user) throw new ForbiddenException('User not found')
 
-    const jwt = this.authService.login(user)
+      const jwt = this.authService.login(user)
 
-    response.set('Authorization', `Bearer ${jwt}`)
+      response.set('Authorization', `Bearer ${jwt}`)
 
-    return {
-      url: `${this.configService.get(Environment.CLIENT_URL)}/about?${stringify(
-        {
+      return {
+        url: `${this.configService.get(
+          Environment.CLIENT_URL
+        )}/about?${stringify({
           accessToken,
           refreshToken,
-        }
-      )}`,
-      statusCode: HttpStatus.PERMANENT_REDIRECT,
+        })}`,
+        statusCode: HttpStatus.PERMANENT_REDIRECT,
+      }
+    } catch (error) {
+      this.authLogger.log(error)
     }
   }
 }
