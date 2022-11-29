@@ -2,7 +2,7 @@ import { Args, Query, Resolver } from '@nestjs/graphql'
 import { firstValueFrom } from 'rxjs'
 
 import { StatisticsService } from './statistics.service'
-import { LimitArguments } from './dtos'
+import { IdArguments, LimitArguments } from './dtos'
 
 import { Artist, Track, AccessToken } from '@lib/common'
 
@@ -38,5 +38,13 @@ export class StatisticsResolver {
     return await firstValueFrom(
       this.statisticsService.topArtists(accessToken, limit)
     )
+  }
+
+  @Query(() => Artist)
+  async artist(
+    @AccessToken() accessToken: string,
+    @Args() { id }: IdArguments
+  ) {
+    return await firstValueFrom(this.statisticsService.artist(accessToken, id))
   }
 }

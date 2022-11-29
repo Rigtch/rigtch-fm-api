@@ -118,4 +118,14 @@ describe('StatisticsResolver', () => {
       expect(result.length).toEqual(limit)
     })
   })
+
+  it('should get artist with given id', async () => {
+    statisticsService.artist = jest
+      .fn()
+      .mockReturnValue(of(formattedArtistMock))
+
+    expect(await statisticsResolver.artist('awd', { id: 'some id' })).toEqual(
+      formattedArtistMock
+    )
+  })
 })
