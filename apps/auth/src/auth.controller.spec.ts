@@ -2,19 +2,22 @@ import { createMock } from '@golevelup/ts-jest'
 import { HttpStatus } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { Test, TestingModule } from '@nestjs/testing'
-import { Response } from 'express'
+import { of } from 'rxjs'
 
 import { AuthController } from './auth.controller'
 import { AuthService } from './auth.service'
 import { SpotifyAuthRequest } from './types'
 
 describe('AuthController', () => {
-  const clientUrl = 'http://test.com'
-  const jwt = 'test'
+  const redirectUrl = 'http://test.com'
+  const tokenResponse = {
+    accessToken: '123',
+    refreshToken: '456',
+    expiresIn: 3600,
+  }
 
   let authController: AuthController
   let request: SpotifyAuthRequest
-  let response: Response
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -23,13 +26,13 @@ describe('AuthController', () => {
         {
           provide: AuthService,
           useValue: {
-            login: jest.fn().mockReturnValue(jwt),
+            token: jest.fn().mockReturnValue(of(tokenResponse)),
           },
         },
         {
           provide: ConfigService,
           useValue: {
-            get: jest.fn().mockReturnValue(clientUrl),
+            get: jest.fn().mockReturnValue(redirectUrl),
           },
         },
       ],
@@ -37,13 +40,10 @@ describe('AuthController', () => {
 
     authController = module.get<AuthController>(AuthController)
     request = createMock<SpotifyAuthRequest>({
-      authInfo: {
-        accessToken: '123',
-        refreshToken: '456',
-        expiresIn: 3600,
+      query: {
+        code: '123',
       },
     })
-    response = createMock<Response>()
   })
 
   it('should be defined', () => {
@@ -51,19 +51,16 @@ describe('AuthController', () => {
   })
 
   it('login should return undefined', () => {
-    expect(authController.login()).toBeUndefined()
+    const { url, statusCode } = authController.login()
+
+    expect(url).toMatch(/authorize\?/)
+    expect(statusCode).toEqual(HttpStatus.PERMANENT_REDIRECT)
   })
 
-  describe('callback', () => {
-    it('should return valid redirect path', async () => {
-      expect(await authController.callback(request, response)).toEqual({
-        url: `${clientUrl}/about?accessToken=123&refreshToken=456`,
-        statusCode: HttpStatus.PERMANENT_REDIRECT,
-      })
-      expect(response.set).toHaveBeenCalledWith(
-        'Authorization',
-        `Bearer ${jwt}`
-      )
+  it('callback should return valid redirect path', async () => {
+    expect(await authController.callback(request)).toEqual({
+      url: `${redirectUrl}/about?accessToken=${tokenResponse.accessToken}&refreshToken=${tokenResponse.refreshToken}`,
+      statusCode: HttpStatus.PERMANENT_REDIRECT,
     })
   })
 })

@@ -1,3 +1,4 @@
+import { firstValueFrom } from 'rxjs'
 import {
   Controller,
   Get,
@@ -5,17 +6,19 @@ import {
   Logger,
   Redirect,
   Req,
-  Res,
-  UseGuards,
 } from '@nestjs/common'
-import { Response } from 'express'
 import { ConfigService } from '@nestjs/config'
-import { stringify } from 'query-string'
 
-import { SpotifyAuthGuard } from './guards'
 import { AuthService } from './auth.service'
 import { RedirectResponse, SpotifyAuthRequest } from './types'
-import { Environment } from './config'
+import { Environment, spotifyAuthorizationScopes } from './config'
+
+const {
+  SPOTIFY_CALLBACK_URL,
+  SPOTIFY_CLIENT_ID,
+  SPOTIFY_ACCOUNTS_URL,
+  CLIENT_URL,
+} = Environment
 
 @Controller('auth/spotify')
 export class AuthController {
@@ -24,42 +27,37 @@ export class AuthController {
     private readonly configService: ConfigService
   ) {}
 
-  authLogger = new Logger('AuthController')
+  logger = new Logger('AuthController')
 
   @Get('login')
-  @UseGuards(SpotifyAuthGuard)
-  login() {
-    return
+  @Redirect()
+  login(): RedirectResponse {
+    return {
+      url: `${this.configService.get(
+        SPOTIFY_ACCOUNTS_URL
+      )}/authorize?${new URLSearchParams({
+        client_id: this.configService.get(SPOTIFY_CLIENT_ID),
+        response_type: 'code',
+        redirect_uri: this.configService.get(SPOTIFY_CALLBACK_URL),
+        scope: spotifyAuthorizationScopes.join(' '),
+      })}`,
+      statusCode: HttpStatus.PERMANENT_REDIRECT,
+    }
   }
 
   @Get('callback')
-  @UseGuards(SpotifyAuthGuard)
   @Redirect()
-  async callback(
-    @Req() request: SpotifyAuthRequest,
-    @Res() response: Response
-  ): Promise<RedirectResponse> {
-    try {
-      const {
-        user,
-        authInfo: { accessToken, refreshToken },
-      } = request
+  async callback(@Req() { query: { code } }: SpotifyAuthRequest) {
+    const { accessToken, refreshToken } = await firstValueFrom(
+      this.authService.token({ code })
+    )
 
-      const jwt = this.authService.login(user)
-
-      response.set('Authorization', `Bearer ${jwt}`)
-
-      return {
-        url: `${this.configService.get(
-          Environment.CLIENT_URL
-        )}/about?${stringify({
-          accessToken,
-          refreshToken,
-        })}`,
-        statusCode: HttpStatus.PERMANENT_REDIRECT,
-      }
-    } catch (error) {
-      this.authLogger.log(error)
+    return {
+      url: `${this.configService.get(CLIENT_URL)}/about?${new URLSearchParams({
+        accessToken,
+        refreshToken,
+      })}`,
+      statusCode: HttpStatus.PERMANENT_REDIRECT,
     }
   }
 }
