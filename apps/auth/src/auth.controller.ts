@@ -1,6 +1,5 @@
 import {
   Controller,
-  ForbiddenException,
   Get,
   HttpStatus,
   Logger,
@@ -45,8 +44,6 @@ export class AuthController {
         user,
         authInfo: { accessToken, refreshToken },
       } = request
-
-      if (!user) throw new ForbiddenException('User not found')
 
       const jwt = this.authService.login(user)
 

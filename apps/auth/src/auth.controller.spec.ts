@@ -1,5 +1,5 @@
 import { createMock } from '@golevelup/ts-jest'
-import { ForbiddenException, HttpStatus } from '@nestjs/common'
+import { HttpStatus } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { Test, TestingModule } from '@nestjs/testing'
 import { Response } from 'express'
@@ -63,14 +63,6 @@ describe('AuthController', () => {
       expect(response.set).toHaveBeenCalledWith(
         'Authorization',
         `Bearer ${jwt}`
-      )
-    })
-
-    it('should throw forbidden exception because of no user', async () => {
-      request.user = undefined
-
-      expect(authController.callback(request, response)).rejects.toThrow(
-        ForbiddenException
       )
     })
   })
