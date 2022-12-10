@@ -23,6 +23,7 @@ module.exports = {
             ['~', './'],
             ['@lib/common', './libs/common/src'],
             ['@lib/utils', './libs/utils/src'],
+            ['@lib/types', './libs/types/src'],
             ['@app/auth', './apps/auth/src'],
             ['@app/statistics', './apps/statistics/src'],
             ['@app/player', './apps/player/src'],

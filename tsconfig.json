@@ -28,7 +28,9 @@
       "@app/statistics": ["apps/statistics/src"],
       "@app/statistics/*": ["apps/statistics/src/*"],
       "@app/player": ["apps/player/src"],
-      "@app/player/*": ["apps/player/src/*"]
+      "@app/player/*": ["apps/player/src/*"],
+      "@lib/types": ["libs/types/src"],
+      "@lib/types/*": ["libs/types/src/*"]
     }
   }
 }
