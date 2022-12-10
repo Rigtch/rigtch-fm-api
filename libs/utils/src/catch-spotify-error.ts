@@ -13,6 +13,7 @@ export const catchSpotifyError = ({
     throw new UnauthorizedException('Invalid token')
 
   throw new InternalServerErrorException(
-    `Something went wrong with fetching data from spotify API`
+    'Something went wrong with fetching data from spotify API',
+    error
   )
 }
