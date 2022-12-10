@@ -4,13 +4,13 @@ import {
   Get,
   HttpStatus,
   Logger,
+  Query,
   Redirect,
-  Req,
 } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 
 import { AuthService } from './auth.service'
-import { RedirectResponse, SpotifyAuthRequest } from './types'
+import { RedirectResponse } from './types'
 import { Environment, spotifyAuthorizationScopes } from './config'
 
 const {
@@ -47,7 +47,7 @@ export class AuthController {
 
   @Get('callback')
   @Redirect()
-  async callback(@Req() { query: { code } }: SpotifyAuthRequest) {
+  async callback(@Query('code') code: string): Promise<RedirectResponse> {
     const { accessToken, refreshToken } = await firstValueFrom(
       this.authService.token({ code })
     )

@@ -1,4 +1,3 @@
-import { createMock } from '@golevelup/ts-jest'
 import { HttpStatus } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { Test, TestingModule } from '@nestjs/testing'
@@ -6,7 +5,6 @@ import { of } from 'rxjs'
 
 import { AuthController } from './auth.controller'
 import { AuthService } from './auth.service'
-import { SpotifyAuthRequest } from './types'
 
 describe('AuthController', () => {
   const redirectUrl = 'http://test.com'
@@ -17,7 +15,6 @@ describe('AuthController', () => {
   }
 
   let authController: AuthController
-  let request: SpotifyAuthRequest
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -39,11 +36,6 @@ describe('AuthController', () => {
     }).compile()
 
     authController = module.get<AuthController>(AuthController)
-    request = createMock<SpotifyAuthRequest>({
-      query: {
-        code: '123',
-      },
-    })
   })
 
   it('should be defined', () => {
@@ -58,7 +50,7 @@ describe('AuthController', () => {
   })
 
   it('callback should return valid redirect path', async () => {
-    expect(await authController.callback(request)).toEqual({
+    expect(await authController.callback('code')).toEqual({
       url: `${redirectUrl}/about?accessToken=${tokenResponse.accessToken}&refreshToken=${tokenResponse.refreshToken}`,
       statusCode: HttpStatus.PERMANENT_REDIRECT,
     })
