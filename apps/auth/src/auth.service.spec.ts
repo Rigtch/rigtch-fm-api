@@ -1,3 +1,5 @@
+import { URLSearchParams } from 'node:url'
+
 import { HttpService } from '@nestjs/axios'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
@@ -76,28 +78,64 @@ describe('AuthService', () => {
     expect(authService.login(profile)).toEqual('token')
   })
 
-  it('should refresh token', async () => {
-    configService.get = jest.fn().mockReturnValue('value')
+  describe('token', () => {
+    it('should refresh token', async () => {
+      configService.get = jest.fn().mockReturnValue('value')
 
-    const response = {
-      data: {
-        access_token: 'token',
-        refresh_token: 'refresh',
-        expires_in: 3600,
-      },
-    }
+      const response = {
+        data: {
+          access_token: 'token',
+          expires_in: 3600,
+        },
+      }
 
-    const expectedResponse = {
-      accessToken: 'token',
-      refreshToken: 'refresh',
-      expiresIn: 3600,
-    }
+      const expectedResponse = {
+        accessToken: 'token',
+        expiresIn: 3600,
+      }
 
-    httpService.post = jest.fn().mockReturnValue(of(response))
+      httpService.post = jest
+        .fn()
+        .mockImplementation((_url, parameters: URLSearchParams) => {
+          if (parameters.get('grant_type') === 'refresh_token') {
+            return of(response)
+          }
+        })
 
-    expect(await firstValueFrom(authService.refresh('refresh'))).toEqual(
-      expectedResponse
-    )
+      expect(
+        await firstValueFrom(authService.token({ refreshToken: 'refresh' }))
+      ).toEqual(expectedResponse)
+    })
+
+    it('should authorize and get tokens', async () => {
+      configService.get = jest.fn().mockReturnValue('value')
+
+      const response = {
+        data: {
+          access_token: 'token',
+          refresh_token: 'refresh',
+          expires_in: 3600,
+        },
+      }
+
+      const expectedResponse = {
+        accessToken: 'token',
+        refreshToken: 'refresh',
+        expiresIn: 3600,
+      }
+
+      httpService.post = jest
+        .fn()
+        .mockImplementation((_url, parameters: URLSearchParams) => {
+          if (parameters.get('grant_type') === 'authorization_code') {
+            return of(response)
+          }
+        })
+
+      expect(await firstValueFrom(authService.token({ code: 'code' }))).toEqual(
+        expectedResponse
+      )
+    })
   })
 
   it('should return profile', async () => {

@@ -3,7 +3,7 @@ import { of } from 'rxjs'
 
 import { AuthResolver } from './auth.resolver'
 import { AuthService } from './auth.service'
-import { RefreshResponse } from './dtos'
+import { TokenResponse } from './dtos'
 
 describe('AuthResolver', () => {
   let authResolver: AuthResolver
@@ -13,7 +13,7 @@ describe('AuthResolver', () => {
   const accessToken = '456'
   const expiresIn = 3600
 
-  const refreshResponse: RefreshResponse = {
+  const refreshResponse: TokenResponse = {
     accessToken,
     expiresIn,
     refreshToken,
@@ -42,7 +42,7 @@ describe('AuthResolver', () => {
   })
 
   it('should refresh', async () => {
-    authService.refresh = jest.fn().mockReturnValueOnce(of(refreshResponse))
+    authService.token = jest.fn().mockReturnValueOnce(of(refreshResponse))
 
     expect(await authResolver.refresh(refreshToken)).toEqual({
       accessToken,
