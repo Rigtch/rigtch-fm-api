@@ -1,12 +1,5 @@
 import { firstValueFrom } from 'rxjs'
-import {
-  Controller,
-  Get,
-  HttpStatus,
-  Logger,
-  Query,
-  Redirect,
-} from '@nestjs/common'
+import { Controller, Get, HttpStatus, Query, Redirect } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 
 import { AuthService } from './auth.service'
@@ -26,8 +19,6 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly configService: ConfigService
   ) {}
-
-  logger = new Logger('AuthController')
 
   @Get('login')
   @Redirect()
