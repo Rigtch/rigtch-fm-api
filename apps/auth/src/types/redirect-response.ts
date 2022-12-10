@@ -1,4 +1,4 @@
 export interface RedirectResponse {
   url: string
-  statusCode: number
+  statusCode?: number
 }
