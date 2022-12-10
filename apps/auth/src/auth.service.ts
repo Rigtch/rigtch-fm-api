@@ -6,7 +6,8 @@ import { Profile } from 'passport-spotify'
 import { catchError, map, Observable } from 'rxjs'
 
 import { Environment } from './config'
-import { RefreshResponse } from './dtos'
+import { TokenResponse } from './dtos'
+import { TokenOptions } from './types'
 
 import { catchSpotifyError } from '@lib/utils'
 import {
@@ -34,7 +35,7 @@ export class AuthService {
     return this.jwtService.sign(payload)
   }
 
-  refresh(refreshToken: string): Observable<RefreshResponse> {
+  token({ refreshToken, code }: TokenOptions): Observable<TokenResponse> {
     const url = `${this.configService.get(
       Environment.SPOTIFY_ACCOUNTS_URL
     )}/api/token`
@@ -47,8 +48,18 @@ export class AuthService {
     ).toString('base64')
     const parameters = new URLSearchParams()
 
-    parameters.append('grant_type', 'refresh_token')
-    parameters.append('refresh_token', refreshToken)
+    if (refreshToken) {
+      parameters.append('refresh_token', refreshToken)
+      parameters.append('grant_type', 'refresh_token')
+    }
+    if (code) {
+      parameters.append('code', code)
+      parameters.append('grant_type', 'authorization_code')
+      parameters.append(
+        'redirect_uri',
+        this.configService.get(Environment.SPOTIFY_CALLBACK_URL)
+      )
+    }
 
     return this.httpService
       .post<SpotifyToken>(url, parameters, {

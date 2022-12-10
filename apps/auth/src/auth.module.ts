@@ -10,7 +10,6 @@ import { AuthService } from './auth.service'
 import { AuthResolver } from './auth.resolver'
 import { Environment } from './config'
 import { AuthController } from './auth.controller'
-import { SpotifyStrategy } from './strategies'
 
 import { SpotifyModule } from '@lib/common'
 
@@ -73,7 +72,7 @@ import { SpotifyModule } from '@lib/common'
     }),
     SpotifyModule,
   ],
-  providers: [AuthService, AuthResolver, SpotifyStrategy],
+  providers: [AuthService, AuthResolver],
   controllers: [AuthController],
 })
 export class AuthModule {}
