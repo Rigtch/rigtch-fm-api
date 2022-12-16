@@ -1,13 +1,16 @@
+import { createMock } from '@golevelup/ts-jest'
 import { Test, TestingModule } from '@nestjs/testing'
+import { Response } from 'express'
 import { of } from 'rxjs'
 
 import { AuthResolver } from './auth.resolver'
 import { AuthService } from './auth.service'
-import { TokenResponse } from './dtos'
+import { TokenResponse } from './types'
 
 describe('AuthResolver', () => {
   let authResolver: AuthResolver
   let authService: AuthService
+  let response: Response
 
   const refreshToken = '123'
   const accessToken = '456'
@@ -35,6 +38,7 @@ describe('AuthResolver', () => {
 
     authService = module.get<AuthService>(AuthService)
     authResolver = module.get<AuthResolver>(AuthResolver)
+    response = createMock<Response>()
   })
 
   it('should be defined', () => {
@@ -44,11 +48,17 @@ describe('AuthResolver', () => {
   it('should refresh', async () => {
     authService.token = jest.fn().mockReturnValueOnce(of(refreshResponse))
 
-    expect(await authResolver.refresh(refreshToken)).toEqual({
-      accessToken,
-      refreshToken,
-      expiresIn,
-    })
+    expect(await authResolver.refresh(refreshToken, { res: response })).toEqual(
+      true
+    )
+
+    expect(response.cookie).toHaveBeenCalledWith('access-token', accessToken)
+  })
+
+  it('should logout', async () => {
+    expect(await authResolver.logout({ res: response })).toEqual(true)
+
+    expect(response.clearCookie).toHaveBeenCalledTimes(2)
   })
 
   it('should get profile', async () => {
