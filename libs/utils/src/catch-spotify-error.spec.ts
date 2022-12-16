@@ -12,10 +12,10 @@ describe('catchSpotifyError', () => {
         response: {
           data: {
             error: {
-              status: 401,
               message: 'Unauthorized',
             },
           },
+          status: 401,
         },
       })
     ).toThrowError(UnauthorizedException)
@@ -28,6 +28,7 @@ describe('catchSpotifyError', () => {
           data: {
             error: 'invalid_grant',
           },
+          status: 401,
         },
       })
     ).toThrowError(UnauthorizedException)
@@ -39,10 +40,10 @@ describe('catchSpotifyError', () => {
         response: {
           data: {
             error: {
-              status: 500,
               message: 'Internal Server Error',
             },
           },
+          status: 500,
         },
       })
     ).toThrowError(InternalServerErrorException)
