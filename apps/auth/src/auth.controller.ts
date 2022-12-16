@@ -1,6 +1,14 @@
 import { firstValueFrom } from 'rxjs'
-import { Controller, Get, HttpStatus, Query, Redirect } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  HttpStatus,
+  Query,
+  Redirect,
+  Res,
+} from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
+import { Response } from 'express'
 
 import { AuthService } from './auth.service'
 import { RedirectResponse } from './types'
@@ -38,16 +46,19 @@ export class AuthController {
 
   @Get('callback')
   @Redirect()
-  async callback(@Query('code') code: string): Promise<RedirectResponse> {
+  async callback(
+    @Query('code') code: string,
+    @Res({ passthrough: true }) response: Response
+  ): Promise<RedirectResponse> {
     const { accessToken, refreshToken } = await firstValueFrom(
       this.authService.token({ code })
     )
 
+    response.cookie('access-token', accessToken)
+    response.cookie('refresh-token', refreshToken)
+
     return {
-      url: `${this.configService.get(CLIENT_URL)}/about?${new URLSearchParams({
-        accessToken,
-        refreshToken,
-      })}`,
+      url: `${this.configService.get(CLIENT_URL)}/about`,
       statusCode: HttpStatus.PERMANENT_REDIRECT,
     }
   }

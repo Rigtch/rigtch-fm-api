@@ -13,16 +13,13 @@ export const RefreshToken = createParamDecorator(
         ? context.switchToHttp().getRequest()
         : GqlExecutionContext.create(context).getContext().req
 
-    const authorization = request.headers?.authorization
+    const refreshToken = request.cookies['refresh-token']
 
-    if (!authorization?.slice(6))
+    if (!refreshToken)
       throw new UnauthorizedException(
         'No value was provided for Authentication'
       )
 
-    if (authorization?.slice(0, 5).toLowerCase() !== 'basic')
-      throw new UnauthorizedException('Invalid Authentication Type')
-
-    return authorization?.slice(6)
+    return refreshToken
   }
 )

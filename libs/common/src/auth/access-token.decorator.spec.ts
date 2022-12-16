@@ -21,8 +21,8 @@ describe('AccessToken', () => {
         createMock<ExecutionContext>({
           switchToHttp: () => ({
             getRequest: () => ({
-              headers: {
-                authorization: `Bearer ${accessToken}`,
+              cookies: {
+                'access-token': accessToken,
               },
             }),
           }),
@@ -37,24 +37,6 @@ describe('AccessToken', () => {
       factory(
         undefined,
         createMock<ExecutionContext>({ getType: () => 'http' })
-      )
-    ).toThrow(UnauthorizedException)
-  })
-
-  it('should throw unauthorized exception when authentication type is wrong', () => {
-    expect(() =>
-      factory(
-        undefined,
-        createMock<ExecutionContext>({
-          switchToHttp: () => ({
-            getRequest: () => ({
-              headers: {
-                authorization: 'Basic test',
-              },
-            }),
-          }),
-          getType: () => 'http',
-        })
       )
     ).toThrow(UnauthorizedException)
   })
