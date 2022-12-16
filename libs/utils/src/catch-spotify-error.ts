@@ -5,9 +5,9 @@ import {
 } from '@nestjs/common'
 
 export const catchSpotifyError = ({ response: { data, status } }) => {
-  if (status === 401) throw new UnauthorizedException(data.error.message)
   if (data.error === 'invalid_grant')
     throw new UnauthorizedException('Invalid token')
+  if (status === 401) throw new UnauthorizedException(data?.error?.message)
   if (
     status === 403 &&
     data === 'User not registered in the Developer Dashboard'
