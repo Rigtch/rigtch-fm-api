@@ -21,8 +21,8 @@ describe('RefreshToken', () => {
         createMock<ExecutionContext>({
           switchToHttp: () => ({
             getRequest: () => ({
-              headers: {
-                authorization: `Basic ${refreshToken}`,
+              cookies: {
+                'refresh-token': refreshToken,
               },
             }),
           }),
@@ -37,24 +37,6 @@ describe('RefreshToken', () => {
       factory(
         undefined,
         createMock<ExecutionContext>({ getType: () => 'http' })
-      )
-    ).toThrow(UnauthorizedException)
-  })
-
-  it('should throw unauthorized exception when authentication type is wrong', () => {
-    expect(() =>
-      factory(
-        undefined,
-        createMock<ExecutionContext>({
-          switchToHttp: () => ({
-            getRequest: () => ({
-              headers: {
-                authorization: 'Bearer test',
-              },
-            }),
-          }),
-          getType: () => 'http',
-        })
       )
     ).toThrow(UnauthorizedException)
   })

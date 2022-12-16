@@ -1,6 +1,8 @@
+import { createMock } from '@golevelup/ts-jest'
 import { HttpStatus } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { Test, TestingModule } from '@nestjs/testing'
+import { Response } from 'express'
 import { of } from 'rxjs'
 
 import { AuthController } from './auth.controller'
@@ -15,6 +17,7 @@ describe('AuthController', () => {
   }
 
   let authController: AuthController
+  let response: Response
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -36,6 +39,7 @@ describe('AuthController', () => {
     }).compile()
 
     authController = module.get<AuthController>(AuthController)
+    response = createMock<Response>()
   })
 
   it('should be defined', () => {
@@ -50,9 +54,11 @@ describe('AuthController', () => {
   })
 
   it('callback should return valid redirect path', async () => {
-    expect(await authController.callback('code')).toEqual({
-      url: `${redirectUrl}/about?accessToken=${tokenResponse.accessToken}&refreshToken=${tokenResponse.refreshToken}`,
+    expect(await authController.callback('code', response)).toEqual({
+      url: `${redirectUrl}/about`,
       statusCode: HttpStatus.PERMANENT_REDIRECT,
     })
+
+    expect(response.cookie).toHaveBeenCalledTimes(2)
   })
 })

@@ -13,16 +13,13 @@ export const AccessToken = createParamDecorator(
         ? context.switchToHttp().getRequest()
         : GqlExecutionContext.create(context).getContext().req
 
-    const authorization = request.headers?.authorization
+    const accessToken = request.cookies['access-token']
 
-    if (!authorization?.slice(7))
+    if (!accessToken)
       throw new UnauthorizedException(
         'No value was provided for Authentication'
       )
 
-    if (authorization?.slice(0, 6).toLowerCase() !== 'bearer')
-      throw new UnauthorizedException('Invalid Authentication Type')
-
-    return authorization?.slice(7)
+    return accessToken
   }
 )
