@@ -1,8 +1,9 @@
-import { ObjectType, Resolver, Query, Field } from '@nestjs/graphql'
+import { ObjectType, Resolver, Query, Field, Context } from '@nestjs/graphql'
 import { firstValueFrom } from 'rxjs'
+import { Response } from 'express'
 
 import { AuthService } from './auth.service'
-import { ProfileDto, TokenResponse } from './dtos'
+import { ProfileDto } from './dtos'
 
 import { AccessToken, RefreshToken } from '@lib/common'
 
@@ -23,9 +24,26 @@ export class AuthResolver {
     }
   }
 
-  @Query(() => TokenResponse)
-  async refresh(@RefreshToken() refreshToken: string) {
-    return await firstValueFrom(this.authService.token({ refreshToken }))
+  @Query(() => Boolean)
+  async refresh(
+    @RefreshToken() refreshToken: string,
+    @Context('req') { res: response }: { res: Response }
+  ) {
+    const { accessToken } = await firstValueFrom(
+      this.authService.token({ refreshToken })
+    )
+
+    response.cookie('access-token', accessToken)
+
+    if (accessToken) return true
+  }
+
+  @Query(() => Boolean)
+  async logout(@Context('req') { res: response }: { res: Response }) {
+    response.clearCookie('access-token')
+    response.clearCookie('refresh-token')
+
+    return true
   }
 
   @Query(() => ProfileDto)
