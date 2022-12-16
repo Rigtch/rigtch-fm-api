@@ -6,8 +6,7 @@ import { Profile } from 'passport-spotify'
 import { catchError, map, Observable } from 'rxjs'
 
 import { Environment } from './config'
-import { TokenResponse } from './dtos'
-import { TokenOptions } from './types'
+import { TokenOptions, TokenResponse } from './types'
 
 import { catchSpotifyError } from '@lib/utils'
 import {
