@@ -24,23 +24,19 @@ import { AuthModule, SpotifyModule } from '@lib/common'
     }),
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
-      useFactory: (configService: ConfigService) => ({
+      useFactory: () => ({
         autoSchemaFile: true,
-        playground:
-          configService.get(Environment.NODE_ENV) === 'production'
-            ? false
-            : {
-                settings: {
-                  'request.credentials': 'include',
-                },
-              },
+        playground: {
+          settings: {
+            'request.credentials': 'include',
+          },
+        },
         introspection: true,
         cors: {
           credentials: true,
           origin: true,
         },
       }),
-      inject: [ConfigService],
     }),
     HttpModule.registerAsync({
       useFactory: (configService: ConfigService) => ({
