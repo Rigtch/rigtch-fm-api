@@ -17,8 +17,8 @@ import { SpotifyModule } from '@lib/common'
   imports: [
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
-      cache: 'bounded',
       useFactory: () => ({
+        cache: 'bounded',
         autoSchemaFile: true,
         playground: {
           settings: {
