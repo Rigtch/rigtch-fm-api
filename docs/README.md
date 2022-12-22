@@ -101,34 +101,42 @@ Update issue status to `in::progress` or `in::review`.
 
 Wait for review.
 
-## GraphQL Queries and Endpoints
+## Endpoints and GraphQL Queries
 
 ### Auth Microservice
 
 #### Endpoints
 
-`/auth/spotify/login`
+- `/auth/spotify/login`
 
 Redirecting to spotify login page.
 After successful authentication redirect to `/auth/spotify/callback` endpoint.
 
-Returns:
+- `/auth/spotify/callback`
 
-`SpotifyAuth`
+After sucessful redirect from `/login` page,
+saves `access-token` and `refresh-token` as http only cookies
+and redirects to client page.
 
 #### GraphQL Queries
 
 - `refresh`
 
-Requires Authentication Basic as authorization header.
+Refreshing access token and saves new one as http only cookie.
 
 Returns:
 
-`RefreshResponse`
+`Boolean`
+
+- `logout`
+
+Clearing token cookies.
+
+Returns:
+
+`Boolean`
 
 - `profile`
-
-Requires Authentication Bearer as authorization header.
 
 Returns:
 
@@ -140,8 +148,6 @@ Returns:
 
 - `lastTracks`
 
-Requires Authentication Bearer as authorization header.
-
 Accepts:
 `limit` - number of tracks to Return
 [type: `Float`, default: `20`, max: `50`]
@@ -152,8 +158,6 @@ Returns:
 
 - `topTracks`
 
-Requires Authentication Bearer as authorization header.
-
 Accepts:
 `limit` - number of tracks to Return
 [type: `Float`, default: `20`, max: `50`]
@@ -163,8 +167,6 @@ Returns:
 `Track[]`
 
 - `topArtists`
-
-Requires Authentication Bearer as authorization header.
 
 Accepts:
 `limit` - number of tracks to Return
@@ -180,23 +182,17 @@ Returns:
 
 - `avaibleDevices`
 
-Requires Authentication Bearer as authorization header.
-
 Returns:
 
 `Device[]`
 
 - `currentPlayback`
 
-Requires Authentication Bearer as authorization header.
-
 Returns:
 
 `Playback`
 
 - `pausePlayer`
-
-Requires Authentication Bearer as authorization header.
 
 Accepts:
 
@@ -212,8 +208,6 @@ Returns:
 
 - `playPlayer`
 
-Requires Authentication Bearer as authorization header.
-
 Accepts:
 
 `deviceId` - id of device to pause
@@ -223,40 +217,7 @@ Returns:
 
 `Success`
 
-### Dtos and ObjectTypes
-
-#### Dtos
-
-- `SpotityAuth`
-
-```ts
-abstract class SpotifyAuth {
-  user: Profile
-  authInfo: AuthInfo
-}
-```
-
-- `AuthInfo`
-
-```ts
-abstract class AuthInfo {
-  accessToken: string
-  refreshToken: string
-  expiresIn: number
-}
-```
-
-#### ObjectTypes
-
-- `RefreshResponse`
-
-```graphql
-type RefreshResponse {
-  accessToken: String!
-  refreshToken: String
-  expiresIn: Float!
-}
-```
+### ObjectTypes
 
 - `ProfileDto`
 
