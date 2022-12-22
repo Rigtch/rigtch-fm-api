@@ -58,7 +58,7 @@ export class AuthController {
     response.cookie('refresh-token', refreshToken)
 
     return {
-      url: `${this.configService.get(CLIENT_URL)}/about`,
+      url: this.configService.get(CLIENT_URL),
       statusCode: HttpStatus.PERMANENT_REDIRECT,
     }
   }
