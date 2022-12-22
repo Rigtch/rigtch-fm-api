@@ -20,6 +20,7 @@ const {
   SPOTIFY_CLIENT_ID,
   SPOTIFY_ACCOUNTS_URL,
   CLIENT_URL,
+  NODE_ENV,
 } = Environment
 
 @Controller('auth/spotify')
@@ -59,13 +60,14 @@ export class AuthController {
       this.authService.token({ code })
     )
 
-    console.log({
-      accessToken,
-      refreshToken,
+    response.cookie('access-token', accessToken, {
+      secure: this.configService.get(NODE_ENV) === 'production',
+      httpOnly: true,
     })
-
-    response.cookie('access-token', accessToken)
-    response.cookie('refresh-token', refreshToken)
+    response.cookie('refresh-token', refreshToken, {
+      secure: this.configService.get(NODE_ENV) === 'production',
+      httpOnly: true,
+    })
 
     return {
       url: this.configService.get(CLIENT_URL),

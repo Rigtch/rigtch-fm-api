@@ -1,4 +1,5 @@
 import { createMock } from '@golevelup/ts-jest'
+import { ConfigService } from '@nestjs/config'
 import { Test, TestingModule } from '@nestjs/testing'
 import { Response } from 'express'
 import { of } from 'rxjs'
@@ -33,6 +34,12 @@ describe('AuthResolver', () => {
             profile: jest.fn(),
           },
         },
+        {
+          provide: ConfigService,
+          useValue: {
+            get: jest.fn(),
+          },
+        },
       ],
     }).compile()
 
@@ -52,7 +59,10 @@ describe('AuthResolver', () => {
       true
     )
 
-    expect(response.cookie).toHaveBeenCalledWith('access-token', accessToken)
+    expect(response.cookie).toHaveBeenCalledWith('access-token', accessToken, {
+      secure: false,
+      httpOnly: true,
+    })
   })
 
   it('should logout', async () => {
