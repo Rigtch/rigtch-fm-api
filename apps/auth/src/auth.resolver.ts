@@ -1,9 +1,11 @@
 import { ObjectType, Resolver, Query, Field, Context } from '@nestjs/graphql'
 import { firstValueFrom } from 'rxjs'
 import { Response } from 'express'
+import { ConfigService } from '@nestjs/config'
 
 import { AuthService } from './auth.service'
 import { ProfileDto } from './dtos'
+import { Environment } from './config'
 
 import { AccessToken, RefreshToken } from '@lib/common'
 
@@ -15,7 +17,10 @@ export abstract class Hello {
 
 @Resolver()
 export class AuthResolver {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly configService: ConfigService
+  ) {}
 
   @Query(() => Hello, { name: 'hello' })
   getHello() {
@@ -33,7 +38,10 @@ export class AuthResolver {
       this.authService.token({ refreshToken })
     )
 
-    response.cookie('access-token', accessToken)
+    response.cookie('access-token', accessToken, {
+      secure: this.configService.get(Environment.NODE_ENV) === 'production',
+      httpOnly: true,
+    })
 
     if (accessToken) return true
   }
