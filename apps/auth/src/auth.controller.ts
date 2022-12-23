@@ -59,6 +59,11 @@ export class AuthController {
       this.authService.token({ code })
     )
 
+    console.log({
+      accessToken,
+      refreshToken,
+    })
+
     response.cookie('access-token', accessToken)
     response.cookie('refresh-token', refreshToken)
 
