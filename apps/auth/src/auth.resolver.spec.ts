@@ -16,6 +16,7 @@ describe('AuthResolver', () => {
   const refreshToken = '123'
   const accessToken = '456'
   const expiresIn = 3600
+  const clientUrl = 'http://test.com'
 
   const refreshResponse: TokenResponse = {
     accessToken,
@@ -37,7 +38,7 @@ describe('AuthResolver', () => {
         {
           provide: ConfigService,
           useValue: {
-            get: jest.fn(),
+            get: jest.fn().mockReturnValue(clientUrl),
           },
         },
       ],
@@ -60,6 +61,7 @@ describe('AuthResolver', () => {
     )
 
     expect(response.cookie).toHaveBeenCalledWith('access-token', accessToken, {
+      domain: clientUrl.slice(7),
       secure: false,
       httpOnly: true,
     })
