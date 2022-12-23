@@ -15,8 +15,6 @@ export const AccessToken = createParamDecorator(
 
     const accessToken = request.cookies['access-token']
 
-    console.log(request.cookies)
-
     if (!accessToken)
       throw new UnauthorizedException(
         'No value was provided for Authentication'
