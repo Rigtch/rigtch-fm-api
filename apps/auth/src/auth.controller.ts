@@ -61,18 +61,13 @@ export class AuthController {
     )
 
     const secure = this.configService.get(NODE_ENV) === 'production'
-    const domain = this.configService
-      .get<string>(CLIENT_URL)
-      .slice(this.configService.get(NODE_ENV) === 'production' ? 8 : 7)
 
     response.cookie('access-token', accessToken, {
       secure,
-      domain,
       httpOnly: true,
     })
     response.cookie('refresh-token', refreshToken, {
       secure,
-      domain,
       httpOnly: true,
     })
 

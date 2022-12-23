@@ -40,11 +40,6 @@ export class AuthResolver {
 
     response.cookie('access-token', accessToken, {
       secure: this.configService.get(Environment.NODE_ENV) === 'production',
-      domain: this.configService
-        .get<string>(Environment.CLIENT_URL)
-        .slice(
-          this.configService.get(Environment.NODE_ENV) === 'production' ? 8 : 7
-        ),
       httpOnly: true,
     })
 
