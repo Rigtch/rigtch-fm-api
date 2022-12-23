@@ -2,6 +2,7 @@ import { firstValueFrom } from 'rxjs'
 import {
   Controller,
   Get,
+  Header,
   HttpStatus,
   Query,
   Redirect,
@@ -29,6 +30,7 @@ export class AuthController {
   ) {}
 
   @Get('login')
+  @Header('access-control-allow-credentials', 'true')
   @Redirect()
   login(): RedirectResponse {
     return {
@@ -45,6 +47,7 @@ export class AuthController {
   }
 
   @Get('callback')
+  @Header('access-control-allow-credentials', 'true')
   @Redirect()
   async callback(
     @Query('code') code: string,
