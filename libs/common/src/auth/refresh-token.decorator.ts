@@ -15,6 +15,8 @@ export const RefreshToken = createParamDecorator(
 
     const refreshToken = request.cookies['refresh-token']
 
+    console.log('refreshToken', refreshToken)
+
     if (!refreshToken)
       throw new UnauthorizedException(
         'No value was provided for Authentication'

@@ -8,7 +8,10 @@ import { Environment } from './config'
 const app = await NestFactory.create(PlayerModule)
 const configService = app.get(ConfigService)
 
-app.enableCors()
+app.enableCors({
+  origin: ['*', 'https://rigtch-music.vercel.app'],
+  credentials: true,
+})
 app.use(cookieParser())
 
 await app.startAllMicroservices()
