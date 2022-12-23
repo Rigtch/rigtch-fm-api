@@ -31,6 +31,7 @@ export class AuthController {
 
   @Get('login')
   @Header('access-control-allow-credentials', 'true')
+  @Header('access-control-allow-origin', '*')
   @Redirect()
   login(): RedirectResponse {
     return {
@@ -48,6 +49,7 @@ export class AuthController {
 
   @Get('callback')
   @Header('access-control-allow-credentials', 'true')
+  @Header('access-control-allow-origin', '*')
   @Redirect()
   async callback(
     @Query('code') code: string,
