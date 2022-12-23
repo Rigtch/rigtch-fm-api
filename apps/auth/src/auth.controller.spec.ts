@@ -55,7 +55,7 @@ describe('AuthController', () => {
 
   it('callback should return valid redirect path', async () => {
     expect(await authController.callback('code', response)).toEqual({
-      url: `${redirectUrl}/about`,
+      url: redirectUrl,
       statusCode: HttpStatus.PERMANENT_REDIRECT,
     })
 
