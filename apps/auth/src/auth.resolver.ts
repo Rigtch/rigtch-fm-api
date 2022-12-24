@@ -38,8 +38,11 @@ export class AuthResolver {
       this.authService.token({ refreshToken })
     )
 
+    const domain = this.configService.get(Environment.CLIENT_URL).split('//')[1]
+
     response.cookie('access-token', accessToken, {
       secure: this.configService.get(Environment.NODE_ENV) === 'production',
+      domain,
       httpOnly: true,
     })
 
