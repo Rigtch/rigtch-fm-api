@@ -13,13 +13,7 @@ export const RefreshToken = createParamDecorator(
         ? context.switchToHttp().getRequest()
         : GqlExecutionContext.create(context).getContext().req
 
-    console.log('cookies', request.cookies)
-    console.log('body', request.body)
-    console.log('headers', request.headers)
-
     const refreshToken = request.cookies['refresh-token']
-
-    console.log('refreshToken', refreshToken)
 
     if (!refreshToken)
       throw new UnauthorizedException(

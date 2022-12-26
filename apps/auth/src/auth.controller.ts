@@ -74,8 +74,6 @@ export class AuthController {
       httpOnly: true,
     })
 
-    console.log(response)
-
     return {
       url: this.configService.get(CLIENT_URL),
       statusCode: HttpStatus.PERMANENT_REDIRECT,
