@@ -115,8 +115,8 @@ After successful authentication redirect to `/auth/spotify/callback` endpoint.
 - `/auth/spotify/callback`
 
 After sucessful redirect from `/login` page,
-saves `access-token` and `refresh-token` as http only cookies
-and redirects to client page.
+Redurecting to client callback url with query params:
+`accessToken` and `refreshToken`.
 
 #### GraphQL Queries
 
@@ -218,6 +218,16 @@ Returns:
 `Success`
 
 ### ObjectTypes
+
+- `SecretData`
+
+```graphql
+type SecretData {
+  accessToken: String!
+  refreshToken: String
+  expiresIn: Float!
+}
+```
 
 - `ProfileDto`
 
