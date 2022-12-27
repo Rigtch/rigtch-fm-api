@@ -6,7 +6,8 @@ import { Profile } from 'passport-spotify'
 import { catchError, map, Observable } from 'rxjs'
 
 import { Environment } from './config'
-import { TokenOptions, TokenResponse } from './types'
+import { TokenOptions } from './types'
+import { SecretData } from './dtos'
 
 import { catchSpotifyError } from '@lib/utils'
 import {
@@ -34,7 +35,7 @@ export class AuthService {
     return this.jwtService.sign(payload)
   }
 
-  token({ refreshToken, code }: TokenOptions): Observable<TokenResponse> {
+  token({ refreshToken, code }: TokenOptions): Observable<SecretData> {
     const url = `${this.configService.get(
       Environment.SPOTIFY_ACCOUNTS_URL
     )}/api/token`
@@ -91,9 +92,5 @@ export class AuthService {
         map(this.spotifyService.formatProfile),
         catchError(catchSpotifyError)
       )
-  }
-
-  getHello() {
-    return 'Hello World!'
   }
 }
