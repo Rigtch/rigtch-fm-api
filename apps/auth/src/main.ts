@@ -9,7 +9,7 @@ const app = await NestFactory.create(AuthModule)
 const configService = app.get(ConfigService)
 
 app.enableCors({
-  origin: ['*', configService.get(Environment.CLIENT_URL)],
+  origin: '*',
   credentials: true,
 })
 app.use(cookieParser())
