@@ -1,15 +1,6 @@
 import { firstValueFrom } from 'rxjs'
-import {
-  Controller,
-  Get,
-  Header,
-  HttpStatus,
-  Query,
-  Redirect,
-  Res,
-} from '@nestjs/common'
+import { Controller, Get, HttpStatus, Query, Redirect } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { Response } from 'express'
 
 import { AuthService } from './auth.service'
 import { RedirectResponse } from './types'
@@ -19,8 +10,7 @@ const {
   SPOTIFY_CALLBACK_URL,
   SPOTIFY_CLIENT_ID,
   SPOTIFY_ACCOUNTS_URL,
-  CLIENT_URL,
-  NODE_ENV,
+  CLIENT_CALLBACK_URL,
 } = Environment
 
 @Controller('auth/spotify')
@@ -31,8 +21,6 @@ export class AuthController {
   ) {}
 
   @Get('login')
-  @Header('access-control-allow-credentials', 'true')
-  @Header('access-control-allow-origin', '*')
   @Redirect()
   login(): RedirectResponse {
     return {
@@ -49,33 +37,18 @@ export class AuthController {
   }
 
   @Get('callback')
-  @Header('access-control-allow-credentials', 'true')
-  @Header('access-control-allow-origin', '*')
   @Redirect()
-  async callback(
-    @Query('code') code: string,
-    @Res({ passthrough: true }) response: Response
-  ): Promise<RedirectResponse> {
+  async callback(@Query('code') code: string): Promise<RedirectResponse> {
     const { accessToken, refreshToken } = await firstValueFrom(
       this.authService.token({ code })
     )
-
-    const secure = this.configService.get(NODE_ENV) === 'production'
-    const domain = this.configService.get(CLIENT_URL).split('//')[1]
-
-    response.cookie('access-token', accessToken, {
-      secure,
-      domain,
-      httpOnly: true,
-    })
-    response.cookie('refresh-token', refreshToken, {
-      secure,
-      domain,
-      httpOnly: true,
-    })
-
     return {
-      url: this.configService.get(CLIENT_URL),
+      url: `${this.configService.get(
+        CLIENT_CALLBACK_URL
+      )}?${new URLSearchParams({
+        accessToken,
+        refreshToken,
+      })}`,
       statusCode: HttpStatus.PERMANENT_REDIRECT,
     }
   }
