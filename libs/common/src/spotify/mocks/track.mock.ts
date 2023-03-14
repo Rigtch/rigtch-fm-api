@@ -153,7 +153,7 @@ export const formattedTrackMock: FormattedTrack = {
   ],
   name: 'Kobresia',
   duration: 1000,
-  href: 'https://api.spotify.com/v1/tracks/5O6MFTh1rd9PeN8XEn1yCS',
+  href: 'https://open.spotify.com/track/5O6MFTh1rd9PeN8XEn1yCS',
   playedAt: '2022-11-26T11:01:10.040Z',
 }
 
