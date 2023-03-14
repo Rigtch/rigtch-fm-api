@@ -30,7 +30,7 @@ export class SpotifyService {
         name,
         album,
         artists,
-        href,
+        external_urls: { spotify: href },
         duration_ms,
         progress_ms,
         played_at,
