@@ -64,16 +64,34 @@ describe('PlayerService', () => {
     )
   })
 
-  it('currentPlaybackState', async () => {
-    httpService.get = jest.fn().mockReturnValue(
-      of({
-        data: spotifyPlaybackStateMock,
-      })
-    )
+  describe('currentPlaybackState', () => {
+    it('should get playback state', async () => {
+      httpService.get = jest.fn().mockReturnValue(
+        of({
+          data: spotifyPlaybackStateMock,
+        })
+      )
 
-    expect(
-      await firstValueFrom(playerService.currentPlaybackState('awd'))
-    ).toEqual(formattedPlaybackStateMock)
+      expect(
+        await firstValueFrom(playerService.currentPlaybackState('awd'))
+      ).toEqual(formattedPlaybackStateMock)
+    })
+
+    it('should throw Forbidden expception because No device is currently playing', async () => {
+      httpService.get = jest.fn().mockReturnValue(
+        of({
+          data: '',
+        })
+      )
+
+      expect(
+        await firstValueFrom(
+          playerService
+            .currentPlaybackState('awd')
+            .pipe(catchError(error => [error]))
+        )
+      ).toBeInstanceOf(ForbiddenException)
+    })
   })
 
   describe('pausePlayer', () => {

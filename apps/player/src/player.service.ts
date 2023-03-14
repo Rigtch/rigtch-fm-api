@@ -30,12 +30,12 @@ export class PlayerService {
       })
       .pipe(
         map(response => response.data.devices),
+        catchError(catchSpotifyError),
         tap(devices => {
           if (devices.length <= 0)
             throw new ForbiddenException(PlayerMessage.NO_AVAIBLE_DEVICES)
         }),
-        map(this.spotifyService.formatDevices),
-        catchError(catchSpotifyError)
+        map(this.spotifyService.formatDevices)
       )
   }
 
@@ -50,8 +50,12 @@ export class PlayerService {
       })
       .pipe(
         map(response => response.data),
-        map(this.spotifyService.formatPlaybackState),
-        catchError(catchSpotifyError)
+        catchError(catchSpotifyError),
+        tap(playbackState => {
+          if (!playbackState.device)
+            throw new ForbiddenException(PlayerMessage.NO_PLAYING_DEVICE)
+        }),
+        map(this.spotifyService.formatPlaybackState)
       )
   }
 
