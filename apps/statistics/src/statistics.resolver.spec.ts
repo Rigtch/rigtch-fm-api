@@ -9,6 +9,8 @@ import {
   formattedArtistsMock,
   formattedTrackMock,
   formattedTracksMock,
+  topGenresArrayMock,
+  topGenresMock,
 } from '@lib/common'
 
 const mockArrayFactory = (mock: any, length: number) =>
@@ -28,6 +30,7 @@ describe('StatisticsResolver', () => {
             lastTracks: jest.fn(),
             topArtists: jest.fn(),
             topTracks: jest.fn(),
+            topGenres: jest.fn(),
           },
         },
       ],
@@ -64,6 +67,32 @@ describe('StatisticsResolver', () => {
       const result = await statisticsResolver.lastTracks('awd', { limit })
 
       expect(result.length).toEqual(limit)
+    })
+  })
+
+  describe('topGenres', () => {
+    it('should query top genres', async () => {
+      statisticsService.topGenres = jest.fn().mockReturnValue(of(topGenresMock))
+
+      expect(await statisticsResolver.topGenres('awd', {})).toEqual(
+        topGenresMock
+      )
+    })
+
+    it('should query top genres with limit argument', async () => {
+      const limit = 2
+
+      statisticsService.topGenres = jest
+        .fn()
+        .mockImplementation((accessToken, limit) =>
+          of({
+            genres: mockArrayFactory(topGenresArrayMock, limit),
+          })
+        )
+
+      const result = await statisticsResolver.topGenres('awd', { limit })
+
+      expect(result.genres.length).toEqual(limit)
     })
   })
 

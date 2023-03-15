@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs'
 import { StatisticsService } from './statistics.service'
 import { IdArguments, LimitArguments } from './dtos'
 
-import { Artist, Track, AccessToken } from '@lib/common'
+import { Artist, Track, AccessToken, Genres } from '@lib/common'
 
 @Resolver()
 export class StatisticsResolver {
@@ -27,6 +27,16 @@ export class StatisticsResolver {
   ) {
     return await firstValueFrom(
       this.statisticsService.topTracks(accessToken, limit)
+    )
+  }
+
+  @Query(() => Genres)
+  async topGenres(
+    @AccessToken() accessToken: string,
+    @Args() { limit }: LimitArguments
+  ) {
+    return await firstValueFrom(
+      this.statisticsService.topGenres(accessToken, limit)
     )
   }
 

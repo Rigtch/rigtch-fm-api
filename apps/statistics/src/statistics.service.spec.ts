@@ -15,6 +15,7 @@ import {
   formattedTracksMock,
   spotifyArtistsMock,
   SpotifyService,
+  topGenresMock,
 } from '@lib/common'
 
 describe('StatisticsService', () => {
@@ -71,6 +72,20 @@ describe('StatisticsService', () => {
 
     expect(await firstValueFrom(statisticsService.topArtists('awd'))).toEqual(
       formattedArtistsMock
+    )
+  })
+
+  it('should get top genres', async () => {
+    httpService.get = jest.fn().mockReturnValueOnce(
+      of({
+        data: {
+          items: spotifyArtistsMock,
+        },
+      })
+    )
+
+    expect(await firstValueFrom(statisticsService.topGenres('awd', 3))).toEqual(
+      topGenresMock
     )
   })
 

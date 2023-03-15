@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { HttpService } from '@nestjs/axios'
-import { catchError, map, Observable } from 'rxjs'
+import { catchError, map, Observable, tap } from 'rxjs'
 
 import {
   FormattedTrack,
@@ -9,6 +9,7 @@ import {
   SpotifyResponse,
   SpotifyTrack,
   SpotifyService,
+  Genres,
 } from '@lib/common'
 import { catchSpotifyError } from '@lib/utils'
 
@@ -24,6 +25,8 @@ export class StatisticsService {
   }
 
   lastTracks(accessToken: string, limit = 20): Observable<FormattedTrack[]> {
+    console.log(accessToken)
+
     return this.httpService
       .get<SpotifyResponse<{ track: SpotifyTrack; played_at: string }>>(
         `/me/player/recently-played?limit=${limit}`,
@@ -42,6 +45,26 @@ export class StatisticsService {
           }))
         ),
         map(this.spotifyService.formatTracks),
+        catchError(catchSpotifyError)
+      )
+  }
+
+  topGenres(accessToken: string, limit = 10): Observable<Genres> {
+    console.log(accessToken)
+
+    return this.httpService
+      .get<SpotifyResponse<SpotifyArtist>>(
+        `/me/top/artists?limit=${50}&time_range=long_term`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      )
+      .pipe(
+        tap(console.log),
+        map(response => response.data.items),
+        map(items => this.spotifyService.formatGenres(items, limit)),
         catchError(catchSpotifyError)
       )
   }
