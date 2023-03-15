@@ -11,6 +11,7 @@ import {
   spotifyPlaybackStateMock,
   formattedPlaybackStateMock,
   formattedDevicesMock,
+  topGenresMock,
 } from './mocks'
 import { SpotifyService } from './spotify.service'
 
@@ -32,6 +33,12 @@ describe('AuthService', () => {
   it('should format artists', () => {
     expect(spotifyService.formatArtists(spotifyArtistsMock)).toEqual(
       formattedArtistsMock
+    )
+  })
+
+  it('should format genres', () => {
+    expect(spotifyService.formatGenres(spotifyArtistsMock, 3)).toEqual(
+      topGenresMock
     )
   })
 

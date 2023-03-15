@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common'
 
+import { Genres } from './dtos'
 import {
   SpotifyArtist,
   FormattedArtist,
@@ -13,6 +14,8 @@ import {
   FormattedPlaybackState,
 } from './types'
 
+import { getMostFrequentItems } from '@lib/utils'
+
 @Injectable()
 export class SpotifyService {
   formatArtists(artists: SpotifyArtist[]): FormattedArtist[] {
@@ -22,6 +25,15 @@ export class SpotifyService {
       href,
       images,
     }))
+  }
+
+  formatGenres(artists: SpotifyArtist[], limit: number): Genres {
+    return {
+      genres: getMostFrequentItems(
+        artists.flatMap(({ genres }) => genres),
+        limit
+      ),
+    }
   }
 
   formatTracks(tracks: SpotifyTrack[]): FormattedTrack[] {
