@@ -19,18 +19,7 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@lib/common": ["libs/common/src"],
-      "@lib/common/*": ["libs/common/src/*"],
-      "@lib/utils": ["libs/utils/src"],
-      "@lib/utils/*": ["libs/utils/src/*"],
-      "@app/auth": ["apps/auth/src"],
-      "@app/auth/*": ["apps/auth/src/*"],
-      "@app/statistics": ["apps/statistics/src"],
-      "@app/statistics/*": ["apps/statistics/src/*"],
-      "@app/player": ["apps/player/src"],
-      "@app/player/*": ["apps/player/src/*"],
-      "@lib/types": ["libs/types/src"],
-      "@lib/types/*": ["libs/types/src/*"]
+      "~/*": ["src/*"]
     }
   }
 }
