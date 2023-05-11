@@ -2,7 +2,7 @@ import { HttpService } from '@nestjs/axios'
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
-import { Profile } from 'passport'
+import { Profile } from 'passport-spotify'
 import { Observable, map, catchError } from 'rxjs'
 
 import { AdapterService } from '../adapter'

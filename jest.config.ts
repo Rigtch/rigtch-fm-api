@@ -16,7 +16,7 @@ const configuration: Config = {
     '.js',
   ],
   moduleNameMapper: {
-    '^~/(.*)$': '<rootDir>/$1',
+    '^~/(.*)$': '<rootDir>/src/$1',
     '^@lib/common(.*)$': '<rootDir>/libs/common/src/$1',
     '^@lib/utils(.*)$': '<rootDir>/libs/utils/src/$1',
     '^@lib/types(.*)$': '<rootDir>/libs/types/src/$1',
@@ -32,7 +32,7 @@ const configuration: Config = {
   ],
   coverageDirectory: './coverage',
   testEnvironment: 'node',
-  roots: ['<rootDir>/apps', '<rootDir>/libs'],
+  roots: ['<rootDir>/src'],
 }
 
 export default configuration
