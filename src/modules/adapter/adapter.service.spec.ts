@@ -14,6 +14,10 @@ import {
   formattedPlaybackStateMock,
   formattedDevicesMock,
   topGenresMock,
+  spotifyArtistMock,
+  formattedArtistMock,
+  spotifyTrackMock,
+  formattedTrackMock,
 } from '~/common/mocks'
 
 describe('AdapterService', () => {
@@ -31,6 +35,12 @@ describe('AdapterService', () => {
     expect(adapterService).toBeDefined()
   })
 
+  it('should adapt artist', () => {
+    expect(adapterService.adaptArtist(spotifyArtistMock)).toEqual(
+      formattedArtistMock
+    )
+  })
+
   it('should adapt artists', () => {
     expect(adapterService.adaptArtists(spotifyArtistsMock)).toEqual(
       formattedArtistsMock
@@ -41,6 +51,34 @@ describe('AdapterService', () => {
     expect(adapterService.adaptGenres(spotifyArtistsMock, 3)).toEqual(
       topGenresMock
     )
+  })
+
+  describe('adaptTrack', () => {
+    it('should adapt tracks', () => {
+      expect(adapterService.adaptTrack(spotifyTrackMock)).toEqual(
+        formattedTrackMock
+      )
+    })
+
+    it('should adapt tracks without duration', () => {
+      const { progress_ms, ...spotifyTrackMockRest } = spotifyTrackMock
+      const { progress, ...formattedTrackMockRest } = formattedTrackMock
+
+      expect(
+        adapterService.adaptTrack({
+          ...spotifyTrackMockRest,
+        })
+      ).toEqual(formattedTrackMockRest)
+    })
+
+    it('should adapt tracks without playedAt field', () => {
+      const { played_at, ...spotifyTrackMockRest } = spotifyTrackMock
+      const { playedAt, ...formattedTrackMockRest } = formattedTrackMock
+
+      expect(adapterService.adaptTrack(spotifyTrackMockRest)).toEqual(
+        formattedTrackMockRest
+      )
+    })
   })
 
   describe('adaptTracks', () => {

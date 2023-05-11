@@ -91,7 +91,7 @@ export class StatisticsService {
       )
       .pipe(
         map(response => response.data),
-        map(artist => this.adapterService.adaptArtists([artist])[0]),
+        map(this.adapterService.adaptArtist),
         catchError(catchSpotifyError)
       )
   }
