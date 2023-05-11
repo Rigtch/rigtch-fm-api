@@ -17,47 +17,50 @@ import { getMostFrequentItems } from '~/utils'
 
 @Injectable()
 export class AdapterService {
-  adaptArtists(artists: SpotifyArtist[]): FormattedArtist[] {
-    return artists.map(({ name, genres, href, images }) => ({
-      name,
-      genres,
-      href,
-      images,
-    }))
-  }
+  adaptArtist = ({
+    name,
+    genres,
+    href,
+    images,
+  }: SpotifyArtist): FormattedArtist => ({
+    name,
+    genres,
+    href,
+    images,
+  })
 
-  adaptGenres(artists: SpotifyArtist[], limit: number): Genres {
-    return {
-      genres: getMostFrequentItems(
-        artists.flatMap(({ genres }) => genres),
-        limit
-      ),
-    }
-  }
+  adaptArtists = (artists: SpotifyArtist[]): FormattedArtist[] =>
+    artists.map(artist => this.adaptArtist(artist))
 
-  adaptTracks(tracks: SpotifyTrack[]): FormattedTrack[] {
-    return tracks.map(
-      ({
-        name,
-        album,
-        artists,
-        external_urls: { spotify: href },
-        duration_ms,
-        progress_ms,
-        played_at,
-      }) => ({
-        name,
-        album: { name: album.name, images: album.images },
-        artists: artists.map(({ name, id, href }) => ({ name, id, href })),
-        href,
-        duration: duration_ms,
-        ...(progress_ms && { progress: progress_ms }),
-        ...(played_at && { playedAt: played_at }),
-      })
-    )
-  }
+  adaptGenres = (artists: SpotifyArtist[], limit: number): Genres => ({
+    genres: getMostFrequentItems(
+      artists.flatMap(({ genres }) => genres),
+      limit
+    ),
+  })
 
-  adaptProfile({
+  adaptTrack = ({
+    name,
+    album,
+    artists,
+    external_urls: { spotify: href },
+    duration_ms,
+    progress_ms,
+    played_at,
+  }: SpotifyTrack): FormattedTrack => ({
+    name,
+    album: { name: album.name, images: album.images },
+    artists: artists.map(({ name, id, href }) => ({ name, id, href })),
+    href,
+    duration: duration_ms,
+    ...(progress_ms && { progress: progress_ms }),
+    ...(played_at && { playedAt: played_at }),
+  })
+
+  adaptTracks = (tracks: SpotifyTrack[]): FormattedTrack[] =>
+    tracks.map(track => this.adaptTrack(track))
+
+  adaptProfile = ({
     id,
     display_name,
     email,
@@ -65,20 +68,18 @@ export class AdapterService {
     country,
     external_urls: { spotify: href },
     followers,
-  }: SpotifyProfile): FormattedProfile {
-    return {
-      id,
-      displayName: display_name,
-      email,
-      images,
-      country,
-      href,
-      followers: followers.total,
-    }
-  }
+  }: SpotifyProfile): FormattedProfile => ({
+    id,
+    displayName: display_name,
+    email,
+    images,
+    country,
+    href,
+    followers: followers.total,
+  })
 
-  adaptDevices(devices: SpotifyDevice[]): FormattedDevice[] {
-    return devices.map(
+  adaptDevices = (devices: SpotifyDevice[]): FormattedDevice[] =>
+    devices.map(
       ({
         id,
         name,
@@ -97,7 +98,6 @@ export class AdapterService {
         volumePercent,
       })
     )
-  }
 
   adaptPlaybackState = ({
     device,
