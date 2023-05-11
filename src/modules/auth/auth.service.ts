@@ -16,7 +16,7 @@ import {
   FormattedProfile,
   SpotifyProfile,
 } from '~/common/types/spotify'
-import { catchSpotifyError } from '~/utils'
+import { applyAuthorizationHeader, catchSpotifyError } from '~/utils'
 
 @Injectable()
 export class AuthService {
@@ -83,11 +83,7 @@ export class AuthService {
 
   profile(accessToken: string): Observable<FormattedProfile> {
     return this.httpService
-      .get<SpotifyProfile>('/me', {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
+      .get<SpotifyProfile>('/me', applyAuthorizationHeader(accessToken))
       .pipe(
         map(response => response.data),
         map(this.adapterService.adaptProfile),
