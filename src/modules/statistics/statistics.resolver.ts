@@ -1,12 +1,11 @@
 import { Args, Query, Resolver } from '@nestjs/graphql'
 import { firstValueFrom } from 'rxjs'
 
-import { AccessToken } from '../auth'
-
 import { StatisticsService } from './statistics.service'
 import { IdArguments, LimitArguments } from './dtos'
 
-import { Track, Genres, Artist } from '~/common/dtos'
+import { AccessToken } from '@modules/auth'
+import { Track, Genres, Artist } from '@common/dtos'
 
 @Resolver()
 export class StatisticsResolver {

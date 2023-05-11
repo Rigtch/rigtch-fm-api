@@ -5,17 +5,16 @@ import { JwtService } from '@nestjs/jwt'
 import { Profile } from 'passport-spotify'
 import { Observable, map, catchError } from 'rxjs'
 
-import { AdapterService } from '../adapter'
-
 import { SecretData } from './dtos'
 import { TokenOptions } from './types'
 
+import { AdapterService } from '@modules/adapter'
 import { Environment } from '~/config'
 import {
   SpotifyToken,
   FormattedProfile,
   SpotifyProfile,
-} from '~/common/types/spotify'
+} from '@common/types/spotify'
 import { applyAuthorizationHeader, catchSpotifyError } from '~/utils'
 
 @Injectable()

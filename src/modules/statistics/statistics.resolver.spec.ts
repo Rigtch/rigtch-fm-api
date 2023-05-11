@@ -11,7 +11,7 @@ import {
   formattedTracksMock,
   topGenresArrayMock,
   topGenresMock,
-} from '~/common/mocks'
+} from '@common/mocks'
 
 const mockArrayFactory = (mock: any, length: number) =>
   Array.from({ length }, () => mock)

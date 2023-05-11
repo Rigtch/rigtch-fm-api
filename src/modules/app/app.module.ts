@@ -4,10 +4,10 @@ import { GraphQLModule } from '@nestjs/graphql'
 import Joi from 'joi'
 import { ConfigModule } from '@nestjs/config'
 
-import { AdapterModule } from '../adapter'
-import { AuthModule } from '../auth'
-import { StatisticsModule } from '../statistics'
-import { PlayerModule } from '../player'
+import { AdapterModule } from '@modules/adapter'
+import { AuthModule } from '@modules/auth'
+import { StatisticsModule } from '@modules/statistics'
+import { PlayerModule } from '@modules/player'
 
 @Module({
   imports: [

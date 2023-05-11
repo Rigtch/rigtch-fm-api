@@ -1,4 +1,4 @@
-import { RequireOnlyOne } from '~/common/types/utils'
+import { RequireOnlyOne } from '@common/types/utils'
 
 export type TokenOptions = RequireOnlyOne<{
   refreshToken?: string

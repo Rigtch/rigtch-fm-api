@@ -2,16 +2,15 @@ import { HttpService } from '@nestjs/axios'
 import { Injectable } from '@nestjs/common'
 import { Observable, map, catchError } from 'rxjs'
 
-import { AdapterService } from '../adapter'
-
-import { Genres } from '~/common/dtos'
+import { AdapterService } from '@modules/adapter'
+import { Genres } from '@common/dtos'
 import {
   FormattedTrack,
   SpotifyResponse,
   SpotifyTrack,
   SpotifyArtist,
   FormattedArtist,
-} from '~/common/types/spotify'
+} from '@common/types/spotify'
 import { applyAuthorizationHeader, catchSpotifyError } from '~/utils'
 
 @Injectable()

@@ -1,11 +1,10 @@
 import { Query, Resolver, Args } from '@nestjs/graphql'
 import { firstValueFrom } from 'rxjs'
 
-import { AccessToken } from '../auth'
-
 import { PlayerService } from './player.service'
 
-import { Device, PlaybackState, Success } from '~/common/dtos'
+import { AccessToken } from '@modules/auth'
+import { Device, PlaybackState, Success } from '@common/dtos'
 
 @Resolver()
 export class PlayerResolver {
