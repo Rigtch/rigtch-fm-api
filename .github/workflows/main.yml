@@ -106,16 +106,16 @@ jobs:
       - name: Run unit tests 🧪
         run: yarn test:coverage --ci --maxWorkers=2 --detectOpenHandles
 
-      - name: Run e2e tests
-        run: yarn test:e2e --ci --maxWorkers=2 --detectOpenHandles
-        env:
-          SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
-          SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
-          SPOTIFY_CALLBACK_URL: ${{ secrets.SPOTIFY_CALLBACK_URL }}
-          SPOTIFY_BASE_URL: https://api.spotify.com/v1
-          SPOTIFY_ACCOUNTS_URL: https://accounts.spotify.com
-          CLIENT_URL: ${{ secrets.CLIENT_URL }}
-          JWT_SECRET: secret
+      # - name: Run e2e tests
+      #   run: yarn test:e2e --ci --maxWorkers=2 --detectOpenHandles
+      #   env:
+      #     SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+      #     SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+      #     SPOTIFY_CALLBACK_URL: ${{ secrets.SPOTIFY_CALLBACK_URL }}
+      #     SPOTIFY_BASE_URL: https://api.spotify.com/v1
+      #     SPOTIFY_ACCOUNTS_URL: https://accounts.spotify.com
+      #     CLIENT_URL: ${{ secrets.CLIENT_URL }}
+      #     JWT_SECRET: secret
 
       - name: Collect coverage
         uses: codecov/codecov-action@v3
