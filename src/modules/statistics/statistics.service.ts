@@ -12,7 +12,7 @@ import {
   SpotifyArtist,
   FormattedArtist,
 } from '~/common/types/spotify'
-import { catchSpotifyError } from '~/utils'
+import { applyAuthorizationHeader, catchSpotifyError } from '~/utils'
 
 @Injectable()
 export class StatisticsService {
@@ -29,11 +29,7 @@ export class StatisticsService {
     return this.httpService
       .get<SpotifyResponse<{ track: SpotifyTrack; played_at: string }>>(
         `/me/player/recently-played?limit=${limit}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
+        applyAuthorizationHeader(accessToken)
       )
       .pipe(
         map(response => response.data.items),
@@ -52,11 +48,7 @@ export class StatisticsService {
     return this.httpService
       .get<SpotifyResponse<SpotifyArtist>>(
         `/me/top/artists?limit=${50}&time_range=long_term`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
+        applyAuthorizationHeader(accessToken)
       )
       .pipe(
         map(response => response.data.items),
@@ -69,11 +61,7 @@ export class StatisticsService {
     return this.httpService
       .get<SpotifyResponse<SpotifyArtist>>(
         `/me/top/artists?limit=${limit}&time_range=long_term`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
+        applyAuthorizationHeader(accessToken)
       )
       .pipe(
         map(response => response.data.items),
@@ -86,11 +74,7 @@ export class StatisticsService {
     return this.httpService
       .get<SpotifyResponse<SpotifyTrack>>(
         `/me/top/tracks?limit=${limit}&time_range=long_term`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
+        applyAuthorizationHeader(accessToken)
       )
       .pipe(
         map(response => response.data.items),
@@ -101,11 +85,10 @@ export class StatisticsService {
 
   artist(accessToken: string, id: string) {
     return this.httpService
-      .get<SpotifyArtist>(`/artists/${id}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
+      .get<SpotifyArtist>(
+        `/artists/${id}`,
+        applyAuthorizationHeader(accessToken)
+      )
       .pipe(
         map(response => response.data),
         map(artist => this.adapterService.adaptArtists([artist])[0]),

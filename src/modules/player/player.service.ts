@@ -12,7 +12,7 @@ import {
   FormattedPlaybackState,
   SpotifyPlaybackState,
 } from '~/common/types/spotify'
-import { catchSpotifyError } from '~/utils'
+import { applyAuthorizationHeader, catchSpotifyError } from '~/utils'
 import { Success } from '~/common/dtos'
 
 @Injectable()
@@ -24,11 +24,10 @@ export class PlayerService {
 
   avaibleDevices(accessToken: string): Observable<FormattedDevice[]> {
     return this.httpService
-      .get<{ devices: SpotifyDevice[] }>('/me/player/devices', {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
+      .get<{ devices: SpotifyDevice[] }>(
+        '/me/player/devices',
+        applyAuthorizationHeader(accessToken)
+      )
       .pipe(
         map(response => response.data.devices),
         catchError(catchSpotifyError),
@@ -44,11 +43,10 @@ export class PlayerService {
     accessToken: string
   ): Observable<FormattedPlaybackState> {
     return this.httpService
-      .get<SpotifyPlaybackState>('/me/player', {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
+      .get<SpotifyPlaybackState>(
+        '/me/player',
+        applyAuthorizationHeader(accessToken)
+      )
       .pipe(
         map(response => response.data),
         catchError(catchSpotifyError),
@@ -73,11 +71,7 @@ export class PlayerService {
           .put(
             `/me/player/pause${deviceId ? deviceIdQuery : ''}`,
             {},
-            {
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-              },
-            }
+            applyAuthorizationHeader(accessToken)
           )
           .pipe(
             map(() => ({
@@ -101,11 +95,7 @@ export class PlayerService {
       .put(
         `/me/player/play${deviceId ? deviceIdQuery : ''}`,
         {},
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
+        applyAuthorizationHeader(accessToken)
       )
       .pipe(
         map(() => ({
