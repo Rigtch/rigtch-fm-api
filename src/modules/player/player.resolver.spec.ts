@@ -4,10 +4,7 @@ import { of } from 'rxjs'
 import { PlayerResolver } from './player.resolver'
 import { PlayerService } from './player.service'
 
-import {
-  formattedPlaybackStateMock,
-  formattedDevicesMock,
-} from '~/common/mocks'
+import { formattedPlaybackStateMock, formattedDevicesMock } from '@common/mocks'
 
 describe('PlayerResolver', () => {
   let playerResolver: PlayerResolver

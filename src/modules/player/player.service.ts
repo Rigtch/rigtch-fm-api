@@ -11,9 +11,9 @@ import {
   SpotifyDevice,
   FormattedPlaybackState,
   SpotifyPlaybackState,
-} from '~/common/types/spotify'
+} from '@common/types/spotify'
 import { applyAuthorizationHeader, catchSpotifyError } from '~/utils'
-import { Success } from '~/common/dtos'
+import { Success } from '@common/dtos'
 
 @Injectable()
 export class PlayerService {

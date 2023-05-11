@@ -3,12 +3,11 @@ import { ConfigService } from '@nestjs/config'
 import { JwtModule } from '@nestjs/jwt'
 import { HttpModule } from '@nestjs/axios'
 
-import { AdapterModule } from '../adapter'
-
 import { AuthService } from './auth.service'
 import { AuthResolver } from './auth.resolver'
 import { AuthController } from './auth.controller'
 
+import { AdapterModule } from '@modules/adapter'
 import { Environment } from '~/config'
 
 @Module({

@@ -15,18 +15,30 @@ module.exports = {
     settings: {
       'import/resolver': {
         node: {
-          paths: ['~/', '@lib/common', '@lib/utils'],
+          paths: [
+            '~/',
+            '@modules/adapter',
+            '@modules/app',
+            '@modules/auth',
+            '@modules/player',
+            '@modules/statistics',
+            '@common/dtos',
+            '@common/mocks',
+            '@common/types',
+          ],
           extensions: ['.js', '.ts'],
         },
         alias: {
           map: [
             ['~', './'],
-            ['@lib/common', './libs/common/src'],
-            ['@lib/utils', './libs/utils/src'],
-            ['@lib/types', './libs/types/src'],
-            ['@app/auth', './apps/auth/src'],
-            ['@app/statistics', './apps/statistics/src'],
-            ['@app/player', './apps/player/src'],
+            ['@modules/adapter', './src/modules/adapter'],
+            ['@modules/app', './src/modules/app'],
+            ['@modules/auth', './src/modules/auth'],
+            ['@modules/player', './src/modules/player'],
+            ['@modules/statistics', './src/modules/statistics'],
+            ['@common/dtos', './src/common/dtos'],
+            ['@common/mocks', './src/common/mocks'],
+            ['@common/types', './src/common/types'],
           ],
           extensions: ['.ts', '.js'],
         },
@@ -51,7 +63,7 @@ module.exports = {
   ],
   overrides: [
     {
-      files: ['*.spec.ts'],
+      files: ['*.spec.ts', '*.mock.ts'],
       rules: {
         'sonarjs/no-duplicate-string': 'off',
       },

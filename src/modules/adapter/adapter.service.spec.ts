@@ -18,7 +18,7 @@ import {
   formattedArtistMock,
   spotifyTrackMock,
   formattedTrackMock,
-} from '~/common/mocks'
+} from '@common/mocks'
 
 describe('AdapterService', () => {
   let adapterService: AdapterService

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 
-import { Genres } from '~/common/dtos'
+import { Genres } from '@common/dtos'
 import {
   SpotifyArtist,
   FormattedArtist,
@@ -12,7 +12,7 @@ import {
   FormattedDevice,
   SpotifyPlaybackState,
   FormattedPlaybackState,
-} from '~/common/types/spotify'
+} from '@common/types/spotify'
 import { getMostFrequentItems } from '~/utils'
 
 @Injectable()

@@ -2,10 +2,9 @@ import { HttpService } from '@nestjs/axios'
 import { TestingModule, Test } from '@nestjs/testing'
 import { firstValueFrom, of } from 'rxjs'
 
-import { AdapterService } from '../adapter'
-
 import { StatisticsService } from './statistics.service'
 
+import { AdapterService } from '@modules/adapter'
 import {
   spotifyTrackMock,
   formattedTracksMock,
@@ -15,7 +14,7 @@ import {
   spotifyTracksMock,
   spotifyArtistMock,
   formattedArtistMock,
-} from '~/common/mocks'
+} from '@common/mocks'
 
 describe('StatisticsService', () => {
   let statisticsService: StatisticsService

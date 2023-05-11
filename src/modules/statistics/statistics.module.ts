@@ -2,12 +2,11 @@ import { Module } from '@nestjs/common'
 import { HttpModule } from '@nestjs/axios'
 import { ConfigService } from '@nestjs/config'
 
-import { AdapterModule } from '../adapter'
-import { AuthModule } from '../auth'
-
 import { StatisticsService } from './statistics.service'
 import { StatisticsResolver } from './statistics.resolver'
 
+import { AdapterModule } from '@modules/adapter'
+import { AuthModule } from '@modules/auth'
 import { Environment } from '~/config'
 
 @Module({

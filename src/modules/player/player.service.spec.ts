@@ -3,10 +3,9 @@ import { TestingModule, Test } from '@nestjs/testing'
 import { of, firstValueFrom, throwError, catchError } from 'rxjs'
 import { ForbiddenException } from '@nestjs/common'
 
-import { AdapterService } from '../adapter'
-
 import { PlayerService } from './player.service'
 
+import { AdapterService } from '@modules/adapter'
 import {
   formattedDevicesMock,
   formattedPlaybackStateMock,

@@ -1,7 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql'
 
-import { ImageDto } from '~/common/dtos'
-import { FormattedProfile } from '~/common/types/spotify'
+import { ImageDto } from '@common/dtos'
+import { FormattedProfile } from '@common/types/spotify'
 
 @ObjectType()
 export abstract class ProfileDto implements FormattedProfile {

@@ -7,11 +7,10 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { Profile } from 'passport-spotify'
 import { firstValueFrom, of } from 'rxjs'
 
-import { AdapterService } from '../adapter'
-
 import { AuthService } from './auth.service'
 
-import { spotifyProfileMock, formattedProfileMock } from '~/common/mocks'
+import { AdapterService } from '@modules/adapter'
+import { spotifyProfileMock, formattedProfileMock } from '@common/mocks'
 
 describe('AuthService', () => {
   let authService: AuthService
