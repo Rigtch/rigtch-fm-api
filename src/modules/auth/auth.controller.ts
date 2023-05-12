@@ -47,7 +47,7 @@ export class AuthController {
     return {
       url: `${this.configService.get(
         CLIENT_CALLBACK_URL
-      )}?${new URLSearchParams({
+      )}/api/authorize?${new URLSearchParams({
         accessToken,
         refreshToken,
       })}`,

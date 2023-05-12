@@ -53,7 +53,7 @@ describe('AuthController', () => {
     const { accessToken, refreshToken } = tokenResponse
 
     expect(await authController.callback('code')).toEqual({
-      url: `${redirectUrl}?${new URLSearchParams({
+      url: `${redirectUrl}/api/authorize?${new URLSearchParams({
         accessToken,
         refreshToken,
       })}`,
