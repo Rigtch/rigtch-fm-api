@@ -4,8 +4,14 @@ import {
   UnauthorizedException,
 } from '@nestjs/common'
 
-export const catchSpotifyError = ({ response: { data, status } }) => {
-  if (data.error === 'invalid_grant')
+export const catchSpotifyError = error => {
+  console.error(error)
+
+  const {
+    response: { data, status },
+  } = error
+
+  if (data?.error === 'invalid_grant')
     throw new UnauthorizedException('Invalid token')
   if (status === 401) throw new UnauthorizedException(data?.error?.message)
   if (

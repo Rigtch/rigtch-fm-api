@@ -57,7 +57,9 @@ export class AuthService {
       parameters.append('grant_type', 'authorization_code')
       parameters.append(
         'redirect_uri',
-        this.configService.get(Environment.SPOTIFY_CALLBACK_URL)
+        `${this.configService.get(
+          Environment.SPOTIFY_CALLBACK_URL
+        )}/api/authorize`
       )
     }
 
