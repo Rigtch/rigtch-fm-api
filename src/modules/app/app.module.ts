@@ -2,12 +2,13 @@ import { Module } from '@nestjs/common'
 import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo'
 import { GraphQLModule } from '@nestjs/graphql'
 import Joi from 'joi'
-import { ConfigModule } from '@nestjs/config'
+import { ConfigModule, ConfigService } from '@nestjs/config'
 
 import { AdapterModule } from '@modules/adapter'
 import { AuthModule } from '@modules/auth'
 import { StatisticsModule } from '@modules/statistics'
 import { PlayerModule } from '@modules/player'
+import { Environment } from '~/config'
 
 @Module({
   imports: [
@@ -17,9 +18,10 @@ import { PlayerModule } from '@modules/player'
     PlayerModule,
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
-      useFactory: () => ({
+      useFactory: (configService: ConfigService) => ({
         cache: 'bounded',
         autoSchemaFile: true,
+        context: ({ req, res }) => ({ req, res }),
         playground: {
           settings: {
             'request.credentials': 'include',
@@ -28,9 +30,11 @@ import { PlayerModule } from '@modules/player'
         introspection: true,
         cors: {
           credentials: true,
-          origin: true,
+          methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+          origin: configService.get(Environment.CLIENT_CALLBACK_URL),
         },
       }),
+      inject: [ConfigService],
     }),
     ConfigModule.forRoot({
       isGlobal: true,

@@ -13,7 +13,9 @@ export const AccessToken = createParamDecorator(
         ? context.switchToHttp().getRequest()
         : GqlExecutionContext.create(context).getContext().req
 
-    const accessToken = request.cookies['access-token']
+    const accessToken =
+      request.cookies?.['access-token'] ??
+      request.headers?.['Authorization']?.slice(7)
 
     if (!accessToken)
       throw new UnauthorizedException(

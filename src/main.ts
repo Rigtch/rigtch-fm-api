@@ -10,6 +10,7 @@ const configService = app.get(ConfigService)
 
 app.enableCors({
   origin: configService.get(Environment.CLIENT_CALLBACK_URL),
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
 })
 app.use(cookieParser())

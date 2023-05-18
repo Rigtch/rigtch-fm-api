@@ -12,7 +12,7 @@ describe('RefreshToken', () => {
     expect(RefreshToken).toBeDefined()
   })
 
-  it('should return the refresh token', () => {
+  it('should return the refresh token from cookie', () => {
     const refreshToken = 'test'
 
     expect(
@@ -23,6 +23,26 @@ describe('RefreshToken', () => {
             getRequest: () => ({
               cookies: {
                 'refresh-token': refreshToken,
+              },
+            }),
+          }),
+          getType: () => 'http',
+        })
+      )
+    ).toEqual(refreshToken)
+  })
+
+  it('should return the refresh token from headers', () => {
+    const refreshToken = 'test'
+
+    expect(
+      factory(
+        undefined,
+        createMock<ExecutionContext>({
+          switchToHttp: () => ({
+            getRequest: () => ({
+              headers: {
+                Authorization: `Basic ${refreshToken}`,
               },
             }),
           }),
