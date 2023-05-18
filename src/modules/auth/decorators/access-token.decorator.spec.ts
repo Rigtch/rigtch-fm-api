@@ -42,7 +42,7 @@ describe('AccessToken', () => {
           switchToHttp: () => ({
             getRequest: () => ({
               headers: {
-                Authorization: `Bearer ${accessToken}`,
+                authorization: `Bearer ${accessToken}`,
               },
             }),
           }),

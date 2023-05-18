@@ -15,7 +15,7 @@ export const AccessToken = createParamDecorator(
 
     const accessToken =
       request.cookies?.['access-token'] ??
-      request.headers?.['Authorization']?.slice(7)
+      request.headers?.authorization?.slice(7)
 
     if (!accessToken)
       throw new UnauthorizedException(

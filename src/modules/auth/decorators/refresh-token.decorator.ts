@@ -15,7 +15,7 @@ export const RefreshToken = createParamDecorator(
 
     const refreshToken =
       request.cookies?.['refresh-token'] ??
-      request.headers?.['Authorization']?.slice(6)
+      request.headers?.authorization?.slice(6)
 
     if (!refreshToken)
       throw new UnauthorizedException(

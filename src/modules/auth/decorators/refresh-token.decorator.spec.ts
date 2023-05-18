@@ -42,7 +42,7 @@ describe('RefreshToken', () => {
           switchToHttp: () => ({
             getRequest: () => ({
               headers: {
-                Authorization: `Basic ${refreshToken}`,
+                authorization: `Basic ${refreshToken}`,
               },
             }),
           }),
