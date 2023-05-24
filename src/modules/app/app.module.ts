@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common'
 import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo'
 import { GraphQLModule } from '@nestjs/graphql'
-import Joi from 'joi'
+import * as Joi from 'joi'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 
 import { AdapterModule } from '@modules/adapter'

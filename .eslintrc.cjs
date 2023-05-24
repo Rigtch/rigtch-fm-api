@@ -93,6 +93,7 @@ module.exports = {
         'newlines-between': 'always',
       },
     ],
+    'unicorn/prefer-top-level-await': 'off',
     'unicorn/prevent-abbreviations': [
       'error',
       {
