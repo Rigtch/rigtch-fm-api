@@ -16,9 +16,7 @@ are always up to date.
 
 ## Deployment
 
-- [Statistics](https://rigtch-music-statistics.onrender.com)
-- [Auth](https://rigtch-music-auth.onrender.com)
-- [Player](https://rigtch-music-player.onrender.com)
+- [Production](https://rigtch-music-api.vercel.app)
 
 ### Related repositories
 
