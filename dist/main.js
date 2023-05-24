@@ -1324,9 +1324,8 @@ let AuthService = class AuthService {
             parameters.append('grant_type', 'authorization_code');
             parameters.append('redirect_uri', this.configService.get(config_2.Environment.SPOTIFY_CALLBACK_URL));
         }
-        const formData = `code=${code}&grant_type=authorization_code&redirect_uri=${this.configService.get(config_2.Environment.SPOTIFY_CALLBACK_URL)}`;
         return this.httpService
-            .post(url, formData, {
+            .post(url, parameters, {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 Authorization: `Basic ${bufferedCredentials}`,
