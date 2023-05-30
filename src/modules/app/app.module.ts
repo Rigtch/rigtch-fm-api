@@ -30,8 +30,9 @@ import { Environment } from '~/config'
         introspection: true,
         cors: {
           credentials: true,
-          methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+          methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
           origin: configService.get(Environment.CLIENT_CALLBACK_URL),
+          // origin: '*',
         },
       }),
       inject: [ConfigService],

@@ -88,7 +88,7 @@ AppModule = __decorate([
                     introspection: true,
                     cors: {
                         credentials: true,
-                        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+                        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
                         origin: configService.get(config_2.Environment.CLIENT_CALLBACK_URL),
                     },
                 }),
@@ -2146,7 +2146,7 @@ async function bootstrap() {
     const configService = app.get(config_1.ConfigService);
     app.enableCors({
         origin: configService.get(config_2.Environment.CLIENT_CALLBACK_URL),
-        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
         credentials: true,
     });
     app.use(cookieParser());

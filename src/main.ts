@@ -11,7 +11,8 @@ async function bootstrap() {
 
   app.enableCors({
     origin: configService.get(Environment.CLIENT_CALLBACK_URL),
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    // origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   })
   app.use(cookieParser())
