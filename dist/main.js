@@ -2077,9 +2077,6 @@ let StatisticsService = class StatisticsService {
         this.httpService = httpService;
         this.adapterService = adapterService;
     }
-    getHello() {
-        return 'Hello World!';
-    }
     lastTracks(accessToken, limit = 20) {
         return this.httpService
             .get(`/me/player/recently-played?limit=${limit}`, (0, utils_1.applyAuthorizationHeader)(accessToken))
