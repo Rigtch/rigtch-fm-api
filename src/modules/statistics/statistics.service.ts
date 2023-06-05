@@ -20,10 +20,6 @@ export class StatisticsService {
     private readonly adapterService: AdapterService
   ) {}
 
-  getHello(): string {
-    return 'Hello World!'
-  }
-
   lastTracks(accessToken: string, limit = 20): Observable<FormattedTrack[]> {
     return this.httpService
       .get<SpotifyResponse<{ track: SpotifyTrack; played_at: string }>>(
