@@ -57,7 +57,7 @@ export const formattedArtistMock: FormattedArtist = {
     'norwegian death metal',
     'norwegian metal',
   ],
-  href: 'https://api.spotify.com/v1/artists/7kWnE981vITXDnAD2cZmCV',
+  href: 'https://open.spotify.com/artist/7kWnE981vITXDnAD2cZmCV',
   images: [
     {
       height: 640,

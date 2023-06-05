@@ -20,7 +20,7 @@ export class AdapterService {
   adaptArtist = ({
     name,
     genres,
-    href,
+    external_urls: { spotify: href },
     images,
   }: SpotifyArtist): FormattedArtist => ({
     name,

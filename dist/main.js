@@ -1,26 +1,248 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
-/******/ 	var __webpack_modules__ = ([
-/* 0 */,
-/* 1 */
-/***/ ((module) => {
+/******/ 	var __webpack_modules__ = ({
 
-module.exports = require("@nestjs/core");
+/***/ "./src/common/dtos/album.dto.ts":
+/*!**************************************!*\
+  !*** ./src/common/dtos/album.dto.ts ***!
+  \**************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Album = void 0;
+const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
+const _1 = __webpack_require__(/*! . */ "./src/common/dtos/index.ts");
+let Album = class Album {
+};
+__decorate([
+    (0, graphql_1.Field)(() => String),
+    __metadata("design:type", String)
+], Album.prototype, "name", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => String),
+    __metadata("design:type", String)
+], Album.prototype, "artist", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => [_1.ImageDto]),
+    __metadata("design:type", Array)
+], Album.prototype, "images", void 0);
+Album = __decorate([
+    (0, graphql_1.ObjectType)()
+], Album);
+exports.Album = Album;
+
 
 /***/ }),
-/* 2 */
-/***/ ((module) => {
 
-module.exports = require("@nestjs/config");
+/***/ "./src/common/dtos/artist.dto.ts":
+/*!***************************************!*\
+  !*** ./src/common/dtos/artist.dto.ts ***!
+  \***************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TrackArtist = exports.Artist = void 0;
+const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
+const _1 = __webpack_require__(/*! . */ "./src/common/dtos/index.ts");
+let Artist = class Artist {
+};
+__decorate([
+    (0, graphql_1.Field)(() => String),
+    __metadata("design:type", String)
+], Artist.prototype, "name", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => [String]),
+    __metadata("design:type", Array)
+], Artist.prototype, "genres", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => String),
+    __metadata("design:type", String)
+], Artist.prototype, "href", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => [_1.ImageDto]),
+    __metadata("design:type", Array)
+], Artist.prototype, "images", void 0);
+Artist = __decorate([
+    (0, graphql_1.ObjectType)()
+], Artist);
+exports.Artist = Artist;
+let TrackArtist = class TrackArtist {
+};
+__decorate([
+    (0, graphql_1.Field)(() => String),
+    __metadata("design:type", String)
+], TrackArtist.prototype, "name", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => String),
+    __metadata("design:type", String)
+], TrackArtist.prototype, "id", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => String),
+    __metadata("design:type", String)
+], TrackArtist.prototype, "href", void 0);
+TrackArtist = __decorate([
+    (0, graphql_1.ObjectType)()
+], TrackArtist);
+exports.TrackArtist = TrackArtist;
+
 
 /***/ }),
-/* 3 */
-/***/ ((module) => {
 
-module.exports = require("cookie-parser");
+/***/ "./src/common/dtos/device.dto.ts":
+/*!***************************************!*\
+  !*** ./src/common/dtos/device.dto.ts ***!
+  \***************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Device = void 0;
+const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
+let Device = class Device {
+};
+__decorate([
+    (0, graphql_1.Field)(() => String),
+    __metadata("design:type", String)
+], Device.prototype, "id", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => String),
+    __metadata("design:type", String)
+], Device.prototype, "name", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => String),
+    __metadata("design:type", String)
+], Device.prototype, "type", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => Boolean),
+    __metadata("design:type", Boolean)
+], Device.prototype, "isActive", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => Boolean),
+    __metadata("design:type", Boolean)
+], Device.prototype, "isPrivateSession", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => Boolean),
+    __metadata("design:type", Boolean)
+], Device.prototype, "isRestricted", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => Number),
+    __metadata("design:type", Number)
+], Device.prototype, "volumePercent", void 0);
+Device = __decorate([
+    (0, graphql_1.ObjectType)()
+], Device);
+exports.Device = Device;
+
 
 /***/ }),
-/* 4 */
+
+/***/ "./src/common/dtos/genres.dto.ts":
+/*!***************************************!*\
+  !*** ./src/common/dtos/genres.dto.ts ***!
+  \***************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Genres = void 0;
+const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
+let Genres = class Genres {
+};
+__decorate([
+    (0, graphql_1.Field)(() => [String]),
+    __metadata("design:type", Array)
+], Genres.prototype, "genres", void 0);
+Genres = __decorate([
+    (0, graphql_1.ObjectType)()
+], Genres);
+exports.Genres = Genres;
+
+
+/***/ }),
+
+/***/ "./src/common/dtos/image.dto.ts":
+/*!**************************************!*\
+  !*** ./src/common/dtos/image.dto.ts ***!
+  \**************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ImageDto = void 0;
+const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
+let ImageDto = class ImageDto {
+};
+__decorate([
+    (0, graphql_1.Field)(() => Number),
+    __metadata("design:type", Number)
+], ImageDto.prototype, "height", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => Number),
+    __metadata("design:type", Number)
+], ImageDto.prototype, "width", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => String),
+    __metadata("design:type", String)
+], ImageDto.prototype, "url", void 0);
+ImageDto = __decorate([
+    (0, graphql_1.ObjectType)()
+], ImageDto);
+exports.ImageDto = ImageDto;
+
+
+/***/ }),
+
+/***/ "./src/common/dtos/index.ts":
+/*!**********************************!*\
+  !*** ./src/common/dtos/index.ts ***!
+  \**********************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -39,11 +261,505 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-__exportStar(__webpack_require__(5), exports);
+__exportStar(__webpack_require__(/*! ./image.dto */ "./src/common/dtos/image.dto.ts"), exports);
+__exportStar(__webpack_require__(/*! ./album.dto */ "./src/common/dtos/album.dto.ts"), exports);
+__exportStar(__webpack_require__(/*! ./artist.dto */ "./src/common/dtos/artist.dto.ts"), exports);
+__exportStar(__webpack_require__(/*! ./track.dto */ "./src/common/dtos/track.dto.ts"), exports);
+__exportStar(__webpack_require__(/*! ./device.dto */ "./src/common/dtos/device.dto.ts"), exports);
+__exportStar(__webpack_require__(/*! ./playback-state.dto */ "./src/common/dtos/playback-state.dto.ts"), exports);
+__exportStar(__webpack_require__(/*! ./genres.dto */ "./src/common/dtos/genres.dto.ts"), exports);
+__exportStar(__webpack_require__(/*! ./success.dto */ "./src/common/dtos/success.dto.ts"), exports);
 
 
 /***/ }),
-/* 5 */
+
+/***/ "./src/common/dtos/playback-state.dto.ts":
+/*!***********************************************!*\
+  !*** ./src/common/dtos/playback-state.dto.ts ***!
+  \***********************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var _a, _b, _c, _d;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.PlaybackState = void 0;
+const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
+const _1 = __webpack_require__(/*! . */ "./src/common/dtos/index.ts");
+const spotify_1 = __webpack_require__(/*! ~/common/types/spotify */ "./src/common/types/spotify/index.ts");
+let PlaybackState = class PlaybackState {
+};
+__decorate([
+    (0, graphql_1.Field)(() => _1.Device),
+    __metadata("design:type", typeof (_a = typeof _1.Device !== "undefined" && _1.Device) === "function" ? _a : Object)
+], PlaybackState.prototype, "device", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => String),
+    __metadata("design:type", typeof (_b = typeof spotify_1.RepeatedState !== "undefined" && spotify_1.RepeatedState) === "function" ? _b : Object)
+], PlaybackState.prototype, "repeatState", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => String),
+    __metadata("design:type", typeof (_c = typeof spotify_1.ShuffleState !== "undefined" && spotify_1.ShuffleState) === "function" ? _c : Object)
+], PlaybackState.prototype, "shuffleState", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => Boolean),
+    __metadata("design:type", Boolean)
+], PlaybackState.prototype, "isPlaying", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => _1.Track),
+    __metadata("design:type", typeof (_d = typeof _1.Track !== "undefined" && _1.Track) === "function" ? _d : Object)
+], PlaybackState.prototype, "track", void 0);
+PlaybackState = __decorate([
+    (0, graphql_1.ObjectType)()
+], PlaybackState);
+exports.PlaybackState = PlaybackState;
+
+
+/***/ }),
+
+/***/ "./src/common/dtos/success.dto.ts":
+/*!****************************************!*\
+  !*** ./src/common/dtos/success.dto.ts ***!
+  \****************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Success = void 0;
+const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
+let Success = class Success {
+};
+__decorate([
+    (0, graphql_1.Field)(() => Boolean),
+    __metadata("design:type", Boolean)
+], Success.prototype, "success", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => String, { nullable: true }),
+    __metadata("design:type", String)
+], Success.prototype, "message", void 0);
+Success = __decorate([
+    (0, graphql_1.ObjectType)()
+], Success);
+exports.Success = Success;
+
+
+/***/ }),
+
+/***/ "./src/common/dtos/track.dto.ts":
+/*!**************************************!*\
+  !*** ./src/common/dtos/track.dto.ts ***!
+  \**************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var _a;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Track = void 0;
+const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
+const _1 = __webpack_require__(/*! . */ "./src/common/dtos/index.ts");
+let Track = class Track {
+};
+__decorate([
+    (0, graphql_1.Field)(() => String),
+    __metadata("design:type", String)
+], Track.prototype, "name", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => String),
+    __metadata("design:type", String)
+], Track.prototype, "href", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => [_1.TrackArtist]),
+    __metadata("design:type", Array)
+], Track.prototype, "artists", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => _1.Album),
+    __metadata("design:type", typeof (_a = typeof _1.Album !== "undefined" && _1.Album) === "function" ? _a : Object)
+], Track.prototype, "album", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => Number),
+    __metadata("design:type", Number)
+], Track.prototype, "duration", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => Number, { nullable: true }),
+    __metadata("design:type", Number)
+], Track.prototype, "progress", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => String, { nullable: true }),
+    __metadata("design:type", String)
+], Track.prototype, "playedAt", void 0);
+Track = __decorate([
+    (0, graphql_1.ObjectType)()
+], Track);
+exports.Track = Track;
+
+
+/***/ }),
+
+/***/ "./src/common/types/spotify/album.ts":
+/*!*******************************************!*\
+  !*** ./src/common/types/spotify/album.ts ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+
+/***/ }),
+
+/***/ "./src/common/types/spotify/artist.ts":
+/*!********************************************!*\
+  !*** ./src/common/types/spotify/artist.ts ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+
+/***/ }),
+
+/***/ "./src/common/types/spotify/device.ts":
+/*!********************************************!*\
+  !*** ./src/common/types/spotify/device.ts ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+
+/***/ }),
+
+/***/ "./src/common/types/spotify/image.ts":
+/*!*******************************************!*\
+  !*** ./src/common/types/spotify/image.ts ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+
+/***/ }),
+
+/***/ "./src/common/types/spotify/index.ts":
+/*!*******************************************!*\
+  !*** ./src/common/types/spotify/index.ts ***!
+  \*******************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+__exportStar(__webpack_require__(/*! ./image */ "./src/common/types/spotify/image.ts"), exports);
+__exportStar(__webpack_require__(/*! ./spotify-response */ "./src/common/types/spotify/spotify-response.ts"), exports);
+__exportStar(__webpack_require__(/*! ./album */ "./src/common/types/spotify/album.ts"), exports);
+__exportStar(__webpack_require__(/*! ./artist */ "./src/common/types/spotify/artist.ts"), exports);
+__exportStar(__webpack_require__(/*! ./track */ "./src/common/types/spotify/track.ts"), exports);
+__exportStar(__webpack_require__(/*! ./profile */ "./src/common/types/spotify/profile.ts"), exports);
+__exportStar(__webpack_require__(/*! ./spotify-token */ "./src/common/types/spotify/spotify-token.ts"), exports);
+__exportStar(__webpack_require__(/*! ./device */ "./src/common/types/spotify/device.ts"), exports);
+__exportStar(__webpack_require__(/*! ./playback-state */ "./src/common/types/spotify/playback-state.ts"), exports);
+
+
+/***/ }),
+
+/***/ "./src/common/types/spotify/playback-state.ts":
+/*!****************************************************!*\
+  !*** ./src/common/types/spotify/playback-state.ts ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ShuffleState = exports.RepeatedState = void 0;
+var RepeatedState;
+(function (RepeatedState) {
+    RepeatedState["TRACK"] = "track";
+    RepeatedState["CONTEXT"] = "context";
+    RepeatedState["OFF"] = "off";
+})(RepeatedState = exports.RepeatedState || (exports.RepeatedState = {}));
+var ShuffleState;
+(function (ShuffleState) {
+    ShuffleState["ON"] = "on";
+    ShuffleState["OFF"] = "off";
+})(ShuffleState = exports.ShuffleState || (exports.ShuffleState = {}));
+
+
+/***/ }),
+
+/***/ "./src/common/types/spotify/profile.ts":
+/*!*********************************************!*\
+  !*** ./src/common/types/spotify/profile.ts ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+
+/***/ }),
+
+/***/ "./src/common/types/spotify/spotify-response.ts":
+/*!******************************************************!*\
+  !*** ./src/common/types/spotify/spotify-response.ts ***!
+  \******************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+
+/***/ }),
+
+/***/ "./src/common/types/spotify/spotify-token.ts":
+/*!***************************************************!*\
+  !*** ./src/common/types/spotify/spotify-token.ts ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+
+/***/ }),
+
+/***/ "./src/common/types/spotify/track.ts":
+/*!*******************************************!*\
+  !*** ./src/common/types/spotify/track.ts ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+
+/***/ }),
+
+/***/ "./src/config/environment.enum.ts":
+/*!****************************************!*\
+  !*** ./src/config/environment.enum.ts ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Environment = void 0;
+var Environment;
+(function (Environment) {
+    Environment["PORT"] = "PORT";
+    Environment["SPOTIFY_CLIENT_ID"] = "SPOTIFY_CLIENT_ID";
+    Environment["SPOTIFY_CLIENT_SECRET"] = "SPOTIFY_CLIENT_SECRET";
+    Environment["SPOTIFY_CALLBACK_URL"] = "SPOTIFY_CALLBACK_URL";
+    Environment["SPOTIFY_BASE_URL"] = "SPOTIFY_BASE_URL";
+    Environment["SPOTIFY_ACCOUNTS_URL"] = "SPOTIFY_ACCOUNTS_URL";
+    Environment["CLIENT_CALLBACK_URL"] = "CLIENT_CALLBACK_URL";
+    Environment["JWT_SECRET"] = "JWT_SECRET";
+    Environment["NODE_ENV"] = "NODE_ENV";
+})(Environment = exports.Environment || (exports.Environment = {}));
+
+
+/***/ }),
+
+/***/ "./src/config/index.ts":
+/*!*****************************!*\
+  !*** ./src/config/index.ts ***!
+  \*****************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+__exportStar(__webpack_require__(/*! ./environment.enum */ "./src/config/environment.enum.ts"), exports);
+
+
+/***/ }),
+
+/***/ "./src/modules/adapter/adapter.module.ts":
+/*!***********************************************!*\
+  !*** ./src/modules/adapter/adapter.module.ts ***!
+  \***********************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AdapterModule = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const adapter_service_1 = __webpack_require__(/*! ./adapter.service */ "./src/modules/adapter/adapter.service.ts");
+let AdapterModule = class AdapterModule {
+};
+AdapterModule = __decorate([
+    (0, common_1.Module)({
+        providers: [adapter_service_1.AdapterService],
+        exports: [adapter_service_1.AdapterService],
+    })
+], AdapterModule);
+exports.AdapterModule = AdapterModule;
+
+
+/***/ }),
+
+/***/ "./src/modules/adapter/adapter.service.ts":
+/*!************************************************!*\
+  !*** ./src/modules/adapter/adapter.service.ts ***!
+  \************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AdapterService = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const utils_1 = __webpack_require__(/*! ~/utils */ "./src/utils/index.ts");
+let AdapterService = class AdapterService {
+    constructor() {
+        this.adaptArtist = ({ name, genres, external_urls: { spotify: href }, images, }) => ({
+            name,
+            genres,
+            href,
+            images,
+        });
+        this.adaptArtists = (artists) => artists.map(artist => this.adaptArtist(artist));
+        this.adaptGenres = (artists, limit) => ({
+            genres: (0, utils_1.getMostFrequentItems)(artists.flatMap(({ genres }) => genres), limit),
+        });
+        this.adaptTrack = ({ name, album, artists, external_urls: { spotify: href }, duration_ms, progress_ms, played_at, }) => (Object.assign(Object.assign({ name, album: { name: album.name, images: album.images }, artists: artists.map(({ name, id, href }) => ({ name, id, href })), href, duration: duration_ms }, (progress_ms && { progress: progress_ms })), (played_at && { playedAt: played_at })));
+        this.adaptTracks = (tracks) => tracks.map(track => this.adaptTrack(track));
+        this.adaptProfile = ({ id, display_name, email, images, country, external_urls: { spotify: href }, followers, }) => ({
+            id,
+            displayName: display_name,
+            email,
+            images,
+            country,
+            href,
+            followers: followers.total,
+        });
+        this.adaptDevices = (devices) => devices.map(({ id, name, type, is_active: isActive, is_private_session: isPrivateSession, is_restricted: isRestricted, volume_percent: volumePercent, }) => ({
+            id,
+            name,
+            type,
+            isActive,
+            isPrivateSession,
+            isRestricted,
+            volumePercent,
+        }));
+        this.adaptPlaybackState = ({ device, repeat_state, shuffle_state, is_playing, item, }) => {
+            const [formattedDevice] = this.adaptDevices([device]);
+            const [formattedTrack] = this.adaptTracks([item]);
+            return {
+                device: formattedDevice,
+                repeatState: repeat_state,
+                shuffleState: shuffle_state,
+                isPlaying: is_playing,
+                track: formattedTrack,
+            };
+        };
+    }
+};
+AdapterService = __decorate([
+    (0, common_1.Injectable)()
+], AdapterService);
+exports.AdapterService = AdapterService;
+
+
+/***/ }),
+
+/***/ "./src/modules/adapter/index.ts":
+/*!**************************************!*\
+  !*** ./src/modules/adapter/index.ts ***!
+  \**************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+__exportStar(__webpack_require__(/*! ./adapter.module */ "./src/modules/adapter/adapter.module.ts"), exports);
+__exportStar(__webpack_require__(/*! ./adapter.service */ "./src/modules/adapter/adapter.service.ts"), exports);
+
+
+/***/ }),
+
+/***/ "./src/modules/app/app.module.ts":
+/*!***************************************!*\
+  !*** ./src/modules/app/app.module.ts ***!
+  \***************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -55,16 +771,16 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AppModule = void 0;
-const common_1 = __webpack_require__(6);
-const apollo_1 = __webpack_require__(7);
-const graphql_1 = __webpack_require__(8);
-const Joi = __webpack_require__(9);
-const config_1 = __webpack_require__(2);
-const adapter_1 = __webpack_require__(10);
-const auth_1 = __webpack_require__(19);
-const statistics_1 = __webpack_require__(60);
-const player_1 = __webpack_require__(68);
-const config_2 = __webpack_require__(56);
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const apollo_1 = __webpack_require__(/*! @nestjs/apollo */ "@nestjs/apollo");
+const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
+const Joi = __webpack_require__(/*! joi */ "joi");
+const config_1 = __webpack_require__(/*! @nestjs/config */ "@nestjs/config");
+const adapter_1 = __webpack_require__(/*! @modules/adapter */ "./src/modules/adapter/index.ts");
+const auth_1 = __webpack_require__(/*! @modules/auth */ "./src/modules/auth/index.ts");
+const statistics_1 = __webpack_require__(/*! @modules/statistics */ "./src/modules/statistics/index.ts");
+const player_1 = __webpack_require__(/*! @modules/player */ "./src/modules/player/index.ts");
+const config_2 = __webpack_require__(/*! ~/config */ "./src/config/index.ts");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -115,31 +831,11 @@ exports.AppModule = AppModule;
 
 
 /***/ }),
-/* 6 */
-/***/ ((module) => {
 
-module.exports = require("@nestjs/common");
-
-/***/ }),
-/* 7 */
-/***/ ((module) => {
-
-module.exports = require("@nestjs/apollo");
-
-/***/ }),
-/* 8 */
-/***/ ((module) => {
-
-module.exports = require("@nestjs/graphql");
-
-/***/ }),
-/* 9 */
-/***/ ((module) => {
-
-module.exports = require("joi");
-
-/***/ }),
-/* 10 */
+/***/ "./src/modules/app/index.ts":
+/*!**********************************!*\
+  !*** ./src/modules/app/index.ts ***!
+  \**********************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -158,189 +854,15 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-__exportStar(__webpack_require__(11), exports);
-__exportStar(__webpack_require__(12), exports);
+__exportStar(__webpack_require__(/*! ./app.module */ "./src/modules/app/app.module.ts"), exports);
 
 
 /***/ }),
-/* 11 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.AdapterModule = void 0;
-const common_1 = __webpack_require__(6);
-const adapter_service_1 = __webpack_require__(12);
-let AdapterModule = class AdapterModule {
-};
-AdapterModule = __decorate([
-    (0, common_1.Module)({
-        providers: [adapter_service_1.AdapterService],
-        exports: [adapter_service_1.AdapterService],
-    })
-], AdapterModule);
-exports.AdapterModule = AdapterModule;
-
-
-/***/ }),
-/* 12 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.AdapterService = void 0;
-const common_1 = __webpack_require__(6);
-const utils_1 = __webpack_require__(13);
-let AdapterService = class AdapterService {
-    constructor() {
-        this.adaptArtist = ({ name, genres, href, images, }) => ({
-            name,
-            genres,
-            href,
-            images,
-        });
-        this.adaptArtists = (artists) => artists.map(artist => this.adaptArtist(artist));
-        this.adaptGenres = (artists, limit) => ({
-            genres: (0, utils_1.getMostFrequentItems)(artists.flatMap(({ genres }) => genres), limit),
-        });
-        this.adaptTrack = ({ name, album, artists, external_urls: { spotify: href }, duration_ms, progress_ms, played_at, }) => (Object.assign(Object.assign({ name, album: { name: album.name, images: album.images }, artists: artists.map(({ name, id, href }) => ({ name, id, href })), href, duration: duration_ms }, (progress_ms && { progress: progress_ms })), (played_at && { playedAt: played_at })));
-        this.adaptTracks = (tracks) => tracks.map(track => this.adaptTrack(track));
-        this.adaptProfile = ({ id, display_name, email, images, country, external_urls: { spotify: href }, followers, }) => ({
-            id,
-            displayName: display_name,
-            email,
-            images,
-            country,
-            href,
-            followers: followers.total,
-        });
-        this.adaptDevices = (devices) => devices.map(({ id, name, type, is_active: isActive, is_private_session: isPrivateSession, is_restricted: isRestricted, volume_percent: volumePercent, }) => ({
-            id,
-            name,
-            type,
-            isActive,
-            isPrivateSession,
-            isRestricted,
-            volumePercent,
-        }));
-        this.adaptPlaybackState = ({ device, repeat_state, shuffle_state, is_playing, item, }) => {
-            const [formattedDevice] = this.adaptDevices([device]);
-            const [formattedTrack] = this.adaptTracks([item]);
-            return {
-                device: formattedDevice,
-                repeatState: repeat_state,
-                shuffleState: shuffle_state,
-                isPlaying: is_playing,
-                track: formattedTrack,
-            };
-        };
-    }
-};
-AdapterService = __decorate([
-    (0, common_1.Injectable)()
-], AdapterService);
-exports.AdapterService = AdapterService;
-
-
-/***/ }),
-/* 13 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __exportStar = (this && this.__exportStar) || function(m, exports) {
-    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-__exportStar(__webpack_require__(14), exports);
-__exportStar(__webpack_require__(15), exports);
-__exportStar(__webpack_require__(16), exports);
-__exportStar(__webpack_require__(18), exports);
-
-
-/***/ }),
-/* 14 */
-/***/ ((__unused_webpack_module, exports) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getMostFrequentItems = void 0;
-function getMostFrequentItems(array, limit = 1) {
-    if (array.length === 0)
-        return array;
-    const frequencies = {};
-    for (const item of array) {
-        if (frequencies[item] === undefined) {
-            frequencies[item] = 1;
-        }
-        else {
-            frequencies[item] = frequencies[item] + 1;
-        }
-    }
-    const frequencyArray = [];
-    for (const key in frequencies) {
-        frequencyArray.push([frequencies[key], key]);
-    }
-    frequencyArray.sort((a, b) => {
-        return b[0] - a[0];
-    });
-    const mostFrequentItems = [];
-    for (let index = 0; index < limit; index++) {
-        mostFrequentItems.push(frequencyArray[index][1]);
-    }
-    return mostFrequentItems;
-}
-exports.getMostFrequentItems = getMostFrequentItems;
-
-
-/***/ }),
-/* 15 */
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.catchSpotifyError = void 0;
-const common_1 = __webpack_require__(6);
-const catchSpotifyError = error => {
-    var _a;
-    console.error(error);
-    const { response: { data, status }, } = error;
-    if ((data === null || data === void 0 ? void 0 : data.error) === 'invalid_grant')
-        throw new common_1.UnauthorizedException('Invalid token');
-    if (status === 401)
-        throw new common_1.UnauthorizedException((_a = data === null || data === void 0 ? void 0 : data.error) === null || _a === void 0 ? void 0 : _a.message);
-    if (status === 403 &&
-        data === 'User not registered in the Developer Dashboard')
-        throw new common_1.ForbiddenException('User not registered in the Developer Dashboard');
-    throw new common_1.InternalServerErrorException('Something went wrong with fetching data from spotify API', data === null || data === void 0 ? void 0 : data.error);
-};
-exports.catchSpotifyError = catchSpotifyError;
-
-
-/***/ }),
-/* 16 */
+/***/ "./src/modules/auth/auth.controller.ts":
+/*!*********************************************!*\
+  !*** ./src/modules/auth/auth.controller.ts ***!
+  \*********************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -356,857 +878,133 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getParameterDecoratorFactory = void 0;
-const constants_1 = __webpack_require__(17);
-function getParameterDecoratorFactory(decorator) {
-    class Test {
-        test(value) { }
-    }
-    __decorate([
-        __param(0, decorator()),
-        __metadata("design:type", Function),
-        __metadata("design:paramtypes", [Object]),
-        __metadata("design:returntype", void 0)
-    ], Test.prototype, "test", null);
-    const arguments_ = Reflect.getMetadata(constants_1.ROUTE_ARGS_METADATA, Test, 'test');
-    return arguments_[Object.keys(arguments_)[0]].factory;
-}
-exports.getParameterDecoratorFactory = getParameterDecoratorFactory;
-
-
-/***/ }),
-/* 17 */
-/***/ ((module) => {
-
-module.exports = require("@nestjs/common/constants");
-
-/***/ }),
-/* 18 */
-/***/ ((__unused_webpack_module, exports) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.applyAuthorizationHeader = void 0;
-const applyAuthorizationHeader = (accessToken) => ({
-    headers: {
-        Authorization: `Bearer ${accessToken}`,
-    },
-});
-exports.applyAuthorizationHeader = applyAuthorizationHeader;
-
-
-/***/ }),
-/* 19 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __exportStar = (this && this.__exportStar) || function(m, exports) {
-    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-__exportStar(__webpack_require__(20), exports);
-__exportStar(__webpack_require__(22), exports);
-__exportStar(__webpack_require__(25), exports);
-__exportStar(__webpack_require__(47), exports);
-__exportStar(__webpack_require__(51), exports);
-__exportStar(__webpack_require__(53), exports);
-__exportStar(__webpack_require__(58), exports);
-__exportStar(__webpack_require__(59), exports);
-
-
-/***/ }),
-/* 20 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __exportStar = (this && this.__exportStar) || function(m, exports) {
-    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-__exportStar(__webpack_require__(21), exports);
-
-
-/***/ }),
-/* 21 */
-/***/ ((__unused_webpack_module, exports) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.spotifyAuthorizationScopes = void 0;
-exports.spotifyAuthorizationScopes = [
-    'user-follow-read',
-    'user-read-recently-played',
-    'user-modify-playback-state',
-    'user-read-playback-state',
-    'user-read-currently-playing',
-    'user-read-playback-position',
-    'user-top-read',
-    'playlist-read-collaborative',
-    'playlist-modify-public',
-    'playlist-read-private',
-    'playlist-modify-private',
-    'app-remote-control',
-    'streaming',
-    'user-read-email',
-    'user-read-private',
-    'user-library-modify',
-    'user-library-read',
-];
-
-
-/***/ }),
-/* 22 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __exportStar = (this && this.__exportStar) || function(m, exports) {
-    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-__exportStar(__webpack_require__(23), exports);
-__exportStar(__webpack_require__(24), exports);
-
-
-/***/ }),
-/* 23 */
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.RefreshToken = void 0;
-const common_1 = __webpack_require__(6);
-const graphql_1 = __webpack_require__(8);
-exports.RefreshToken = (0, common_1.createParamDecorator)((data, context) => {
-    var _a, _b, _c, _d;
-    const request = context.getType() === 'http'
-        ? context.switchToHttp().getRequest()
-        : graphql_1.GqlExecutionContext.create(context).getContext().req;
-    const refreshToken = (_b = (_a = request.cookies) === null || _a === void 0 ? void 0 : _a['refresh-token']) !== null && _b !== void 0 ? _b : (_d = (_c = request.headers) === null || _c === void 0 ? void 0 : _c.authorization) === null || _d === void 0 ? void 0 : _d.slice(6);
-    if (!refreshToken)
-        throw new common_1.UnauthorizedException('No value was provided for Authentication');
-    return refreshToken;
-});
-
-
-/***/ }),
-/* 24 */
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.AccessToken = void 0;
-const common_1 = __webpack_require__(6);
-const graphql_1 = __webpack_require__(8);
-exports.AccessToken = (0, common_1.createParamDecorator)((data, context) => {
-    var _a, _b, _c, _d;
-    const request = context.getType() === 'http'
-        ? context.switchToHttp().getRequest()
-        : graphql_1.GqlExecutionContext.create(context).getContext().req;
-    const accessToken = (_b = (_a = request.cookies) === null || _a === void 0 ? void 0 : _a['access-token']) !== null && _b !== void 0 ? _b : (_d = (_c = request.headers) === null || _c === void 0 ? void 0 : _c.authorization) === null || _d === void 0 ? void 0 : _d.slice(7);
-    if (!accessToken)
-        throw new common_1.UnauthorizedException('No value was provided for Authentication');
-    return accessToken;
-});
-
-
-/***/ }),
-/* 25 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __exportStar = (this && this.__exportStar) || function(m, exports) {
-    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-__exportStar(__webpack_require__(26), exports);
-__exportStar(__webpack_require__(46), exports);
-
-
-/***/ }),
-/* 26 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.ProfileDto = void 0;
-const graphql_1 = __webpack_require__(8);
-const dtos_1 = __webpack_require__(27);
-let ProfileDto = class ProfileDto {
-};
-__decorate([
-    (0, graphql_1.Field)(() => String),
-    __metadata("design:type", String)
-], ProfileDto.prototype, "id", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => String),
-    __metadata("design:type", String)
-], ProfileDto.prototype, "displayName", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => [dtos_1.ImageDto]),
-    __metadata("design:type", Array)
-], ProfileDto.prototype, "images", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => Number),
-    __metadata("design:type", Number)
-], ProfileDto.prototype, "followers", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => String, { nullable: true }),
-    __metadata("design:type", String)
-], ProfileDto.prototype, "country", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => String, { nullable: true }),
-    __metadata("design:type", String)
-], ProfileDto.prototype, "email", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => String),
-    __metadata("design:type", String)
-], ProfileDto.prototype, "href", void 0);
-ProfileDto = __decorate([
-    (0, graphql_1.ObjectType)()
-], ProfileDto);
-exports.ProfileDto = ProfileDto;
-
-
-/***/ }),
-/* 27 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __exportStar = (this && this.__exportStar) || function(m, exports) {
-    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-__exportStar(__webpack_require__(28), exports);
-__exportStar(__webpack_require__(29), exports);
-__exportStar(__webpack_require__(30), exports);
-__exportStar(__webpack_require__(31), exports);
-__exportStar(__webpack_require__(32), exports);
-__exportStar(__webpack_require__(33), exports);
-__exportStar(__webpack_require__(44), exports);
-__exportStar(__webpack_require__(45), exports);
-
-
-/***/ }),
-/* 28 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.ImageDto = void 0;
-const graphql_1 = __webpack_require__(8);
-let ImageDto = class ImageDto {
-};
-__decorate([
-    (0, graphql_1.Field)(() => Number),
-    __metadata("design:type", Number)
-], ImageDto.prototype, "height", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => Number),
-    __metadata("design:type", Number)
-], ImageDto.prototype, "width", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => String),
-    __metadata("design:type", String)
-], ImageDto.prototype, "url", void 0);
-ImageDto = __decorate([
-    (0, graphql_1.ObjectType)()
-], ImageDto);
-exports.ImageDto = ImageDto;
-
-
-/***/ }),
-/* 29 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Album = void 0;
-const graphql_1 = __webpack_require__(8);
-const _1 = __webpack_require__(27);
-let Album = class Album {
-};
-__decorate([
-    (0, graphql_1.Field)(() => String),
-    __metadata("design:type", String)
-], Album.prototype, "name", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => String),
-    __metadata("design:type", String)
-], Album.prototype, "artist", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => [_1.ImageDto]),
-    __metadata("design:type", Array)
-], Album.prototype, "images", void 0);
-Album = __decorate([
-    (0, graphql_1.ObjectType)()
-], Album);
-exports.Album = Album;
-
-
-/***/ }),
-/* 30 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.TrackArtist = exports.Artist = void 0;
-const graphql_1 = __webpack_require__(8);
-const _1 = __webpack_require__(27);
-let Artist = class Artist {
-};
-__decorate([
-    (0, graphql_1.Field)(() => String),
-    __metadata("design:type", String)
-], Artist.prototype, "name", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => [String]),
-    __metadata("design:type", Array)
-], Artist.prototype, "genres", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => String),
-    __metadata("design:type", String)
-], Artist.prototype, "href", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => [_1.ImageDto]),
-    __metadata("design:type", Array)
-], Artist.prototype, "images", void 0);
-Artist = __decorate([
-    (0, graphql_1.ObjectType)()
-], Artist);
-exports.Artist = Artist;
-let TrackArtist = class TrackArtist {
-};
-__decorate([
-    (0, graphql_1.Field)(() => String),
-    __metadata("design:type", String)
-], TrackArtist.prototype, "name", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => String),
-    __metadata("design:type", String)
-], TrackArtist.prototype, "id", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => String),
-    __metadata("design:type", String)
-], TrackArtist.prototype, "href", void 0);
-TrackArtist = __decorate([
-    (0, graphql_1.ObjectType)()
-], TrackArtist);
-exports.TrackArtist = TrackArtist;
-
-
-/***/ }),
-/* 31 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var _a;
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Track = void 0;
-const graphql_1 = __webpack_require__(8);
-const _1 = __webpack_require__(27);
-let Track = class Track {
-};
-__decorate([
-    (0, graphql_1.Field)(() => String),
-    __metadata("design:type", String)
-], Track.prototype, "name", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => String),
-    __metadata("design:type", String)
-], Track.prototype, "href", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => [_1.TrackArtist]),
-    __metadata("design:type", Array)
-], Track.prototype, "artists", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => _1.Album),
-    __metadata("design:type", typeof (_a = typeof _1.Album !== "undefined" && _1.Album) === "function" ? _a : Object)
-], Track.prototype, "album", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => Number),
-    __metadata("design:type", Number)
-], Track.prototype, "duration", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => Number, { nullable: true }),
-    __metadata("design:type", Number)
-], Track.prototype, "progress", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => String, { nullable: true }),
-    __metadata("design:type", String)
-], Track.prototype, "playedAt", void 0);
-Track = __decorate([
-    (0, graphql_1.ObjectType)()
-], Track);
-exports.Track = Track;
-
-
-/***/ }),
-/* 32 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Device = void 0;
-const graphql_1 = __webpack_require__(8);
-let Device = class Device {
-};
-__decorate([
-    (0, graphql_1.Field)(() => String),
-    __metadata("design:type", String)
-], Device.prototype, "id", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => String),
-    __metadata("design:type", String)
-], Device.prototype, "name", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => String),
-    __metadata("design:type", String)
-], Device.prototype, "type", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => Boolean),
-    __metadata("design:type", Boolean)
-], Device.prototype, "isActive", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => Boolean),
-    __metadata("design:type", Boolean)
-], Device.prototype, "isPrivateSession", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => Boolean),
-    __metadata("design:type", Boolean)
-], Device.prototype, "isRestricted", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => Number),
-    __metadata("design:type", Number)
-], Device.prototype, "volumePercent", void 0);
-Device = __decorate([
-    (0, graphql_1.ObjectType)()
-], Device);
-exports.Device = Device;
-
-
-/***/ }),
-/* 33 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
 var _a, _b, _c, _d;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.PlaybackState = void 0;
-const graphql_1 = __webpack_require__(8);
-const _1 = __webpack_require__(27);
-const spotify_1 = __webpack_require__(34);
-let PlaybackState = class PlaybackState {
-};
-__decorate([
-    (0, graphql_1.Field)(() => _1.Device),
-    __metadata("design:type", typeof (_a = typeof _1.Device !== "undefined" && _1.Device) === "function" ? _a : Object)
-], PlaybackState.prototype, "device", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => String),
-    __metadata("design:type", typeof (_b = typeof spotify_1.RepeatedState !== "undefined" && spotify_1.RepeatedState) === "function" ? _b : Object)
-], PlaybackState.prototype, "repeatState", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => String),
-    __metadata("design:type", typeof (_c = typeof spotify_1.ShuffleState !== "undefined" && spotify_1.ShuffleState) === "function" ? _c : Object)
-], PlaybackState.prototype, "shuffleState", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => Boolean),
-    __metadata("design:type", Boolean)
-], PlaybackState.prototype, "isPlaying", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => _1.Track),
-    __metadata("design:type", typeof (_d = typeof _1.Track !== "undefined" && _1.Track) === "function" ? _d : Object)
-], PlaybackState.prototype, "track", void 0);
-PlaybackState = __decorate([
-    (0, graphql_1.ObjectType)()
-], PlaybackState);
-exports.PlaybackState = PlaybackState;
-
-
-/***/ }),
-/* 34 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
+exports.AuthController = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const config_1 = __webpack_require__(/*! @nestjs/config */ "@nestjs/config");
+const rxjs_1 = __webpack_require__(/*! rxjs */ "rxjs");
+const auth_service_1 = __webpack_require__(/*! ./auth.service */ "./src/modules/auth/auth.service.ts");
+const config_2 = __webpack_require__(/*! ./config */ "./src/modules/auth/config/index.ts");
+const types_1 = __webpack_require__(/*! ./types */ "./src/modules/auth/types/index.ts");
+const config_3 = __webpack_require__(/*! ~/config */ "./src/config/index.ts");
+const { SPOTIFY_CALLBACK_URL, SPOTIFY_CLIENT_ID, SPOTIFY_ACCOUNTS_URL, CLIENT_CALLBACK_URL, } = config_3.Environment;
+let AuthController = class AuthController {
+    constructor(authService, configService) {
+        this.authService = authService;
+        this.configService = configService;
     }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __exportStar = (this && this.__exportStar) || function(m, exports) {
-    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-__exportStar(__webpack_require__(35), exports);
-__exportStar(__webpack_require__(36), exports);
-__exportStar(__webpack_require__(37), exports);
-__exportStar(__webpack_require__(38), exports);
-__exportStar(__webpack_require__(39), exports);
-__exportStar(__webpack_require__(40), exports);
-__exportStar(__webpack_require__(41), exports);
-__exportStar(__webpack_require__(42), exports);
-__exportStar(__webpack_require__(43), exports);
-
-
-/***/ }),
-/* 35 */
-/***/ ((__unused_webpack_module, exports) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-
-
-/***/ }),
-/* 36 */
-/***/ ((__unused_webpack_module, exports) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-
-
-/***/ }),
-/* 37 */
-/***/ ((__unused_webpack_module, exports) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-
-
-/***/ }),
-/* 38 */
-/***/ ((__unused_webpack_module, exports) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-
-
-/***/ }),
-/* 39 */
-/***/ ((__unused_webpack_module, exports) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-
-
-/***/ }),
-/* 40 */
-/***/ ((__unused_webpack_module, exports) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-
-
-/***/ }),
-/* 41 */
-/***/ ((__unused_webpack_module, exports) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-
-
-/***/ }),
-/* 42 */
-/***/ ((__unused_webpack_module, exports) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-
-
-/***/ }),
-/* 43 */
-/***/ ((__unused_webpack_module, exports) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.ShuffleState = exports.RepeatedState = void 0;
-var RepeatedState;
-(function (RepeatedState) {
-    RepeatedState["TRACK"] = "track";
-    RepeatedState["CONTEXT"] = "context";
-    RepeatedState["OFF"] = "off";
-})(RepeatedState = exports.RepeatedState || (exports.RepeatedState = {}));
-var ShuffleState;
-(function (ShuffleState) {
-    ShuffleState["ON"] = "on";
-    ShuffleState["OFF"] = "off";
-})(ShuffleState = exports.ShuffleState || (exports.ShuffleState = {}));
-
-
-/***/ }),
-/* 44 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Genres = void 0;
-const graphql_1 = __webpack_require__(8);
-let Genres = class Genres {
-};
-__decorate([
-    (0, graphql_1.Field)(() => [String]),
-    __metadata("design:type", Array)
-], Genres.prototype, "genres", void 0);
-Genres = __decorate([
-    (0, graphql_1.ObjectType)()
-], Genres);
-exports.Genres = Genres;
-
-
-/***/ }),
-/* 45 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Success = void 0;
-const graphql_1 = __webpack_require__(8);
-let Success = class Success {
-};
-__decorate([
-    (0, graphql_1.Field)(() => Boolean),
-    __metadata("design:type", Boolean)
-], Success.prototype, "success", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => String, { nullable: true }),
-    __metadata("design:type", String)
-], Success.prototype, "message", void 0);
-Success = __decorate([
-    (0, graphql_1.ObjectType)()
-], Success);
-exports.Success = Success;
-
-
-/***/ }),
-/* 46 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.SecretData = void 0;
-const graphql_1 = __webpack_require__(8);
-let SecretData = class SecretData {
-};
-__decorate([
-    (0, graphql_1.Field)(() => String),
-    __metadata("design:type", String)
-], SecretData.prototype, "accessToken", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => String, { nullable: true }),
-    __metadata("design:type", String)
-], SecretData.prototype, "refreshToken", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => Number),
-    __metadata("design:type", Number)
-], SecretData.prototype, "expiresIn", void 0);
-SecretData = __decorate([
-    (0, graphql_1.ObjectType)()
-], SecretData);
-exports.SecretData = SecretData;
-
-
-/***/ }),
-/* 47 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
+    login() {
+        return {
+            url: `${this.configService.get(SPOTIFY_ACCOUNTS_URL)}/authorize?${new URLSearchParams({
+                client_id: this.configService.get(SPOTIFY_CLIENT_ID),
+                response_type: 'code',
+                redirect_uri: this.configService.get(SPOTIFY_CALLBACK_URL),
+                scope: config_2.spotifyAuthorizationScopes.join(' '),
+            })}`,
+            statusCode: common_1.HttpStatus.PERMANENT_REDIRECT,
+        };
     }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __exportStar = (this && this.__exportStar) || function(m, exports) {
-    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+    async callback(code) {
+        const { accessToken, refreshToken } = await (0, rxjs_1.firstValueFrom)(this.authService.token({ code }));
+        return {
+            url: `${this.configService.get(CLIENT_CALLBACK_URL)}/api/authorize?${new URLSearchParams({
+                accessToken,
+                refreshToken,
+            })}`,
+            statusCode: common_1.HttpStatus.PERMANENT_REDIRECT,
+        };
+    }
+};
+__decorate([
+    (0, common_1.Get)('login'),
+    (0, common_1.Redirect)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", typeof (_c = typeof types_1.RedirectResponse !== "undefined" && types_1.RedirectResponse) === "function" ? _c : Object)
+], AuthController.prototype, "login", null);
+__decorate([
+    (0, common_1.Get)('callback'),
+    (0, common_1.Redirect)(),
+    __param(0, (0, common_1.Query)('code')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", typeof (_d = typeof Promise !== "undefined" && Promise) === "function" ? _d : Object)
+], AuthController.prototype, "callback", null);
+AuthController = __decorate([
+    (0, common_1.Controller)('auth'),
+    __metadata("design:paramtypes", [typeof (_a = typeof auth_service_1.AuthService !== "undefined" && auth_service_1.AuthService) === "function" ? _a : Object, typeof (_b = typeof config_1.ConfigService !== "undefined" && config_1.ConfigService) === "function" ? _b : Object])
+], AuthController);
+exports.AuthController = AuthController;
+
+
+/***/ }),
+
+/***/ "./src/modules/auth/auth.module.ts":
+/*!*****************************************!*\
+  !*** ./src/modules/auth/auth.module.ts ***!
+  \*****************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-__exportStar(__webpack_require__(48), exports);
-__exportStar(__webpack_require__(49), exports);
-__exportStar(__webpack_require__(50), exports);
+exports.AuthModule = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const config_1 = __webpack_require__(/*! @nestjs/config */ "@nestjs/config");
+const jwt_1 = __webpack_require__(/*! @nestjs/jwt */ "@nestjs/jwt");
+const axios_1 = __webpack_require__(/*! @nestjs/axios */ "@nestjs/axios");
+const auth_service_1 = __webpack_require__(/*! ./auth.service */ "./src/modules/auth/auth.service.ts");
+const auth_resolver_1 = __webpack_require__(/*! ./auth.resolver */ "./src/modules/auth/auth.resolver.ts");
+const auth_controller_1 = __webpack_require__(/*! ./auth.controller */ "./src/modules/auth/auth.controller.ts");
+const adapter_1 = __webpack_require__(/*! @modules/adapter */ "./src/modules/adapter/index.ts");
+const config_2 = __webpack_require__(/*! ~/config */ "./src/config/index.ts");
+let AuthModule = class AuthModule {
+};
+AuthModule = __decorate([
+    (0, common_1.Module)({
+        imports: [
+            axios_1.HttpModule.registerAsync({
+                useFactory: (configService) => ({
+                    baseURL: configService.get(config_2.Environment.SPOTIFY_BASE_URL),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Accept: 'application/json',
+                    },
+                }),
+                inject: [config_1.ConfigService],
+            }),
+            jwt_1.JwtModule.registerAsync({
+                useFactory: async (configService) => {
+                    return {
+                        secret: configService.get(config_2.Environment.JWT_SECRET),
+                        signOptions: {
+                            expiresIn: '3600s',
+                        },
+                    };
+                },
+                inject: [config_1.ConfigService],
+            }),
+            adapter_1.AdapterModule,
+        ],
+        providers: [auth_service_1.AuthService, auth_resolver_1.AuthResolver],
+        controllers: [auth_controller_1.AuthController],
+    })
+], AuthModule);
+exports.AuthModule = AuthModule;
 
 
 /***/ }),
-/* 48 */
-/***/ ((__unused_webpack_module, exports) => {
 
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-
-
-/***/ }),
-/* 49 */
-/***/ ((__unused_webpack_module, exports) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-
-
-/***/ }),
-/* 50 */
-/***/ ((__unused_webpack_module, exports) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-
-
-/***/ }),
-/* 51 */
+/***/ "./src/modules/auth/auth.resolver.ts":
+/*!*******************************************!*\
+  !*** ./src/modules/auth/auth.resolver.ts ***!
+  \*******************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -1225,12 +1023,12 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 var _a, _b;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AuthResolver = void 0;
-const config_1 = __webpack_require__(2);
-const graphql_1 = __webpack_require__(8);
-const rxjs_1 = __webpack_require__(52);
-const auth_service_1 = __webpack_require__(53);
-const dtos_1 = __webpack_require__(25);
-const decorators_1 = __webpack_require__(22);
+const config_1 = __webpack_require__(/*! @nestjs/config */ "@nestjs/config");
+const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
+const rxjs_1 = __webpack_require__(/*! rxjs */ "rxjs");
+const auth_service_1 = __webpack_require__(/*! ./auth.service */ "./src/modules/auth/auth.service.ts");
+const dtos_1 = __webpack_require__(/*! ./dtos */ "./src/modules/auth/dtos/index.ts");
+const decorators_1 = __webpack_require__(/*! ./decorators */ "./src/modules/auth/decorators/index.ts");
 let AuthResolver = class AuthResolver {
     constructor(authService, configService) {
         this.authService = authService;
@@ -1265,13 +1063,11 @@ exports.AuthResolver = AuthResolver;
 
 
 /***/ }),
-/* 52 */
-/***/ ((module) => {
 
-module.exports = require("rxjs");
-
-/***/ }),
-/* 53 */
+/***/ "./src/modules/auth/auth.service.ts":
+/*!******************************************!*\
+  !*** ./src/modules/auth/auth.service.ts ***!
+  \******************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -1287,14 +1083,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var _a, _b, _c, _d;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AuthService = void 0;
-const axios_1 = __webpack_require__(54);
-const common_1 = __webpack_require__(6);
-const config_1 = __webpack_require__(2);
-const jwt_1 = __webpack_require__(55);
-const rxjs_1 = __webpack_require__(52);
-const adapter_1 = __webpack_require__(10);
-const config_2 = __webpack_require__(56);
-const utils_1 = __webpack_require__(13);
+const axios_1 = __webpack_require__(/*! @nestjs/axios */ "@nestjs/axios");
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const config_1 = __webpack_require__(/*! @nestjs/config */ "@nestjs/config");
+const jwt_1 = __webpack_require__(/*! @nestjs/jwt */ "@nestjs/jwt");
+const rxjs_1 = __webpack_require__(/*! rxjs */ "rxjs");
+const adapter_1 = __webpack_require__(/*! @modules/adapter */ "./src/modules/adapter/index.ts");
+const config_2 = __webpack_require__(/*! ~/config */ "./src/config/index.ts");
+const utils_1 = __webpack_require__(/*! ~/utils */ "./src/utils/index.ts");
 let AuthService = class AuthService {
     constructor(jwtService, httpService, configService, adapterService) {
         this.jwtService = jwtService;
@@ -1351,19 +1147,11 @@ exports.AuthService = AuthService;
 
 
 /***/ }),
-/* 54 */
-/***/ ((module) => {
 
-module.exports = require("@nestjs/axios");
-
-/***/ }),
-/* 55 */
-/***/ ((module) => {
-
-module.exports = require("@nestjs/jwt");
-
-/***/ }),
-/* 56 */
+/***/ "./src/modules/auth/config/index.ts":
+/*!******************************************!*\
+  !*** ./src/modules/auth/config/index.ts ***!
+  \******************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -1382,32 +1170,447 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-__exportStar(__webpack_require__(57), exports);
+__exportStar(__webpack_require__(/*! ./spotify-authorization-scopes */ "./src/modules/auth/config/spotify-authorization-scopes.ts"), exports);
 
 
 /***/ }),
-/* 57 */
+
+/***/ "./src/modules/auth/config/spotify-authorization-scopes.ts":
+/*!*****************************************************************!*\
+  !*** ./src/modules/auth/config/spotify-authorization-scopes.ts ***!
+  \*****************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Environment = void 0;
-var Environment;
-(function (Environment) {
-    Environment["PORT"] = "PORT";
-    Environment["SPOTIFY_CLIENT_ID"] = "SPOTIFY_CLIENT_ID";
-    Environment["SPOTIFY_CLIENT_SECRET"] = "SPOTIFY_CLIENT_SECRET";
-    Environment["SPOTIFY_CALLBACK_URL"] = "SPOTIFY_CALLBACK_URL";
-    Environment["SPOTIFY_BASE_URL"] = "SPOTIFY_BASE_URL";
-    Environment["SPOTIFY_ACCOUNTS_URL"] = "SPOTIFY_ACCOUNTS_URL";
-    Environment["CLIENT_CALLBACK_URL"] = "CLIENT_CALLBACK_URL";
-    Environment["JWT_SECRET"] = "JWT_SECRET";
-    Environment["NODE_ENV"] = "NODE_ENV";
-})(Environment = exports.Environment || (exports.Environment = {}));
+exports.spotifyAuthorizationScopes = void 0;
+exports.spotifyAuthorizationScopes = [
+    'user-follow-read',
+    'user-read-recently-played',
+    'user-modify-playback-state',
+    'user-read-playback-state',
+    'user-read-currently-playing',
+    'user-read-playback-position',
+    'user-top-read',
+    'playlist-read-collaborative',
+    'playlist-modify-public',
+    'playlist-read-private',
+    'playlist-modify-private',
+    'app-remote-control',
+    'streaming',
+    'user-read-email',
+    'user-read-private',
+    'user-library-modify',
+    'user-library-read',
+];
 
 
 /***/ }),
-/* 58 */
+
+/***/ "./src/modules/auth/decorators/access-token.decorator.ts":
+/*!***************************************************************!*\
+  !*** ./src/modules/auth/decorators/access-token.decorator.ts ***!
+  \***************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AccessToken = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
+exports.AccessToken = (0, common_1.createParamDecorator)((data, context) => {
+    var _a, _b, _c, _d;
+    const request = context.getType() === 'http'
+        ? context.switchToHttp().getRequest()
+        : graphql_1.GqlExecutionContext.create(context).getContext().req;
+    const accessToken = (_b = (_a = request.cookies) === null || _a === void 0 ? void 0 : _a['access-token']) !== null && _b !== void 0 ? _b : (_d = (_c = request.headers) === null || _c === void 0 ? void 0 : _c.authorization) === null || _d === void 0 ? void 0 : _d.slice(7);
+    if (!accessToken)
+        throw new common_1.UnauthorizedException('No value was provided for Authentication');
+    return accessToken;
+});
+
+
+/***/ }),
+
+/***/ "./src/modules/auth/decorators/index.ts":
+/*!**********************************************!*\
+  !*** ./src/modules/auth/decorators/index.ts ***!
+  \**********************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+__exportStar(__webpack_require__(/*! ./refresh-token.decorator */ "./src/modules/auth/decorators/refresh-token.decorator.ts"), exports);
+__exportStar(__webpack_require__(/*! ./access-token.decorator */ "./src/modules/auth/decorators/access-token.decorator.ts"), exports);
+
+
+/***/ }),
+
+/***/ "./src/modules/auth/decorators/refresh-token.decorator.ts":
+/*!****************************************************************!*\
+  !*** ./src/modules/auth/decorators/refresh-token.decorator.ts ***!
+  \****************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.RefreshToken = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
+exports.RefreshToken = (0, common_1.createParamDecorator)((data, context) => {
+    var _a, _b, _c, _d;
+    const request = context.getType() === 'http'
+        ? context.switchToHttp().getRequest()
+        : graphql_1.GqlExecutionContext.create(context).getContext().req;
+    const refreshToken = (_b = (_a = request.cookies) === null || _a === void 0 ? void 0 : _a['refresh-token']) !== null && _b !== void 0 ? _b : (_d = (_c = request.headers) === null || _c === void 0 ? void 0 : _c.authorization) === null || _d === void 0 ? void 0 : _d.slice(6);
+    if (!refreshToken)
+        throw new common_1.UnauthorizedException('No value was provided for Authentication');
+    return refreshToken;
+});
+
+
+/***/ }),
+
+/***/ "./src/modules/auth/dtos/index.ts":
+/*!****************************************!*\
+  !*** ./src/modules/auth/dtos/index.ts ***!
+  \****************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+__exportStar(__webpack_require__(/*! ./profile.dto */ "./src/modules/auth/dtos/profile.dto.ts"), exports);
+__exportStar(__webpack_require__(/*! ./secret-data.dto */ "./src/modules/auth/dtos/secret-data.dto.ts"), exports);
+
+
+/***/ }),
+
+/***/ "./src/modules/auth/dtos/profile.dto.ts":
+/*!**********************************************!*\
+  !*** ./src/modules/auth/dtos/profile.dto.ts ***!
+  \**********************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ProfileDto = void 0;
+const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
+const dtos_1 = __webpack_require__(/*! @common/dtos */ "./src/common/dtos/index.ts");
+let ProfileDto = class ProfileDto {
+};
+__decorate([
+    (0, graphql_1.Field)(() => String),
+    __metadata("design:type", String)
+], ProfileDto.prototype, "id", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => String),
+    __metadata("design:type", String)
+], ProfileDto.prototype, "displayName", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => [dtos_1.ImageDto]),
+    __metadata("design:type", Array)
+], ProfileDto.prototype, "images", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => Number),
+    __metadata("design:type", Number)
+], ProfileDto.prototype, "followers", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => String, { nullable: true }),
+    __metadata("design:type", String)
+], ProfileDto.prototype, "country", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => String, { nullable: true }),
+    __metadata("design:type", String)
+], ProfileDto.prototype, "email", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => String),
+    __metadata("design:type", String)
+], ProfileDto.prototype, "href", void 0);
+ProfileDto = __decorate([
+    (0, graphql_1.ObjectType)()
+], ProfileDto);
+exports.ProfileDto = ProfileDto;
+
+
+/***/ }),
+
+/***/ "./src/modules/auth/dtos/secret-data.dto.ts":
+/*!**************************************************!*\
+  !*** ./src/modules/auth/dtos/secret-data.dto.ts ***!
+  \**************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.SecretData = void 0;
+const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
+let SecretData = class SecretData {
+};
+__decorate([
+    (0, graphql_1.Field)(() => String),
+    __metadata("design:type", String)
+], SecretData.prototype, "accessToken", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => String, { nullable: true }),
+    __metadata("design:type", String)
+], SecretData.prototype, "refreshToken", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => Number),
+    __metadata("design:type", Number)
+], SecretData.prototype, "expiresIn", void 0);
+SecretData = __decorate([
+    (0, graphql_1.ObjectType)()
+], SecretData);
+exports.SecretData = SecretData;
+
+
+/***/ }),
+
+/***/ "./src/modules/auth/index.ts":
+/*!***********************************!*\
+  !*** ./src/modules/auth/index.ts ***!
+  \***********************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+__exportStar(__webpack_require__(/*! ./config */ "./src/modules/auth/config/index.ts"), exports);
+__exportStar(__webpack_require__(/*! ./decorators */ "./src/modules/auth/decorators/index.ts"), exports);
+__exportStar(__webpack_require__(/*! ./dtos */ "./src/modules/auth/dtos/index.ts"), exports);
+__exportStar(__webpack_require__(/*! ./types */ "./src/modules/auth/types/index.ts"), exports);
+__exportStar(__webpack_require__(/*! ./auth.resolver */ "./src/modules/auth/auth.resolver.ts"), exports);
+__exportStar(__webpack_require__(/*! ./auth.service */ "./src/modules/auth/auth.service.ts"), exports);
+__exportStar(__webpack_require__(/*! ./auth.controller */ "./src/modules/auth/auth.controller.ts"), exports);
+__exportStar(__webpack_require__(/*! ./auth.module */ "./src/modules/auth/auth.module.ts"), exports);
+
+
+/***/ }),
+
+/***/ "./src/modules/auth/types/index.ts":
+/*!*****************************************!*\
+  !*** ./src/modules/auth/types/index.ts ***!
+  \*****************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+__exportStar(__webpack_require__(/*! ./jwt-payload */ "./src/modules/auth/types/jwt-payload.ts"), exports);
+__exportStar(__webpack_require__(/*! ./redirect-response */ "./src/modules/auth/types/redirect-response.ts"), exports);
+__exportStar(__webpack_require__(/*! ./token-options */ "./src/modules/auth/types/token-options.ts"), exports);
+
+
+/***/ }),
+
+/***/ "./src/modules/auth/types/jwt-payload.ts":
+/*!***********************************************!*\
+  !*** ./src/modules/auth/types/jwt-payload.ts ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+
+/***/ }),
+
+/***/ "./src/modules/auth/types/redirect-response.ts":
+/*!*****************************************************!*\
+  !*** ./src/modules/auth/types/redirect-response.ts ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+
+/***/ }),
+
+/***/ "./src/modules/auth/types/token-options.ts":
+/*!*************************************************!*\
+  !*** ./src/modules/auth/types/token-options.ts ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+
+/***/ }),
+
+/***/ "./src/modules/player/index.ts":
+/*!*************************************!*\
+  !*** ./src/modules/player/index.ts ***!
+  \*************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+__exportStar(__webpack_require__(/*! ./messages */ "./src/modules/player/messages/index.ts"), exports);
+__exportStar(__webpack_require__(/*! ./player.module */ "./src/modules/player/player.module.ts"), exports);
+__exportStar(__webpack_require__(/*! ./player.resolver */ "./src/modules/player/player.resolver.ts"), exports);
+__exportStar(__webpack_require__(/*! ./player.service */ "./src/modules/player/player.service.ts"), exports);
+
+
+/***/ }),
+
+/***/ "./src/modules/player/messages/index.ts":
+/*!**********************************************!*\
+  !*** ./src/modules/player/messages/index.ts ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.PlayerMessage = void 0;
+var PlayerMessage;
+(function (PlayerMessage) {
+    PlayerMessage["NO_AVAIBLE_DEVICES"] = "No device is avaible";
+    PlayerMessage["NO_PLAYING_DEVICE"] = "No device is currently playing";
+    PlayerMessage["DEVICE_ALREADY_PLAYING"] = "Device is already playing";
+})(PlayerMessage = exports.PlayerMessage || (exports.PlayerMessage = {}));
+
+
+/***/ }),
+
+/***/ "./src/modules/player/player.module.ts":
+/*!*********************************************!*\
+  !*** ./src/modules/player/player.module.ts ***!
+  \*********************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.PlayerModule = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const axios_1 = __webpack_require__(/*! @nestjs/axios */ "@nestjs/axios");
+const config_1 = __webpack_require__(/*! @nestjs/config */ "@nestjs/config");
+const player_service_1 = __webpack_require__(/*! ./player.service */ "./src/modules/player/player.service.ts");
+const player_resolver_1 = __webpack_require__(/*! ./player.resolver */ "./src/modules/player/player.resolver.ts");
+const adapter_1 = __webpack_require__(/*! @modules/adapter */ "./src/modules/adapter/index.ts");
+const config_2 = __webpack_require__(/*! ~/config */ "./src/config/index.ts");
+let PlayerModule = class PlayerModule {
+};
+PlayerModule = __decorate([
+    (0, common_1.Module)({
+        imports: [
+            axios_1.HttpModule.registerAsync({
+                useFactory: (configService) => ({
+                    baseURL: configService.get(config_2.Environment.SPOTIFY_BASE_URL),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Accept: 'application/json',
+                    },
+                }),
+                inject: [config_1.ConfigService],
+            }),
+            adapter_1.AdapterModule,
+        ],
+        providers: [player_service_1.PlayerService, player_resolver_1.PlayerResolver],
+    })
+], PlayerModule);
+exports.PlayerModule = PlayerModule;
+
+
+/***/ }),
+
+/***/ "./src/modules/player/player.resolver.ts":
+/*!***********************************************!*\
+  !*** ./src/modules/player/player.resolver.ts ***!
+  \***********************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -1423,68 +1626,75 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var _a, _b, _c, _d;
+var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.AuthController = void 0;
-const common_1 = __webpack_require__(6);
-const config_1 = __webpack_require__(2);
-const rxjs_1 = __webpack_require__(52);
-const auth_service_1 = __webpack_require__(53);
-const config_2 = __webpack_require__(20);
-const types_1 = __webpack_require__(47);
-const config_3 = __webpack_require__(56);
-const { SPOTIFY_CALLBACK_URL, SPOTIFY_CLIENT_ID, SPOTIFY_ACCOUNTS_URL, CLIENT_CALLBACK_URL, } = config_3.Environment;
-let AuthController = class AuthController {
-    constructor(authService, configService) {
-        this.authService = authService;
-        this.configService = configService;
+exports.PlayerResolver = void 0;
+const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
+const rxjs_1 = __webpack_require__(/*! rxjs */ "rxjs");
+const player_service_1 = __webpack_require__(/*! ./player.service */ "./src/modules/player/player.service.ts");
+const auth_1 = __webpack_require__(/*! @modules/auth */ "./src/modules/auth/index.ts");
+const dtos_1 = __webpack_require__(/*! @common/dtos */ "./src/common/dtos/index.ts");
+let PlayerResolver = class PlayerResolver {
+    constructor(playerService) {
+        this.playerService = playerService;
     }
-    login() {
-        return {
-            url: `${this.configService.get(SPOTIFY_ACCOUNTS_URL)}/authorize?${new URLSearchParams({
-                client_id: this.configService.get(SPOTIFY_CLIENT_ID),
-                response_type: 'code',
-                redirect_uri: this.configService.get(SPOTIFY_CALLBACK_URL),
-                scope: config_2.spotifyAuthorizationScopes.join(' '),
-            })}`,
-            statusCode: common_1.HttpStatus.PERMANENT_REDIRECT,
-        };
+    async avaibleDevices(accessToken) {
+        return await (0, rxjs_1.firstValueFrom)(this.playerService.avaibleDevices(accessToken));
     }
-    async callback(code) {
-        const { accessToken, refreshToken } = await (0, rxjs_1.firstValueFrom)(this.authService.token({ code }));
-        return {
-            url: `${this.configService.get(CLIENT_CALLBACK_URL)}/api/authorize?${new URLSearchParams({
-                accessToken,
-                refreshToken,
-            })}`,
-            statusCode: common_1.HttpStatus.PERMANENT_REDIRECT,
-        };
+    async currentPlaybackState(accessToken) {
+        return await (0, rxjs_1.firstValueFrom)(this.playerService.currentPlaybackState(accessToken));
+    }
+    async pausePlayer(accessToken, afterTime, deviceId) {
+        return await (0, rxjs_1.firstValueFrom)(this.playerService.pausePlayer(accessToken, afterTime, deviceId));
+    }
+    async resumePlayer(accessToken, deviceId) {
+        return await (0, rxjs_1.firstValueFrom)(this.playerService.resumePlayer(accessToken, deviceId));
     }
 };
 __decorate([
-    (0, common_1.Get)('login'),
-    (0, common_1.Redirect)(),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", typeof (_c = typeof types_1.RedirectResponse !== "undefined" && types_1.RedirectResponse) === "function" ? _c : Object)
-], AuthController.prototype, "login", null);
-__decorate([
-    (0, common_1.Get)('callback'),
-    (0, common_1.Redirect)(),
-    __param(0, (0, common_1.Query)('code')),
+    (0, graphql_1.Query)(() => [dtos_1.Device]),
+    __param(0, (0, auth_1.AccessToken)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", typeof (_d = typeof Promise !== "undefined" && Promise) === "function" ? _d : Object)
-], AuthController.prototype, "callback", null);
-AuthController = __decorate([
-    (0, common_1.Controller)('auth'),
-    __metadata("design:paramtypes", [typeof (_a = typeof auth_service_1.AuthService !== "undefined" && auth_service_1.AuthService) === "function" ? _a : Object, typeof (_b = typeof config_1.ConfigService !== "undefined" && config_1.ConfigService) === "function" ? _b : Object])
-], AuthController);
-exports.AuthController = AuthController;
+    __metadata("design:returntype", Promise)
+], PlayerResolver.prototype, "avaibleDevices", null);
+__decorate([
+    (0, graphql_1.Query)(() => dtos_1.PlaybackState),
+    __param(0, (0, auth_1.AccessToken)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], PlayerResolver.prototype, "currentPlaybackState", null);
+__decorate([
+    (0, graphql_1.Query)(() => dtos_1.Success),
+    __param(0, (0, auth_1.AccessToken)()),
+    __param(1, (0, graphql_1.Args)('afterTime', { nullable: true })),
+    __param(2, (0, graphql_1.Args)('deviceId', { nullable: true })),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Number, String]),
+    __metadata("design:returntype", Promise)
+], PlayerResolver.prototype, "pausePlayer", null);
+__decorate([
+    (0, graphql_1.Query)(() => dtos_1.Success),
+    __param(0, (0, auth_1.AccessToken)()),
+    __param(1, (0, graphql_1.Args)('deviceId', { nullable: true })),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", Promise)
+], PlayerResolver.prototype, "resumePlayer", null);
+PlayerResolver = __decorate([
+    (0, graphql_1.Resolver)(),
+    __metadata("design:paramtypes", [typeof (_a = typeof player_service_1.PlayerService !== "undefined" && player_service_1.PlayerService) === "function" ? _a : Object])
+], PlayerResolver);
+exports.PlayerResolver = PlayerResolver;
 
 
 /***/ }),
-/* 59 */
+
+/***/ "./src/modules/player/player.service.ts":
+/*!**********************************************!*\
+  !*** ./src/modules/player/player.service.ts ***!
+  \**********************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -1494,54 +1704,114 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.AuthModule = void 0;
-const common_1 = __webpack_require__(6);
-const config_1 = __webpack_require__(2);
-const jwt_1 = __webpack_require__(55);
-const axios_1 = __webpack_require__(54);
-const auth_service_1 = __webpack_require__(53);
-const auth_resolver_1 = __webpack_require__(51);
-const auth_controller_1 = __webpack_require__(58);
-const adapter_1 = __webpack_require__(10);
-const config_2 = __webpack_require__(56);
-let AuthModule = class AuthModule {
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-AuthModule = __decorate([
-    (0, common_1.Module)({
-        imports: [
-            axios_1.HttpModule.registerAsync({
-                useFactory: (configService) => ({
-                    baseURL: configService.get(config_2.Environment.SPOTIFY_BASE_URL),
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Accept: 'application/json',
-                    },
-                }),
-                inject: [config_1.ConfigService],
-            }),
-            jwt_1.JwtModule.registerAsync({
-                useFactory: async (configService) => {
-                    return {
-                        secret: configService.get(config_2.Environment.JWT_SECRET),
-                        signOptions: {
-                            expiresIn: '3600s',
-                        },
-                    };
-                },
-                inject: [config_1.ConfigService],
-            }),
-            adapter_1.AdapterModule,
-        ],
-        providers: [auth_service_1.AuthService, auth_resolver_1.AuthResolver],
-        controllers: [auth_controller_1.AuthController],
-    })
-], AuthModule);
-exports.AuthModule = AuthModule;
+var _a, _b;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.PlayerService = void 0;
+const axios_1 = __webpack_require__(/*! @nestjs/axios */ "@nestjs/axios");
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const rxjs_1 = __webpack_require__(/*! rxjs */ "rxjs");
+const adapter_1 = __webpack_require__(/*! ../adapter */ "./src/modules/adapter/index.ts");
+const messages_1 = __webpack_require__(/*! ./messages */ "./src/modules/player/messages/index.ts");
+const utils_1 = __webpack_require__(/*! ~/utils */ "./src/utils/index.ts");
+let PlayerService = class PlayerService {
+    constructor(httpService, adapterService) {
+        this.httpService = httpService;
+        this.adapterService = adapterService;
+    }
+    avaibleDevices(accessToken) {
+        return this.httpService
+            .get('/me/player/devices', (0, utils_1.applyAuthorizationHeader)(accessToken))
+            .pipe((0, rxjs_1.map)(response => response.data.devices), (0, rxjs_1.catchError)(utils_1.catchSpotifyError), (0, rxjs_1.tap)(devices => {
+            if (devices.length <= 0)
+                throw new common_1.ForbiddenException(messages_1.PlayerMessage.NO_AVAIBLE_DEVICES);
+        }), (0, rxjs_1.map)(this.adapterService.adaptDevices));
+    }
+    currentPlaybackState(accessToken) {
+        return this.httpService
+            .get('/me/player', (0, utils_1.applyAuthorizationHeader)(accessToken))
+            .pipe((0, rxjs_1.map)(response => response.data), (0, rxjs_1.catchError)(utils_1.catchSpotifyError), (0, rxjs_1.tap)(playbackState => {
+            if (!playbackState.device)
+                throw new common_1.ForbiddenException(messages_1.PlayerMessage.NO_PLAYING_DEVICE);
+        }), (0, rxjs_1.map)(this.adapterService.adaptPlaybackState));
+    }
+    pausePlayer(accessToken, afterTime = 0, deviceId) {
+        const deviceIdQuery = `?device_id=${deviceId}`;
+        return (0, rxjs_1.timer)(afterTime).pipe((0, rxjs_1.exhaustMap)(() => {
+            return this.httpService
+                .put(`/me/player/pause${deviceId ? deviceIdQuery : ''}`, {}, (0, utils_1.applyAuthorizationHeader)(accessToken))
+                .pipe((0, rxjs_1.map)(() => ({
+                success: true,
+            })), (0, rxjs_1.catchError)(error => {
+                if (error.response.data.error.status === 403)
+                    throw new common_1.ForbiddenException(messages_1.PlayerMessage.NO_PLAYING_DEVICE);
+                return (0, utils_1.catchSpotifyError)(error);
+            }));
+        }));
+    }
+    resumePlayer(accessToken, deviceId) {
+        const deviceIdQuery = `?device_id=${deviceId}`;
+        return this.httpService
+            .put(`/me/player/play${deviceId ? deviceIdQuery : ''}`, {}, (0, utils_1.applyAuthorizationHeader)(accessToken))
+            .pipe((0, rxjs_1.map)(() => ({
+            success: true,
+        })), (0, rxjs_1.catchError)(error => {
+            if (error.response.data.error.status === 403)
+                throw new common_1.ForbiddenException(messages_1.PlayerMessage.DEVICE_ALREADY_PLAYING);
+            return (0, utils_1.catchSpotifyError)(error);
+        }));
+    }
+};
+PlayerService = __decorate([
+    (0, common_1.Injectable)(),
+    __metadata("design:paramtypes", [typeof (_a = typeof axios_1.HttpService !== "undefined" && axios_1.HttpService) === "function" ? _a : Object, typeof (_b = typeof adapter_1.AdapterService !== "undefined" && adapter_1.AdapterService) === "function" ? _b : Object])
+], PlayerService);
+exports.PlayerService = PlayerService;
 
 
 /***/ }),
-/* 60 */
+
+/***/ "./src/modules/statistics/dtos/id.dto.ts":
+/*!***********************************************!*\
+  !*** ./src/modules/statistics/dtos/id.dto.ts ***!
+  \***********************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.IdArguments = void 0;
+const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
+const class_validator_1 = __webpack_require__(/*! class-validator */ "class-validator");
+let IdArguments = class IdArguments {
+};
+__decorate([
+    (0, graphql_1.Field)(() => String),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], IdArguments.prototype, "id", void 0);
+IdArguments = __decorate([
+    (0, graphql_1.ArgsType)()
+], IdArguments);
+exports.IdArguments = IdArguments;
+
+
+/***/ }),
+
+/***/ "./src/modules/statistics/dtos/index.ts":
+/*!**********************************************!*\
+  !*** ./src/modules/statistics/dtos/index.ts ***!
+  \**********************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -1560,38 +1830,16 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-__exportStar(__webpack_require__(61), exports);
-__exportStar(__webpack_require__(65), exports);
-__exportStar(__webpack_require__(67), exports);
-__exportStar(__webpack_require__(66), exports);
+__exportStar(__webpack_require__(/*! ./limit.dto */ "./src/modules/statistics/dtos/limit.dto.ts"), exports);
+__exportStar(__webpack_require__(/*! ./id.dto */ "./src/modules/statistics/dtos/id.dto.ts"), exports);
 
 
 /***/ }),
-/* 61 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __exportStar = (this && this.__exportStar) || function(m, exports) {
-    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-__exportStar(__webpack_require__(62), exports);
-__exportStar(__webpack_require__(64), exports);
-
-
-/***/ }),
-/* 62 */
+/***/ "./src/modules/statistics/dtos/limit.dto.ts":
+/*!**************************************************!*\
+  !*** ./src/modules/statistics/dtos/limit.dto.ts ***!
+  \**************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -1606,8 +1854,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.LimitArguments = void 0;
-const graphql_1 = __webpack_require__(8);
-const class_validator_1 = __webpack_require__(63);
+const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
+const class_validator_1 = __webpack_require__(/*! class-validator */ "class-validator");
 let LimitArguments = class LimitArguments {
 };
 __decorate([
@@ -1623,44 +1871,41 @@ exports.LimitArguments = LimitArguments;
 
 
 /***/ }),
-/* 63 */
-/***/ ((module) => {
 
-module.exports = require("class-validator");
-
-/***/ }),
-/* 64 */
+/***/ "./src/modules/statistics/index.ts":
+/*!*****************************************!*\
+  !*** ./src/modules/statistics/index.ts ***!
+  \*****************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.IdArguments = void 0;
-const graphql_1 = __webpack_require__(8);
-const class_validator_1 = __webpack_require__(63);
-let IdArguments = class IdArguments {
-};
-__decorate([
-    (0, graphql_1.Field)(() => String),
-    (0, class_validator_1.IsString)(),
-    __metadata("design:type", String)
-], IdArguments.prototype, "id", void 0);
-IdArguments = __decorate([
-    (0, graphql_1.ArgsType)()
-], IdArguments);
-exports.IdArguments = IdArguments;
+__exportStar(__webpack_require__(/*! ./dtos */ "./src/modules/statistics/dtos/index.ts"), exports);
+__exportStar(__webpack_require__(/*! ./statistics.module */ "./src/modules/statistics/statistics.module.ts"), exports);
+__exportStar(__webpack_require__(/*! ./statistics.resolver */ "./src/modules/statistics/statistics.resolver.ts"), exports);
+__exportStar(__webpack_require__(/*! ./statistics.service */ "./src/modules/statistics/statistics.service.ts"), exports);
 
 
 /***/ }),
-/* 65 */
+
+/***/ "./src/modules/statistics/statistics.module.ts":
+/*!*****************************************************!*\
+  !*** ./src/modules/statistics/statistics.module.ts ***!
+  \*****************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -1672,14 +1917,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.StatisticsModule = void 0;
-const common_1 = __webpack_require__(6);
-const axios_1 = __webpack_require__(54);
-const config_1 = __webpack_require__(2);
-const statistics_service_1 = __webpack_require__(66);
-const statistics_resolver_1 = __webpack_require__(67);
-const adapter_1 = __webpack_require__(10);
-const auth_1 = __webpack_require__(19);
-const config_2 = __webpack_require__(56);
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const axios_1 = __webpack_require__(/*! @nestjs/axios */ "@nestjs/axios");
+const config_1 = __webpack_require__(/*! @nestjs/config */ "@nestjs/config");
+const statistics_service_1 = __webpack_require__(/*! ./statistics.service */ "./src/modules/statistics/statistics.service.ts");
+const statistics_resolver_1 = __webpack_require__(/*! ./statistics.resolver */ "./src/modules/statistics/statistics.resolver.ts");
+const adapter_1 = __webpack_require__(/*! @modules/adapter */ "./src/modules/adapter/index.ts");
+const auth_1 = __webpack_require__(/*! @modules/auth */ "./src/modules/auth/index.ts");
+const config_2 = __webpack_require__(/*! ~/config */ "./src/config/index.ts");
 let StatisticsModule = class StatisticsModule {
 };
 StatisticsModule = __decorate([
@@ -1705,70 +1950,11 @@ exports.StatisticsModule = StatisticsModule;
 
 
 /***/ }),
-/* 66 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var _a, _b;
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.StatisticsService = void 0;
-const axios_1 = __webpack_require__(54);
-const common_1 = __webpack_require__(6);
-const rxjs_1 = __webpack_require__(52);
-const adapter_1 = __webpack_require__(10);
-const utils_1 = __webpack_require__(13);
-let StatisticsService = class StatisticsService {
-    constructor(httpService, adapterService) {
-        this.httpService = httpService;
-        this.adapterService = adapterService;
-    }
-    getHello() {
-        return 'Hello World!';
-    }
-    lastTracks(accessToken, limit = 20) {
-        return this.httpService
-            .get(`/me/player/recently-played?limit=${limit}`, (0, utils_1.applyAuthorizationHeader)(accessToken))
-            .pipe((0, rxjs_1.map)(response => response.data.items), (0, rxjs_1.map)(items => items.map(({ track, played_at }) => (Object.assign(Object.assign({}, track), { played_at })))), (0, rxjs_1.map)(this.adapterService.adaptTracks), (0, rxjs_1.catchError)(utils_1.catchSpotifyError));
-    }
-    topGenres(accessToken, limit = 10) {
-        return this.httpService
-            .get(`/me/top/artists?limit=${50}&time_range=long_term`, (0, utils_1.applyAuthorizationHeader)(accessToken))
-            .pipe((0, rxjs_1.map)(response => response.data.items), (0, rxjs_1.map)(items => this.adapterService.adaptGenres(items, limit)), (0, rxjs_1.catchError)(utils_1.catchSpotifyError));
-    }
-    topArtists(accessToken, limit = 10) {
-        return this.httpService
-            .get(`/me/top/artists?limit=${limit}&time_range=long_term`, (0, utils_1.applyAuthorizationHeader)(accessToken))
-            .pipe((0, rxjs_1.map)(response => response.data.items), (0, rxjs_1.map)(this.adapterService.adaptArtists), (0, rxjs_1.catchError)(utils_1.catchSpotifyError));
-    }
-    topTracks(accessToken, limit = 10) {
-        return this.httpService
-            .get(`/me/top/tracks?limit=${limit}&time_range=long_term`, (0, utils_1.applyAuthorizationHeader)(accessToken))
-            .pipe((0, rxjs_1.map)(response => response.data.items), (0, rxjs_1.map)(this.adapterService.adaptTracks), (0, rxjs_1.catchError)(utils_1.catchSpotifyError));
-    }
-    artist(accessToken, id) {
-        return this.httpService
-            .get(`/artists/${id}`, (0, utils_1.applyAuthorizationHeader)(accessToken))
-            .pipe((0, rxjs_1.map)(response => response.data), (0, rxjs_1.map)(this.adapterService.adaptArtist), (0, rxjs_1.catchError)(utils_1.catchSpotifyError));
-    }
-};
-StatisticsService = __decorate([
-    (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [typeof (_a = typeof axios_1.HttpService !== "undefined" && axios_1.HttpService) === "function" ? _a : Object, typeof (_b = typeof adapter_1.AdapterService !== "undefined" && adapter_1.AdapterService) === "function" ? _b : Object])
-], StatisticsService);
-exports.StatisticsService = StatisticsService;
-
-
-/***/ }),
-/* 67 */
+/***/ "./src/modules/statistics/statistics.resolver.ts":
+/*!*******************************************************!*\
+  !*** ./src/modules/statistics/statistics.resolver.ts ***!
+  \*******************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -1787,12 +1973,12 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 var _a, _b, _c, _d, _e, _f;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.StatisticsResolver = void 0;
-const graphql_1 = __webpack_require__(8);
-const rxjs_1 = __webpack_require__(52);
-const statistics_service_1 = __webpack_require__(66);
-const dtos_1 = __webpack_require__(61);
-const auth_1 = __webpack_require__(19);
-const dtos_2 = __webpack_require__(27);
+const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
+const rxjs_1 = __webpack_require__(/*! rxjs */ "rxjs");
+const statistics_service_1 = __webpack_require__(/*! ./statistics.service */ "./src/modules/statistics/statistics.service.ts");
+const dtos_1 = __webpack_require__(/*! ./dtos */ "./src/modules/statistics/dtos/index.ts");
+const auth_1 = __webpack_require__(/*! @modules/auth */ "./src/modules/auth/index.ts");
+const dtos_2 = __webpack_require__(/*! @common/dtos */ "./src/common/dtos/index.ts");
 let StatisticsResolver = class StatisticsResolver {
     constructor(statisticsService) {
         this.statisticsService = statisticsService;
@@ -1861,7 +2047,204 @@ exports.StatisticsResolver = StatisticsResolver;
 
 
 /***/ }),
-/* 68 */
+
+/***/ "./src/modules/statistics/statistics.service.ts":
+/*!******************************************************!*\
+  !*** ./src/modules/statistics/statistics.service.ts ***!
+  \******************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var _a, _b;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.StatisticsService = void 0;
+const axios_1 = __webpack_require__(/*! @nestjs/axios */ "@nestjs/axios");
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const rxjs_1 = __webpack_require__(/*! rxjs */ "rxjs");
+const adapter_1 = __webpack_require__(/*! @modules/adapter */ "./src/modules/adapter/index.ts");
+const utils_1 = __webpack_require__(/*! ~/utils */ "./src/utils/index.ts");
+let StatisticsService = class StatisticsService {
+    constructor(httpService, adapterService) {
+        this.httpService = httpService;
+        this.adapterService = adapterService;
+    }
+    getHello() {
+        return 'Hello World!';
+    }
+    lastTracks(accessToken, limit = 20) {
+        return this.httpService
+            .get(`/me/player/recently-played?limit=${limit}`, (0, utils_1.applyAuthorizationHeader)(accessToken))
+            .pipe((0, rxjs_1.map)(response => response.data.items), (0, rxjs_1.map)(items => items.map(({ track, played_at }) => (Object.assign(Object.assign({}, track), { played_at })))), (0, rxjs_1.map)(this.adapterService.adaptTracks), (0, rxjs_1.catchError)(utils_1.catchSpotifyError));
+    }
+    topGenres(accessToken, limit = 10) {
+        return this.httpService
+            .get(`/me/top/artists?limit=${50}&time_range=long_term`, (0, utils_1.applyAuthorizationHeader)(accessToken))
+            .pipe((0, rxjs_1.map)(response => response.data.items), (0, rxjs_1.map)(items => this.adapterService.adaptGenres(items, limit)), (0, rxjs_1.catchError)(utils_1.catchSpotifyError));
+    }
+    topArtists(accessToken, limit = 10) {
+        return this.httpService
+            .get(`/me/top/artists?limit=${limit}&time_range=long_term`, (0, utils_1.applyAuthorizationHeader)(accessToken))
+            .pipe((0, rxjs_1.map)(response => response.data.items), (0, rxjs_1.map)(this.adapterService.adaptArtists), (0, rxjs_1.catchError)(utils_1.catchSpotifyError));
+    }
+    topTracks(accessToken, limit = 10) {
+        return this.httpService
+            .get(`/me/top/tracks?limit=${limit}&time_range=long_term`, (0, utils_1.applyAuthorizationHeader)(accessToken))
+            .pipe((0, rxjs_1.map)(response => response.data.items), (0, rxjs_1.map)(this.adapterService.adaptTracks), (0, rxjs_1.catchError)(utils_1.catchSpotifyError));
+    }
+    artist(accessToken, id) {
+        return this.httpService
+            .get(`/artists/${id}`, (0, utils_1.applyAuthorizationHeader)(accessToken))
+            .pipe((0, rxjs_1.map)(response => response.data), (0, rxjs_1.map)(this.adapterService.adaptArtist), (0, rxjs_1.catchError)(utils_1.catchSpotifyError));
+    }
+};
+StatisticsService = __decorate([
+    (0, common_1.Injectable)(),
+    __metadata("design:paramtypes", [typeof (_a = typeof axios_1.HttpService !== "undefined" && axios_1.HttpService) === "function" ? _a : Object, typeof (_b = typeof adapter_1.AdapterService !== "undefined" && adapter_1.AdapterService) === "function" ? _b : Object])
+], StatisticsService);
+exports.StatisticsService = StatisticsService;
+
+
+/***/ }),
+
+/***/ "./src/utils/apply-authorization-header.ts":
+/*!*************************************************!*\
+  !*** ./src/utils/apply-authorization-header.ts ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.applyAuthorizationHeader = void 0;
+const applyAuthorizationHeader = (accessToken) => ({
+    headers: {
+        Authorization: `Bearer ${accessToken}`,
+    },
+});
+exports.applyAuthorizationHeader = applyAuthorizationHeader;
+
+
+/***/ }),
+
+/***/ "./src/utils/catch-spotify-error.ts":
+/*!******************************************!*\
+  !*** ./src/utils/catch-spotify-error.ts ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.catchSpotifyError = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const catchSpotifyError = error => {
+    var _a;
+    console.error(error);
+    const { response: { data, status }, } = error;
+    if ((data === null || data === void 0 ? void 0 : data.error) === 'invalid_grant')
+        throw new common_1.UnauthorizedException('Invalid token');
+    if (status === 401)
+        throw new common_1.UnauthorizedException((_a = data === null || data === void 0 ? void 0 : data.error) === null || _a === void 0 ? void 0 : _a.message);
+    if (status === 403 &&
+        data === 'User not registered in the Developer Dashboard')
+        throw new common_1.ForbiddenException('User not registered in the Developer Dashboard');
+    throw new common_1.InternalServerErrorException('Something went wrong with fetching data from spotify API', data === null || data === void 0 ? void 0 : data.error);
+};
+exports.catchSpotifyError = catchSpotifyError;
+
+
+/***/ }),
+
+/***/ "./src/utils/get-most-frequent-items.ts":
+/*!**********************************************!*\
+  !*** ./src/utils/get-most-frequent-items.ts ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getMostFrequentItems = void 0;
+function getMostFrequentItems(array, limit = 1) {
+    if (array.length === 0)
+        return array;
+    const frequencies = {};
+    for (const item of array) {
+        if (frequencies[item] === undefined) {
+            frequencies[item] = 1;
+        }
+        else {
+            frequencies[item] = frequencies[item] + 1;
+        }
+    }
+    const frequencyArray = [];
+    for (const key in frequencies) {
+        frequencyArray.push([frequencies[key], key]);
+    }
+    frequencyArray.sort((a, b) => {
+        return b[0] - a[0];
+    });
+    const mostFrequentItems = [];
+    for (let index = 0; index < limit; index++) {
+        mostFrequentItems.push(frequencyArray[index][1]);
+    }
+    return mostFrequentItems;
+}
+exports.getMostFrequentItems = getMostFrequentItems;
+
+
+/***/ }),
+
+/***/ "./src/utils/get-parameter-decorator-factory.ts":
+/*!******************************************************!*\
+  !*** ./src/utils/get-parameter-decorator-factory.ts ***!
+  \******************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getParameterDecoratorFactory = void 0;
+const constants_1 = __webpack_require__(/*! @nestjs/common/constants */ "@nestjs/common/constants");
+function getParameterDecoratorFactory(decorator) {
+    class Test {
+        test(value) { }
+    }
+    __decorate([
+        __param(0, decorator()),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Object]),
+        __metadata("design:returntype", void 0)
+    ], Test.prototype, "test", null);
+    const arguments_ = Reflect.getMetadata(constants_1.ROUTE_ARGS_METADATA, Test, 'test');
+    return arguments_[Object.keys(arguments_)[0]].factory;
+}
+exports.getParameterDecoratorFactory = getParameterDecoratorFactory;
+
+
+/***/ }),
+
+/***/ "./src/utils/index.ts":
+/*!****************************!*\
+  !*** ./src/utils/index.ts ***!
+  \****************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -1880,230 +2263,135 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-__exportStar(__webpack_require__(69), exports);
-__exportStar(__webpack_require__(70), exports);
-__exportStar(__webpack_require__(72), exports);
-__exportStar(__webpack_require__(71), exports);
+__exportStar(__webpack_require__(/*! ./get-most-frequent-items */ "./src/utils/get-most-frequent-items.ts"), exports);
+__exportStar(__webpack_require__(/*! ./catch-spotify-error */ "./src/utils/catch-spotify-error.ts"), exports);
+__exportStar(__webpack_require__(/*! ./get-parameter-decorator-factory */ "./src/utils/get-parameter-decorator-factory.ts"), exports);
+__exportStar(__webpack_require__(/*! ./apply-authorization-header */ "./src/utils/apply-authorization-header.ts"), exports);
 
 
 /***/ }),
-/* 69 */
-/***/ ((__unused_webpack_module, exports) => {
 
+/***/ "@nestjs/apollo":
+/*!*********************************!*\
+  !*** external "@nestjs/apollo" ***!
+  \*********************************/
+/***/ ((module) => {
 
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.PlayerMessage = void 0;
-var PlayerMessage;
-(function (PlayerMessage) {
-    PlayerMessage["NO_AVAIBLE_DEVICES"] = "No device is avaible";
-    PlayerMessage["NO_PLAYING_DEVICE"] = "No device is currently playing";
-    PlayerMessage["DEVICE_ALREADY_PLAYING"] = "Device is already playing";
-})(PlayerMessage = exports.PlayerMessage || (exports.PlayerMessage = {}));
-
+module.exports = require("@nestjs/apollo");
 
 /***/ }),
-/* 70 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
+/***/ "@nestjs/axios":
+/*!********************************!*\
+  !*** external "@nestjs/axios" ***!
+  \********************************/
+/***/ ((module) => {
 
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.PlayerModule = void 0;
-const common_1 = __webpack_require__(6);
-const axios_1 = __webpack_require__(54);
-const config_1 = __webpack_require__(2);
-const player_service_1 = __webpack_require__(71);
-const player_resolver_1 = __webpack_require__(72);
-const adapter_1 = __webpack_require__(10);
-const config_2 = __webpack_require__(56);
-let PlayerModule = class PlayerModule {
-};
-PlayerModule = __decorate([
-    (0, common_1.Module)({
-        imports: [
-            axios_1.HttpModule.registerAsync({
-                useFactory: (configService) => ({
-                    baseURL: configService.get(config_2.Environment.SPOTIFY_BASE_URL),
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Accept: 'application/json',
-                    },
-                }),
-                inject: [config_1.ConfigService],
-            }),
-            adapter_1.AdapterModule,
-        ],
-        providers: [player_service_1.PlayerService, player_resolver_1.PlayerResolver],
-    })
-], PlayerModule);
-exports.PlayerModule = PlayerModule;
-
+module.exports = require("@nestjs/axios");
 
 /***/ }),
-/* 71 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
+/***/ "@nestjs/common":
+/*!*********************************!*\
+  !*** external "@nestjs/common" ***!
+  \*********************************/
+/***/ ((module) => {
 
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var _a, _b;
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.PlayerService = void 0;
-const axios_1 = __webpack_require__(54);
-const common_1 = __webpack_require__(6);
-const rxjs_1 = __webpack_require__(52);
-const adapter_1 = __webpack_require__(10);
-const messages_1 = __webpack_require__(69);
-const utils_1 = __webpack_require__(13);
-let PlayerService = class PlayerService {
-    constructor(httpService, adapterService) {
-        this.httpService = httpService;
-        this.adapterService = adapterService;
-    }
-    avaibleDevices(accessToken) {
-        return this.httpService
-            .get('/me/player/devices', (0, utils_1.applyAuthorizationHeader)(accessToken))
-            .pipe((0, rxjs_1.map)(response => response.data.devices), (0, rxjs_1.catchError)(utils_1.catchSpotifyError), (0, rxjs_1.tap)(devices => {
-            if (devices.length <= 0)
-                throw new common_1.ForbiddenException(messages_1.PlayerMessage.NO_AVAIBLE_DEVICES);
-        }), (0, rxjs_1.map)(this.adapterService.adaptDevices));
-    }
-    currentPlaybackState(accessToken) {
-        return this.httpService
-            .get('/me/player', (0, utils_1.applyAuthorizationHeader)(accessToken))
-            .pipe((0, rxjs_1.map)(response => response.data), (0, rxjs_1.catchError)(utils_1.catchSpotifyError), (0, rxjs_1.tap)(playbackState => {
-            if (!playbackState.device)
-                throw new common_1.ForbiddenException(messages_1.PlayerMessage.NO_PLAYING_DEVICE);
-        }), (0, rxjs_1.map)(this.adapterService.adaptPlaybackState));
-    }
-    pausePlayer(accessToken, afterTime = 0, deviceId) {
-        const deviceIdQuery = `?device_id=${deviceId}`;
-        return (0, rxjs_1.timer)(afterTime).pipe((0, rxjs_1.exhaustMap)(() => {
-            return this.httpService
-                .put(`/me/player/pause${deviceId ? deviceIdQuery : ''}`, {}, (0, utils_1.applyAuthorizationHeader)(accessToken))
-                .pipe((0, rxjs_1.map)(() => ({
-                success: true,
-            })), (0, rxjs_1.catchError)(error => {
-                if (error.response.data.error.status === 403)
-                    throw new common_1.ForbiddenException(messages_1.PlayerMessage.NO_PLAYING_DEVICE);
-                return (0, utils_1.catchSpotifyError)(error);
-            }));
-        }));
-    }
-    resumePlayer(accessToken, deviceId) {
-        const deviceIdQuery = `?device_id=${deviceId}`;
-        return this.httpService
-            .put(`/me/player/play${deviceId ? deviceIdQuery : ''}`, {}, (0, utils_1.applyAuthorizationHeader)(accessToken))
-            .pipe((0, rxjs_1.map)(() => ({
-            success: true,
-        })), (0, rxjs_1.catchError)(error => {
-            if (error.response.data.error.status === 403)
-                throw new common_1.ForbiddenException(messages_1.PlayerMessage.DEVICE_ALREADY_PLAYING);
-            return (0, utils_1.catchSpotifyError)(error);
-        }));
-    }
-};
-PlayerService = __decorate([
-    (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [typeof (_a = typeof axios_1.HttpService !== "undefined" && axios_1.HttpService) === "function" ? _a : Object, typeof (_b = typeof adapter_1.AdapterService !== "undefined" && adapter_1.AdapterService) === "function" ? _b : Object])
-], PlayerService);
-exports.PlayerService = PlayerService;
-
+module.exports = require("@nestjs/common");
 
 /***/ }),
-/* 72 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
+/***/ "@nestjs/common/constants":
+/*!*******************************************!*\
+  !*** external "@nestjs/common/constants" ***!
+  \*******************************************/
+/***/ ((module) => {
 
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
-var _a;
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.PlayerResolver = void 0;
-const graphql_1 = __webpack_require__(8);
-const rxjs_1 = __webpack_require__(52);
-const player_service_1 = __webpack_require__(71);
-const auth_1 = __webpack_require__(19);
-const dtos_1 = __webpack_require__(27);
-let PlayerResolver = class PlayerResolver {
-    constructor(playerService) {
-        this.playerService = playerService;
-    }
-    async avaibleDevices(accessToken) {
-        return await (0, rxjs_1.firstValueFrom)(this.playerService.avaibleDevices(accessToken));
-    }
-    async currentPlaybackState(accessToken) {
-        return await (0, rxjs_1.firstValueFrom)(this.playerService.currentPlaybackState(accessToken));
-    }
-    async pausePlayer(accessToken, afterTime, deviceId) {
-        return await (0, rxjs_1.firstValueFrom)(this.playerService.pausePlayer(accessToken, afterTime, deviceId));
-    }
-    async resumePlayer(accessToken, deviceId) {
-        return await (0, rxjs_1.firstValueFrom)(this.playerService.resumePlayer(accessToken, deviceId));
-    }
-};
-__decorate([
-    (0, graphql_1.Query)(() => [dtos_1.Device]),
-    __param(0, (0, auth_1.AccessToken)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Promise)
-], PlayerResolver.prototype, "avaibleDevices", null);
-__decorate([
-    (0, graphql_1.Query)(() => dtos_1.PlaybackState),
-    __param(0, (0, auth_1.AccessToken)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Promise)
-], PlayerResolver.prototype, "currentPlaybackState", null);
-__decorate([
-    (0, graphql_1.Query)(() => dtos_1.Success),
-    __param(0, (0, auth_1.AccessToken)()),
-    __param(1, (0, graphql_1.Args)('afterTime', { nullable: true })),
-    __param(2, (0, graphql_1.Args)('deviceId', { nullable: true })),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Number, String]),
-    __metadata("design:returntype", Promise)
-], PlayerResolver.prototype, "pausePlayer", null);
-__decorate([
-    (0, graphql_1.Query)(() => dtos_1.Success),
-    __param(0, (0, auth_1.AccessToken)()),
-    __param(1, (0, graphql_1.Args)('deviceId', { nullable: true })),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String]),
-    __metadata("design:returntype", Promise)
-], PlayerResolver.prototype, "resumePlayer", null);
-PlayerResolver = __decorate([
-    (0, graphql_1.Resolver)(),
-    __metadata("design:paramtypes", [typeof (_a = typeof player_service_1.PlayerService !== "undefined" && player_service_1.PlayerService) === "function" ? _a : Object])
-], PlayerResolver);
-exports.PlayerResolver = PlayerResolver;
+module.exports = require("@nestjs/common/constants");
 
+/***/ }),
+
+/***/ "@nestjs/config":
+/*!*********************************!*\
+  !*** external "@nestjs/config" ***!
+  \*********************************/
+/***/ ((module) => {
+
+module.exports = require("@nestjs/config");
+
+/***/ }),
+
+/***/ "@nestjs/core":
+/*!*******************************!*\
+  !*** external "@nestjs/core" ***!
+  \*******************************/
+/***/ ((module) => {
+
+module.exports = require("@nestjs/core");
+
+/***/ }),
+
+/***/ "@nestjs/graphql":
+/*!**********************************!*\
+  !*** external "@nestjs/graphql" ***!
+  \**********************************/
+/***/ ((module) => {
+
+module.exports = require("@nestjs/graphql");
+
+/***/ }),
+
+/***/ "@nestjs/jwt":
+/*!******************************!*\
+  !*** external "@nestjs/jwt" ***!
+  \******************************/
+/***/ ((module) => {
+
+module.exports = require("@nestjs/jwt");
+
+/***/ }),
+
+/***/ "class-validator":
+/*!**********************************!*\
+  !*** external "class-validator" ***!
+  \**********************************/
+/***/ ((module) => {
+
+module.exports = require("class-validator");
+
+/***/ }),
+
+/***/ "cookie-parser":
+/*!********************************!*\
+  !*** external "cookie-parser" ***!
+  \********************************/
+/***/ ((module) => {
+
+module.exports = require("cookie-parser");
+
+/***/ }),
+
+/***/ "joi":
+/*!**********************!*\
+  !*** external "joi" ***!
+  \**********************/
+/***/ ((module) => {
+
+module.exports = require("joi");
+
+/***/ }),
+
+/***/ "rxjs":
+/*!***********************!*\
+  !*** external "rxjs" ***!
+  \***********************/
+/***/ ((module) => {
+
+module.exports = require("rxjs");
 
 /***/ })
-/******/ 	]);
+
+/******/ 	});
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
@@ -2134,13 +2422,16 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
 var exports = __webpack_exports__;
+/*!*********************!*\
+  !*** ./src/main.ts ***!
+  \*********************/
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const core_1 = __webpack_require__(1);
-const config_1 = __webpack_require__(2);
-const cookieParser = __webpack_require__(3);
-const app_1 = __webpack_require__(4);
-const config_2 = __webpack_require__(56);
+const core_1 = __webpack_require__(/*! @nestjs/core */ "@nestjs/core");
+const config_1 = __webpack_require__(/*! @nestjs/config */ "@nestjs/config");
+const cookieParser = __webpack_require__(/*! cookie-parser */ "cookie-parser");
+const app_1 = __webpack_require__(/*! ./modules/app */ "./src/modules/app/index.ts");
+const config_2 = __webpack_require__(/*! ./config */ "./src/config/index.ts");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_1.AppModule);
     const configService = app.get(config_1.ConfigService);
