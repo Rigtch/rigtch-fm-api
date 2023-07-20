@@ -1,12 +1,15 @@
 import { Controller, Get, HttpStatus, Query, Redirect } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { firstValueFrom } from 'rxjs'
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 
 import { AuthService } from './auth.service'
 import { spotifyAuthorizationScopes } from './config'
 import { RedirectResponse } from './types'
+import { AccessToken } from './decorators'
 
 import { Environment } from '~/config'
+import { AuthenticationType } from '@modules/auth/enums'
 
 const {
   SPOTIFY_CALLBACK_URL,
@@ -16,6 +19,7 @@ const {
 } = Environment
 
 @Controller('auth')
+@ApiTags('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
@@ -44,6 +48,10 @@ export class AuthController {
     const { accessToken, refreshToken } = await firstValueFrom(
       this.authService.token({ code })
     )
+
+    console.log('acessToken', accessToken)
+    console.log('refreshToken', refreshToken)
+
     return {
       url: `${this.configService.get(
         CLIENT_CALLBACK_URL
@@ -53,5 +61,17 @@ export class AuthController {
       })}`,
       statusCode: HttpStatus.PERMANENT_REDIRECT,
     }
+  }
+
+  @Get('refresh')
+  @ApiBearerAuth(AuthenticationType.REFRESH_TOKEN)
+  refresh(@AccessToken() refreshToken: string) {
+    return firstValueFrom(this.authService.token({ refreshToken }))
+  }
+
+  @Get('profile')
+  @ApiBearerAuth(AuthenticationType.ACCESS_TOKEN)
+  profile(@AccessToken() accessToken: string) {
+    return firstValueFrom(this.authService.profile(accessToken))
   }
 }
