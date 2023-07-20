@@ -884,10 +884,13 @@ exports.AuthController = void 0;
 const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
 const config_1 = __webpack_require__(/*! @nestjs/config */ "@nestjs/config");
 const rxjs_1 = __webpack_require__(/*! rxjs */ "rxjs");
+const swagger_1 = __webpack_require__(/*! @nestjs/swagger */ "@nestjs/swagger");
 const auth_service_1 = __webpack_require__(/*! ./auth.service */ "./src/modules/auth/auth.service.ts");
 const config_2 = __webpack_require__(/*! ./config */ "./src/modules/auth/config/index.ts");
 const types_1 = __webpack_require__(/*! ./types */ "./src/modules/auth/types/index.ts");
+const decorators_1 = __webpack_require__(/*! ./decorators */ "./src/modules/auth/decorators/index.ts");
 const config_3 = __webpack_require__(/*! ~/config */ "./src/config/index.ts");
+const enums_1 = __webpack_require__(/*! @modules/auth/enums */ "./src/modules/auth/enums/index.ts");
 const { SPOTIFY_CALLBACK_URL, SPOTIFY_CLIENT_ID, SPOTIFY_ACCOUNTS_URL, CLIENT_CALLBACK_URL, } = config_3.Environment;
 let AuthController = class AuthController {
     constructor(authService, configService) {
@@ -907,6 +910,8 @@ let AuthController = class AuthController {
     }
     async callback(code) {
         const { accessToken, refreshToken } = await (0, rxjs_1.firstValueFrom)(this.authService.token({ code }));
+        console.log('acessToken', accessToken);
+        console.log('refreshToken', refreshToken);
         return {
             url: `${this.configService.get(CLIENT_CALLBACK_URL)}/api/authorize?${new URLSearchParams({
                 accessToken,
@@ -914,6 +919,12 @@ let AuthController = class AuthController {
             })}`,
             statusCode: common_1.HttpStatus.PERMANENT_REDIRECT,
         };
+    }
+    refresh(refreshToken) {
+        return (0, rxjs_1.firstValueFrom)(this.authService.token({ refreshToken }));
+    }
+    profile(accessToken) {
+        return (0, rxjs_1.firstValueFrom)(this.authService.profile(accessToken));
     }
 };
 __decorate([
@@ -931,8 +942,25 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", typeof (_d = typeof Promise !== "undefined" && Promise) === "function" ? _d : Object)
 ], AuthController.prototype, "callback", null);
+__decorate([
+    (0, common_1.Get)('refresh'),
+    (0, swagger_1.ApiBearerAuth)(enums_1.AuthenticationType.REFRESH_TOKEN),
+    __param(0, (0, decorators_1.AccessToken)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "refresh", null);
+__decorate([
+    (0, common_1.Get)('profile'),
+    (0, swagger_1.ApiBearerAuth)(enums_1.AuthenticationType.ACCESS_TOKEN),
+    __param(0, (0, decorators_1.AccessToken)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "profile", null);
 AuthController = __decorate([
     (0, common_1.Controller)('auth'),
+    (0, swagger_1.ApiTags)('auth'),
     __metadata("design:paramtypes", [typeof (_a = typeof auth_service_1.AuthService !== "undefined" && auth_service_1.AuthService) === "function" ? _a : Object, typeof (_b = typeof config_1.ConfigService !== "undefined" && config_1.ConfigService) === "function" ? _b : Object])
 ], AuthController);
 exports.AuthController = AuthController;
@@ -1207,6 +1235,20 @@ exports.spotifyAuthorizationScopes = [
 
 /***/ }),
 
+/***/ "./src/modules/auth/constants/index.ts":
+/*!*********************************************!*\
+  !*** ./src/modules/auth/constants/index.ts ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.BEARER = void 0;
+exports.BEARER = 'bearer';
+
+
+/***/ }),
+
 /***/ "./src/modules/auth/decorators/access-token.decorator.ts":
 /*!***************************************************************!*\
   !*** ./src/modules/auth/decorators/access-token.decorator.ts ***!
@@ -1219,11 +1261,11 @@ exports.AccessToken = void 0;
 const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
 const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
 exports.AccessToken = (0, common_1.createParamDecorator)((data, context) => {
-    var _a, _b, _c, _d;
+    var _a, _b;
     const request = context.getType() === 'http'
         ? context.switchToHttp().getRequest()
         : graphql_1.GqlExecutionContext.create(context).getContext().req;
-    const accessToken = (_b = (_a = request.cookies) === null || _a === void 0 ? void 0 : _a['access-token']) !== null && _b !== void 0 ? _b : (_d = (_c = request.headers) === null || _c === void 0 ? void 0 : _c.authorization) === null || _d === void 0 ? void 0 : _d.slice(7);
+    const accessToken = (_b = (_a = request.headers) === null || _a === void 0 ? void 0 : _a.authorization) === null || _b === void 0 ? void 0 : _b.slice(7);
     if (!accessToken)
         throw new common_1.UnauthorizedException('No value was provided for Authentication');
     return accessToken;
@@ -1412,6 +1454,51 @@ exports.SecretData = SecretData;
 
 /***/ }),
 
+/***/ "./src/modules/auth/enums/authentication-type.enum.ts":
+/*!************************************************************!*\
+  !*** ./src/modules/auth/enums/authentication-type.enum.ts ***!
+  \************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AuthenticationType = void 0;
+var AuthenticationType;
+(function (AuthenticationType) {
+    AuthenticationType["ACCESS_TOKEN"] = "access-token";
+    AuthenticationType["REFRESH_TOKEN"] = "refresh-token";
+})(AuthenticationType = exports.AuthenticationType || (exports.AuthenticationType = {}));
+
+
+/***/ }),
+
+/***/ "./src/modules/auth/enums/index.ts":
+/*!*****************************************!*\
+  !*** ./src/modules/auth/enums/index.ts ***!
+  \*****************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+__exportStar(__webpack_require__(/*! ./authentication-type.enum */ "./src/modules/auth/enums/authentication-type.enum.ts"), exports);
+
+
+/***/ }),
+
 /***/ "./src/modules/auth/index.ts":
 /*!***********************************!*\
   !*** ./src/modules/auth/index.ts ***!
@@ -1560,6 +1647,96 @@ var PlayerMessage;
 
 /***/ }),
 
+/***/ "./src/modules/player/player.controller.ts":
+/*!*************************************************!*\
+  !*** ./src/modules/player/player.controller.ts ***!
+  \*************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+var _a;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.PlayerController = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const rxjs_1 = __webpack_require__(/*! rxjs */ "rxjs");
+const swagger_1 = __webpack_require__(/*! @nestjs/swagger */ "@nestjs/swagger");
+const player_service_1 = __webpack_require__(/*! ./player.service */ "./src/modules/player/player.service.ts");
+const auth_1 = __webpack_require__(/*! @modules/auth */ "./src/modules/auth/index.ts");
+const enums_1 = __webpack_require__(/*! @modules/auth/enums */ "./src/modules/auth/enums/index.ts");
+let PlayerController = class PlayerController {
+    constructor(playerService) {
+        this.playerService = playerService;
+    }
+    async availableDevices(accessToken) {
+        return await (0, rxjs_1.firstValueFrom)(this.playerService.avaibleDevices(accessToken));
+    }
+    async currentPlaybackState(accessToken) {
+        return await (0, rxjs_1.firstValueFrom)(this.playerService.currentPlaybackState(accessToken));
+    }
+    pausePlayer(accessToken, afterTime, deviceId) {
+        return (0, rxjs_1.firstValueFrom)(this.playerService.pausePlayer(accessToken, afterTime, deviceId));
+    }
+    resumePlayer(accessToken, deviceId) {
+        return (0, rxjs_1.firstValueFrom)(this.playerService.resumePlayer(accessToken, deviceId));
+    }
+};
+__decorate([
+    (0, common_1.Get)('/devices'),
+    __param(0, (0, auth_1.AccessToken)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], PlayerController.prototype, "availableDevices", null);
+__decorate([
+    (0, common_1.Get)('/state'),
+    __param(0, (0, auth_1.AccessToken)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], PlayerController.prototype, "currentPlaybackState", null);
+__decorate([
+    (0, common_1.Put)('/pause'),
+    (0, swagger_1.ApiQuery)({ name: 'afterTime', type: Number, required: false }),
+    (0, swagger_1.ApiQuery)({ name: 'deviceId', type: String, required: false }),
+    __param(0, (0, auth_1.AccessToken)()),
+    __param(1, (0, common_1.Query)('afterTime', common_1.ParseIntPipe)),
+    __param(2, (0, common_1.Query)('deviceId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Number, String]),
+    __metadata("design:returntype", void 0)
+], PlayerController.prototype, "pausePlayer", null);
+__decorate([
+    (0, common_1.Put)('/resume'),
+    (0, swagger_1.ApiQuery)({ name: 'deviceId', type: String, required: false }),
+    __param(0, (0, auth_1.AccessToken)()),
+    __param(1, (0, common_1.Query)('deviceId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", void 0)
+], PlayerController.prototype, "resumePlayer", null);
+PlayerController = __decorate([
+    (0, common_1.Controller)('player'),
+    (0, swagger_1.ApiTags)('player'),
+    (0, swagger_1.ApiBearerAuth)(enums_1.AuthenticationType.ACCESS_TOKEN),
+    __metadata("design:paramtypes", [typeof (_a = typeof player_service_1.PlayerService !== "undefined" && player_service_1.PlayerService) === "function" ? _a : Object])
+], PlayerController);
+exports.PlayerController = PlayerController;
+
+
+/***/ }),
+
 /***/ "./src/modules/player/player.module.ts":
 /*!*********************************************!*\
   !*** ./src/modules/player/player.module.ts ***!
@@ -1580,6 +1757,7 @@ const axios_1 = __webpack_require__(/*! @nestjs/axios */ "@nestjs/axios");
 const config_1 = __webpack_require__(/*! @nestjs/config */ "@nestjs/config");
 const player_service_1 = __webpack_require__(/*! ./player.service */ "./src/modules/player/player.service.ts");
 const player_resolver_1 = __webpack_require__(/*! ./player.resolver */ "./src/modules/player/player.resolver.ts");
+const player_controller_1 = __webpack_require__(/*! ./player.controller */ "./src/modules/player/player.controller.ts");
 const adapter_1 = __webpack_require__(/*! @modules/adapter */ "./src/modules/adapter/index.ts");
 const config_2 = __webpack_require__(/*! ~/config */ "./src/config/index.ts");
 let PlayerModule = class PlayerModule {
@@ -1599,6 +1777,7 @@ PlayerModule = __decorate([
             }),
             adapter_1.AdapterModule,
         ],
+        controllers: [player_controller_1.PlayerController],
         providers: [player_service_1.PlayerService, player_resolver_1.PlayerResolver],
     })
 ], PlayerModule);
@@ -1902,6 +2081,111 @@ __exportStar(__webpack_require__(/*! ./statistics.service */ "./src/modules/stat
 
 /***/ }),
 
+/***/ "./src/modules/statistics/statistics.controller.ts":
+/*!*********************************************************!*\
+  !*** ./src/modules/statistics/statistics.controller.ts ***!
+  \*********************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+var _a, _b, _c, _d, _e;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.StatisticsController = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const swagger_1 = __webpack_require__(/*! @nestjs/swagger */ "@nestjs/swagger");
+const rxjs_1 = __webpack_require__(/*! rxjs */ "rxjs");
+const statistics_service_1 = __webpack_require__(/*! ./statistics.service */ "./src/modules/statistics/statistics.service.ts");
+const dtos_1 = __webpack_require__(/*! ./dtos */ "./src/modules/statistics/dtos/index.ts");
+const auth_1 = __webpack_require__(/*! @modules/auth */ "./src/modules/auth/index.ts");
+const enums_1 = __webpack_require__(/*! @modules/auth/enums */ "./src/modules/auth/enums/index.ts");
+let StatisticsController = class StatisticsController {
+    constructor(statisticsService) {
+        this.statisticsService = statisticsService;
+    }
+    lastTracks(accessToken, { limit }) {
+        return (0, rxjs_1.firstValueFrom)(this.statisticsService.lastTracks(accessToken, limit));
+    }
+    topTracks(accessToken, { limit }) {
+        return (0, rxjs_1.firstValueFrom)(this.statisticsService.topTracks(accessToken, limit));
+    }
+    topGenres(accessToken, { limit }) {
+        return (0, rxjs_1.firstValueFrom)(this.statisticsService.topGenres(accessToken, limit));
+    }
+    topArtists(accessToken, { limit }) {
+        return (0, rxjs_1.firstValueFrom)(this.statisticsService.topArtists(accessToken, limit));
+    }
+    artist(accessToken, id) {
+        return (0, rxjs_1.firstValueFrom)(this.statisticsService.artist(accessToken, id));
+    }
+};
+__decorate([
+    (0, common_1.Get)('/last-tracks'),
+    (0, swagger_1.ApiQuery)({ name: 'limit', type: Number, required: false }),
+    __param(0, (0, auth_1.AccessToken)()),
+    __param(1, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, typeof (_b = typeof dtos_1.LimitArguments !== "undefined" && dtos_1.LimitArguments) === "function" ? _b : Object]),
+    __metadata("design:returntype", void 0)
+], StatisticsController.prototype, "lastTracks", null);
+__decorate([
+    (0, common_1.Get)('/top-tracks'),
+    (0, swagger_1.ApiQuery)({ name: 'limit', type: Number, required: false }),
+    __param(0, (0, auth_1.AccessToken)()),
+    __param(1, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, typeof (_c = typeof dtos_1.LimitArguments !== "undefined" && dtos_1.LimitArguments) === "function" ? _c : Object]),
+    __metadata("design:returntype", void 0)
+], StatisticsController.prototype, "topTracks", null);
+__decorate([
+    (0, common_1.Get)('/top-genres'),
+    (0, swagger_1.ApiQuery)({ name: 'limit', type: Number, required: false }),
+    __param(0, (0, auth_1.AccessToken)()),
+    __param(1, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, typeof (_d = typeof dtos_1.LimitArguments !== "undefined" && dtos_1.LimitArguments) === "function" ? _d : Object]),
+    __metadata("design:returntype", void 0)
+], StatisticsController.prototype, "topGenres", null);
+__decorate([
+    (0, common_1.Get)('/top-artists'),
+    (0, swagger_1.ApiQuery)({ name: 'limit', type: Number, required: false }),
+    __param(0, (0, auth_1.AccessToken)()),
+    __param(1, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, typeof (_e = typeof dtos_1.LimitArguments !== "undefined" && dtos_1.LimitArguments) === "function" ? _e : Object]),
+    __metadata("design:returntype", void 0)
+], StatisticsController.prototype, "topArtists", null);
+__decorate([
+    (0, common_1.Get)('/artist'),
+    (0, swagger_1.ApiQuery)({ name: 'id', type: String, required: true }),
+    __param(0, (0, auth_1.AccessToken)()),
+    __param(1, (0, common_1.Query)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", void 0)
+], StatisticsController.prototype, "artist", null);
+StatisticsController = __decorate([
+    (0, common_1.Controller)('statistics'),
+    (0, swagger_1.ApiTags)('statistics'),
+    (0, swagger_1.ApiBearerAuth)(enums_1.AuthenticationType.ACCESS_TOKEN),
+    __metadata("design:paramtypes", [typeof (_a = typeof statistics_service_1.StatisticsService !== "undefined" && statistics_service_1.StatisticsService) === "function" ? _a : Object])
+], StatisticsController);
+exports.StatisticsController = StatisticsController;
+
+
+/***/ }),
+
 /***/ "./src/modules/statistics/statistics.module.ts":
 /*!*****************************************************!*\
   !*** ./src/modules/statistics/statistics.module.ts ***!
@@ -1922,6 +2206,7 @@ const axios_1 = __webpack_require__(/*! @nestjs/axios */ "@nestjs/axios");
 const config_1 = __webpack_require__(/*! @nestjs/config */ "@nestjs/config");
 const statistics_service_1 = __webpack_require__(/*! ./statistics.service */ "./src/modules/statistics/statistics.service.ts");
 const statistics_resolver_1 = __webpack_require__(/*! ./statistics.resolver */ "./src/modules/statistics/statistics.resolver.ts");
+const statistics_controller_1 = __webpack_require__(/*! ./statistics.controller */ "./src/modules/statistics/statistics.controller.ts");
 const adapter_1 = __webpack_require__(/*! @modules/adapter */ "./src/modules/adapter/index.ts");
 const auth_1 = __webpack_require__(/*! @modules/auth */ "./src/modules/auth/index.ts");
 const config_2 = __webpack_require__(/*! ~/config */ "./src/config/index.ts");
@@ -1943,6 +2228,7 @@ StatisticsModule = __decorate([
             adapter_1.AdapterModule,
             auth_1.AuthModule,
         ],
+        controllers: [statistics_controller_1.StatisticsController],
         providers: [statistics_service_1.StatisticsService, statistics_resolver_1.StatisticsResolver],
     })
 ], StatisticsModule);
@@ -2143,7 +2429,6 @@ exports.catchSpotifyError = void 0;
 const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
 const catchSpotifyError = error => {
     var _a;
-    console.error(error);
     const { response: { data, status }, } = error;
     if ((data === null || data === void 0 ? void 0 : data.error) === 'invalid_grant')
         throw new common_1.UnauthorizedException('Invalid token');
@@ -2348,6 +2633,16 @@ module.exports = require("@nestjs/jwt");
 
 /***/ }),
 
+/***/ "@nestjs/swagger":
+/*!**********************************!*\
+  !*** external "@nestjs/swagger" ***!
+  \**********************************/
+/***/ ((module) => {
+
+module.exports = require("@nestjs/swagger");
+
+/***/ }),
+
 /***/ "class-validator":
 /*!**********************************!*\
   !*** external "class-validator" ***!
@@ -2427,11 +2722,29 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core_1 = __webpack_require__(/*! @nestjs/core */ "@nestjs/core");
 const config_1 = __webpack_require__(/*! @nestjs/config */ "@nestjs/config");
 const cookieParser = __webpack_require__(/*! cookie-parser */ "cookie-parser");
-const app_1 = __webpack_require__(/*! ./modules/app */ "./src/modules/app/index.ts");
+const swagger_1 = __webpack_require__(/*! @nestjs/swagger */ "@nestjs/swagger");
 const config_2 = __webpack_require__(/*! ./config */ "./src/config/index.ts");
+const app_1 = __webpack_require__(/*! @modules/app */ "./src/modules/app/index.ts");
+const enums_1 = __webpack_require__(/*! @modules/auth/enums */ "./src/modules/auth/enums/index.ts");
+const constants_1 = __webpack_require__(/*! @modules/auth/constants */ "./src/modules/auth/constants/index.ts");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_1.AppModule);
     const configService = app.get(config_1.ConfigService);
+    const documentConfig = new swagger_1.DocumentBuilder()
+        .setTitle('Rigtch Music API')
+        .addBearerAuth({
+        type: 'http',
+        scheme: constants_1.BEARER,
+        bearerFormat: 'JWT',
+    }, enums_1.AuthenticationType.ACCESS_TOKEN)
+        .addBearerAuth({
+        type: 'http',
+        scheme: constants_1.BEARER,
+        bearerFormat: 'JWT',
+    }, enums_1.AuthenticationType.REFRESH_TOKEN)
+        .build();
+    const document = swagger_1.SwaggerModule.createDocument(app, documentConfig);
+    swagger_1.SwaggerModule.setup('api', app, document);
     app.enableCors({
         origin: configService.get(config_2.Environment.CLIENT_CALLBACK_URL),
         methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',

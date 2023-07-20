@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config'
 
 import { StatisticsService } from './statistics.service'
 import { StatisticsResolver } from './statistics.resolver'
+import { StatisticsController } from './statistics.controller'
 
 import { AdapterModule } from '@modules/adapter'
 import { AuthModule } from '@modules/auth'
@@ -24,6 +25,7 @@ import { Environment } from '~/config'
     AdapterModule,
     AuthModule,
   ],
+  controllers: [StatisticsController],
   providers: [StatisticsService, StatisticsResolver],
 })
 export class StatisticsModule {}
