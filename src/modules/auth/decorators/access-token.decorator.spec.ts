@@ -12,26 +12,6 @@ describe('AccessToken', () => {
     expect(AccessToken).toBeDefined()
   })
 
-  it('should return the access token from cookie', () => {
-    const accessToken = 'test'
-
-    expect(
-      factory(
-        undefined,
-        createMock<ExecutionContext>({
-          switchToHttp: () => ({
-            getRequest: () => ({
-              cookies: {
-                'access-token': accessToken,
-              },
-            }),
-          }),
-          getType: () => 'http',
-        })
-      )
-    ).toEqual(accessToken)
-  })
-
   it('should return the access token from header', () => {
     const accessToken = 'test'
 
