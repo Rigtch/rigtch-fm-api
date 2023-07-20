@@ -20,22 +20,8 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "~/*": ["src/*"],
-      "@modules/adapter": ["src/modules/adapter"],
-      "@modules/adapter/*": ["src/modules/adapter/*"],
-      "@modules/app": ["src/modules/app"],
-      "@modules/app/*": ["src/modules/app/*"],
-      "@modules/auth": ["src/modules/auth"],
-      "@modules/auth/*": ["src/modules/auth/*"],
-      "@modules/player": ["src/modules/player"],
-      "@modules/player/*": ["src/modules/player/*"],
-      "@modules/statistics": ["src/modules/statistics"],
-      "@modules/statistics/*": ["src/modules/statistics/*"],
-      "@common/dtos": ["src/common/dtos"],
-      "@common/dtos/*": ["src/common/dtos/*"],
-      "@common/mocks": ["src/common/mocks"],
-      "@common/mocks/*": ["src/common/mocks/*"],
-      "@common/types": ["src/common/types"],
-      "@common/types/*": ["src/common/types/*"]
+      "@modules/*": ["src/modules/*"],
+      "@common/*": ["src/common/*"]
     }
   }
 }
