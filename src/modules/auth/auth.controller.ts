@@ -1,12 +1,13 @@
 import { Controller, Get, HttpStatus, Query, Redirect } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { firstValueFrom } from 'rxjs'
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
+import { ApiExcludeEndpoint, ApiOkResponse, ApiTags } from '@nestjs/swagger'
 
 import { AuthService } from './auth.service'
 import { spotifyAuthorizationScopes } from './config'
 import { RedirectResponse } from './types'
-import { AccessToken } from './decorators'
+import { AccessToken, ApiAuth } from './decorators'
+import { ProfileDto, SecretData } from './dtos'
 
 import { Environment } from '~/config'
 import { AuthenticationType } from '@modules/auth/enums'
@@ -27,6 +28,7 @@ export class AuthController {
   ) {}
 
   @Get('login')
+  @ApiExcludeEndpoint()
   @Redirect()
   login(): RedirectResponse {
     return {
@@ -43,6 +45,7 @@ export class AuthController {
   }
 
   @Get('callback')
+  @ApiExcludeEndpoint()
   @Redirect()
   async callback(@Query('code') code: string): Promise<RedirectResponse> {
     const { accessToken, refreshToken } = await firstValueFrom(
@@ -64,13 +67,21 @@ export class AuthController {
   }
 
   @Get('refresh')
-  @ApiBearerAuth(AuthenticationType.REFRESH_TOKEN)
+  @ApiAuth(AuthenticationType.REFRESH_TOKEN)
+  @ApiOkResponse({
+    description: 'Access token has been succesfully refreshed',
+    type: SecretData,
+  })
   refresh(@AccessToken() refreshToken: string) {
     return firstValueFrom(this.authService.token({ refreshToken }))
   }
 
   @Get('profile')
-  @ApiBearerAuth(AuthenticationType.ACCESS_TOKEN)
+  @ApiAuth(AuthenticationType.ACCESS_TOKEN)
+  @ApiOkResponse({
+    description: "User's profile has been succesfully found",
+    type: ProfileDto,
+  })
   profile(@AccessToken() accessToken: string) {
     return firstValueFrom(this.authService.profile(accessToken))
   }
