@@ -112,8 +112,8 @@ const Joi = __webpack_require__(12);
 const config_1 = __webpack_require__(2);
 const adapter_1 = __webpack_require__(13);
 const auth_1 = __webpack_require__(22);
-const statistics_1 = __webpack_require__(64);
-const player_1 = __webpack_require__(73);
+const statistics_1 = __webpack_require__(66);
+const player_1 = __webpack_require__(78);
 const config_2 = __webpack_require__(5);
 let AppModule = class AppModule {
 };
@@ -255,7 +255,8 @@ const common_1 = __webpack_require__(9);
 const utils_1 = __webpack_require__(16);
 let AdapterService = class AdapterService {
     constructor() {
-        this.adaptArtist = ({ name, genres, external_urls: { spotify: href }, images, }) => ({
+        this.adaptArtist = ({ id, name, genres, external_urls: { spotify: href }, images, }) => ({
+            id,
             name,
             genres,
             href,
@@ -265,7 +266,8 @@ let AdapterService = class AdapterService {
         this.adaptGenres = (artists, limit) => ({
             genres: (0, utils_1.getMostFrequentItems)(artists.flatMap(({ genres }) => genres), limit),
         });
-        this.adaptTrack = ({ name, album, artists, external_urls: { spotify: href }, duration_ms, progress_ms, played_at, }) => (Object.assign(Object.assign({ name, album: { name: album.name, images: album.images }, artists: artists.map(({ name, id, href }) => ({ name, id, href })), href, duration: duration_ms }, (progress_ms && { progress: progress_ms })), (played_at && { playedAt: played_at })));
+        this.adaptTrack = ({ id, name, album, artists, external_urls: { spotify: href }, duration_ms, progress_ms, played_at, }) => (Object.assign(Object.assign({ id,
+            name, album: { name: album.name, images: album.images }, artists: artists.map(({ name, id, href }) => ({ name, id, href })), href, duration: duration_ms }, (progress_ms && { progress: progress_ms })), (played_at && { playedAt: played_at })));
         this.adaptTracks = (tracks) => tracks.map(track => this.adaptTrack(track));
         this.adaptProfile = ({ id, display_name, email, images, country, external_urls: { spotify: href }, followers, }) => ({
             id,
@@ -296,6 +298,21 @@ let AdapterService = class AdapterService {
                 track: formattedTrack,
             };
         };
+        this.adaptAudioFeatures = ({ id, track_href, danceability, acousticness, instrumentalness, speechiness, liveness, loudness, energy, tempo, mode, key, valence, }) => ({
+            id,
+            trackHref: track_href,
+            danceability,
+            acousticness,
+            instrumentalness,
+            speechiness,
+            liveness,
+            loudness,
+            energy,
+            tempo,
+            mode,
+            key,
+            valence,
+        });
     }
 };
 AdapterService = __decorate([
@@ -468,12 +485,12 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 __exportStar(__webpack_require__(23), exports);
 __exportStar(__webpack_require__(25), exports);
 __exportStar(__webpack_require__(29), exports);
-__exportStar(__webpack_require__(51), exports);
-__exportStar(__webpack_require__(55), exports);
+__exportStar(__webpack_require__(53), exports);
 __exportStar(__webpack_require__(57), exports);
 __exportStar(__webpack_require__(59), exports);
-__exportStar(__webpack_require__(62), exports);
-__exportStar(__webpack_require__(63), exports);
+__exportStar(__webpack_require__(61), exports);
+__exportStar(__webpack_require__(64), exports);
+__exportStar(__webpack_require__(65), exports);
 
 
 /***/ }),
@@ -634,7 +651,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 __exportStar(__webpack_require__(30), exports);
-__exportStar(__webpack_require__(50), exports);
+__exportStar(__webpack_require__(52), exports);
 
 
 /***/ }),
@@ -725,8 +742,9 @@ __exportStar(__webpack_require__(34), exports);
 __exportStar(__webpack_require__(35), exports);
 __exportStar(__webpack_require__(36), exports);
 __exportStar(__webpack_require__(37), exports);
-__exportStar(__webpack_require__(48), exports);
 __exportStar(__webpack_require__(49), exports);
+__exportStar(__webpack_require__(50), exports);
+__exportStar(__webpack_require__(51), exports);
 
 
 /***/ }),
@@ -837,6 +855,11 @@ __decorate([
     (0, graphql_1.Field)(() => String),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
+], Artist.prototype, "id", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => String),
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
 ], Artist.prototype, "name", void 0);
 __decorate([
     (0, graphql_1.Field)(() => [String]),
@@ -902,6 +925,11 @@ const swagger_1 = __webpack_require__(4);
 const _1 = __webpack_require__(31);
 let Track = class Track {
 };
+__decorate([
+    (0, graphql_1.Field)(() => String),
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], Track.prototype, "id", void 0);
 __decorate([
     (0, graphql_1.Field)(() => String),
     (0, swagger_1.ApiProperty)(),
@@ -1087,6 +1115,7 @@ __exportStar(__webpack_require__(44), exports);
 __exportStar(__webpack_require__(45), exports);
 __exportStar(__webpack_require__(46), exports);
 __exportStar(__webpack_require__(47), exports);
+__exportStar(__webpack_require__(48), exports);
 
 
 /***/ }),
@@ -1175,6 +1204,14 @@ var ShuffleState;
 
 /***/ }),
 /* 48 */
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+
+/***/ }),
+/* 49 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -1205,7 +1242,7 @@ exports.Genres = Genres;
 
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -1241,7 +1278,73 @@ exports.Success = Success;
 
 
 /***/ }),
-/* 50 */
+/* 51 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Analysis = void 0;
+const swagger_1 = __webpack_require__(4);
+class Analysis {
+}
+__decorate([
+    (0, swagger_1.ApiProperty)({ type: Number }),
+    __metadata("design:type", Number)
+], Analysis.prototype, "danceability", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ type: Number }),
+    __metadata("design:type", Number)
+], Analysis.prototype, "acousticness", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ type: Number }),
+    __metadata("design:type", Number)
+], Analysis.prototype, "instrumentalness", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ type: Number }),
+    __metadata("design:type", Number)
+], Analysis.prototype, "speechiness", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ type: Number }),
+    __metadata("design:type", Number)
+], Analysis.prototype, "liveness", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ type: Number }),
+    __metadata("design:type", Number)
+], Analysis.prototype, "loudness", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ type: Number }),
+    __metadata("design:type", Number)
+], Analysis.prototype, "energy", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ type: Number }),
+    __metadata("design:type", Number)
+], Analysis.prototype, "tempo", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ type: Number }),
+    __metadata("design:type", Number)
+], Analysis.prototype, "mode", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ type: Number }),
+    __metadata("design:type", Number)
+], Analysis.prototype, "key", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ type: Number }),
+    __metadata("design:type", Number)
+], Analysis.prototype, "valence", void 0);
+exports.Analysis = Analysis;
+
+
+/***/ }),
+/* 52 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -1282,7 +1385,7 @@ exports.SecretData = SecretData;
 
 
 /***/ }),
-/* 51 */
+/* 53 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -1301,25 +1404,9 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-__exportStar(__webpack_require__(52), exports);
-__exportStar(__webpack_require__(53), exports);
 __exportStar(__webpack_require__(54), exports);
-
-
-/***/ }),
-/* 52 */
-/***/ ((__unused_webpack_module, exports) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-
-
-/***/ }),
-/* 53 */
-/***/ ((__unused_webpack_module, exports) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
+__exportStar(__webpack_require__(55), exports);
+__exportStar(__webpack_require__(56), exports);
 
 
 /***/ }),
@@ -1332,6 +1419,22 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 /* 55 */
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+
+/***/ }),
+/* 56 */
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+
+/***/ }),
+/* 57 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -1350,11 +1453,11 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-__exportStar(__webpack_require__(56), exports);
+__exportStar(__webpack_require__(58), exports);
 
 
 /***/ }),
-/* 56 */
+/* 58 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -1368,7 +1471,7 @@ var AuthenticationType;
 
 
 /***/ }),
-/* 57 */
+/* 59 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -1389,8 +1492,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AuthResolver = void 0;
 const config_1 = __webpack_require__(2);
 const graphql_1 = __webpack_require__(11);
-const rxjs_1 = __webpack_require__(58);
-const auth_service_1 = __webpack_require__(59);
+const rxjs_1 = __webpack_require__(60);
+const auth_service_1 = __webpack_require__(61);
 const dtos_1 = __webpack_require__(29);
 const decorators_1 = __webpack_require__(25);
 let AuthResolver = class AuthResolver {
@@ -1427,13 +1530,13 @@ exports.AuthResolver = AuthResolver;
 
 
 /***/ }),
-/* 58 */
+/* 60 */
 /***/ ((module) => {
 
 module.exports = require("rxjs");
 
 /***/ }),
-/* 59 */
+/* 61 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -1449,11 +1552,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var _a, _b, _c, _d;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AuthService = void 0;
-const axios_1 = __webpack_require__(60);
+const axios_1 = __webpack_require__(62);
 const common_1 = __webpack_require__(9);
 const config_1 = __webpack_require__(2);
-const jwt_1 = __webpack_require__(61);
-const rxjs_1 = __webpack_require__(58);
+const jwt_1 = __webpack_require__(63);
+const rxjs_1 = __webpack_require__(60);
 const adapter_1 = __webpack_require__(13);
 const config_2 = __webpack_require__(5);
 const utils_1 = __webpack_require__(16);
@@ -1513,19 +1616,19 @@ exports.AuthService = AuthService;
 
 
 /***/ }),
-/* 60 */
+/* 62 */
 /***/ ((module) => {
 
 module.exports = require("@nestjs/axios");
 
 /***/ }),
-/* 61 */
+/* 63 */
 /***/ ((module) => {
 
 module.exports = require("@nestjs/jwt");
 
 /***/ }),
-/* 62 */
+/* 64 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -1546,15 +1649,15 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AuthController = void 0;
 const common_1 = __webpack_require__(9);
 const config_1 = __webpack_require__(2);
-const rxjs_1 = __webpack_require__(58);
+const rxjs_1 = __webpack_require__(60);
 const swagger_1 = __webpack_require__(4);
-const auth_service_1 = __webpack_require__(59);
+const auth_service_1 = __webpack_require__(61);
 const config_2 = __webpack_require__(23);
-const types_1 = __webpack_require__(51);
+const types_1 = __webpack_require__(53);
 const decorators_1 = __webpack_require__(25);
 const dtos_1 = __webpack_require__(29);
 const config_3 = __webpack_require__(5);
-const enums_1 = __webpack_require__(55);
+const enums_1 = __webpack_require__(57);
 const { SPOTIFY_CALLBACK_URL, SPOTIFY_CLIENT_ID, SPOTIFY_ACCOUNTS_URL, CLIENT_CALLBACK_URL, } = config_3.Environment;
 let AuthController = class AuthController {
     constructor(authService, configService) {
@@ -1641,7 +1744,7 @@ exports.AuthController = AuthController;
 
 
 /***/ }),
-/* 63 */
+/* 65 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -1655,11 +1758,11 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AuthModule = void 0;
 const common_1 = __webpack_require__(9);
 const config_1 = __webpack_require__(2);
-const jwt_1 = __webpack_require__(61);
-const axios_1 = __webpack_require__(60);
-const auth_service_1 = __webpack_require__(59);
-const auth_resolver_1 = __webpack_require__(57);
-const auth_controller_1 = __webpack_require__(62);
+const jwt_1 = __webpack_require__(63);
+const axios_1 = __webpack_require__(62);
+const auth_service_1 = __webpack_require__(61);
+const auth_resolver_1 = __webpack_require__(59);
+const auth_controller_1 = __webpack_require__(64);
 const adapter_1 = __webpack_require__(13);
 const config_2 = __webpack_require__(5);
 let AuthModule = class AuthModule {
@@ -1698,92 +1801,54 @@ exports.AuthModule = AuthModule;
 
 
 /***/ }),
-/* 64 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __exportStar = (this && this.__exportStar) || function(m, exports) {
-    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-__exportStar(__webpack_require__(65), exports);
-__exportStar(__webpack_require__(69), exports);
-__exportStar(__webpack_require__(71), exports);
-__exportStar(__webpack_require__(70), exports);
-
-
-/***/ }),
-/* 65 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __exportStar = (this && this.__exportStar) || function(m, exports) {
-    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-__exportStar(__webpack_require__(66), exports);
-__exportStar(__webpack_require__(68), exports);
-
-
-/***/ }),
 /* 66 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.LimitArguments = void 0;
-const graphql_1 = __webpack_require__(11);
-const class_validator_1 = __webpack_require__(67);
-let LimitArguments = class LimitArguments {
-};
-__decorate([
-    (0, graphql_1.Field)(() => Number, { nullable: true }),
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.Max)(50),
-    __metadata("design:type", Number)
-], LimitArguments.prototype, "limit", void 0);
-LimitArguments = __decorate([
-    (0, graphql_1.ArgsType)()
-], LimitArguments);
-exports.LimitArguments = LimitArguments;
+__exportStar(__webpack_require__(67), exports);
+__exportStar(__webpack_require__(71), exports);
+__exportStar(__webpack_require__(76), exports);
+__exportStar(__webpack_require__(72), exports);
 
 
 /***/ }),
 /* 67 */
-/***/ ((module) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
-module.exports = require("class-validator");
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+__exportStar(__webpack_require__(68), exports);
+__exportStar(__webpack_require__(70), exports);
+
 
 /***/ }),
 /* 68 */
@@ -1800,9 +1865,47 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.LimitArguments = void 0;
+const graphql_1 = __webpack_require__(11);
+const class_validator_1 = __webpack_require__(69);
+let LimitArguments = class LimitArguments {
+};
+__decorate([
+    (0, graphql_1.Field)(() => Number, { nullable: true }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.Max)(50),
+    __metadata("design:type", Number)
+], LimitArguments.prototype, "limit", void 0);
+LimitArguments = __decorate([
+    (0, graphql_1.ArgsType)()
+], LimitArguments);
+exports.LimitArguments = LimitArguments;
+
+
+/***/ }),
+/* 69 */
+/***/ ((module) => {
+
+module.exports = require("class-validator");
+
+/***/ }),
+/* 70 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.IdArguments = void 0;
 const graphql_1 = __webpack_require__(11);
-const class_validator_1 = __webpack_require__(67);
+const class_validator_1 = __webpack_require__(69);
 let IdArguments = class IdArguments {
 };
 __decorate([
@@ -1817,7 +1920,7 @@ exports.IdArguments = IdArguments;
 
 
 /***/ }),
-/* 69 */
+/* 71 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -1830,11 +1933,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.StatisticsModule = void 0;
 const common_1 = __webpack_require__(9);
-const axios_1 = __webpack_require__(60);
+const axios_1 = __webpack_require__(62);
 const config_1 = __webpack_require__(2);
-const statistics_service_1 = __webpack_require__(70);
-const statistics_resolver_1 = __webpack_require__(71);
-const statistics_controller_1 = __webpack_require__(72);
+const statistics_service_1 = __webpack_require__(72);
+const statistics_resolver_1 = __webpack_require__(76);
+const statistics_controller_1 = __webpack_require__(77);
 const adapter_1 = __webpack_require__(13);
 const auth_1 = __webpack_require__(22);
 const config_2 = __webpack_require__(5);
@@ -1864,7 +1967,7 @@ exports.StatisticsModule = StatisticsModule;
 
 
 /***/ }),
-/* 70 */
+/* 72 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -1880,11 +1983,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var _a, _b;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.StatisticsService = void 0;
-const axios_1 = __webpack_require__(60);
+const axios_1 = __webpack_require__(62);
 const common_1 = __webpack_require__(9);
-const rxjs_1 = __webpack_require__(58);
+const rxjs_1 = __webpack_require__(60);
+const utils_1 = __webpack_require__(73);
 const adapter_1 = __webpack_require__(13);
-const utils_1 = __webpack_require__(16);
+const utils_2 = __webpack_require__(16);
 let StatisticsService = class StatisticsService {
     constructor(httpService, adapterService) {
         this.httpService = httpService;
@@ -1892,28 +1996,36 @@ let StatisticsService = class StatisticsService {
     }
     lastTracks(accessToken, limit = 20) {
         return this.httpService
-            .get(`/me/player/recently-played?limit=${limit}`, (0, utils_1.applyAuthorizationHeader)(accessToken))
-            .pipe((0, rxjs_1.map)(response => response.data.items), (0, rxjs_1.map)(items => items.map(({ track, played_at }) => (Object.assign(Object.assign({}, track), { played_at })))), (0, rxjs_1.map)(this.adapterService.adaptTracks), (0, rxjs_1.catchError)(utils_1.catchSpotifyError));
+            .get(`/me/player/recently-played?limit=${limit}`, (0, utils_2.applyAuthorizationHeader)(accessToken))
+            .pipe((0, rxjs_1.map)(response => response.data.items), (0, rxjs_1.map)(items => items.map(({ track, played_at }) => (Object.assign(Object.assign({}, track), { played_at })))), (0, rxjs_1.map)(this.adapterService.adaptTracks), (0, rxjs_1.catchError)(utils_2.catchSpotifyError));
     }
     topGenres(accessToken, limit = 10) {
         return this.httpService
-            .get(`/me/top/artists?limit=${50}&time_range=long_term`, (0, utils_1.applyAuthorizationHeader)(accessToken))
-            .pipe((0, rxjs_1.map)(response => response.data.items), (0, rxjs_1.map)(items => this.adapterService.adaptGenres(items, limit)), (0, rxjs_1.catchError)(utils_1.catchSpotifyError));
+            .get(`/me/top/artists?limit=${50}&time_range=long_term`, (0, utils_2.applyAuthorizationHeader)(accessToken))
+            .pipe((0, rxjs_1.map)(response => response.data.items), (0, rxjs_1.map)(items => this.adapterService.adaptGenres(items, limit)), (0, rxjs_1.catchError)(utils_2.catchSpotifyError));
     }
     topArtists(accessToken, limit = 10) {
         return this.httpService
-            .get(`/me/top/artists?limit=${limit}&time_range=long_term`, (0, utils_1.applyAuthorizationHeader)(accessToken))
-            .pipe((0, rxjs_1.map)(response => response.data.items), (0, rxjs_1.map)(this.adapterService.adaptArtists), (0, rxjs_1.catchError)(utils_1.catchSpotifyError));
+            .get(`/me/top/artists?limit=${limit}&time_range=long_term`, (0, utils_2.applyAuthorizationHeader)(accessToken))
+            .pipe((0, rxjs_1.map)(response => response.data.items), (0, rxjs_1.map)(this.adapterService.adaptArtists), (0, rxjs_1.catchError)(utils_2.catchSpotifyError));
     }
     topTracks(accessToken, limit = 10) {
         return this.httpService
-            .get(`/me/top/tracks?limit=${limit}&time_range=long_term`, (0, utils_1.applyAuthorizationHeader)(accessToken))
-            .pipe((0, rxjs_1.map)(response => response.data.items), (0, rxjs_1.map)(this.adapterService.adaptTracks), (0, rxjs_1.catchError)(utils_1.catchSpotifyError));
+            .get(`/me/top/tracks?limit=${limit}&time_range=long_term`, (0, utils_2.applyAuthorizationHeader)(accessToken))
+            .pipe((0, rxjs_1.map)(response => response.data.items), (0, rxjs_1.map)(this.adapterService.adaptTracks), (0, rxjs_1.catchError)(utils_2.catchSpotifyError));
     }
     artist(accessToken, id) {
         return this.httpService
-            .get(`/artists/${id}`, (0, utils_1.applyAuthorizationHeader)(accessToken))
-            .pipe((0, rxjs_1.map)(response => response.data), (0, rxjs_1.map)(this.adapterService.adaptArtist), (0, rxjs_1.catchError)(utils_1.catchSpotifyError));
+            .get(`/artists/${id}`, (0, utils_2.applyAuthorizationHeader)(accessToken))
+            .pipe((0, rxjs_1.map)(response => response.data), (0, rxjs_1.map)(this.adapterService.adaptArtist), (0, rxjs_1.catchError)(utils_2.catchSpotifyError));
+    }
+    analysis(accessToken) {
+        return this.topTracks(accessToken, 50).pipe((0, rxjs_1.mergeMap)(tracks => {
+            const tracksIds = tracks.map(({ id }) => id).join(',');
+            return this.httpService
+                .get(`/audio-features?ids=${tracksIds}`, (0, utils_2.applyAuthorizationHeader)(accessToken))
+                .pipe((0, rxjs_1.map)(response => response.data.audio_features), (0, rxjs_1.map)(audioFeatures => audioFeatures.map(audioFeature => this.adapterService.adaptAudioFeatures(audioFeature))), (0, rxjs_1.map)(utils_1.analysisFactory), (0, rxjs_1.catchError)(utils_2.catchSpotifyError));
+        }));
     }
 };
 StatisticsService = __decorate([
@@ -1924,7 +2036,81 @@ exports.StatisticsService = StatisticsService;
 
 
 /***/ }),
-/* 71 */
+/* 73 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+__exportStar(__webpack_require__(74), exports);
+__exportStar(__webpack_require__(75), exports);
+
+
+/***/ }),
+/* 74 */
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.audioFeaturesReducer = void 0;
+const audioFeaturesReducer = (accumulator, currentValue) => accumulator + currentValue;
+exports.audioFeaturesReducer = audioFeaturesReducer;
+
+
+/***/ }),
+/* 75 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.analysisFactory = void 0;
+const audio_features_reducer_1 = __webpack_require__(74);
+const analysisFactory = (audioFeatures) => ({
+    danceability: audioFeatures
+        .map(({ danceability }) => danceability)
+        .reduce(audio_features_reducer_1.audioFeaturesReducer) / audioFeatures.length,
+    acousticness: audioFeatures
+        .map(({ acousticness }) => acousticness)
+        .reduce(audio_features_reducer_1.audioFeaturesReducer) / audioFeatures.length,
+    instrumentalness: audioFeatures
+        .map(({ instrumentalness }) => instrumentalness)
+        .reduce(audio_features_reducer_1.audioFeaturesReducer, 0) / audioFeatures.length,
+    speechiness: audioFeatures
+        .map(({ speechiness }) => speechiness)
+        .reduce(audio_features_reducer_1.audioFeaturesReducer) / audioFeatures.length,
+    liveness: audioFeatures.map(({ liveness }) => liveness).reduce(audio_features_reducer_1.audioFeaturesReducer) /
+        audioFeatures.length,
+    loudness: audioFeatures.map(({ loudness }) => loudness).reduce(audio_features_reducer_1.audioFeaturesReducer) /
+        audioFeatures.length,
+    energy: audioFeatures.map(({ energy }) => energy).reduce(audio_features_reducer_1.audioFeaturesReducer) /
+        audioFeatures.length,
+    tempo: audioFeatures.map(({ tempo }) => tempo).reduce(audio_features_reducer_1.audioFeaturesReducer) /
+        audioFeatures.length,
+    mode: audioFeatures.map(({ mode }) => mode).reduce(audio_features_reducer_1.audioFeaturesReducer) /
+        audioFeatures.length,
+    key: audioFeatures.map(({ key }) => key).reduce(audio_features_reducer_1.audioFeaturesReducer) /
+        audioFeatures.length,
+    valence: audioFeatures.map(({ valence }) => valence).reduce(audio_features_reducer_1.audioFeaturesReducer) /
+        audioFeatures.length,
+});
+exports.analysisFactory = analysisFactory;
+
+
+/***/ }),
+/* 76 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -1944,9 +2130,9 @@ var _a, _b, _c, _d, _e, _f;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.StatisticsResolver = void 0;
 const graphql_1 = __webpack_require__(11);
-const rxjs_1 = __webpack_require__(58);
-const statistics_service_1 = __webpack_require__(70);
-const dtos_1 = __webpack_require__(65);
+const rxjs_1 = __webpack_require__(60);
+const statistics_service_1 = __webpack_require__(72);
+const dtos_1 = __webpack_require__(67);
 const auth_1 = __webpack_require__(22);
 const dtos_2 = __webpack_require__(31);
 let StatisticsResolver = class StatisticsResolver {
@@ -2017,7 +2203,7 @@ exports.StatisticsResolver = StatisticsResolver;
 
 
 /***/ }),
-/* 72 */
+/* 77 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -2038,30 +2224,32 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.StatisticsController = void 0;
 const common_1 = __webpack_require__(9);
 const swagger_1 = __webpack_require__(4);
-const rxjs_1 = __webpack_require__(58);
-const statistics_service_1 = __webpack_require__(70);
-const dtos_1 = __webpack_require__(65);
+const statistics_service_1 = __webpack_require__(72);
+const dtos_1 = __webpack_require__(67);
 const auth_1 = __webpack_require__(22);
-const enums_1 = __webpack_require__(55);
+const enums_1 = __webpack_require__(57);
 const dtos_2 = __webpack_require__(31);
 let StatisticsController = class StatisticsController {
     constructor(statisticsService) {
         this.statisticsService = statisticsService;
     }
     lastTracks(accessToken, { limit }) {
-        return (0, rxjs_1.firstValueFrom)(this.statisticsService.lastTracks(accessToken, limit));
+        return this.statisticsService.lastTracks(accessToken, limit);
     }
     topTracks(accessToken, { limit }) {
-        return (0, rxjs_1.firstValueFrom)(this.statisticsService.topTracks(accessToken, limit));
+        return this.statisticsService.topTracks(accessToken, limit);
     }
     topGenres(accessToken, { limit }) {
-        return (0, rxjs_1.firstValueFrom)(this.statisticsService.topGenres(accessToken, limit));
+        return this.statisticsService.topGenres(accessToken, limit);
     }
     topArtists(accessToken, { limit }) {
-        return (0, rxjs_1.firstValueFrom)(this.statisticsService.topArtists(accessToken, limit));
+        return this.statisticsService.topArtists(accessToken, limit);
     }
     artist(accessToken, id) {
-        return (0, rxjs_1.firstValueFrom)(this.statisticsService.artist(accessToken, id));
+        return this.statisticsService.artist(accessToken, id);
+    }
+    analysis(accessToken) {
+        return this.statisticsService.analysis(accessToken);
     }
 };
 __decorate([
@@ -2129,6 +2317,17 @@ __decorate([
     __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", void 0)
 ], StatisticsController.prototype, "artist", null);
+__decorate([
+    (0, common_1.Get)('/analysis'),
+    (0, swagger_1.ApiOkResponse)({
+        description: 'Analysis has been succesfully generated',
+        type: dtos_2.Analysis,
+    }),
+    __param(0, (0, auth_1.AccessToken)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], StatisticsController.prototype, "analysis", null);
 StatisticsController = __decorate([
     (0, common_1.Controller)('statistics'),
     (0, swagger_1.ApiTags)('statistics'),
@@ -2139,7 +2338,7 @@ exports.StatisticsController = StatisticsController;
 
 
 /***/ }),
-/* 73 */
+/* 78 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -2158,14 +2357,14 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-__exportStar(__webpack_require__(74), exports);
-__exportStar(__webpack_require__(75), exports);
-__exportStar(__webpack_require__(77), exports);
-__exportStar(__webpack_require__(76), exports);
+__exportStar(__webpack_require__(79), exports);
+__exportStar(__webpack_require__(80), exports);
+__exportStar(__webpack_require__(82), exports);
+__exportStar(__webpack_require__(81), exports);
 
 
 /***/ }),
-/* 74 */
+/* 79 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -2180,7 +2379,7 @@ var PlayerMessage;
 
 
 /***/ }),
-/* 75 */
+/* 80 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -2193,11 +2392,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PlayerModule = void 0;
 const common_1 = __webpack_require__(9);
-const axios_1 = __webpack_require__(60);
+const axios_1 = __webpack_require__(62);
 const config_1 = __webpack_require__(2);
-const player_service_1 = __webpack_require__(76);
-const player_resolver_1 = __webpack_require__(77);
-const player_controller_1 = __webpack_require__(78);
+const player_service_1 = __webpack_require__(81);
+const player_resolver_1 = __webpack_require__(82);
+const player_controller_1 = __webpack_require__(83);
 const adapter_1 = __webpack_require__(13);
 const config_2 = __webpack_require__(5);
 let PlayerModule = class PlayerModule {
@@ -2225,7 +2424,7 @@ exports.PlayerModule = PlayerModule;
 
 
 /***/ }),
-/* 76 */
+/* 81 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -2241,11 +2440,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var _a, _b;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PlayerService = void 0;
-const axios_1 = __webpack_require__(60);
+const axios_1 = __webpack_require__(62);
 const common_1 = __webpack_require__(9);
-const rxjs_1 = __webpack_require__(58);
+const rxjs_1 = __webpack_require__(60);
 const adapter_1 = __webpack_require__(13);
-const messages_1 = __webpack_require__(74);
+const messages_1 = __webpack_require__(79);
 const utils_1 = __webpack_require__(16);
 let PlayerService = class PlayerService {
     constructor(httpService, adapterService) {
@@ -2303,7 +2502,7 @@ exports.PlayerService = PlayerService;
 
 
 /***/ }),
-/* 77 */
+/* 82 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -2323,8 +2522,8 @@ var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PlayerResolver = void 0;
 const graphql_1 = __webpack_require__(11);
-const rxjs_1 = __webpack_require__(58);
-const player_service_1 = __webpack_require__(76);
+const rxjs_1 = __webpack_require__(60);
+const player_service_1 = __webpack_require__(81);
 const auth_1 = __webpack_require__(22);
 const dtos_1 = __webpack_require__(31);
 let PlayerResolver = class PlayerResolver {
@@ -2383,7 +2582,7 @@ exports.PlayerResolver = PlayerResolver;
 
 
 /***/ }),
-/* 78 */
+/* 83 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -2403,9 +2602,9 @@ var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PlayerController = void 0;
 const common_1 = __webpack_require__(9);
-const rxjs_1 = __webpack_require__(58);
+const rxjs_1 = __webpack_require__(60);
 const swagger_1 = __webpack_require__(4);
-const player_service_1 = __webpack_require__(76);
+const player_service_1 = __webpack_require__(81);
 const dtos_1 = __webpack_require__(31);
 const auth_1 = __webpack_require__(22);
 let PlayerController = class PlayerController {
@@ -2491,7 +2690,7 @@ exports.PlayerController = PlayerController;
 
 
 /***/ }),
-/* 79 */
+/* 84 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -2540,8 +2739,8 @@ const cookieParser = __webpack_require__(3);
 const swagger_1 = __webpack_require__(4);
 const config_2 = __webpack_require__(5);
 const app_1 = __webpack_require__(7);
-const enums_1 = __webpack_require__(55);
-const constants_1 = __webpack_require__(79);
+const enums_1 = __webpack_require__(57);
+const constants_1 = __webpack_require__(84);
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_1.AppModule);
     const configService = app.get(config_1.ConfigService);
