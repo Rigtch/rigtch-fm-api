@@ -47,6 +47,7 @@ export const spotifyArtistsMock = Array.from({ length: 5 }).map(
 )
 
 export const formattedArtistMock: FormattedArtist = {
+  id: '7kWnE981vITXDnAD2cZmCV',
   name: 'Darkthrone',
   genres: [
     "black 'n' roll",

@@ -1,6 +1,7 @@
 import { SpotifyImage } from '.'
 
 export interface FormattedArtist {
+  id: string
   name: string
   genres: string[]
   href: string

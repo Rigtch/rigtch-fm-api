@@ -125,6 +125,7 @@ export const spotifyTracksMock = Array.from({ length: 5 }).map(
 )
 
 export const formattedTrackMock: FormattedTrack = {
+  id: '5O6MFTh1rd9PeN8XEn1yCS',
   album: {
     name: 'Substrata + Man with a Movie Camera',
     images: [
