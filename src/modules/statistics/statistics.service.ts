@@ -1,15 +1,18 @@
 import { HttpService } from '@nestjs/axios'
 import { Injectable } from '@nestjs/common'
-import { Observable, map, catchError } from 'rxjs'
+import { Observable, map, catchError, mergeMap } from 'rxjs'
+
+import { analysisFactory } from './utils'
 
 import { AdapterService } from '@modules/adapter'
-import { Genres } from '@common/dtos'
+import { Genres, Analysis } from '@common/dtos'
 import {
   FormattedTrack,
   SpotifyResponse,
   SpotifyTrack,
   SpotifyArtist,
   FormattedArtist,
+  SpotifyAudioFeatures,
 } from '@common/types/spotify'
 import { applyAuthorizationHeader, catchSpotifyError } from '~/utils'
 
@@ -89,5 +92,29 @@ export class StatisticsService {
         map(this.adapterService.adaptArtist),
         catchError(catchSpotifyError)
       )
+  }
+
+  analysis(accessToken: string): Observable<Analysis> {
+    return this.topTracks(accessToken, 50).pipe(
+      mergeMap(tracks => {
+        const tracksIds = tracks.map(({ id }) => id).join(',')
+
+        return this.httpService
+          .get<{ audio_features: SpotifyAudioFeatures[] }>(
+            `/audio-features?ids=${tracksIds}`,
+            applyAuthorizationHeader(accessToken)
+          )
+          .pipe(
+            map(response => response.data.audio_features),
+            map(audioFeatures =>
+              audioFeatures.map(audioFeature =>
+                this.adapterService.adaptAudioFeatures(audioFeature)
+              )
+            ),
+            map(analysisFactory),
+            catchError(catchSpotifyError)
+          )
+      })
+    )
   }
 }

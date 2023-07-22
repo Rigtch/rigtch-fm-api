@@ -1,13 +1,12 @@
 import { Controller, Get, Query } from '@nestjs/common'
 import { ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger'
-import { firstValueFrom } from 'rxjs'
 
 import { StatisticsService } from './statistics.service'
 import { LimitArguments } from './dtos'
 
 import { AccessToken, ApiAuth } from '@modules/auth'
 import { AuthenticationType } from '@modules/auth/enums'
-import { Artist, Genres, Track } from '~/common/dtos'
+import { Analysis, Artist, Genres, Track } from '@common/dtos'
 
 @Controller('statistics')
 @ApiTags('statistics')
@@ -25,7 +24,7 @@ export class StatisticsController {
     @AccessToken() accessToken: string,
     @Query() { limit }: LimitArguments
   ) {
-    return firstValueFrom(this.statisticsService.lastTracks(accessToken, limit))
+    return this.statisticsService.lastTracks(accessToken, limit)
   }
 
   @Get('/top-tracks')
@@ -38,7 +37,7 @@ export class StatisticsController {
     @AccessToken() accessToken: string,
     @Query() { limit }: LimitArguments
   ) {
-    return firstValueFrom(this.statisticsService.topTracks(accessToken, limit))
+    return this.statisticsService.topTracks(accessToken, limit)
   }
 
   @Get('/top-genres')
@@ -51,7 +50,7 @@ export class StatisticsController {
     @AccessToken() accessToken: string,
     @Query() { limit }: LimitArguments
   ) {
-    return firstValueFrom(this.statisticsService.topGenres(accessToken, limit))
+    return this.statisticsService.topGenres(accessToken, limit)
   }
 
   @Get('/top-artists')
@@ -64,7 +63,7 @@ export class StatisticsController {
     @AccessToken() accessToken: string,
     @Query() { limit }: LimitArguments
   ) {
-    return firstValueFrom(this.statisticsService.topArtists(accessToken, limit))
+    return this.statisticsService.topArtists(accessToken, limit)
   }
 
   @Get('/artist')
@@ -74,6 +73,15 @@ export class StatisticsController {
     type: Artist,
   })
   artist(@AccessToken() accessToken: string, @Query('id') id: string) {
-    return firstValueFrom(this.statisticsService.artist(accessToken, id))
+    return this.statisticsService.artist(accessToken, id)
+  }
+
+  @Get('/analysis')
+  @ApiOkResponse({
+    description: 'Analysis has been succesfully generated',
+    type: Analysis,
+  })
+  analysis(@AccessToken() accessToken: string) {
+    return this.statisticsService.analysis(accessToken)
   }
 }
