@@ -18,6 +18,8 @@ import {
   formattedArtistMock,
   spotifyTrackMock,
   formattedTrackMock,
+  formattedAudioFeaturesMock,
+  spotifyAudioFeaturesMock,
 } from '@common/mocks'
 
 describe('AdapterService', () => {
@@ -120,6 +122,12 @@ describe('AdapterService', () => {
   it('should adapt playback state', () => {
     expect(adapterService.adaptPlaybackState(spotifyPlaybackStateMock)).toEqual(
       formattedPlaybackStateMock
+    )
+  })
+
+  it('should adapt audio features', () => {
+    expect(adapterService.adaptAudioFeatures(spotifyAudioFeaturesMock)).toEqual(
+      formattedAudioFeaturesMock
     )
   })
 })
