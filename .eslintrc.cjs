@@ -93,6 +93,8 @@ module.exports = {
         'newlines-between': 'always',
       },
     ],
+    'unicorn/no-array-reduce': 'off',
+    'unicorn/no-array-callback-reference': 'off',
     'unicorn/prefer-top-level-await': 'off',
     'unicorn/prevent-abbreviations': [
       'error',
