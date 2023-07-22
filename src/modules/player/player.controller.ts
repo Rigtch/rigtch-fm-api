@@ -1,4 +1,4 @@
-import { Controller, Get, ParseIntPipe, Put, Query } from '@nestjs/common'
+import { Controller, Get, Put, Query } from '@nestjs/common'
 import { firstValueFrom } from 'rxjs'
 import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger'
 
@@ -30,7 +30,7 @@ export class PlayerController {
   @ApiQuery({ name: 'deviceId', type: String, required: false })
   pausePlayer(
     @AccessToken() accessToken: string,
-    @Query('afterTime', ParseIntPipe) afterTime?: number,
+    @Query('afterTime') afterTime?: number,
     @Query('deviceId') deviceId?: string
   ) {
     return firstValueFrom(
