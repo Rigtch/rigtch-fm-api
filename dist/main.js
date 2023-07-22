@@ -1688,10 +1688,10 @@ let AuthController = class AuthController {
         };
     }
     refresh(refreshToken) {
-        return (0, rxjs_1.firstValueFrom)(this.authService.token({ refreshToken }));
+        return this.authService.token({ refreshToken });
     }
     profile(accessToken) {
-        return (0, rxjs_1.firstValueFrom)(this.authService.profile(accessToken));
+        return this.authService.profile(accessToken);
     }
 };
 __decorate([
@@ -2602,7 +2602,6 @@ var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PlayerController = void 0;
 const common_1 = __webpack_require__(9);
-const rxjs_1 = __webpack_require__(60);
 const swagger_1 = __webpack_require__(4);
 const player_service_1 = __webpack_require__(81);
 const dtos_1 = __webpack_require__(31);
@@ -2611,17 +2610,17 @@ let PlayerController = class PlayerController {
     constructor(playerService) {
         this.playerService = playerService;
     }
-    async availableDevices(accessToken) {
-        return await (0, rxjs_1.firstValueFrom)(this.playerService.avaibleDevices(accessToken));
+    availableDevices(accessToken) {
+        return this.playerService.avaibleDevices(accessToken);
     }
-    async currentPlaybackState(accessToken) {
-        return await (0, rxjs_1.firstValueFrom)(this.playerService.currentPlaybackState(accessToken));
+    currentPlaybackState(accessToken) {
+        return this.playerService.currentPlaybackState(accessToken);
     }
     pausePlayer(accessToken, afterTime, deviceId) {
-        return (0, rxjs_1.firstValueFrom)(this.playerService.pausePlayer(accessToken, afterTime, deviceId));
+        return this.playerService.pausePlayer(accessToken, afterTime, deviceId);
     }
     resumePlayer(accessToken, deviceId) {
-        return (0, rxjs_1.firstValueFrom)(this.playerService.resumePlayer(accessToken, deviceId));
+        return this.playerService.resumePlayer(accessToken, deviceId);
     }
 };
 __decorate([
@@ -2633,7 +2632,7 @@ __decorate([
     __param(0, (0, auth_1.AccessToken)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Promise)
+    __metadata("design:returntype", void 0)
 ], PlayerController.prototype, "availableDevices", null);
 __decorate([
     (0, common_1.Get)('/state'),
@@ -2644,7 +2643,7 @@ __decorate([
     __param(0, (0, auth_1.AccessToken)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Promise)
+    __metadata("design:returntype", void 0)
 ], PlayerController.prototype, "currentPlaybackState", null);
 __decorate([
     (0, common_1.Put)('/pause'),

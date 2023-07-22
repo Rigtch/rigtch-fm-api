@@ -1,7 +1,7 @@
 import { HttpStatus } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { Test, TestingModule } from '@nestjs/testing'
-import { of } from 'rxjs'
+import { firstValueFrom, of } from 'rxjs'
 
 import { AuthController } from './auth.controller'
 import { AuthService } from './auth.service'
@@ -78,7 +78,9 @@ describe('AuthController', () => {
 
     jest.spyOn(authService, 'token').mockReturnValue(of(secretData))
 
-    expect(await authController.refresh('123')).toEqual(secretData)
+    expect(await firstValueFrom(authController.refresh('123'))).toEqual(
+      secretData
+    )
   })
 
   it('should return profile', async () => {
@@ -100,6 +102,8 @@ describe('AuthController', () => {
 
     jest.spyOn(authService, 'profile').mockReturnValue(of(profileMock))
 
-    expect(await authController.profile('123')).toEqual(profileMock)
+    expect(await firstValueFrom(authController.profile('123'))).toEqual(
+      profileMock
+    )
   })
 })

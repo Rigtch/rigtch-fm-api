@@ -1,5 +1,4 @@
 import { Controller, Get, Put, Query } from '@nestjs/common'
-import { firstValueFrom } from 'rxjs'
 import {
   ApiForbiddenResponse,
   ApiOkResponse,
@@ -23,8 +22,8 @@ export class PlayerController {
     type: Device,
     description: 'Available devices has been succesfully found',
   })
-  async availableDevices(@AccessToken() accessToken: string) {
-    return await firstValueFrom(this.playerService.avaibleDevices(accessToken))
+  availableDevices(@AccessToken() accessToken: string) {
+    return this.playerService.avaibleDevices(accessToken)
   }
 
   @Get('/state')
@@ -32,10 +31,8 @@ export class PlayerController {
     type: PlaybackState,
     description: 'Current playback state has been succesfully found',
   })
-  async currentPlaybackState(@AccessToken() accessToken: string) {
-    return await firstValueFrom(
-      this.playerService.currentPlaybackState(accessToken)
-    )
+  currentPlaybackState(@AccessToken() accessToken: string) {
+    return this.playerService.currentPlaybackState(accessToken)
   }
 
   @Put('/pause')
@@ -53,9 +50,7 @@ export class PlayerController {
     @Query('afterTime') afterTime?: number,
     @Query('deviceId') deviceId?: string
   ) {
-    return firstValueFrom(
-      this.playerService.pausePlayer(accessToken, afterTime, deviceId)
-    )
+    return this.playerService.pausePlayer(accessToken, afterTime, deviceId)
   }
 
   @Put('/resume')
@@ -71,8 +66,6 @@ export class PlayerController {
     @AccessToken() accessToken: string,
     @Query('deviceId') deviceId?: string
   ) {
-    return firstValueFrom(
-      this.playerService.resumePlayer(accessToken, deviceId)
-    )
+    return this.playerService.resumePlayer(accessToken, deviceId)
   }
 }

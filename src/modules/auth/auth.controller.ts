@@ -73,7 +73,7 @@ export class AuthController {
     type: SecretData,
   })
   refresh(@AccessToken() refreshToken: string) {
-    return firstValueFrom(this.authService.token({ refreshToken }))
+    return this.authService.token({ refreshToken })
   }
 
   @Get('profile')
@@ -83,6 +83,6 @@ export class AuthController {
     type: ProfileDto,
   })
   profile(@AccessToken() accessToken: string) {
-    return firstValueFrom(this.authService.profile(accessToken))
+    return this.authService.profile(accessToken)
   }
 }
