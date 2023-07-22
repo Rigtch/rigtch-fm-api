@@ -6,6 +6,7 @@ import {
 } from '.'
 
 export interface FormattedTrack {
+  id: string
   name: string
   album: { name: string; images: SpotifyImage[] }
   artists: FormattedTrackArtist[]

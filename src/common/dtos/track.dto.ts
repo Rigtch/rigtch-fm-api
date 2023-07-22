@@ -9,6 +9,10 @@ import { FormattedTrack } from '~/common/types/spotify'
 export abstract class Track implements FormattedTrack {
   @Field(() => String)
   @ApiProperty()
+  id: string
+
+  @Field(() => String)
+  @ApiProperty()
   name: string
 
   @Field(() => String)
