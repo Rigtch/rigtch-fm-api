@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { of } from 'rxjs'
+import { firstValueFrom, of } from 'rxjs'
 
 import { PlayerController } from './player.controller'
 import { PlayerService } from './player.service'
@@ -39,9 +39,9 @@ describe('PlayerController', () => {
       .spyOn(playerService, 'avaibleDevices')
       .mockReturnValue(of(formattedDevicesMock))
 
-    expect(await playerController.availableDevices('awd')).toEqual(
-      formattedDevicesMock
-    )
+    expect(
+      await firstValueFrom(playerController.availableDevices('awd'))
+    ).toEqual(formattedDevicesMock)
   })
 
   it('should get currentPlaybackState', async () => {
@@ -49,9 +49,9 @@ describe('PlayerController', () => {
       .spyOn(playerService, 'currentPlaybackState')
       .mockReturnValue(of(formattedPlaybackStateMock))
 
-    expect(await playerController.currentPlaybackState('awd')).toEqual(
-      formattedPlaybackStateMock
-    )
+    expect(
+      await firstValueFrom(playerController.currentPlaybackState('awd'))
+    ).toEqual(formattedPlaybackStateMock)
   })
 
   it('should pause player', async () => {
@@ -59,7 +59,9 @@ describe('PlayerController', () => {
       .spyOn(playerService, 'pausePlayer')
       .mockReturnValue(of({ success: true }))
 
-    expect(await playerController.pausePlayer('awd')).toEqual({ success: true })
+    expect(await firstValueFrom(playerController.pausePlayer('awd'))).toEqual({
+      success: true,
+    })
   })
 
   it('should resume player', async () => {
@@ -67,7 +69,7 @@ describe('PlayerController', () => {
       .spyOn(playerService, 'resumePlayer')
       .mockReturnValue(of({ success: true }))
 
-    expect(await playerController.resumePlayer('awd')).toEqual({
+    expect(await firstValueFrom(playerController.resumePlayer('awd'))).toEqual({
       success: true,
     })
   })

@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { of } from 'rxjs'
+import { firstValueFrom, of } from 'rxjs'
 
 import { StatisticsController } from './statistics.controller'
 import { StatisticsService } from './statistics.service'
@@ -42,9 +42,9 @@ describe('StatisticsController', () => {
         .fn()
         .mockReturnValue(of([formattedTrackMock]))
 
-      expect(await statisticsController.lastTracks('awd', {})).toEqual([
-        formattedTrackMock,
-      ])
+      expect(
+        await firstValueFrom(statisticsController.lastTracks('awd', {}))
+      ).toEqual([formattedTrackMock])
     })
 
     it('should query last tracks with limit argument', async () => {
@@ -59,9 +59,9 @@ describe('StatisticsController', () => {
         .fn()
         .mockReturnValue(of(formattedTrackWithLimitMock))
 
-      expect(await statisticsController.lastTracks('awd', { limit })).toEqual(
-        formattedTrackWithLimitMock
-      )
+      expect(
+        await firstValueFrom(statisticsController.lastTracks('awd', { limit }))
+      ).toEqual(formattedTrackWithLimitMock)
     })
   })
 
@@ -71,9 +71,9 @@ describe('StatisticsController', () => {
         .fn()
         .mockReturnValue(of([formattedTrackMock]))
 
-      expect(await statisticsController.topTracks('awd', {})).toEqual([
-        formattedTrackMock,
-      ])
+      expect(
+        await firstValueFrom(statisticsController.topTracks('awd', {}))
+      ).toEqual([formattedTrackMock])
     })
 
     it('should query top tracks with limit argument', async () => {
@@ -88,9 +88,9 @@ describe('StatisticsController', () => {
         .fn()
         .mockReturnValue(of(formattedTrackWithLimitMock))
 
-      expect(await statisticsController.topTracks('awd', { limit })).toEqual(
-        formattedTrackWithLimitMock
-      )
+      expect(
+        await firstValueFrom(statisticsController.topTracks('awd', { limit }))
+      ).toEqual(formattedTrackWithLimitMock)
     })
   })
 
@@ -100,9 +100,9 @@ describe('StatisticsController', () => {
         .fn()
         .mockReturnValue(of([formattedTrackMock]))
 
-      expect(await statisticsController.topGenres('awd', {})).toEqual([
-        formattedTrackMock,
-      ])
+      expect(
+        await firstValueFrom(statisticsController.topGenres('awd', {}))
+      ).toEqual([formattedTrackMock])
     })
 
     it('should query top genres with limit argument', async () => {
@@ -117,9 +117,9 @@ describe('StatisticsController', () => {
         .fn()
         .mockReturnValue(of(formattedTrackWithLimitMock))
 
-      expect(await statisticsController.topGenres('awd', { limit })).toEqual(
-        formattedTrackWithLimitMock
-      )
+      expect(
+        await firstValueFrom(statisticsController.topGenres('awd', { limit }))
+      ).toEqual(formattedTrackWithLimitMock)
     })
   })
 
@@ -129,9 +129,9 @@ describe('StatisticsController', () => {
         .fn()
         .mockReturnValue(of([formattedTrackMock]))
 
-      expect(await statisticsController.topArtists('awd', {})).toEqual([
-        formattedTrackMock,
-      ])
+      expect(
+        await firstValueFrom(statisticsController.topArtists('awd', {}))
+      ).toEqual([formattedTrackMock])
     })
 
     it('should query top artists with limit argument', async () => {
@@ -146,17 +146,17 @@ describe('StatisticsController', () => {
         .fn()
         .mockReturnValue(of(formattedTrackWithLimitMock))
 
-      expect(await statisticsController.topArtists('awd', { limit })).toEqual(
-        formattedTrackWithLimitMock
-      )
+      expect(
+        await firstValueFrom(statisticsController.topArtists('awd', { limit }))
+      ).toEqual(formattedTrackWithLimitMock)
     })
   })
 
   it('should query artist', async () => {
     statisticsService.artist = jest.fn().mockReturnValue(of(formattedTrackMock))
 
-    expect(await statisticsController.artist('awd', '123')).toEqual(
-      formattedTrackMock
-    )
+    expect(
+      await firstValueFrom(statisticsController.artist('awd', '123'))
+    ).toEqual(formattedTrackMock)
   })
 })
