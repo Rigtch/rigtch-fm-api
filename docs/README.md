@@ -1,30 +1,34 @@
 # Rigtch Music Api
 
-## Configuration
+## Usage
+
+### Setup
+
+Make sure to have installed right version of Node.js in nvm
+
+```bash
+nvm use
+```
 
 ### Installation
 
+Don't forget to install the dependencies:
+
 ```bash
-yarn
+yarn install
 ```
 
 ### Running the app
 
 ```bash
 # development
-yarn start:dev {microserviceName}
+yarn start:dev
 
 # debug mode
-yarn start:debug {microserviceName}
+yarn start:debug
 
 # build
-yarn build {microserviceName}
-
-# run docker first time
-yarn docker:build
-
-# run docker
-yarn docker:dev
+yarn build
 ```
 
 ### Linting app
@@ -51,15 +55,6 @@ yarn test:debug
 
 # code coverage
 yarn test:cov
-```
-
-#### E2E tests
-
-```bash
-yarn test:e2e
-
-# watch mode
-yarn test:e2e:watch
 ```
 
 #### Mutation tests
@@ -101,223 +96,17 @@ Update issue status to `in::progress` or `in::review`.
 
 Wait for review.
 
-## Endpoints and GraphQL Queries
+## Endpoints
 
-### Auth Microservice
+### Authentication
 
-#### Endpoints
-
-- `/auth/spotify/login`
+- `/auth/login`
 
 Redirecting to spotify login page.
-After successful authentication redirect to `/auth/spotify/callback` endpoint.
+After successful authentication redirect to `/auth/callback` endpoint.
 
-- `/auth/spotify/callback`
+- `/auth/callback`
 
 After sucessful redirect from `/login` page,
 Redurecting to client callback url with query params:
 `accessToken` and `refreshToken`.
-
-#### GraphQL Queries
-
-- `refresh`
-
-Refreshing access token and saves new one as http only cookie.
-
-Returns:
-
-`Boolean`
-
-- `logout`
-
-Clearing token cookies.
-
-Returns:
-
-`Boolean`
-
-- `profile`
-
-Returns:
-
-`ProfileDto`
-
-### Statistics Microservice
-
-#### GraphQL Queries
-
-- `lastTracks`
-
-Accepts:
-`limit` - number of tracks to Return
-[type: `Float`, default: `20`, max: `50`]
-
-Returns:
-
-`Track[]`
-
-- `topTracks`
-
-Accepts:
-`limit` - number of tracks to Return
-[type: `Float`, default: `20`, max: `50`]
-
-Returns:
-
-`Track[]`
-
-- `topArtists`
-
-Accepts:
-`limit` - number of tracks to Return
-[type: `Float`, default: `20`, max: `50`]
-
-Returns:
-
-`Artist[]`
-
-### Player Microservice
-
-#### GraphQL Queries
-
-- `avaibleDevices`
-
-Returns:
-
-`Device[]`
-
-- `currentPlayback`
-
-Returns:
-
-`Playback`
-
-- `pausePlayer`
-
-Accepts:
-
-`afterTime` - time in seconds after which the player will pause
-[type: `Float`, default: `0`]
-
-`deviceId` - id of device to pause
-[type: `String`, default: `currentDevice`)]
-
-Returns:
-
-`Success`
-
-- `playPlayer`
-
-Accepts:
-
-`deviceId` - id of device to pause
-[type: `String`, default: `currentDevice`)]
-
-Returns:
-
-`Success`
-
-### ObjectTypes
-
-- `SecretData`
-
-```graphql
-type SecretData {
-  accessToken: String!
-  refreshToken: String
-  expiresIn: Float!
-}
-```
-
-- `ProfileDto`
-
-```graphql
-type ProfileDto {
-  id: String!
-  displayName: String!
-  images: [ImageDto!]!
-  followers: Float!
-  country: String
-  email: String
-  uri: String!
-}
-```
-
-- `Track`
-
-```graphql
-type Track {
-  name: String!
-  href: String!
-  artists: [String!]!
-  album: Album!
-  duration: Float!
-  progress: Float
-}
-```
-
-- `Artist`
-
-```graphql
-type Artist {
-  name: String!
-  genres: [String!]!
-  href: String!
-  images: [ImageDto!]!
-}
-```
-
-- `Album`
-
-```graphql
-type Album {
-  name: String!
-  artist: String!
-  images: [ImageDto!]!
-}
-```
-
-- `ImageDto`
-
-```graphql
-type ImageDto {
-  height: Float!
-  width: Float!
-  url: String!
-}
-```
-
-- `Device`
-
-```graphql
-type Device {
-  id: String!
-  name: String!
-  type: String!
-  isActive: Boolean!
-  isPrivateSession: Boolean!
-  isRestricted: Boolean!
-  volumePercent: Float!
-}
-```
-
-- `PlaybackState`
-
-```graphql
-type PlaybackState {
-  device: Device!
-  repeatState: String!
-  shuffleState: String!
-  isPlaying: Boolean!
-  track: Track!
-}
-```
-
-- `Success`
-
-```graphql
-type Success {
-  success: Boolean!
-  message: String
-}
-```
