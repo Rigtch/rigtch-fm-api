@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common'
 
-import { Genres } from '@common/dtos'
 import {
+  FormattedAudioFeatures,
+  SpotifyAudioFeatures,
   SpotifyArtist,
   FormattedArtist,
   SpotifyTrack,
@@ -13,16 +14,19 @@ import {
   SpotifyPlaybackState,
   FormattedPlaybackState,
 } from '@common/types/spotify'
+import { Genres } from '@common/dtos'
 import { getMostFrequentItems } from '~/utils'
 
 @Injectable()
 export class AdapterService {
   adaptArtist = ({
+    id,
     name,
     genres,
     external_urls: { spotify: href },
     images,
   }: SpotifyArtist): FormattedArtist => ({
+    id,
     name,
     genres,
     href,
@@ -40,6 +44,7 @@ export class AdapterService {
   })
 
   adaptTrack = ({
+    id,
     name,
     album,
     artists,
@@ -48,6 +53,7 @@ export class AdapterService {
     progress_ms,
     played_at,
   }: SpotifyTrack): FormattedTrack => ({
+    id,
     name,
     album: { name: album.name, images: album.images },
     artists: artists.map(({ name, id, href }) => ({ name, id, href })),
@@ -117,4 +123,34 @@ export class AdapterService {
       track: formattedTrack,
     }
   }
+
+  adaptAudioFeatures = ({
+    id,
+    track_href,
+    danceability,
+    acousticness,
+    instrumentalness,
+    speechiness,
+    liveness,
+    loudness,
+    energy,
+    tempo,
+    mode,
+    key,
+    valence,
+  }: SpotifyAudioFeatures): FormattedAudioFeatures => ({
+    id,
+    trackHref: track_href,
+    danceability,
+    acousticness,
+    instrumentalness,
+    speechiness,
+    liveness,
+    loudness,
+    energy,
+    tempo,
+    mode,
+    key,
+    valence,
+  })
 }
