@@ -1711,7 +1711,7 @@ __decorate([
     (0, swagger_1.ApiQuery)({ name: 'afterTime', type: Number, required: false }),
     (0, swagger_1.ApiQuery)({ name: 'deviceId', type: String, required: false }),
     __param(0, (0, auth_1.AccessToken)()),
-    __param(1, (0, common_1.Query)('afterTime', common_1.ParseIntPipe)),
+    __param(1, (0, common_1.Query)('afterTime')),
     __param(2, (0, common_1.Query)('deviceId')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, Number, String]),
