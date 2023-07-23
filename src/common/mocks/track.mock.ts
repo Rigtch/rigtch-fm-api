@@ -100,6 +100,7 @@ export const spotifyTrackMock: SpotifyTrack = {
   ],
   disc_number: 1,
   duration_ms: 1000,
+  progress_ms: 1000,
   explicit: false,
   external_ids: {
     isrc: 'NOBIP1701070',
@@ -155,6 +156,7 @@ export const formattedTrackMock: FormattedTrack = {
   ],
   name: 'Kobresia',
   duration: 1000,
+  progress: 1000,
   href: 'https://open.spotify.com/track/5O6MFTh1rd9PeN8XEn1yCS',
   playedAt: '2022-11-26T11:01:10.040Z',
 }
