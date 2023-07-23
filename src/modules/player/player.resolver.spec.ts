@@ -33,7 +33,7 @@ describe('PlayerResolver', () => {
   })
 
   it('should get available devices', async () => {
-    playerService.avaibleDevices = jest
+    playerService.availableDevices = jest
       .fn()
       .mockReturnValue(of(formattedDevicesMock))
 
