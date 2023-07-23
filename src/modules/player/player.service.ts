@@ -22,7 +22,7 @@ export class PlayerService {
     private readonly adapterService: AdapterService
   ) {}
 
-  avaibleDevices(accessToken: string): Observable<FormattedDevice[]> {
+  availableDevices(accessToken: string): Observable<FormattedDevice[]> {
     return this.httpService
       .get<{ devices: SpotifyDevice[] }>(
         '/me/player/devices',

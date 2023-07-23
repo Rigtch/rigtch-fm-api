@@ -12,6 +12,7 @@ import {
   spotifyDevicesMock,
   spotifyPlaybackStateMock,
 } from '~/common/mocks'
+import { axiosResponseMockFactory } from '~/utils'
 
 const forbiddenExceptionObserver = throwError(() => ({
   response: {
@@ -50,27 +51,45 @@ describe('PlayerService', () => {
     expect(playerService).toBeDefined()
   })
 
-  it('should get available devices', async () => {
-    httpService.get = jest.fn().mockReturnValue(
-      of({
-        data: {
-          devices: spotifyDevicesMock,
-        },
-      })
-    )
+  describe('availableDevices', () => {
+    it('should get available devices', async () => {
+      jest.spyOn(httpService, 'get').mockReturnValue(
+        of(
+          axiosResponseMockFactory({
+            devices: spotifyDevicesMock,
+          })
+        )
+      )
 
-    expect(await firstValueFrom(playerService.avaibleDevices('awd'))).toEqual(
-      formattedDevicesMock
-    )
+      expect(
+        await firstValueFrom(playerService.availableDevices('awd'))
+      ).toEqual(formattedDevicesMock)
+    })
+
+    it('should throw Forbidden expception because no device is currently playing', async () => {
+      jest.spyOn(httpService, 'get').mockReturnValue(
+        of(
+          axiosResponseMockFactory({
+            devices: [],
+          })
+        )
+      )
+
+      expect(
+        await firstValueFrom(
+          playerService
+            .availableDevices('awd')
+            .pipe(catchError(error => [error]))
+        )
+      ).toBeInstanceOf(ForbiddenException)
+    })
   })
 
   describe('currentPlaybackState', () => {
     it('should get playback state', async () => {
-      httpService.get = jest.fn().mockReturnValue(
-        of({
-          data: spotifyPlaybackStateMock,
-        })
-      )
+      jest
+        .spyOn(httpService, 'get')
+        .mockReturnValue(of(axiosResponseMockFactory(spotifyPlaybackStateMock)))
 
       expect(
         await firstValueFrom(playerService.currentPlaybackState('awd'))
@@ -78,11 +97,9 @@ describe('PlayerService', () => {
     })
 
     it('should throw Forbidden expception because No device is currently playing', async () => {
-      httpService.get = jest.fn().mockReturnValue(
-        of({
-          data: '',
-        })
-      )
+      jest
+        .spyOn(httpService, 'get')
+        .mockReturnValue(of(axiosResponseMockFactory('')))
 
       expect(
         await firstValueFrom(
@@ -101,8 +118,8 @@ describe('PlayerService', () => {
       })
     })
 
-    it('should throw Forbidden expception because No device is currently playing', async () => {
-      httpService.put = jest.fn().mockReturnValue(forbiddenExceptionObserver)
+    it('should throw Forbidden expception because no device is currently playing', async () => {
+      jest.spyOn(httpService, 'put').mockReturnValue(forbiddenExceptionObserver)
 
       expect(
         await firstValueFrom(
@@ -119,8 +136,8 @@ describe('PlayerService', () => {
       })
     })
 
-    it('should throw Forbidden expception because No device is currently playing', async () => {
-      httpService.put = jest.fn().mockReturnValue(forbiddenExceptionObserver)
+    it('should throw Forbidden expception because no device is currently playing', async () => {
+      jest.spyOn(httpService, 'put').mockReturnValue(forbiddenExceptionObserver)
 
       expect(
         await firstValueFrom(

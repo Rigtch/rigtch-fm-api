@@ -17,7 +17,7 @@ describe('PlayerController', () => {
         {
           provide: PlayerService,
           useValue: {
-            avaibleDevices: jest.fn(),
+            availableDevices: jest.fn(),
             currentPlaybackState: jest.fn(),
             pausePlayer: jest.fn(),
             resumePlayer: jest.fn(),
@@ -36,7 +36,7 @@ describe('PlayerController', () => {
 
   it('should get available devices', async () => {
     jest
-      .spyOn(playerService, 'avaibleDevices')
+      .spyOn(playerService, 'availableDevices')
       .mockReturnValue(of(formattedDevicesMock))
 
     expect(
