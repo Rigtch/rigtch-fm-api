@@ -1,15 +1,15 @@
 import { ExecutionContext, UnauthorizedException } from '@nestjs/common'
 import { createMock } from '@golevelup/ts-jest'
 
-import { AccessToken } from './access-token.decorator'
+import { Token } from './token.decorator'
 
 import { getParameterDecoratorFactory } from '~/utils'
 
 describe('AccessToken', () => {
-  const factory = getParameterDecoratorFactory(AccessToken)
+  const factory = getParameterDecoratorFactory(Token)
 
   it('should be defined', () => {
-    expect(AccessToken).toBeDefined()
+    expect(Token).toBeDefined()
   })
 
   it('should return the access token from header', () => {

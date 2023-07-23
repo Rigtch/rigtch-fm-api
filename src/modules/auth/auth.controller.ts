@@ -6,7 +6,7 @@ import { ApiExcludeEndpoint, ApiOkResponse, ApiTags } from '@nestjs/swagger'
 import { AuthService } from './auth.service'
 import { spotifyAuthorizationScopes } from './config'
 import { RedirectResponse } from './types'
-import { AccessToken, ApiAuth } from './decorators'
+import { Token, ApiAuth } from './decorators'
 import { ProfileDto, SecretData } from './dtos'
 
 import { Environment } from '~/config'
@@ -72,7 +72,7 @@ export class AuthController {
     description: 'Access token has been succesfully refreshed',
     type: SecretData,
   })
-  refresh(@AccessToken() refreshToken: string) {
+  refresh(@Token() refreshToken: string) {
     return this.authService.token({ refreshToken })
   }
 
@@ -82,7 +82,7 @@ export class AuthController {
     description: "User's profile has been succesfully found",
     type: ProfileDto,
   })
-  profile(@AccessToken() accessToken: string) {
+  profile(@Token() accessToken: string) {
     return this.authService.profile(accessToken)
   }
 }

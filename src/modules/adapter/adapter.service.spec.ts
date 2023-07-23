@@ -56,7 +56,7 @@ describe('AdapterService', () => {
   })
 
   describe('adaptTrack', () => {
-    it('should adapt tracks', () => {
+    it('should adapt track', () => {
       expect(adapterService.adaptTrack(spotifyTrackMock)).toEqual(
         formattedTrackMock
       )

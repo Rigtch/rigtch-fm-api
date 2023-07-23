@@ -4,7 +4,7 @@ import { ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger'
 import { StatisticsService } from './statistics.service'
 import { LimitArguments } from './dtos'
 
-import { AccessToken, ApiAuth } from '@modules/auth'
+import { Token, ApiAuth } from '@modules/auth'
 import { AuthenticationType } from '@modules/auth/enums'
 import { Analysis, Artist, Genres, Track } from '@common/dtos'
 
@@ -20,10 +20,7 @@ export class StatisticsController {
     description: 'Last tracks has been succesfully found',
     type: [Track],
   })
-  lastTracks(
-    @AccessToken() accessToken: string,
-    @Query() { limit }: LimitArguments
-  ) {
+  lastTracks(@Token() accessToken: string, @Query() { limit }: LimitArguments) {
     return this.statisticsService.lastTracks(accessToken, limit)
   }
 
@@ -33,10 +30,7 @@ export class StatisticsController {
     description: 'Top tracks has been succesfully found',
     type: [Track],
   })
-  topTracks(
-    @AccessToken() accessToken: string,
-    @Query() { limit }: LimitArguments
-  ) {
+  topTracks(@Token() accessToken: string, @Query() { limit }: LimitArguments) {
     return this.statisticsService.topTracks(accessToken, limit)
   }
 
@@ -46,10 +40,7 @@ export class StatisticsController {
     description: 'Top genres has been succesfully found',
     type: Genres,
   })
-  topGenres(
-    @AccessToken() accessToken: string,
-    @Query() { limit }: LimitArguments
-  ) {
+  topGenres(@Token() accessToken: string, @Query() { limit }: LimitArguments) {
     return this.statisticsService.topGenres(accessToken, limit)
   }
 
@@ -59,10 +50,7 @@ export class StatisticsController {
     description: 'Top artists has been succesfully found',
     type: [Artist],
   })
-  topArtists(
-    @AccessToken() accessToken: string,
-    @Query() { limit }: LimitArguments
-  ) {
+  topArtists(@Token() accessToken: string, @Query() { limit }: LimitArguments) {
     return this.statisticsService.topArtists(accessToken, limit)
   }
 
@@ -72,7 +60,7 @@ export class StatisticsController {
     description: 'Artist has been succesfully found',
     type: Artist,
   })
-  artist(@AccessToken() accessToken: string, @Query('id') id: string) {
+  artist(@Token() accessToken: string, @Query('id') id: string) {
     return this.statisticsService.artist(accessToken, id)
   }
 
@@ -81,7 +69,7 @@ export class StatisticsController {
     description: 'Analysis has been succesfully generated',
     type: Analysis,
   })
-  analysis(@AccessToken() accessToken: string) {
+  analysis(@Token() accessToken: string) {
     return this.statisticsService.analysis(accessToken)
   }
 }

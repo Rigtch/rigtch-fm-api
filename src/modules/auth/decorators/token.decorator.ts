@@ -6,22 +6,20 @@ import {
 import { GqlExecutionContext } from '@nestjs/graphql'
 import { Request } from 'express'
 
-export const RefreshToken = createParamDecorator(
+export const Token = createParamDecorator(
   (data: unknown, context: ExecutionContext) => {
     const request: Request =
       context.getType() === 'http'
         ? context.switchToHttp().getRequest()
         : GqlExecutionContext.create(context).getContext().req
 
-    const refreshToken =
-      request.cookies?.['refresh-token'] ??
-      request.headers?.authorization?.slice(6)
+    const token = request.headers?.authorization?.slice(7)
 
-    if (!refreshToken)
+    if (!token)
       throw new UnauthorizedException(
         'No value was provided for Authentication'
       )
 
-    return refreshToken
+    return token
   }
 )

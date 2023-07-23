@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs'
 
 import { AuthService } from './auth.service'
 import { SecretData, ProfileDto } from './dtos'
-import { AccessToken, RefreshToken } from './decorators'
+import { Token } from './decorators'
 
 @Resolver()
 export class AuthResolver {
@@ -14,12 +14,12 @@ export class AuthResolver {
   ) {}
 
   @Query(() => SecretData)
-  async refresh(@RefreshToken() refreshToken: string) {
+  async refresh(@Token() refreshToken: string) {
     return await firstValueFrom(this.authService.token({ refreshToken }))
   }
 
   @Query(() => ProfileDto)
-  async profile(@AccessToken() accessToken: string) {
+  async profile(@Token() accessToken: string) {
     return await firstValueFrom(this.authService.profile(accessToken))
   }
 }
