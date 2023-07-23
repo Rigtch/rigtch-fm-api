@@ -14,7 +14,10 @@ import {
   spotifyTracksMock,
   spotifyArtistMock,
   formattedArtistMock,
+  spotifyAudioFeaturesMock,
+  analysisMock,
 } from '@common/mocks'
+import { axiosResponseMockFactory } from '~/utils'
 
 describe('StatisticsService', () => {
   let statisticsService: StatisticsService
@@ -43,15 +46,15 @@ describe('StatisticsService', () => {
   })
 
   it('should get last tracks', async () => {
-    httpService.get = jest.fn().mockReturnValue(
-      of({
-        data: {
+    jest.spyOn(httpService, 'get').mockReturnValue(
+      of(
+        axiosResponseMockFactory({
           items: Array.from({ length: 5 }).map(() => ({
             track: spotifyTrackMock,
             played_at: '2022-11-26T11:01:10.040Z',
           })),
-        },
-      })
+        })
+      )
     )
 
     expect(await firstValueFrom(statisticsService.lastTracks('awd'))).toEqual(
@@ -60,13 +63,11 @@ describe('StatisticsService', () => {
   })
 
   it('should get top artists', async () => {
-    httpService.get = jest.fn().mockReturnValueOnce(
-      of({
-        data: {
-          items: spotifyArtistsMock,
-        },
-      })
-    )
+    jest
+      .spyOn(httpService, 'get')
+      .mockReturnValue(
+        of(axiosResponseMockFactory({ items: spotifyArtistsMock }))
+      )
 
     expect(await firstValueFrom(statisticsService.topArtists('awd'))).toEqual(
       formattedArtistsMock
@@ -74,12 +75,12 @@ describe('StatisticsService', () => {
   })
 
   it('should get top genres', async () => {
-    httpService.get = jest.fn().mockReturnValueOnce(
-      of({
-        data: {
+    jest.spyOn(httpService, 'get').mockReturnValue(
+      of(
+        axiosResponseMockFactory({
           items: spotifyArtistsMock,
-        },
-      })
+        })
+      )
     )
 
     expect(await firstValueFrom(statisticsService.topGenres('awd', 3))).toEqual(
@@ -96,20 +97,40 @@ describe('StatisticsService', () => {
       })
     )
 
+    jest
+      .spyOn(httpService, 'get')
+      .mockReturnValue(of(axiosResponseMockFactory(spotifyTracksMock)))
+
     expect(await firstValueFrom(statisticsService.topTracks('awd'))).toEqual(
       formattedTracksMock
     )
   })
 
   it('should get artist with given id', async () => {
-    httpService.get = jest.fn().mockReturnValueOnce(
-      of({
-        data: spotifyArtistMock,
-      })
-    )
+    jest
+      .spyOn(httpService, 'get')
+      .mockReturnValue(of(axiosResponseMockFactory(spotifyArtistMock)))
 
     expect(
       await firstValueFrom(statisticsService.artist('awd', 'some id'))
     ).toEqual(formattedArtistMock)
+  })
+
+  it('should generate analysis', async () => {
+    jest
+      .spyOn(statisticsService, 'topTracks')
+      .mockReturnValue(of(formattedTracksMock))
+
+    jest.spyOn(httpService, 'get').mockReturnValue(
+      of(
+        axiosResponseMockFactory({
+          audio_features: [spotifyAudioFeaturesMock],
+        })
+      )
+    )
+
+    expect(await firstValueFrom(statisticsService.analysis('awd'))).toEqual(
+      analysisMock
+    )
   })
 })
