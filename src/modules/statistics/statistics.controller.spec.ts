@@ -4,7 +4,13 @@ import { firstValueFrom, of } from 'rxjs'
 import { StatisticsController } from './statistics.controller'
 import { StatisticsService } from './statistics.service'
 
-import { formattedTrackMock } from '@common/mocks'
+import {
+  analysisMock,
+  formattedArtistMock,
+  formattedArtistsMock,
+  formattedTrackMock,
+  topGenresMock,
+} from '@common/mocks'
 
 describe('StatisticsController', () => {
   let statisticsController: StatisticsController
@@ -22,6 +28,7 @@ describe('StatisticsController', () => {
             topGenres: jest.fn(),
             topArtists: jest.fn(),
             artist: jest.fn(),
+            analysis: jest.fn(),
           },
         },
       ],
@@ -38,8 +45,8 @@ describe('StatisticsController', () => {
 
   describe('LastTracks', () => {
     it('should query last tracks', async () => {
-      statisticsService.lastTracks = jest
-        .fn()
+      jest
+        .spyOn(statisticsService, 'lastTracks')
         .mockReturnValue(of([formattedTrackMock]))
 
       expect(
@@ -55,8 +62,8 @@ describe('StatisticsController', () => {
         () => formattedTrackMock
       )
 
-      statisticsService.lastTracks = jest
-        .fn()
+      jest
+        .spyOn(statisticsService, 'lastTracks')
         .mockReturnValue(of(formattedTrackWithLimitMock))
 
       expect(
@@ -67,8 +74,8 @@ describe('StatisticsController', () => {
 
   describe('TopTracks', () => {
     it('should query top tracks', async () => {
-      statisticsService.topTracks = jest
-        .fn()
+      jest
+        .spyOn(statisticsService, 'topTracks')
         .mockReturnValue(of([formattedTrackMock]))
 
       expect(
@@ -84,8 +91,8 @@ describe('StatisticsController', () => {
         () => formattedTrackMock
       )
 
-      statisticsService.topTracks = jest
-        .fn()
+      jest
+        .spyOn(statisticsService, 'topTracks')
         .mockReturnValue(of(formattedTrackWithLimitMock))
 
       expect(
@@ -96,67 +103,76 @@ describe('StatisticsController', () => {
 
   describe('TopGenres', () => {
     it('should query top genres', async () => {
-      statisticsService.topGenres = jest
-        .fn()
-        .mockReturnValue(of([formattedTrackMock]))
+      jest
+        .spyOn(statisticsService, 'topGenres')
+        .mockReturnValue(of(topGenresMock))
 
       expect(
         await firstValueFrom(statisticsController.topGenres('awd', {}))
-      ).toEqual([formattedTrackMock])
+      ).toEqual(topGenresMock)
     })
 
     it('should query top genres with limit argument', async () => {
       const limit = 20
 
-      const formattedTrackWithLimitMock = Array.from(
-        { length: limit },
-        () => formattedTrackMock
-      )
+      const genresWithLimitMock = {
+        genres: Array.from({ length: limit }, () => 'genre'),
+      }
 
-      statisticsService.topGenres = jest
-        .fn()
-        .mockReturnValue(of(formattedTrackWithLimitMock))
+      jest
+        .spyOn(statisticsService, 'topGenres')
+        .mockReturnValue(of(genresWithLimitMock))
 
       expect(
         await firstValueFrom(statisticsController.topGenres('awd', { limit }))
-      ).toEqual(formattedTrackWithLimitMock)
+      ).toEqual(genresWithLimitMock)
     })
   })
 
   describe('TopArtists', () => {
     it('should query top artists', async () => {
-      statisticsService.topArtists = jest
-        .fn()
-        .mockReturnValue(of([formattedTrackMock]))
+      jest
+        .spyOn(statisticsService, 'topArtists')
+        .mockReturnValue(of(formattedArtistsMock))
 
       expect(
         await firstValueFrom(statisticsController.topArtists('awd', {}))
-      ).toEqual([formattedTrackMock])
+      ).toEqual(formattedArtistsMock)
     })
 
     it('should query top artists with limit argument', async () => {
       const limit = 20
 
-      const formattedTrackWithLimitMock = Array.from(
+      const formattedArtistsWithLimitMock = Array.from(
         { length: limit },
-        () => formattedTrackMock
+        () => formattedArtistMock
       )
 
-      statisticsService.topArtists = jest
-        .fn()
-        .mockReturnValue(of(formattedTrackWithLimitMock))
+      jest
+        .spyOn(statisticsService, 'topArtists')
+        .mockReturnValue(of(formattedArtistsWithLimitMock))
 
       expect(
         await firstValueFrom(statisticsController.topArtists('awd', { limit }))
-      ).toEqual(formattedTrackWithLimitMock)
+      ).toEqual(formattedArtistsWithLimitMock)
     })
   })
 
   it('should query artist', async () => {
-    statisticsService.artist = jest.fn().mockReturnValue(of(formattedTrackMock))
+    jest
+      .spyOn(statisticsService, 'artist')
+      .mockReturnValue(of(formattedArtistMock))
 
     expect(
       await firstValueFrom(statisticsController.artist('awd', '123'))
-    ).toEqual(formattedTrackMock)
+    ).toEqual(formattedArtistMock)
+  })
+
+  it('should get analysis', async () => {
+    jest.spyOn(statisticsService, 'analysis').mockReturnValue(of(analysisMock))
+
+    expect(await firstValueFrom(statisticsController.analysis('awd'))).toEqual(
+      analysisMock
+    )
   })
 })
