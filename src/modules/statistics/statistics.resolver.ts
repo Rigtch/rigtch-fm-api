@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs'
 import { StatisticsService } from './statistics.service'
 import { IdArguments, LimitArguments } from './dtos'
 
-import { AccessToken } from '@modules/auth'
+import { Token } from '@modules/auth'
 import { Track, Genres, Artist } from '@common/dtos'
 
 @Resolver()
@@ -13,7 +13,7 @@ export class StatisticsResolver {
 
   @Query(() => [Track])
   async lastTracks(
-    @AccessToken() accessToken: string,
+    @Token() accessToken: string,
     @Args() { limit }: LimitArguments
   ) {
     return await firstValueFrom(
@@ -23,7 +23,7 @@ export class StatisticsResolver {
 
   @Query(() => [Track])
   async topTracks(
-    @AccessToken() accessToken: string,
+    @Token() accessToken: string,
     @Args() { limit }: LimitArguments
   ) {
     return await firstValueFrom(
@@ -33,7 +33,7 @@ export class StatisticsResolver {
 
   @Query(() => Genres)
   async topGenres(
-    @AccessToken() accessToken: string,
+    @Token() accessToken: string,
     @Args() { limit }: LimitArguments
   ) {
     return await firstValueFrom(
@@ -43,7 +43,7 @@ export class StatisticsResolver {
 
   @Query(() => [Artist])
   async topArtists(
-    @AccessToken() accessToken: string,
+    @Token() accessToken: string,
     @Args() { limit }: LimitArguments
   ) {
     return await firstValueFrom(
@@ -52,10 +52,7 @@ export class StatisticsResolver {
   }
 
   @Query(() => Artist)
-  async artist(
-    @AccessToken() accessToken: string,
-    @Args() { id }: IdArguments
-  ) {
+  async artist(@Token() accessToken: string, @Args() { id }: IdArguments) {
     return await firstValueFrom(this.statisticsService.artist(accessToken, id))
   }
 }

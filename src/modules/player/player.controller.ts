@@ -9,7 +9,7 @@ import {
 import { PlayerService } from './player.service'
 
 import { Device, PlaybackState, Success } from '@common/dtos'
-import { AccessToken, ApiAuth, AuthenticationType } from '@modules/auth'
+import { Token, ApiAuth, AuthenticationType } from '@modules/auth'
 
 @Controller('player')
 @ApiTags('player')
@@ -22,8 +22,8 @@ export class PlayerController {
     type: Device,
     description: 'Available devices has been succesfully found',
   })
-  availableDevices(@AccessToken() accessToken: string) {
-    return this.playerService.avaibleDevices(accessToken)
+  availableDevices(@Token() accessToken: string) {
+    return this.playerService.availableDevices(accessToken)
   }
 
   @Get('/state')
@@ -31,7 +31,7 @@ export class PlayerController {
     type: PlaybackState,
     description: 'Current playback state has been succesfully found',
   })
-  currentPlaybackState(@AccessToken() accessToken: string) {
+  currentPlaybackState(@Token() accessToken: string) {
     return this.playerService.currentPlaybackState(accessToken)
   }
 
@@ -46,7 +46,7 @@ export class PlayerController {
     type: Success,
   })
   pausePlayer(
-    @AccessToken() accessToken: string,
+    @Token() accessToken: string,
     @Query('afterTime') afterTime?: number,
     @Query('deviceId') deviceId?: string
   ) {
@@ -63,7 +63,7 @@ export class PlayerController {
     type: Success,
   })
   resumePlayer(
-    @AccessToken() accessToken: string,
+    @Token() accessToken: string,
     @Query('deviceId') deviceId?: string
   ) {
     return this.playerService.resumePlayer(accessToken, deviceId)
