@@ -1,3 +1,4 @@
+import { Analysis } from '../dtos'
 import { FormattedAudioFeatures, SpotifyAudioFeatures } from '../types/spotify'
 
 export const spotifyAudioFeaturesMock: SpotifyAudioFeatures = {
@@ -36,4 +37,18 @@ export const formattedAudioFeaturesMock: FormattedAudioFeatures = {
   tempo: 138.616,
   trackHref: 'https://api.spotify.com/v1/tracks/2JIRtFAIUkd86PQD12Hm7r',
   valence: 0.0215,
+}
+
+export const analysisMock: Analysis = {
+  acousticness: 0.016,
+  danceability: 0.267,
+  energy: 1,
+  instrumentalness: 0.447,
+  liveness: 0.45,
+  loudness: -4.92,
+  speechiness: 0.135,
+  tempo: 138.616,
+  valence: 0.0215,
+  mode: 0,
+  key: 4,
 }
