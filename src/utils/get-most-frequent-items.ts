@@ -4,11 +4,8 @@ export function getMostFrequentItems(array: string[], limit = 1) {
   const frequencies = {}
 
   for (const item of array) {
-    if (frequencies[item] === undefined) {
-      frequencies[item] = 1
-    } else {
-      frequencies[item] = frequencies[item] + 1
-    }
+    frequencies[item] =
+      frequencies[item] === undefined ? 1 : frequencies[item] + 1
   }
 
   const frequencyArray = []

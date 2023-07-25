@@ -322,12 +322,8 @@ function getMostFrequentItems(array, limit = 1) {
         return array;
     const frequencies = {};
     for (const item of array) {
-        if (frequencies[item] === undefined) {
-            frequencies[item] = 1;
-        }
-        else {
-            frequencies[item] = frequencies[item] + 1;
-        }
+        frequencies[item] =
+            frequencies[item] === undefined ? 1 : frequencies[item] + 1;
     }
     const frequencyArray = [];
     for (const key in frequencies) {
