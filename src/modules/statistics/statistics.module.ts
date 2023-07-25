@@ -3,7 +3,6 @@ import { HttpModule } from '@nestjs/axios'
 import { ConfigService } from '@nestjs/config'
 
 import { StatisticsService } from './statistics.service'
-import { StatisticsResolver } from './statistics.resolver'
 import { StatisticsController } from './statistics.controller'
 
 import { AdapterModule } from '@modules/adapter'
@@ -26,6 +25,6 @@ import { Environment } from '~/config'
     AuthModule,
   ],
   controllers: [StatisticsController],
-  providers: [StatisticsService, StatisticsResolver],
+  providers: [StatisticsService],
 })
 export class StatisticsModule {}
