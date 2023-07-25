@@ -3,15 +3,11 @@ import {
   ExecutionContext,
   UnauthorizedException,
 } from '@nestjs/common'
-import { GqlExecutionContext } from '@nestjs/graphql'
 import { Request } from 'express'
 
 export const Token = createParamDecorator(
   (data: unknown, context: ExecutionContext) => {
-    const request: Request =
-      context.getType() === 'http'
-        ? context.switchToHttp().getRequest()
-        : GqlExecutionContext.create(context).getContext().req
+    const request: Request = context.switchToHttp().getRequest()
 
     const token = request.headers?.authorization?.slice(7)
 

@@ -3,7 +3,6 @@ import { HttpModule } from '@nestjs/axios'
 import { ConfigService } from '@nestjs/config'
 
 import { PlayerService } from './player.service'
-import { PlayerResolver } from './player.resolver'
 import { PlayerController } from './player.controller'
 
 import { AdapterModule } from '@modules/adapter'
@@ -24,6 +23,6 @@ import { Environment } from '~/config'
     AdapterModule,
   ],
   controllers: [PlayerController],
-  providers: [PlayerService, PlayerResolver],
+  providers: [PlayerService],
 })
 export class PlayerModule {}

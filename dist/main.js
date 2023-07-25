@@ -20,29 +20,22 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Album = void 0;
-const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
 const swagger_1 = __webpack_require__(/*! @nestjs/swagger */ "@nestjs/swagger");
 const _1 = __webpack_require__(/*! . */ "./src/common/dtos/index.ts");
-let Album = class Album {
-};
+class Album {
+}
 __decorate([
-    (0, graphql_1.Field)(() => String),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Album.prototype, "name", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => String),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Album.prototype, "artist", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => [_1.ImageDto]),
     (0, swagger_1.ApiProperty)({ type: [_1.ImageDto] }),
     __metadata("design:type", Array)
 ], Album.prototype, "images", void 0);
-Album = __decorate([
-    (0, graphql_1.ObjectType)()
-], Album);
 exports.Album = Album;
 
 
@@ -136,60 +129,45 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TrackArtist = exports.Artist = void 0;
-const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
 const swagger_1 = __webpack_require__(/*! @nestjs/swagger */ "@nestjs/swagger");
 const _1 = __webpack_require__(/*! . */ "./src/common/dtos/index.ts");
-let Artist = class Artist {
-};
+class Artist {
+}
 __decorate([
-    (0, graphql_1.Field)(() => String),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Artist.prototype, "id", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => String),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Artist.prototype, "name", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => [String]),
     (0, swagger_1.ApiProperty)({ type: [String] }),
     __metadata("design:type", Array)
 ], Artist.prototype, "genres", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => String),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Artist.prototype, "href", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => [_1.ImageDto]),
     (0, swagger_1.ApiProperty)({ type: [_1.ImageDto] }),
     __metadata("design:type", Array)
 ], Artist.prototype, "images", void 0);
-Artist = __decorate([
-    (0, graphql_1.ObjectType)()
-], Artist);
 exports.Artist = Artist;
-let TrackArtist = class TrackArtist {
-};
+class TrackArtist {
+}
 __decorate([
-    (0, graphql_1.Field)(() => String),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], TrackArtist.prototype, "name", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => String),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], TrackArtist.prototype, "id", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => String),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], TrackArtist.prototype, "href", void 0);
-TrackArtist = __decorate([
-    (0, graphql_1.ObjectType)()
-], TrackArtist);
 exports.TrackArtist = TrackArtist;
 
 
@@ -213,48 +191,37 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Device = void 0;
-const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
 const swagger_1 = __webpack_require__(/*! @nestjs/swagger */ "@nestjs/swagger");
-let Device = class Device {
-};
+class Device {
+}
 __decorate([
-    (0, graphql_1.Field)(() => String),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Device.prototype, "id", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => String),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Device.prototype, "name", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => String),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Device.prototype, "type", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => Boolean),
     (0, swagger_1.ApiProperty)({ type: Boolean }),
     __metadata("design:type", Boolean)
 ], Device.prototype, "isActive", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => Boolean),
     (0, swagger_1.ApiProperty)({ type: Boolean }),
     __metadata("design:type", Boolean)
 ], Device.prototype, "isPrivateSession", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => Boolean),
     (0, swagger_1.ApiProperty)({ type: Boolean }),
     __metadata("design:type", Boolean)
 ], Device.prototype, "isRestricted", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => Number),
     (0, swagger_1.ApiProperty)({ type: Number }),
     __metadata("design:type", Number)
 ], Device.prototype, "volumePercent", void 0);
-Device = __decorate([
-    (0, graphql_1.ObjectType)()
-], Device);
 exports.Device = Device;
 
 
@@ -278,18 +245,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Genres = void 0;
-const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
 const swagger_1 = __webpack_require__(/*! @nestjs/swagger */ "@nestjs/swagger");
-let Genres = class Genres {
-};
+class Genres {
+}
 __decorate([
-    (0, graphql_1.Field)(() => [String]),
     (0, swagger_1.ApiProperty)({ type: [String] }),
     __metadata("design:type", Array)
 ], Genres.prototype, "genres", void 0);
-Genres = __decorate([
-    (0, graphql_1.ObjectType)()
-], Genres);
 exports.Genres = Genres;
 
 
@@ -313,28 +275,21 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ImageDto = void 0;
-const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
 const swagger_1 = __webpack_require__(/*! @nestjs/swagger */ "@nestjs/swagger");
-let ImageDto = class ImageDto {
-};
+class ImageDto {
+}
 __decorate([
-    (0, graphql_1.Field)(() => Number),
     (0, swagger_1.ApiProperty)({ type: Number }),
     __metadata("design:type", Number)
 ], ImageDto.prototype, "height", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => Number),
     (0, swagger_1.ApiProperty)({ type: Number }),
     __metadata("design:type", Number)
 ], ImageDto.prototype, "width", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => String),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], ImageDto.prototype, "url", void 0);
-ImageDto = __decorate([
-    (0, graphql_1.ObjectType)()
-], ImageDto);
 exports.ImageDto = ImageDto;
 
 
@@ -394,40 +349,31 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var _a, _b, _c, _d;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PlaybackState = void 0;
-const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
 const swagger_1 = __webpack_require__(/*! @nestjs/swagger */ "@nestjs/swagger");
 const _1 = __webpack_require__(/*! . */ "./src/common/dtos/index.ts");
 const spotify_1 = __webpack_require__(/*! ~/common/types/spotify */ "./src/common/types/spotify/index.ts");
-let PlaybackState = class PlaybackState {
-};
+class PlaybackState {
+}
 __decorate([
-    (0, graphql_1.Field)(() => _1.Device),
     (0, swagger_1.ApiProperty)({ type: _1.Device }),
     __metadata("design:type", typeof (_a = typeof _1.Device !== "undefined" && _1.Device) === "function" ? _a : Object)
 ], PlaybackState.prototype, "device", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => String),
     (0, swagger_1.ApiProperty)({ type: String }),
     __metadata("design:type", typeof (_b = typeof spotify_1.RepeatedState !== "undefined" && spotify_1.RepeatedState) === "function" ? _b : Object)
 ], PlaybackState.prototype, "repeatState", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => String),
     (0, swagger_1.ApiProperty)({ type: String }),
     __metadata("design:type", typeof (_c = typeof spotify_1.ShuffleState !== "undefined" && spotify_1.ShuffleState) === "function" ? _c : Object)
 ], PlaybackState.prototype, "shuffleState", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => Boolean),
     (0, swagger_1.ApiProperty)({ type: Boolean }),
     __metadata("design:type", Boolean)
 ], PlaybackState.prototype, "isPlaying", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => _1.Track),
     (0, swagger_1.ApiProperty)({ type: _1.Track }),
     __metadata("design:type", typeof (_d = typeof _1.Track !== "undefined" && _1.Track) === "function" ? _d : Object)
 ], PlaybackState.prototype, "track", void 0);
-PlaybackState = __decorate([
-    (0, graphql_1.ObjectType)()
-], PlaybackState);
 exports.PlaybackState = PlaybackState;
 
 
@@ -451,23 +397,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Success = void 0;
-const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
 const swagger_1 = __webpack_require__(/*! @nestjs/swagger */ "@nestjs/swagger");
-let Success = class Success {
-};
+class Success {
+}
 __decorate([
-    (0, graphql_1.Field)(() => Boolean),
     (0, swagger_1.ApiProperty)({ type: Boolean }),
     __metadata("design:type", Boolean)
 ], Success.prototype, "success", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => String, { nullable: true }),
     (0, swagger_1.ApiProperty)({ required: false }),
     __metadata("design:type", String)
 ], Success.prototype, "message", void 0);
-Success = __decorate([
-    (0, graphql_1.ObjectType)()
-], Success);
 exports.Success = Success;
 
 
@@ -492,54 +432,42 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Track = void 0;
-const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
 const swagger_1 = __webpack_require__(/*! @nestjs/swagger */ "@nestjs/swagger");
 const _1 = __webpack_require__(/*! . */ "./src/common/dtos/index.ts");
-let Track = class Track {
-};
+class Track {
+}
 __decorate([
-    (0, graphql_1.Field)(() => String),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Track.prototype, "id", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => String),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Track.prototype, "name", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => String),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Track.prototype, "href", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => [_1.TrackArtist]),
     (0, swagger_1.ApiProperty)({ type: [_1.TrackArtist] }),
     __metadata("design:type", Array)
 ], Track.prototype, "artists", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => _1.Album),
     (0, swagger_1.ApiProperty)({ type: _1.Album }),
     __metadata("design:type", typeof (_a = typeof _1.Album !== "undefined" && _1.Album) === "function" ? _a : Object)
 ], Track.prototype, "album", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => Number),
     (0, swagger_1.ApiProperty)({ type: Number }),
     __metadata("design:type", Number)
 ], Track.prototype, "duration", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => Number, { nullable: true }),
     (0, swagger_1.ApiProperty)({ type: Number, required: false }),
     __metadata("design:type", Number)
 ], Track.prototype, "progress", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => String, { nullable: true }),
     (0, swagger_1.ApiProperty)({ required: false }),
     __metadata("design:type", String)
 ], Track.prototype, "playedAt", void 0);
-Track = __decorate([
-    (0, graphql_1.ObjectType)()
-], Track);
 exports.Track = Track;
 
 
@@ -926,15 +854,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AppModule = void 0;
 const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
-const apollo_1 = __webpack_require__(/*! @nestjs/apollo */ "@nestjs/apollo");
-const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
 const Joi = __webpack_require__(/*! joi */ "joi");
 const config_1 = __webpack_require__(/*! @nestjs/config */ "@nestjs/config");
 const adapter_1 = __webpack_require__(/*! @modules/adapter */ "./src/modules/adapter/index.ts");
 const auth_1 = __webpack_require__(/*! @modules/auth */ "./src/modules/auth/index.ts");
 const statistics_1 = __webpack_require__(/*! @modules/statistics */ "./src/modules/statistics/index.ts");
 const player_1 = __webpack_require__(/*! @modules/player */ "./src/modules/player/index.ts");
-const config_2 = __webpack_require__(/*! ~/config */ "./src/config/index.ts");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -944,26 +869,6 @@ AppModule = __decorate([
             adapter_1.AdapterModule,
             statistics_1.StatisticsModule,
             player_1.PlayerModule,
-            graphql_1.GraphQLModule.forRootAsync({
-                driver: apollo_1.ApolloDriver,
-                useFactory: (configService) => ({
-                    cache: 'bounded',
-                    autoSchemaFile: true,
-                    context: ({ req, res }) => ({ req, res }),
-                    playground: {
-                        settings: {
-                            'request.credentials': 'include',
-                        },
-                    },
-                    introspection: true,
-                    cors: {
-                        credentials: true,
-                        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-                        origin: configService.get(config_2.Environment.CLIENT_CALLBACK_URL),
-                    },
-                }),
-                inject: [config_1.ConfigService],
-            }),
             config_1.ConfigModule.forRoot({
                 isGlobal: true,
                 envFilePath: './.env',
@@ -1106,7 +1011,7 @@ __decorate([
         description: 'Access token has been succesfully refreshed',
         type: dtos_1.SecretData,
     }),
-    __param(0, (0, decorators_1.AccessToken)()),
+    __param(0, (0, decorators_1.Token)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
@@ -1118,7 +1023,7 @@ __decorate([
         description: "User's profile has been succesfully found",
         type: dtos_1.ProfileDto,
     }),
-    __param(0, (0, decorators_1.AccessToken)()),
+    __param(0, (0, decorators_1.Token)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
@@ -1153,7 +1058,6 @@ const config_1 = __webpack_require__(/*! @nestjs/config */ "@nestjs/config");
 const jwt_1 = __webpack_require__(/*! @nestjs/jwt */ "@nestjs/jwt");
 const axios_1 = __webpack_require__(/*! @nestjs/axios */ "@nestjs/axios");
 const auth_service_1 = __webpack_require__(/*! ./auth.service */ "./src/modules/auth/auth.service.ts");
-const auth_resolver_1 = __webpack_require__(/*! ./auth.resolver */ "./src/modules/auth/auth.resolver.ts");
 const auth_controller_1 = __webpack_require__(/*! ./auth.controller */ "./src/modules/auth/auth.controller.ts");
 const adapter_1 = __webpack_require__(/*! @modules/adapter */ "./src/modules/adapter/index.ts");
 const config_2 = __webpack_require__(/*! ~/config */ "./src/config/index.ts");
@@ -1185,74 +1089,11 @@ AuthModule = __decorate([
             }),
             adapter_1.AdapterModule,
         ],
-        providers: [auth_service_1.AuthService, auth_resolver_1.AuthResolver],
+        providers: [auth_service_1.AuthService],
         controllers: [auth_controller_1.AuthController],
     })
 ], AuthModule);
 exports.AuthModule = AuthModule;
-
-
-/***/ }),
-
-/***/ "./src/modules/auth/auth.resolver.ts":
-/*!*******************************************!*\
-  !*** ./src/modules/auth/auth.resolver.ts ***!
-  \*******************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
-var _a, _b;
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.AuthResolver = void 0;
-const config_1 = __webpack_require__(/*! @nestjs/config */ "@nestjs/config");
-const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
-const rxjs_1 = __webpack_require__(/*! rxjs */ "rxjs");
-const auth_service_1 = __webpack_require__(/*! ./auth.service */ "./src/modules/auth/auth.service.ts");
-const dtos_1 = __webpack_require__(/*! ./dtos */ "./src/modules/auth/dtos/index.ts");
-const decorators_1 = __webpack_require__(/*! ./decorators */ "./src/modules/auth/decorators/index.ts");
-let AuthResolver = class AuthResolver {
-    constructor(authService, configService) {
-        this.authService = authService;
-        this.configService = configService;
-    }
-    async refresh(refreshToken) {
-        return await (0, rxjs_1.firstValueFrom)(this.authService.token({ refreshToken }));
-    }
-    async profile(accessToken) {
-        return await (0, rxjs_1.firstValueFrom)(this.authService.profile(accessToken));
-    }
-};
-__decorate([
-    (0, graphql_1.Query)(() => dtos_1.SecretData),
-    __param(0, (0, decorators_1.RefreshToken)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Promise)
-], AuthResolver.prototype, "refresh", null);
-__decorate([
-    (0, graphql_1.Query)(() => dtos_1.ProfileDto),
-    __param(0, (0, decorators_1.AccessToken)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Promise)
-], AuthResolver.prototype, "profile", null);
-AuthResolver = __decorate([
-    (0, graphql_1.Resolver)(),
-    __metadata("design:paramtypes", [typeof (_a = typeof auth_service_1.AuthService !== "undefined" && auth_service_1.AuthService) === "function" ? _a : Object, typeof (_b = typeof config_1.ConfigService !== "undefined" && config_1.ConfigService) === "function" ? _b : Object])
-], AuthResolver);
-exports.AuthResolver = AuthResolver;
 
 
 /***/ }),
@@ -1414,31 +1255,6 @@ exports.BEARER = 'bearer';
 
 /***/ }),
 
-/***/ "./src/modules/auth/decorators/access-token.decorator.ts":
-/*!***************************************************************!*\
-  !*** ./src/modules/auth/decorators/access-token.decorator.ts ***!
-  \***************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.AccessToken = void 0;
-const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
-const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
-exports.AccessToken = (0, common_1.createParamDecorator)((data, context) => {
-    var _a, _b;
-    const request = context.getType() === 'http'
-        ? context.switchToHttp().getRequest()
-        : graphql_1.GqlExecutionContext.create(context).getContext().req;
-    const accessToken = (_b = (_a = request.headers) === null || _a === void 0 ? void 0 : _a.authorization) === null || _b === void 0 ? void 0 : _b.slice(7);
-    if (!accessToken)
-        throw new common_1.UnauthorizedException('No value was provided for Authentication');
-    return accessToken;
-});
-
-
-/***/ }),
-
 /***/ "./src/modules/auth/decorators/api-auth.decorator.ts":
 /*!***********************************************************!*\
   !*** ./src/modules/auth/decorators/api-auth.decorator.ts ***!
@@ -1484,33 +1300,29 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-__exportStar(__webpack_require__(/*! ./refresh-token.decorator */ "./src/modules/auth/decorators/refresh-token.decorator.ts"), exports);
-__exportStar(__webpack_require__(/*! ./access-token.decorator */ "./src/modules/auth/decorators/access-token.decorator.ts"), exports);
+__exportStar(__webpack_require__(/*! ./token.decorator */ "./src/modules/auth/decorators/token.decorator.ts"), exports);
 __exportStar(__webpack_require__(/*! ./api-auth.decorator */ "./src/modules/auth/decorators/api-auth.decorator.ts"), exports);
 
 
 /***/ }),
 
-/***/ "./src/modules/auth/decorators/refresh-token.decorator.ts":
-/*!****************************************************************!*\
-  !*** ./src/modules/auth/decorators/refresh-token.decorator.ts ***!
-  \****************************************************************/
+/***/ "./src/modules/auth/decorators/token.decorator.ts":
+/*!********************************************************!*\
+  !*** ./src/modules/auth/decorators/token.decorator.ts ***!
+  \********************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.RefreshToken = void 0;
+exports.Token = void 0;
 const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
-const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
-exports.RefreshToken = (0, common_1.createParamDecorator)((data, context) => {
-    var _a, _b, _c, _d;
-    const request = context.getType() === 'http'
-        ? context.switchToHttp().getRequest()
-        : graphql_1.GqlExecutionContext.create(context).getContext().req;
-    const refreshToken = (_b = (_a = request.cookies) === null || _a === void 0 ? void 0 : _a['refresh-token']) !== null && _b !== void 0 ? _b : (_d = (_c = request.headers) === null || _c === void 0 ? void 0 : _c.authorization) === null || _d === void 0 ? void 0 : _d.slice(6);
-    if (!refreshToken)
+exports.Token = (0, common_1.createParamDecorator)((data, context) => {
+    var _a, _b;
+    const request = context.switchToHttp().getRequest();
+    const token = (_b = (_a = request.headers) === null || _a === void 0 ? void 0 : _a.authorization) === null || _b === void 0 ? void 0 : _b.slice(7);
+    if (!token)
         throw new common_1.UnauthorizedException('No value was provided for Authentication');
-    return refreshToken;
+    return token;
 });
 
 
@@ -1562,49 +1374,38 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ProfileDto = void 0;
-const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
 const swagger_1 = __webpack_require__(/*! @nestjs/swagger */ "@nestjs/swagger");
 const dtos_1 = __webpack_require__(/*! @common/dtos */ "./src/common/dtos/index.ts");
-let ProfileDto = class ProfileDto {
-};
+class ProfileDto {
+}
 __decorate([
-    (0, graphql_1.Field)(() => String),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], ProfileDto.prototype, "id", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => String),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], ProfileDto.prototype, "displayName", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => [dtos_1.ImageDto]),
     (0, swagger_1.ApiProperty)({ type: [dtos_1.ImageDto] }),
     __metadata("design:type", Array)
 ], ProfileDto.prototype, "images", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => Number),
     (0, swagger_1.ApiProperty)({ type: Number }),
     __metadata("design:type", Number)
 ], ProfileDto.prototype, "followers", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => String, { nullable: true }),
     (0, swagger_1.ApiProperty)({ required: false }),
     __metadata("design:type", String)
 ], ProfileDto.prototype, "country", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => String, { nullable: true }),
     (0, swagger_1.ApiProperty)({ required: false }),
     __metadata("design:type", String)
 ], ProfileDto.prototype, "email", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => String),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], ProfileDto.prototype, "href", void 0);
-ProfileDto = __decorate([
-    (0, graphql_1.ObjectType)()
-], ProfileDto);
 exports.ProfileDto = ProfileDto;
 
 
@@ -1628,28 +1429,21 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SecretData = void 0;
-const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
 const swagger_1 = __webpack_require__(/*! @nestjs/swagger */ "@nestjs/swagger");
-let SecretData = class SecretData {
-};
+class SecretData {
+}
 __decorate([
-    (0, graphql_1.Field)(() => String),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], SecretData.prototype, "accessToken", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => String, { nullable: true }),
     (0, swagger_1.ApiProperty)({ required: false }),
     __metadata("design:type", String)
 ], SecretData.prototype, "refreshToken", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => Number),
     (0, swagger_1.ApiProperty)({ type: Number }),
     __metadata("design:type", Number)
 ], SecretData.prototype, "expiresIn", void 0);
-SecretData = __decorate([
-    (0, graphql_1.ObjectType)()
-], SecretData);
 exports.SecretData = SecretData;
 
 
@@ -1727,7 +1521,6 @@ __exportStar(__webpack_require__(/*! ./decorators */ "./src/modules/auth/decorat
 __exportStar(__webpack_require__(/*! ./dtos */ "./src/modules/auth/dtos/index.ts"), exports);
 __exportStar(__webpack_require__(/*! ./types */ "./src/modules/auth/types/index.ts"), exports);
 __exportStar(__webpack_require__(/*! ./enums */ "./src/modules/auth/enums/index.ts"), exports);
-__exportStar(__webpack_require__(/*! ./auth.resolver */ "./src/modules/auth/auth.resolver.ts"), exports);
 __exportStar(__webpack_require__(/*! ./auth.service */ "./src/modules/auth/auth.service.ts"), exports);
 __exportStar(__webpack_require__(/*! ./auth.controller */ "./src/modules/auth/auth.controller.ts"), exports);
 __exportStar(__webpack_require__(/*! ./auth.module */ "./src/modules/auth/auth.module.ts"), exports);
@@ -1824,8 +1617,8 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 __exportStar(__webpack_require__(/*! ./messages */ "./src/modules/player/messages/index.ts"), exports);
 __exportStar(__webpack_require__(/*! ./player.module */ "./src/modules/player/player.module.ts"), exports);
-__exportStar(__webpack_require__(/*! ./player.resolver */ "./src/modules/player/player.resolver.ts"), exports);
 __exportStar(__webpack_require__(/*! ./player.service */ "./src/modules/player/player.service.ts"), exports);
+__exportStar(__webpack_require__(/*! ./player.controller */ "./src/modules/player/player.controller.ts"), exports);
 
 
 /***/ }),
@@ -1881,7 +1674,7 @@ let PlayerController = class PlayerController {
         this.playerService = playerService;
     }
     availableDevices(accessToken) {
-        return this.playerService.avaibleDevices(accessToken);
+        return this.playerService.availableDevices(accessToken);
     }
     currentPlaybackState(accessToken) {
         return this.playerService.currentPlaybackState(accessToken);
@@ -1899,7 +1692,7 @@ __decorate([
         type: dtos_1.Device,
         description: 'Available devices has been succesfully found',
     }),
-    __param(0, (0, auth_1.AccessToken)()),
+    __param(0, (0, auth_1.Token)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
@@ -1910,7 +1703,7 @@ __decorate([
         type: dtos_1.PlaybackState,
         description: 'Current playback state has been succesfully found',
     }),
-    __param(0, (0, auth_1.AccessToken)()),
+    __param(0, (0, auth_1.Token)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
@@ -1926,7 +1719,7 @@ __decorate([
         description: 'Player state has been succesfully paused',
         type: dtos_1.Success,
     }),
-    __param(0, (0, auth_1.AccessToken)()),
+    __param(0, (0, auth_1.Token)()),
     __param(1, (0, common_1.Query)('afterTime')),
     __param(2, (0, common_1.Query)('deviceId')),
     __metadata("design:type", Function),
@@ -1943,7 +1736,7 @@ __decorate([
         description: 'Player state has been succesfully resumed',
         type: dtos_1.Success,
     }),
-    __param(0, (0, auth_1.AccessToken)()),
+    __param(0, (0, auth_1.Token)()),
     __param(1, (0, common_1.Query)('deviceId')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, String]),
@@ -1979,7 +1772,6 @@ const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
 const axios_1 = __webpack_require__(/*! @nestjs/axios */ "@nestjs/axios");
 const config_1 = __webpack_require__(/*! @nestjs/config */ "@nestjs/config");
 const player_service_1 = __webpack_require__(/*! ./player.service */ "./src/modules/player/player.service.ts");
-const player_resolver_1 = __webpack_require__(/*! ./player.resolver */ "./src/modules/player/player.resolver.ts");
 const player_controller_1 = __webpack_require__(/*! ./player.controller */ "./src/modules/player/player.controller.ts");
 const adapter_1 = __webpack_require__(/*! @modules/adapter */ "./src/modules/adapter/index.ts");
 const config_2 = __webpack_require__(/*! ~/config */ "./src/config/index.ts");
@@ -2001,94 +1793,10 @@ PlayerModule = __decorate([
             adapter_1.AdapterModule,
         ],
         controllers: [player_controller_1.PlayerController],
-        providers: [player_service_1.PlayerService, player_resolver_1.PlayerResolver],
+        providers: [player_service_1.PlayerService],
     })
 ], PlayerModule);
 exports.PlayerModule = PlayerModule;
-
-
-/***/ }),
-
-/***/ "./src/modules/player/player.resolver.ts":
-/*!***********************************************!*\
-  !*** ./src/modules/player/player.resolver.ts ***!
-  \***********************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
-var _a;
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.PlayerResolver = void 0;
-const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
-const rxjs_1 = __webpack_require__(/*! rxjs */ "rxjs");
-const player_service_1 = __webpack_require__(/*! ./player.service */ "./src/modules/player/player.service.ts");
-const auth_1 = __webpack_require__(/*! @modules/auth */ "./src/modules/auth/index.ts");
-const dtos_1 = __webpack_require__(/*! @common/dtos */ "./src/common/dtos/index.ts");
-let PlayerResolver = class PlayerResolver {
-    constructor(playerService) {
-        this.playerService = playerService;
-    }
-    async avaibleDevices(accessToken) {
-        return await (0, rxjs_1.firstValueFrom)(this.playerService.avaibleDevices(accessToken));
-    }
-    async currentPlaybackState(accessToken) {
-        return await (0, rxjs_1.firstValueFrom)(this.playerService.currentPlaybackState(accessToken));
-    }
-    async pausePlayer(accessToken, afterTime, deviceId) {
-        return await (0, rxjs_1.firstValueFrom)(this.playerService.pausePlayer(accessToken, afterTime, deviceId));
-    }
-    async resumePlayer(accessToken, deviceId) {
-        return await (0, rxjs_1.firstValueFrom)(this.playerService.resumePlayer(accessToken, deviceId));
-    }
-};
-__decorate([
-    (0, graphql_1.Query)(() => [dtos_1.Device]),
-    __param(0, (0, auth_1.AccessToken)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Promise)
-], PlayerResolver.prototype, "avaibleDevices", null);
-__decorate([
-    (0, graphql_1.Query)(() => dtos_1.PlaybackState),
-    __param(0, (0, auth_1.AccessToken)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Promise)
-], PlayerResolver.prototype, "currentPlaybackState", null);
-__decorate([
-    (0, graphql_1.Query)(() => dtos_1.Success),
-    __param(0, (0, auth_1.AccessToken)()),
-    __param(1, (0, graphql_1.Args)('afterTime', { nullable: true })),
-    __param(2, (0, graphql_1.Args)('deviceId', { nullable: true })),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Number, String]),
-    __metadata("design:returntype", Promise)
-], PlayerResolver.prototype, "pausePlayer", null);
-__decorate([
-    (0, graphql_1.Query)(() => dtos_1.Success),
-    __param(0, (0, auth_1.AccessToken)()),
-    __param(1, (0, graphql_1.Args)('deviceId', { nullable: true })),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String]),
-    __metadata("design:returntype", Promise)
-], PlayerResolver.prototype, "resumePlayer", null);
-PlayerResolver = __decorate([
-    (0, graphql_1.Resolver)(),
-    __metadata("design:paramtypes", [typeof (_a = typeof player_service_1.PlayerService !== "undefined" && player_service_1.PlayerService) === "function" ? _a : Object])
-], PlayerResolver);
-exports.PlayerResolver = PlayerResolver;
 
 
 /***/ }),
@@ -2123,7 +1831,7 @@ let PlayerService = class PlayerService {
         this.httpService = httpService;
         this.adapterService = adapterService;
     }
-    avaibleDevices(accessToken) {
+    availableDevices(accessToken) {
         return this.httpService
             .get('/me/player/devices', (0, utils_1.applyAuthorizationHeader)(accessToken))
             .pipe((0, rxjs_1.map)(response => response.data.devices), (0, rxjs_1.catchError)(utils_1.catchSpotifyError), (0, rxjs_1.tap)(devices => {
@@ -2193,18 +1901,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.IdArguments = void 0;
-const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
 const class_validator_1 = __webpack_require__(/*! class-validator */ "class-validator");
-let IdArguments = class IdArguments {
-};
+class IdArguments {
+}
 __decorate([
-    (0, graphql_1.Field)(() => String),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], IdArguments.prototype, "id", void 0);
-IdArguments = __decorate([
-    (0, graphql_1.ArgsType)()
-], IdArguments);
 exports.IdArguments = IdArguments;
 
 
@@ -2256,19 +1959,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.LimitArguments = void 0;
-const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
 const class_validator_1 = __webpack_require__(/*! class-validator */ "class-validator");
-let LimitArguments = class LimitArguments {
-};
+class LimitArguments {
+}
 __decorate([
-    (0, graphql_1.Field)(() => Number, { nullable: true }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.Max)(50),
     __metadata("design:type", Number)
 ], LimitArguments.prototype, "limit", void 0);
-LimitArguments = __decorate([
-    (0, graphql_1.ArgsType)()
-], LimitArguments);
 exports.LimitArguments = LimitArguments;
 
 
@@ -2298,8 +1996,8 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 __exportStar(__webpack_require__(/*! ./dtos */ "./src/modules/statistics/dtos/index.ts"), exports);
 __exportStar(__webpack_require__(/*! ./statistics.module */ "./src/modules/statistics/statistics.module.ts"), exports);
-__exportStar(__webpack_require__(/*! ./statistics.resolver */ "./src/modules/statistics/statistics.resolver.ts"), exports);
 __exportStar(__webpack_require__(/*! ./statistics.service */ "./src/modules/statistics/statistics.service.ts"), exports);
+__exportStar(__webpack_require__(/*! ./statistics.controller */ "./src/modules/statistics/statistics.controller.ts"), exports);
 
 
 /***/ }),
@@ -2363,7 +2061,7 @@ __decorate([
         description: 'Last tracks has been succesfully found',
         type: [dtos_2.Track],
     }),
-    __param(0, (0, auth_1.AccessToken)()),
+    __param(0, (0, auth_1.Token)()),
     __param(1, (0, common_1.Query)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, typeof (_b = typeof dtos_1.LimitArguments !== "undefined" && dtos_1.LimitArguments) === "function" ? _b : Object]),
@@ -2376,7 +2074,7 @@ __decorate([
         description: 'Top tracks has been succesfully found',
         type: [dtos_2.Track],
     }),
-    __param(0, (0, auth_1.AccessToken)()),
+    __param(0, (0, auth_1.Token)()),
     __param(1, (0, common_1.Query)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, typeof (_c = typeof dtos_1.LimitArguments !== "undefined" && dtos_1.LimitArguments) === "function" ? _c : Object]),
@@ -2389,7 +2087,7 @@ __decorate([
         description: 'Top genres has been succesfully found',
         type: dtos_2.Genres,
     }),
-    __param(0, (0, auth_1.AccessToken)()),
+    __param(0, (0, auth_1.Token)()),
     __param(1, (0, common_1.Query)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, typeof (_d = typeof dtos_1.LimitArguments !== "undefined" && dtos_1.LimitArguments) === "function" ? _d : Object]),
@@ -2402,7 +2100,7 @@ __decorate([
         description: 'Top artists has been succesfully found',
         type: [dtos_2.Artist],
     }),
-    __param(0, (0, auth_1.AccessToken)()),
+    __param(0, (0, auth_1.Token)()),
     __param(1, (0, common_1.Query)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, typeof (_e = typeof dtos_1.LimitArguments !== "undefined" && dtos_1.LimitArguments) === "function" ? _e : Object]),
@@ -2415,7 +2113,7 @@ __decorate([
         description: 'Artist has been succesfully found',
         type: dtos_2.Artist,
     }),
-    __param(0, (0, auth_1.AccessToken)()),
+    __param(0, (0, auth_1.Token)()),
     __param(1, (0, common_1.Query)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, String]),
@@ -2427,7 +2125,7 @@ __decorate([
         description: 'Analysis has been succesfully generated',
         type: dtos_2.Analysis,
     }),
-    __param(0, (0, auth_1.AccessToken)()),
+    __param(0, (0, auth_1.Token)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
@@ -2462,7 +2160,6 @@ const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
 const axios_1 = __webpack_require__(/*! @nestjs/axios */ "@nestjs/axios");
 const config_1 = __webpack_require__(/*! @nestjs/config */ "@nestjs/config");
 const statistics_service_1 = __webpack_require__(/*! ./statistics.service */ "./src/modules/statistics/statistics.service.ts");
-const statistics_resolver_1 = __webpack_require__(/*! ./statistics.resolver */ "./src/modules/statistics/statistics.resolver.ts");
 const statistics_controller_1 = __webpack_require__(/*! ./statistics.controller */ "./src/modules/statistics/statistics.controller.ts");
 const adapter_1 = __webpack_require__(/*! @modules/adapter */ "./src/modules/adapter/index.ts");
 const auth_1 = __webpack_require__(/*! @modules/auth */ "./src/modules/auth/index.ts");
@@ -2486,107 +2183,10 @@ StatisticsModule = __decorate([
             auth_1.AuthModule,
         ],
         controllers: [statistics_controller_1.StatisticsController],
-        providers: [statistics_service_1.StatisticsService, statistics_resolver_1.StatisticsResolver],
+        providers: [statistics_service_1.StatisticsService],
     })
 ], StatisticsModule);
 exports.StatisticsModule = StatisticsModule;
-
-
-/***/ }),
-
-/***/ "./src/modules/statistics/statistics.resolver.ts":
-/*!*******************************************************!*\
-  !*** ./src/modules/statistics/statistics.resolver.ts ***!
-  \*******************************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
-var _a, _b, _c, _d, _e, _f;
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.StatisticsResolver = void 0;
-const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
-const rxjs_1 = __webpack_require__(/*! rxjs */ "rxjs");
-const statistics_service_1 = __webpack_require__(/*! ./statistics.service */ "./src/modules/statistics/statistics.service.ts");
-const dtos_1 = __webpack_require__(/*! ./dtos */ "./src/modules/statistics/dtos/index.ts");
-const auth_1 = __webpack_require__(/*! @modules/auth */ "./src/modules/auth/index.ts");
-const dtos_2 = __webpack_require__(/*! @common/dtos */ "./src/common/dtos/index.ts");
-let StatisticsResolver = class StatisticsResolver {
-    constructor(statisticsService) {
-        this.statisticsService = statisticsService;
-    }
-    async lastTracks(accessToken, { limit }) {
-        return await (0, rxjs_1.firstValueFrom)(this.statisticsService.lastTracks(accessToken, limit));
-    }
-    async topTracks(accessToken, { limit }) {
-        return await (0, rxjs_1.firstValueFrom)(this.statisticsService.topTracks(accessToken, limit));
-    }
-    async topGenres(accessToken, { limit }) {
-        return await (0, rxjs_1.firstValueFrom)(this.statisticsService.topGenres(accessToken, limit));
-    }
-    async topArtists(accessToken, { limit }) {
-        return await (0, rxjs_1.firstValueFrom)(this.statisticsService.topArtists(accessToken, limit));
-    }
-    async artist(accessToken, { id }) {
-        return await (0, rxjs_1.firstValueFrom)(this.statisticsService.artist(accessToken, id));
-    }
-};
-__decorate([
-    (0, graphql_1.Query)(() => [dtos_2.Track]),
-    __param(0, (0, auth_1.AccessToken)()),
-    __param(1, (0, graphql_1.Args)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, typeof (_b = typeof dtos_1.LimitArguments !== "undefined" && dtos_1.LimitArguments) === "function" ? _b : Object]),
-    __metadata("design:returntype", Promise)
-], StatisticsResolver.prototype, "lastTracks", null);
-__decorate([
-    (0, graphql_1.Query)(() => [dtos_2.Track]),
-    __param(0, (0, auth_1.AccessToken)()),
-    __param(1, (0, graphql_1.Args)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, typeof (_c = typeof dtos_1.LimitArguments !== "undefined" && dtos_1.LimitArguments) === "function" ? _c : Object]),
-    __metadata("design:returntype", Promise)
-], StatisticsResolver.prototype, "topTracks", null);
-__decorate([
-    (0, graphql_1.Query)(() => dtos_2.Genres),
-    __param(0, (0, auth_1.AccessToken)()),
-    __param(1, (0, graphql_1.Args)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, typeof (_d = typeof dtos_1.LimitArguments !== "undefined" && dtos_1.LimitArguments) === "function" ? _d : Object]),
-    __metadata("design:returntype", Promise)
-], StatisticsResolver.prototype, "topGenres", null);
-__decorate([
-    (0, graphql_1.Query)(() => [dtos_2.Artist]),
-    __param(0, (0, auth_1.AccessToken)()),
-    __param(1, (0, graphql_1.Args)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, typeof (_e = typeof dtos_1.LimitArguments !== "undefined" && dtos_1.LimitArguments) === "function" ? _e : Object]),
-    __metadata("design:returntype", Promise)
-], StatisticsResolver.prototype, "topArtists", null);
-__decorate([
-    (0, graphql_1.Query)(() => dtos_2.Artist),
-    __param(0, (0, auth_1.AccessToken)()),
-    __param(1, (0, graphql_1.Args)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, typeof (_f = typeof dtos_1.IdArguments !== "undefined" && dtos_1.IdArguments) === "function" ? _f : Object]),
-    __metadata("design:returntype", Promise)
-], StatisticsResolver.prototype, "artist", null);
-StatisticsResolver = __decorate([
-    (0, graphql_1.Resolver)(),
-    __metadata("design:paramtypes", [typeof (_a = typeof statistics_service_1.StatisticsService !== "undefined" && statistics_service_1.StatisticsService) === "function" ? _a : Object])
-], StatisticsResolver);
-exports.StatisticsResolver = StatisticsResolver;
 
 
 /***/ }),
@@ -2769,6 +2369,27 @@ exports.applyAuthorizationHeader = applyAuthorizationHeader;
 
 /***/ }),
 
+/***/ "./src/utils/axios-response-mock-factory.ts":
+/*!**************************************************!*\
+  !*** ./src/utils/axios-response-mock-factory.ts ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.axiosResponseMockFactory = void 0;
+const axiosResponseMockFactory = (data) => ({
+    data,
+    status: 200,
+    statusText: 'OK',
+    headers: {},
+    config: {},
+});
+exports.axiosResponseMockFactory = axiosResponseMockFactory;
+
+
+/***/ }),
+
 /***/ "./src/utils/catch-spotify-error.ts":
 /*!******************************************!*\
   !*** ./src/utils/catch-spotify-error.ts ***!
@@ -2901,17 +2522,8 @@ __exportStar(__webpack_require__(/*! ./get-most-frequent-items */ "./src/utils/g
 __exportStar(__webpack_require__(/*! ./catch-spotify-error */ "./src/utils/catch-spotify-error.ts"), exports);
 __exportStar(__webpack_require__(/*! ./get-parameter-decorator-factory */ "./src/utils/get-parameter-decorator-factory.ts"), exports);
 __exportStar(__webpack_require__(/*! ./apply-authorization-header */ "./src/utils/apply-authorization-header.ts"), exports);
+__exportStar(__webpack_require__(/*! ./axios-response-mock-factory */ "./src/utils/axios-response-mock-factory.ts"), exports);
 
-
-/***/ }),
-
-/***/ "@nestjs/apollo":
-/*!*********************************!*\
-  !*** external "@nestjs/apollo" ***!
-  \*********************************/
-/***/ ((module) => {
-
-module.exports = require("@nestjs/apollo");
 
 /***/ }),
 
@@ -2962,16 +2574,6 @@ module.exports = require("@nestjs/config");
 /***/ ((module) => {
 
 module.exports = require("@nestjs/core");
-
-/***/ }),
-
-/***/ "@nestjs/graphql":
-/*!**********************************!*\
-  !*** external "@nestjs/graphql" ***!
-  \**********************************/
-/***/ ((module) => {
-
-module.exports = require("@nestjs/graphql");
 
 /***/ }),
 
