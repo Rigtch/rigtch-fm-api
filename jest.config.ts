@@ -17,14 +17,8 @@ const configuration: Config = {
   ],
   moduleNameMapper: {
     '^~/(.*)$': '<rootDir>/src/$1',
-    '^@modules/adapter(.*)$': '<rootDir>/src/modules/adapter/$1',
-    '^@modules/app(.*)$': '<rootDir>/src/modules/app/$1',
-    '^@modules/auth(.*)$': '<rootDir>/src/modules/auth/$1',
-    '^@modules/player(.*)$': '<rootDir>/src/modules/player/$1',
-    '^@modules/statistics(.*)$': '<rootDir>/src/modules/statistics/$1',
-    '^@common/dtos(.*)$': '<rootDir>/src/common/dtos/$1',
-    '^@common/mocks(.*)$': '<rootDir>/src/common/mocks/$1',
-    '^@common/types(.*)$': '<rootDir>/src/common/types/$1',
+    '^@modules/(.*)$': '<rootDir>/src/modules/$1',
+    '^@common/(.*)$': '<rootDir>/src/common/$1',
   },
   coveragePathIgnorePatterns: [
     '.*\\.(interface|module|schema|entity|repository|dto|enum).ts',
