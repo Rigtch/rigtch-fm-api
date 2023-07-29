@@ -5,7 +5,6 @@ import { ConfigService } from '@nestjs/config'
 import { PlayerService } from './player.service'
 import { PlayerController } from './player.controller'
 
-import { AdapterModule } from '@modules/adapter'
 import { Environment } from '~/config'
 
 @Module({
@@ -20,7 +19,6 @@ import { Environment } from '~/config'
       }),
       inject: [ConfigService],
     }),
-    AdapterModule,
   ],
   controllers: [PlayerController],
   providers: [PlayerService],

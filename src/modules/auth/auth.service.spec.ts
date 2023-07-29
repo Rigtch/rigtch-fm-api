@@ -9,7 +9,6 @@ import { firstValueFrom, of } from 'rxjs'
 
 import { AuthService } from './auth.service'
 
-import { AdapterService } from '@modules/adapter'
 import { spotifyProfileMock, formattedProfileMock } from '@common/mocks'
 
 describe('AuthService', () => {
@@ -22,7 +21,7 @@ describe('AuthService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthService,
-        AdapterService,
+
         {
           provide: JwtService,
           useValue: {

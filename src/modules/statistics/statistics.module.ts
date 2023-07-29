@@ -5,7 +5,6 @@ import { ConfigService } from '@nestjs/config'
 import { StatisticsService } from './statistics.service'
 import { StatisticsController } from './statistics.controller'
 
-import { AdapterModule } from '@modules/adapter'
 import { AuthModule } from '@modules/auth'
 import { Environment } from '~/config'
 
@@ -21,7 +20,7 @@ import { Environment } from '~/config'
       }),
       inject: [ConfigService],
     }),
-    AdapterModule,
+
     AuthModule,
   ],
   controllers: [StatisticsController],

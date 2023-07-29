@@ -2,8 +2,6 @@ import { HttpService } from '@nestjs/axios'
 import { Injectable, ForbiddenException } from '@nestjs/common'
 import { Observable, map, catchError, tap, timer, exhaustMap } from 'rxjs'
 
-import { AdapterService } from '../adapter'
-
 import { PlayerMessage } from './messages'
 
 import {
@@ -14,13 +12,11 @@ import {
 } from '@common/types/spotify'
 import { applyAuthorizationHeader, catchSpotifyError } from '~/utils'
 import { Success } from '@common/dtos'
+import { adaptDevices, adaptPlaybackState } from '@common/adapters'
 
 @Injectable()
 export class PlayerService {
-  constructor(
-    private readonly httpService: HttpService,
-    private readonly adapterService: AdapterService
-  ) {}
+  constructor(private readonly httpService: HttpService) {}
 
   availableDevices(accessToken: string): Observable<FormattedDevice[]> {
     return this.httpService
@@ -35,7 +31,7 @@ export class PlayerService {
           if (devices.length <= 0)
             throw new ForbiddenException(PlayerMessage.NO_AVAIBLE_DEVICES)
         }),
-        map(this.adapterService.adaptDevices)
+        map(adaptDevices)
       )
   }
 
@@ -54,7 +50,7 @@ export class PlayerService {
           if (!playbackState.device)
             throw new ForbiddenException(PlayerMessage.NO_PLAYING_DEVICE)
         }),
-        map(this.adapterService.adaptPlaybackState)
+        map(adaptPlaybackState)
       )
   }
 

@@ -6,7 +6,6 @@ import { HttpModule } from '@nestjs/axios'
 import { AuthService } from './auth.service'
 import { AuthController } from './auth.controller'
 
-import { AdapterModule } from '@modules/adapter'
 import { Environment } from '~/config'
 
 @Module({
@@ -32,7 +31,6 @@ import { Environment } from '~/config'
       },
       inject: [ConfigService],
     }),
-    AdapterModule,
   ],
   providers: [AuthService],
   controllers: [AuthController],

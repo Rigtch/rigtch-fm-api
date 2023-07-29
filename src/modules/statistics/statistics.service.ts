@@ -4,7 +4,6 @@ import { Observable, map, catchError, mergeMap } from 'rxjs'
 
 import { analysisFactory } from './utils'
 
-import { AdapterService } from '@modules/adapter'
 import { Genres, Analysis } from '@common/dtos'
 import {
   FormattedTrack,
@@ -15,13 +14,17 @@ import {
   SpotifyAudioFeatures,
 } from '@common/types/spotify'
 import { applyAuthorizationHeader, catchSpotifyError } from '~/utils'
+import {
+  adaptArtist,
+  adaptArtists,
+  adaptAudioFeatures,
+  adaptGenres,
+  adaptTracks,
+} from '@common/adapters'
 
 @Injectable()
 export class StatisticsService {
-  constructor(
-    private readonly httpService: HttpService,
-    private readonly adapterService: AdapterService
-  ) {}
+  constructor(private readonly httpService: HttpService) {}
 
   lastTracks(accessToken: string, limit = 20): Observable<FormattedTrack[]> {
     return this.httpService
@@ -37,7 +40,7 @@ export class StatisticsService {
             played_at,
           }))
         ),
-        map(this.adapterService.adaptTracks),
+        map(adaptTracks),
         catchError(catchSpotifyError)
       )
   }
@@ -50,7 +53,7 @@ export class StatisticsService {
       )
       .pipe(
         map(response => response.data.items),
-        map(items => this.adapterService.adaptGenres(items, limit)),
+        map(items => adaptGenres(items, limit)),
         catchError(catchSpotifyError)
       )
   }
@@ -63,7 +66,7 @@ export class StatisticsService {
       )
       .pipe(
         map(response => response.data.items),
-        map(this.adapterService.adaptArtists),
+        map(adaptArtists),
         catchError(catchSpotifyError)
       )
   }
@@ -76,7 +79,7 @@ export class StatisticsService {
       )
       .pipe(
         map(response => response.data.items),
-        map(this.adapterService.adaptTracks),
+        map(adaptTracks),
         catchError(catchSpotifyError)
       )
   }
@@ -89,7 +92,7 @@ export class StatisticsService {
       )
       .pipe(
         map(response => response.data),
-        map(this.adapterService.adaptArtist),
+        map(adaptArtist),
         catchError(catchSpotifyError)
       )
   }
@@ -108,7 +111,7 @@ export class StatisticsService {
             map(response => response.data.audio_features),
             map(audioFeatures =>
               audioFeatures.map(audioFeature =>
-                this.adapterService.adaptAudioFeatures(audioFeature)
+                adaptAudioFeatures(audioFeature)
               )
             ),
             map(analysisFactory),

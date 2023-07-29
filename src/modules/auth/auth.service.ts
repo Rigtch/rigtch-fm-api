@@ -8,7 +8,6 @@ import { Observable, map, catchError } from 'rxjs'
 import { SecretData } from './dtos'
 import { TokenOptions } from './types'
 
-import { AdapterService } from '@modules/adapter'
 import { Environment } from '~/config'
 import {
   SpotifyToken,
@@ -16,14 +15,14 @@ import {
   SpotifyProfile,
 } from '@common/types/spotify'
 import { applyAuthorizationHeader, catchSpotifyError } from '~/utils'
+import { adaptProfile, adaptSecretData } from '@common/adapters'
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly httpService: HttpService,
-    private readonly configService: ConfigService,
-    private readonly adapterService: AdapterService
+    private readonly configService: ConfigService
   ) {}
 
   login({ id, username }: Profile) {
@@ -70,11 +69,7 @@ export class AuthService {
       })
       .pipe(
         map(response => response.data),
-        map(({ access_token, refresh_token, expires_in }) => ({
-          accessToken: access_token,
-          refreshToken: refresh_token,
-          expiresIn: expires_in,
-        })),
+        map(adaptSecretData),
         catchError(catchSpotifyError)
       )
   }
@@ -84,7 +79,7 @@ export class AuthService {
       .get<SpotifyProfile>('/me', applyAuthorizationHeader(accessToken))
       .pipe(
         map(response => response.data),
-        map(this.adapterService.adaptProfile),
+        map(adaptProfile),
         catchError(catchSpotifyError)
       )
   }

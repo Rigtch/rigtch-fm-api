@@ -5,7 +5,6 @@ import { ForbiddenException } from '@nestjs/common'
 
 import { PlayerService } from './player.service'
 
-import { AdapterService } from '@modules/adapter'
 import {
   formattedDevicesMock,
   formattedPlaybackStateMock,
@@ -32,7 +31,7 @@ describe('PlayerService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         PlayerService,
-        AdapterService,
+
         {
           provide: HttpService,
           useValue: {
