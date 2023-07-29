@@ -4,7 +4,6 @@ import { firstValueFrom, of } from 'rxjs'
 
 import { StatisticsService } from './statistics.service'
 
-import { AdapterService } from '@modules/adapter'
 import {
   spotifyTrackMock,
   formattedTracksMock,
@@ -27,7 +26,7 @@ describe('StatisticsService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         StatisticsService,
-        AdapterService,
+
         {
           provide: HttpService,
           useValue: {

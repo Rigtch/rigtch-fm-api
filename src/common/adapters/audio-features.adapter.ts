@@ -1,0 +1,31 @@
+import { SpotifyAudioFeatures, FormattedAudioFeatures } from '../types/spotify'
+
+export const adaptAudioFeatures = ({
+  id,
+  track_href,
+  danceability,
+  acousticness,
+  instrumentalness,
+  speechiness,
+  liveness,
+  loudness,
+  energy,
+  tempo,
+  mode,
+  key,
+  valence,
+}: SpotifyAudioFeatures): FormattedAudioFeatures => ({
+  id,
+  trackHref: track_href,
+  danceability,
+  acousticness,
+  instrumentalness,
+  speechiness,
+  liveness,
+  loudness,
+  energy,
+  tempo,
+  mode,
+  key,
+  valence,
+})

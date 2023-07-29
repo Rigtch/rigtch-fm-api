@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common'
 import * as Joi from 'joi'
 import { ConfigModule } from '@nestjs/config'
 
-import { AdapterModule } from '@modules/adapter'
 import { AuthModule } from '@modules/auth'
 import { StatisticsModule } from '@modules/statistics'
 import { PlayerModule } from '@modules/player'
@@ -10,7 +9,6 @@ import { PlayerModule } from '@modules/player'
 @Module({
   imports: [
     AuthModule,
-    AdapterModule,
     StatisticsModule,
     PlayerModule,
     ConfigModule.forRoot({
