@@ -11,8 +11,7 @@
 
 ## Description
 
-Rigtch Music is a web application that allows you to check your statistics that
-are always up to date.
+Rigtch is website focused on displaying your all-time statistics such as favorite artists, most listened songs etc.
 
 ## Deployment
 
