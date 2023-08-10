@@ -1,3 +1,5 @@
+import { test, describe, expect } from 'vitest'
+
 import { SpotifyToken } from '../types/spotify'
 
 import { adaptSecretData } from './secret-data.adapter'
@@ -5,7 +7,7 @@ import { adaptSecretData } from './secret-data.adapter'
 import { SecretData } from '~/modules/auth'
 
 describe('adaptSecretData', () => {
-  it('should adapt secret data', () => {
+  test('should adapt secret data', () => {
     const spotifyTokenMock: SpotifyToken = {
       access_token: 'accessToken',
       token_type: 'tokenType',

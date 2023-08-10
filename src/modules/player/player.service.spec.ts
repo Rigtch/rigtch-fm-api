@@ -1,3 +1,4 @@
+import { test, describe, expect, beforeEach, vi } from 'vitest'
 import { HttpService } from '@nestjs/axios'
 import { TestingModule, Test } from '@nestjs/testing'
 import { of, firstValueFrom, throwError, catchError } from 'rxjs'
@@ -35,8 +36,8 @@ describe('PlayerService', () => {
         {
           provide: HttpService,
           useValue: {
-            get: jest.fn(),
-            put: jest.fn().mockReturnValue(of('')),
+            get: vi.fn(),
+            put: vi.fn().mockReturnValue(of('')),
           },
         },
       ],
@@ -46,13 +47,13 @@ describe('PlayerService', () => {
     httpService = module.get<HttpService>(HttpService)
   })
 
-  it('should be defined', () => {
+  test('should be defined', () => {
     expect(playerService).toBeDefined()
   })
 
   describe('availableDevices', () => {
-    it('should get available devices', async () => {
-      jest.spyOn(httpService, 'get').mockReturnValue(
+    test('should get available devices', async () => {
+      vi.spyOn(httpService, 'get').mockReturnValue(
         of(
           axiosResponseMockFactory({
             devices: spotifyDevicesMock,
@@ -65,8 +66,8 @@ describe('PlayerService', () => {
       ).toEqual(formattedDevicesMock)
     })
 
-    it('should throw Forbidden expception because no device is currently playing', async () => {
-      jest.spyOn(httpService, 'get').mockReturnValue(
+    test('should throw Forbidden expception because no device is currently playing', async () => {
+      vi.spyOn(httpService, 'get').mockReturnValue(
         of(
           axiosResponseMockFactory({
             devices: [],
@@ -85,20 +86,20 @@ describe('PlayerService', () => {
   })
 
   describe('currentPlaybackState', () => {
-    it('should get playback state', async () => {
-      jest
-        .spyOn(httpService, 'get')
-        .mockReturnValue(of(axiosResponseMockFactory(spotifyPlaybackStateMock)))
+    test('should get playback state', async () => {
+      vi.spyOn(httpService, 'get').mockReturnValue(
+        of(axiosResponseMockFactory(spotifyPlaybackStateMock))
+      )
 
       expect(
         await firstValueFrom(playerService.currentPlaybackState('awd'))
       ).toEqual(formattedPlaybackStateMock)
     })
 
-    it('should throw Forbidden expception because No device is currently playing', async () => {
-      jest
-        .spyOn(httpService, 'get')
-        .mockReturnValue(of(axiosResponseMockFactory('')))
+    test('should throw Forbidden expception because No device is currently playing', async () => {
+      vi.spyOn(httpService, 'get').mockReturnValue(
+        of(axiosResponseMockFactory(''))
+      )
 
       expect(
         await firstValueFrom(
@@ -111,14 +112,14 @@ describe('PlayerService', () => {
   })
 
   describe('pausePlayer', () => {
-    it('should pause player', async () => {
+    test('should pause player', async () => {
       expect(await firstValueFrom(playerService.pausePlayer('awd'))).toEqual({
         success: true,
       })
     })
 
-    it('should throw Forbidden expception because no device is currently playing', async () => {
-      jest.spyOn(httpService, 'put').mockReturnValue(forbiddenExceptionObserver)
+    test('should throw Forbidden expception because no device is currently playing', async () => {
+      vi.spyOn(httpService, 'put').mockReturnValue(forbiddenExceptionObserver)
 
       expect(
         await firstValueFrom(
@@ -129,14 +130,14 @@ describe('PlayerService', () => {
   })
 
   describe('resumePlayer', () => {
-    it('should resume player', async () => {
+    test('should resume player', async () => {
       expect(await firstValueFrom(playerService.resumePlayer('awd'))).toEqual({
         success: true,
       })
     })
 
-    it('should throw Forbidden expception because no device is currently playing', async () => {
-      jest.spyOn(httpService, 'put').mockReturnValue(forbiddenExceptionObserver)
+    test('should throw Forbidden expception because no device is currently playing', async () => {
+      vi.spyOn(httpService, 'put').mockReturnValue(forbiddenExceptionObserver)
 
       expect(
         await firstValueFrom(
