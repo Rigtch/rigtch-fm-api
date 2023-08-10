@@ -1,3 +1,4 @@
+import { test, describe, expect, beforeEach, vi } from 'vitest'
 import { HttpStatus } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { Test, TestingModule } from '@nestjs/testing'
@@ -22,14 +23,14 @@ describe('AuthController', () => {
         {
           provide: AuthService,
           useValue: {
-            token: jest.fn(),
-            profile: jest.fn(),
+            token: vi.fn(),
+            profile: vi.fn(),
           },
         },
         {
           provide: ConfigService,
           useValue: {
-            get: jest.fn().mockReturnValue(redirectUrl),
+            get: vi.fn().mockReturnValue(redirectUrl),
           },
         },
       ],
@@ -39,25 +40,25 @@ describe('AuthController', () => {
     authService = module.get<AuthService>(AuthService)
   })
 
-  it('should be defined', () => {
+  test('should be defined', () => {
     expect(authController).toBeDefined()
   })
 
-  it('login should return undefined', () => {
+  test('login should return undefined', () => {
     const { url, statusCode } = authController.login()
 
     expect(url).toMatch(/authorize\?/)
     expect(statusCode).toEqual(HttpStatus.PERMANENT_REDIRECT)
   })
 
-  it('callback should return valid redirect path', async () => {
+  test('callback should return valid redirect path', async () => {
     const tokenResponse = {
       accessToken: '123',
       refreshToken: '456',
       expiresIn: 3600,
     }
 
-    jest.spyOn(authService, 'token').mockReturnValue(of(tokenResponse))
+    vi.spyOn(authService, 'token').mockReturnValue(of(tokenResponse))
 
     const { accessToken, refreshToken } = tokenResponse
 
@@ -70,20 +71,20 @@ describe('AuthController', () => {
     })
   })
 
-  it('should refresh token', async () => {
+  test('should refresh token', async () => {
     const secretData: SecretData = {
       accessToken: '123',
       expiresIn: 3600,
     }
 
-    jest.spyOn(authService, 'token').mockReturnValue(of(secretData))
+    vi.spyOn(authService, 'token').mockReturnValue(of(secretData))
 
     expect(await firstValueFrom(authController.refresh('123'))).toEqual(
       secretData
     )
   })
 
-  it('should return profile', async () => {
+  test('should return profile', async () => {
     const profileMock: FormattedProfile = {
       id: '123',
       displayName: 'test',
@@ -100,7 +101,7 @@ describe('AuthController', () => {
       href: 'http://test.com',
     }
 
-    jest.spyOn(authService, 'profile').mockReturnValue(of(profileMock))
+    vi.spyOn(authService, 'profile').mockReturnValue(of(profileMock))
 
     expect(await firstValueFrom(authController.profile('123'))).toEqual(
       profileMock

@@ -1,3 +1,4 @@
+import { test, describe, expect } from 'vitest'
 import {
   InternalServerErrorException,
   UnauthorizedException,
@@ -6,7 +7,7 @@ import {
 import { catchSpotifyError } from './catch-spotify-error'
 
 describe('catchSpotifyError', () => {
-  it('should throw UnauthorizedException', () => {
+  test('should throw UnauthorizedException', () => {
     expect(() =>
       catchSpotifyError({
         response: {
@@ -21,7 +22,7 @@ describe('catchSpotifyError', () => {
     ).toThrowError(UnauthorizedException)
   })
 
-  it('should throw UnauthorizedException as invalid grant', () => {
+  test('should throw UnauthorizedException as invalid grant', () => {
     expect(() =>
       catchSpotifyError({
         response: {
@@ -34,7 +35,7 @@ describe('catchSpotifyError', () => {
     ).toThrowError(UnauthorizedException)
   })
 
-  it('should throw InternalServerErrorException', () => {
+  test('should throw InternalServerErrorException', () => {
     expect(() =>
       catchSpotifyError({
         response: {

@@ -1,3 +1,4 @@
+import { test, describe, expect, beforeEach, vi } from 'vitest'
 import { Test, TestingModule } from '@nestjs/testing'
 import { firstValueFrom, of } from 'rxjs'
 
@@ -17,10 +18,10 @@ describe('PlayerController', () => {
         {
           provide: PlayerService,
           useValue: {
-            availableDevices: jest.fn(),
-            currentPlaybackState: jest.fn(),
-            pausePlayer: jest.fn(),
-            resumePlayer: jest.fn(),
+            availableDevices: vi.fn(),
+            currentPlaybackState: vi.fn(),
+            pausePlayer: vi.fn(),
+            resumePlayer: vi.fn(),
           },
         },
       ],
@@ -30,44 +31,44 @@ describe('PlayerController', () => {
     playerService = module.get<PlayerService>(PlayerService)
   })
 
-  it('should be defined', () => {
+  test('should be defined', () => {
     expect(playerController).toBeDefined()
   })
 
-  it('should get available devices', async () => {
-    jest
-      .spyOn(playerService, 'availableDevices')
-      .mockReturnValue(of(formattedDevicesMock))
+  test('should get available devices', async () => {
+    vi.spyOn(playerService, 'availableDevices').mockReturnValue(
+      of(formattedDevicesMock)
+    )
 
     expect(
       await firstValueFrom(playerController.availableDevices('awd'))
     ).toEqual(formattedDevicesMock)
   })
 
-  it('should get currentPlaybackState', async () => {
-    jest
-      .spyOn(playerService, 'currentPlaybackState')
-      .mockReturnValue(of(formattedPlaybackStateMock))
+  test('should get currentPlaybackState', async () => {
+    vi.spyOn(playerService, 'currentPlaybackState').mockReturnValue(
+      of(formattedPlaybackStateMock)
+    )
 
     expect(
       await firstValueFrom(playerController.currentPlaybackState('awd'))
     ).toEqual(formattedPlaybackStateMock)
   })
 
-  it('should pause player', async () => {
-    jest
-      .spyOn(playerService, 'pausePlayer')
-      .mockReturnValue(of({ success: true }))
+  test('should pause player', async () => {
+    vi.spyOn(playerService, 'pausePlayer').mockReturnValue(
+      of({ success: true })
+    )
 
     expect(await firstValueFrom(playerController.pausePlayer('awd'))).toEqual({
       success: true,
     })
   })
 
-  it('should resume player', async () => {
-    jest
-      .spyOn(playerService, 'resumePlayer')
-      .mockReturnValue(of({ success: true }))
+  test('should resume player', async () => {
+    vi.spyOn(playerService, 'resumePlayer').mockReturnValue(
+      of({ success: true })
+    )
 
     expect(await firstValueFrom(playerController.resumePlayer('awd'))).toEqual({
       success: true,

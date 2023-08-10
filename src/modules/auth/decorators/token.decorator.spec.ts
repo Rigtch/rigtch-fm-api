@@ -1,5 +1,6 @@
+import { test, describe, expect, vi } from 'vitest'
 import { ExecutionContext, UnauthorizedException } from '@nestjs/common'
-import { createMock } from '@golevelup/ts-jest'
+import { mock } from 'vitest-mock-extended'
 
 import { Token } from './token.decorator'
 
@@ -8,36 +9,41 @@ import { getParameterDecoratorFactory } from '~/utils'
 describe('AccessToken', () => {
   const factory = getParameterDecoratorFactory(Token)
 
-  it('should be defined', () => {
+  test('should be defined', () => {
     expect(Token).toBeDefined()
   })
 
-  it('should return the access token from header', () => {
+  test('should return the access token from header', () => {
     const accessToken = 'test'
 
     expect(
       factory(
         undefined,
-        createMock<ExecutionContext>({
-          switchToHttp: () => ({
-            getRequest: () => ({
+        mock<ExecutionContext>({
+          switchToHttp: vi.fn().mockReturnValue({
+            getRequest: vi.fn().mockReturnValue({
               headers: {
                 authorization: `Bearer ${accessToken}`,
               },
             }),
           }),
-          getType: () => 'http',
+          getType: vi.fn().mockReturnValue('http'),
         })
       )
     ).toEqual(accessToken)
   })
 
-  it('should throw unauthorized exception if no access token is provided', () => {
+  test('should throw unauthorized exception if no access token is provided', () => {
     expect(() =>
       factory(
         undefined,
-        createMock<ExecutionContext>({ getType: () => 'http' })
+        mock<ExecutionContext>({
+          switchToHttp: vi.fn().mockReturnValue({
+            getRequest: vi.fn().mockReturnValue({}),
+          }),
+          getType: vi.fn().mockReturnValue('http'),
+        })
       )
-    ).toThrow(UnauthorizedException)
+    ).toThrowError(UnauthorizedException)
   })
 })

@@ -2,7 +2,6 @@ module.exports = {
   root: true,
   env: {
     node: true,
-    jest: true,
     es2021: true,
   },
   parser: '@typescript-eslint/parser',
@@ -15,30 +14,14 @@ module.exports = {
     settings: {
       'import/resolver': {
         node: {
-          paths: [
-            '~/',
-            '@modules/adapter',
-            '@modules/app',
-            '@modules/auth',
-            '@modules/player',
-            '@modules/statistics',
-            '@common/dtos',
-            '@common/mocks',
-            '@common/types',
-          ],
+          paths: ['~/', '@modules', '@common'],
           extensions: ['.js', '.ts'],
         },
         alias: {
           map: [
             ['~', './'],
-            ['@modules/adapter', './src/modules/adapter'],
-            ['@modules/app', './src/modules/app'],
-            ['@modules/auth', './src/modules/auth'],
-            ['@modules/player', './src/modules/player'],
-            ['@modules/statistics', './src/modules/statistics'],
-            ['@common/dtos', './src/common/dtos'],
-            ['@common/mocks', './src/common/mocks'],
-            ['@common/types', './src/common/types'],
+            ['@modules', './src/modules'],
+            ['@common', './src/common'],
           ],
           extensions: ['.ts', '.js'],
         },

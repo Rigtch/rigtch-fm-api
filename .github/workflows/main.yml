@@ -104,7 +104,7 @@ jobs:
         run: yarn
 
       - name: Run unit tests 🧪
-        run: yarn test:coverage --ci --maxWorkers=2 --detectOpenHandles
+        run: yarn test:coverage
 
       # - name: Run e2e tests
       #   run: yarn test:e2e --ci --maxWorkers=2 --detectOpenHandles

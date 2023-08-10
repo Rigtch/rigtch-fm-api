@@ -1,3 +1,5 @@
+import { describe, test, expect } from 'vitest'
+
 import {
   spotifyArtistMock,
   formattedArtistMock,
@@ -8,11 +10,11 @@ import {
 import { adaptArtist, adaptArtists } from './artists.adapter'
 
 describe('adaptArtists', () => {
-  it('should adapt artist', () => {
+  test('should adapt artist', () => {
     expect(adaptArtist(spotifyArtistMock)).toEqual(formattedArtistMock)
   })
 
-  it('should adapt artists', () => {
+  test('should adapt artists', () => {
     expect(adaptArtists(spotifyArtistsMock)).toEqual(formattedArtistsMock)
   })
 })

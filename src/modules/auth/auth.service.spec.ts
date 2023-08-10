@@ -1,5 +1,6 @@
 import { URLSearchParams } from 'node:url'
 
+import { test, describe, expect, beforeEach, vi } from 'vitest'
 import { HttpService } from '@nestjs/axios'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
@@ -25,20 +26,20 @@ describe('AuthService', () => {
         {
           provide: JwtService,
           useValue: {
-            sign: jest.fn(),
+            sign: vi.fn(),
           },
         },
         {
           provide: HttpService,
           useValue: {
-            post: jest.fn(),
-            get: jest.fn(),
+            post: vi.fn(),
+            get: vi.fn(),
           },
         },
         {
           provide: ConfigService,
           useValue: {
-            get: jest.fn(),
+            get: vi.fn(),
           },
         },
       ],
@@ -50,11 +51,11 @@ describe('AuthService', () => {
     configService = module.get<ConfigService>(ConfigService)
   })
 
-  it('should be defined', () => {
+  test('should be defined', () => {
     expect(authService).toBeDefined()
   })
 
-  it('should login', () => {
+  test('should login', () => {
     const profile: Profile = {
       provider: 'spotify',
       id: '123',
@@ -69,14 +70,14 @@ describe('AuthService', () => {
       _json: {},
     }
 
-    jwtService.sign = jest.fn().mockReturnValue('token')
+    jwtService.sign = vi.fn().mockReturnValue('token')
 
     expect(authService.login(profile)).toEqual('token')
   })
 
   describe('token', () => {
-    it('should refresh token', async () => {
-      configService.get = jest.fn().mockReturnValue('value')
+    test('should refresh token', async () => {
+      configService.get = vi.fn().mockReturnValue('value')
 
       const response = {
         data: {
@@ -90,7 +91,7 @@ describe('AuthService', () => {
         expiresIn: 3600,
       }
 
-      httpService.post = jest
+      httpService.post = vi
         .fn()
         .mockImplementation((_url, parameters: URLSearchParams) => {
           if (parameters.get('grant_type') === 'refresh_token') {
@@ -103,8 +104,8 @@ describe('AuthService', () => {
       ).toEqual(expectedResponse)
     })
 
-    it('should authorize and get tokens', async () => {
-      configService.get = jest.fn().mockReturnValue('value')
+    test('should authorize and get tokens', async () => {
+      configService.get = vi.fn().mockReturnValue('value')
 
       const response = {
         data: {
@@ -120,7 +121,7 @@ describe('AuthService', () => {
         expiresIn: 3600,
       }
 
-      httpService.post = jest
+      httpService.post = vi
         .fn()
         .mockImplementation((_url, parameters: URLSearchParams) => {
           if (parameters.get('grant_type') === 'authorization_code') {
@@ -134,12 +135,12 @@ describe('AuthService', () => {
     })
   })
 
-  it('should return profile', async () => {
+  test('should return profile', async () => {
     const response = {
       data: spotifyProfileMock,
     }
 
-    httpService.get = jest.fn().mockReturnValue(of(response))
+    httpService.get = vi.fn().mockReturnValue(of(response))
 
     expect(await firstValueFrom(authService.profile('token'))).toEqual(
       formattedProfileMock

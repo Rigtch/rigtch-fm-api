@@ -1,3 +1,4 @@
+import { test, describe, expect, beforeEach, vi } from 'vitest'
 import { Test, TestingModule } from '@nestjs/testing'
 import { firstValueFrom, of } from 'rxjs'
 
@@ -23,12 +24,12 @@ describe('StatisticsController', () => {
         {
           provide: StatisticsService,
           useValue: {
-            lastTracks: jest.fn(),
-            topTracks: jest.fn(),
-            topGenres: jest.fn(),
-            topArtists: jest.fn(),
-            artist: jest.fn(),
-            analysis: jest.fn(),
+            lastTracks: vi.fn(),
+            topTracks: vi.fn(),
+            topGenres: vi.fn(),
+            topArtists: vi.fn(),
+            artist: vi.fn(),
+            analysis: vi.fn(),
           },
         },
       ],
@@ -39,22 +40,22 @@ describe('StatisticsController', () => {
     statisticsService = module.get<StatisticsService>(StatisticsService)
   })
 
-  it('should be defined', () => {
+  test('should be defined', () => {
     expect(statisticsController).toBeDefined()
   })
 
   describe('LastTracks', () => {
-    it('should query last tracks', async () => {
-      jest
-        .spyOn(statisticsService, 'lastTracks')
-        .mockReturnValue(of([formattedTrackMock]))
+    test('should query last tracks', async () => {
+      vi.spyOn(statisticsService, 'lastTracks').mockReturnValue(
+        of([formattedTrackMock])
+      )
 
       expect(
         await firstValueFrom(statisticsController.lastTracks('awd', {}))
       ).toEqual([formattedTrackMock])
     })
 
-    it('should query last tracks with limit argument', async () => {
+    test('should query last tracks with limit argument', async () => {
       const limit = 20
 
       const formattedTrackWithLimitMock = Array.from(
@@ -62,9 +63,9 @@ describe('StatisticsController', () => {
         () => formattedTrackMock
       )
 
-      jest
-        .spyOn(statisticsService, 'lastTracks')
-        .mockReturnValue(of(formattedTrackWithLimitMock))
+      vi.spyOn(statisticsService, 'lastTracks').mockReturnValue(
+        of(formattedTrackWithLimitMock)
+      )
 
       expect(
         await firstValueFrom(statisticsController.lastTracks('awd', { limit }))
@@ -73,17 +74,17 @@ describe('StatisticsController', () => {
   })
 
   describe('TopTracks', () => {
-    it('should query top tracks', async () => {
-      jest
-        .spyOn(statisticsService, 'topTracks')
-        .mockReturnValue(of([formattedTrackMock]))
+    test('should query top tracks', async () => {
+      vi.spyOn(statisticsService, 'topTracks').mockReturnValue(
+        of([formattedTrackMock])
+      )
 
       expect(
         await firstValueFrom(statisticsController.topTracks('awd', {}))
       ).toEqual([formattedTrackMock])
     })
 
-    it('should query top tracks with limit argument', async () => {
+    test('should query top tracks with limit argument', async () => {
       const limit = 20
 
       const formattedTrackWithLimitMock = Array.from(
@@ -91,9 +92,9 @@ describe('StatisticsController', () => {
         () => formattedTrackMock
       )
 
-      jest
-        .spyOn(statisticsService, 'topTracks')
-        .mockReturnValue(of(formattedTrackWithLimitMock))
+      vi.spyOn(statisticsService, 'topTracks').mockReturnValue(
+        of(formattedTrackWithLimitMock)
+      )
 
       expect(
         await firstValueFrom(statisticsController.topTracks('awd', { limit }))
@@ -102,26 +103,26 @@ describe('StatisticsController', () => {
   })
 
   describe('TopGenres', () => {
-    it('should query top genres', async () => {
-      jest
-        .spyOn(statisticsService, 'topGenres')
-        .mockReturnValue(of(topGenresMock))
+    test('should query top genres', async () => {
+      vi.spyOn(statisticsService, 'topGenres').mockReturnValue(
+        of(topGenresMock)
+      )
 
       expect(
         await firstValueFrom(statisticsController.topGenres('awd', {}))
       ).toEqual(topGenresMock)
     })
 
-    it('should query top genres with limit argument', async () => {
+    test('should query top genres with limit argument', async () => {
       const limit = 20
 
       const genresWithLimitMock = {
         genres: Array.from({ length: limit }, () => 'genre'),
       }
 
-      jest
-        .spyOn(statisticsService, 'topGenres')
-        .mockReturnValue(of(genresWithLimitMock))
+      vi.spyOn(statisticsService, 'topGenres').mockReturnValue(
+        of(genresWithLimitMock)
+      )
 
       expect(
         await firstValueFrom(statisticsController.topGenres('awd', { limit }))
@@ -130,17 +131,17 @@ describe('StatisticsController', () => {
   })
 
   describe('TopArtists', () => {
-    it('should query top artists', async () => {
-      jest
-        .spyOn(statisticsService, 'topArtists')
-        .mockReturnValue(of(formattedArtistsMock))
+    test('should query top artists', async () => {
+      vi.spyOn(statisticsService, 'topArtists').mockReturnValue(
+        of(formattedArtistsMock)
+      )
 
       expect(
         await firstValueFrom(statisticsController.topArtists('awd', {}))
       ).toEqual(formattedArtistsMock)
     })
 
-    it('should query top artists with limit argument', async () => {
+    test('should query top artists with limit argument', async () => {
       const limit = 20
 
       const formattedArtistsWithLimitMock = Array.from(
@@ -148,9 +149,9 @@ describe('StatisticsController', () => {
         () => formattedArtistMock
       )
 
-      jest
-        .spyOn(statisticsService, 'topArtists')
-        .mockReturnValue(of(formattedArtistsWithLimitMock))
+      vi.spyOn(statisticsService, 'topArtists').mockReturnValue(
+        of(formattedArtistsWithLimitMock)
+      )
 
       expect(
         await firstValueFrom(statisticsController.topArtists('awd', { limit }))
@@ -158,18 +159,18 @@ describe('StatisticsController', () => {
     })
   })
 
-  it('should query artist', async () => {
-    jest
-      .spyOn(statisticsService, 'artist')
-      .mockReturnValue(of(formattedArtistMock))
+  test('should query artist', async () => {
+    vi.spyOn(statisticsService, 'artist').mockReturnValue(
+      of(formattedArtistMock)
+    )
 
     expect(
       await firstValueFrom(statisticsController.artist('awd', '123'))
     ).toEqual(formattedArtistMock)
   })
 
-  it('should get analysis', async () => {
-    jest.spyOn(statisticsService, 'analysis').mockReturnValue(of(analysisMock))
+  test('should get analysis', async () => {
+    vi.spyOn(statisticsService, 'analysis').mockReturnValue(of(analysisMock))
 
     expect(await firstValueFrom(statisticsController.analysis('awd'))).toEqual(
       analysisMock

@@ -1,3 +1,5 @@
+import { test, describe, expect } from 'vitest'
+
 import { applyAuthorizationHeader } from './apply-authorization-header'
 
 describe('applyAuthorizationHeader', () => {

@@ -1,0 +1,17 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+const _vitest = require("vitest");
+const _mocks = require("../mocks/index");
+const _artistsadapter = require("./artists.adapter");
+(0, _vitest.describe)('adaptArtists', ()=>{
+    (0, _vitest.test)('should adapt artist', ()=>{
+        (0, _vitest.expect)((0, _artistsadapter.adaptArtist)(_mocks.spotifyArtistMock)).toEqual(_mocks.formattedArtistMock);
+    });
+    (0, _vitest.test)('should adapt artists', ()=>{
+        (0, _vitest.expect)((0, _artistsadapter.adaptArtists)(_mocks.spotifyArtistsMock)).toEqual(_mocks.formattedArtistsMock);
+    });
+});
+
+//# sourceMappingURL=artists.adapter.spec.js.map
