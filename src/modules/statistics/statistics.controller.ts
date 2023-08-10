@@ -2,7 +2,8 @@ import { Controller, Get, Query } from '@nestjs/common'
 import { ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger'
 
 import { StatisticsService } from './statistics.service'
-import { LimitArguments } from './dtos'
+import { LimitQuery, TopItemsQuery } from './dtos'
+import { TimeRange } from './enums'
 
 import { Token, ApiAuth } from '@modules/auth'
 import { AuthenticationType } from '@modules/auth/enums'
@@ -20,38 +21,50 @@ export class StatisticsController {
     description: 'Last tracks has been succesfully found',
     type: [Track],
   })
-  lastTracks(@Token() accessToken: string, @Query() { limit }: LimitArguments) {
+  lastTracks(@Token() accessToken: string, @Query() { limit }: LimitQuery) {
     return this.statisticsService.lastTracks(accessToken, limit)
   }
 
   @Get('/top-tracks')
   @ApiQuery({ name: 'limit', type: Number, required: false })
+  @ApiQuery({ name: 'timeRange', enum: TimeRange, required: false })
   @ApiOkResponse({
     description: 'Top tracks has been succesfully found',
     type: [Track],
   })
-  topTracks(@Token() accessToken: string, @Query() { limit }: LimitArguments) {
-    return this.statisticsService.topTracks(accessToken, limit)
+  topTracks(
+    @Token() accessToken: string,
+    @Query() { limit, timeRange }: TopItemsQuery
+  ) {
+    return this.statisticsService.topTracks(accessToken, limit, timeRange)
   }
 
   @Get('/top-genres')
   @ApiQuery({ name: 'limit', type: Number, required: false })
+  @ApiQuery({ name: 'timeRange', enum: TimeRange, required: false })
   @ApiOkResponse({
     description: 'Top genres has been succesfully found',
     type: Genres,
   })
-  topGenres(@Token() accessToken: string, @Query() { limit }: LimitArguments) {
-    return this.statisticsService.topGenres(accessToken, limit)
+  topGenres(
+    @Token() accessToken: string,
+    @Query() { limit, timeRange }: TopItemsQuery
+  ) {
+    return this.statisticsService.topGenres(accessToken, limit, timeRange)
   }
 
   @Get('/top-artists')
   @ApiQuery({ name: 'limit', type: Number, required: false })
+  @ApiQuery({ name: 'timeRange', enum: TimeRange, required: false })
   @ApiOkResponse({
     description: 'Top artists has been succesfully found',
     type: [Artist],
   })
-  topArtists(@Token() accessToken: string, @Query() { limit }: LimitArguments) {
-    return this.statisticsService.topArtists(accessToken, limit)
+  topArtists(
+    @Token() accessToken: string,
+    @Query() { limit, timeRange }: TopItemsQuery
+  ) {
+    return this.statisticsService.topArtists(accessToken, limit, timeRange)
   }
 
   @Get('/artist')

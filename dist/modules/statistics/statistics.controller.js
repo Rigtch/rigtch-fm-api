@@ -12,8 +12,9 @@ const _common = require("@nestjs/common");
 const _swagger = require("@nestjs/swagger");
 const _statisticsservice = require("./statistics.service");
 const _dtos = require("./dtos/index");
+const _enums = require("./enums/index");
 const _auth = require("../auth");
-const _enums = require("../auth/enums");
+const _enums1 = require("../auth/enums");
 const _dtos1 = require("../../common/dtos");
 function _ts_decorate(decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -33,14 +34,14 @@ let StatisticsController = class StatisticsController {
     lastTracks(accessToken, { limit }) {
         return this.statisticsService.lastTracks(accessToken, limit);
     }
-    topTracks(accessToken, { limit }) {
-        return this.statisticsService.topTracks(accessToken, limit);
+    topTracks(accessToken, { limit, timeRange }) {
+        return this.statisticsService.topTracks(accessToken, limit, timeRange);
     }
-    topGenres(accessToken, { limit }) {
-        return this.statisticsService.topGenres(accessToken, limit);
+    topGenres(accessToken, { limit, timeRange }) {
+        return this.statisticsService.topGenres(accessToken, limit, timeRange);
     }
-    topArtists(accessToken, { limit }) {
-        return this.statisticsService.topArtists(accessToken, limit);
+    topArtists(accessToken, { limit, timeRange }) {
+        return this.statisticsService.topArtists(accessToken, limit, timeRange);
     }
     artist(accessToken, id) {
         return this.statisticsService.artist(accessToken, id);
@@ -70,7 +71,7 @@ _ts_decorate([
     _ts_metadata("design:type", Function),
     _ts_metadata("design:paramtypes", [
         String,
-        typeof _dtos.LimitArguments === "undefined" ? Object : _dtos.LimitArguments
+        typeof _dtos.LimitQuery === "undefined" ? Object : _dtos.LimitQuery
     ])
 ], StatisticsController.prototype, "lastTracks", null);
 _ts_decorate([
@@ -78,6 +79,11 @@ _ts_decorate([
     (0, _swagger.ApiQuery)({
         name: 'limit',
         type: Number,
+        required: false
+    }),
+    (0, _swagger.ApiQuery)({
+        name: 'timeRange',
+        enum: _enums.TimeRange,
         required: false
     }),
     (0, _swagger.ApiOkResponse)({
@@ -91,7 +97,7 @@ _ts_decorate([
     _ts_metadata("design:type", Function),
     _ts_metadata("design:paramtypes", [
         String,
-        typeof _dtos.LimitArguments === "undefined" ? Object : _dtos.LimitArguments
+        typeof _dtos.TopItemsQuery === "undefined" ? Object : _dtos.TopItemsQuery
     ])
 ], StatisticsController.prototype, "topTracks", null);
 _ts_decorate([
@@ -99,6 +105,11 @@ _ts_decorate([
     (0, _swagger.ApiQuery)({
         name: 'limit',
         type: Number,
+        required: false
+    }),
+    (0, _swagger.ApiQuery)({
+        name: 'timeRange',
+        enum: _enums.TimeRange,
         required: false
     }),
     (0, _swagger.ApiOkResponse)({
@@ -110,7 +121,7 @@ _ts_decorate([
     _ts_metadata("design:type", Function),
     _ts_metadata("design:paramtypes", [
         String,
-        typeof _dtos.LimitArguments === "undefined" ? Object : _dtos.LimitArguments
+        typeof _dtos.TopItemsQuery === "undefined" ? Object : _dtos.TopItemsQuery
     ])
 ], StatisticsController.prototype, "topGenres", null);
 _ts_decorate([
@@ -118,6 +129,11 @@ _ts_decorate([
     (0, _swagger.ApiQuery)({
         name: 'limit',
         type: Number,
+        required: false
+    }),
+    (0, _swagger.ApiQuery)({
+        name: 'timeRange',
+        enum: _enums.TimeRange,
         required: false
     }),
     (0, _swagger.ApiOkResponse)({
@@ -131,7 +147,7 @@ _ts_decorate([
     _ts_metadata("design:type", Function),
     _ts_metadata("design:paramtypes", [
         String,
-        typeof _dtos.LimitArguments === "undefined" ? Object : _dtos.LimitArguments
+        typeof _dtos.TopItemsQuery === "undefined" ? Object : _dtos.TopItemsQuery
     ])
 ], StatisticsController.prototype, "topArtists", null);
 _ts_decorate([
@@ -168,7 +184,7 @@ _ts_decorate([
 StatisticsController = _ts_decorate([
     (0, _common.Controller)('statistics'),
     (0, _swagger.ApiTags)('statistics'),
-    (0, _auth.ApiAuth)(_enums.AuthenticationType.ACCESS_TOKEN),
+    (0, _auth.ApiAuth)(_enums1.AuthenticationType.ACCESS_TOKEN),
     _ts_metadata("design:type", Function),
     _ts_metadata("design:paramtypes", [
         typeof _statisticsservice.StatisticsService === "undefined" ? Object : _statisticsservice.StatisticsService

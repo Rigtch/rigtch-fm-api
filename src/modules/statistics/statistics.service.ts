@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common'
 import { Observable, map, catchError, mergeMap } from 'rxjs'
 
 import { analysisFactory } from './utils'
+import { TimeRange } from './enums'
 
 import { Genres, Analysis } from '@common/dtos'
 import {
@@ -45,10 +46,14 @@ export class StatisticsService {
       )
   }
 
-  topGenres(accessToken: string, limit = 10): Observable<Genres> {
+  topGenres(
+    accessToken: string,
+    limit = 10,
+    timeRange = TimeRange.LONG_TERM
+  ): Observable<Genres> {
     return this.httpService
       .get<SpotifyResponse<SpotifyArtist>>(
-        `/me/top/artists?limit=${50}&time_range=long_term`,
+        `/me/top/artists?limit=${50}&time_range=${timeRange}`,
         applyAuthorizationHeader(accessToken)
       )
       .pipe(
@@ -58,10 +63,14 @@ export class StatisticsService {
       )
   }
 
-  topArtists(accessToken: string, limit = 10): Observable<FormattedArtist[]> {
+  topArtists(
+    accessToken: string,
+    limit = 10,
+    timeRange = TimeRange.LONG_TERM
+  ): Observable<FormattedArtist[]> {
     return this.httpService
       .get<SpotifyResponse<SpotifyArtist>>(
-        `/me/top/artists?limit=${limit}&time_range=long_term`,
+        `/me/top/artists?limit=${limit}&time_range=${timeRange}`,
         applyAuthorizationHeader(accessToken)
       )
       .pipe(
@@ -71,10 +80,14 @@ export class StatisticsService {
       )
   }
 
-  topTracks(accessToken: string, limit = 10): Observable<FormattedTrack[]> {
+  topTracks(
+    accessToken: string,
+    limit = 10,
+    timeRange = TimeRange.LONG_TERM
+  ): Observable<FormattedTrack[]> {
     return this.httpService
       .get<SpotifyResponse<SpotifyTrack>>(
-        `/me/top/tracks?limit=${limit}&time_range=long_term`,
+        `/me/top/tracks?limit=${limit}&time_range=${timeRange}`,
         applyAuthorizationHeader(accessToken)
       )
       .pipe(
