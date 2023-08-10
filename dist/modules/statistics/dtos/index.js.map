@@ -1,1 +1,1 @@
-{"version":3,"sources":["../../../../src/modules/statistics/dtos/index.ts"],"sourcesContent":["export * from './limit.dto'\nexport * from './id.dto'\n"],"names":[],"mappings":";;;;qBAAc;qBACA"}
+{"version":3,"sources":["../../../../src/modules/statistics/dtos/index.ts"],"sourcesContent":["export * from './limit-query.dto'\nexport * from './id.dto'\nexport * from './top-items-query.dto'\n"],"names":[],"mappings":";;;;qBAAc;qBACA;qBACA"}

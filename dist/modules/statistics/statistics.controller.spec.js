@@ -35,7 +35,7 @@ const _mocks = require("../../common/mocks");
         (0, _vitest.expect)(statisticsController).toBeDefined();
     });
     (0, _vitest.describe)('LastTracks', ()=>{
-        (0, _vitest.test)('should query last tracks', async ()=>{
+        (0, _vitest.test)('should get last tracks', async ()=>{
             _vitest.vi.spyOn(statisticsService, 'lastTracks').mockReturnValue((0, _rxjs.of)([
                 _mocks.formattedTrackMock
             ]));
@@ -43,7 +43,7 @@ const _mocks = require("../../common/mocks");
                 _mocks.formattedTrackMock
             ]);
         });
-        (0, _vitest.test)('should query last tracks with limit argument', async ()=>{
+        (0, _vitest.test)('should get last tracks with limit query', async ()=>{
             const limit = 20;
             const formattedTrackWithLimitMock = Array.from({
                 length: limit
@@ -55,7 +55,7 @@ const _mocks = require("../../common/mocks");
         });
     });
     (0, _vitest.describe)('TopTracks', ()=>{
-        (0, _vitest.test)('should query top tracks', async ()=>{
+        (0, _vitest.test)('should get top tracks', async ()=>{
             _vitest.vi.spyOn(statisticsService, 'topTracks').mockReturnValue((0, _rxjs.of)([
                 _mocks.formattedTrackMock
             ]));
@@ -63,7 +63,7 @@ const _mocks = require("../../common/mocks");
                 _mocks.formattedTrackMock
             ]);
         });
-        (0, _vitest.test)('should query top tracks with limit argument', async ()=>{
+        (0, _vitest.test)('should get top tracks with limit query', async ()=>{
             const limit = 20;
             const formattedTrackWithLimitMock = Array.from({
                 length: limit
@@ -75,11 +75,11 @@ const _mocks = require("../../common/mocks");
         });
     });
     (0, _vitest.describe)('TopGenres', ()=>{
-        (0, _vitest.test)('should query top genres', async ()=>{
+        (0, _vitest.test)('should get top genres', async ()=>{
             _vitest.vi.spyOn(statisticsService, 'topGenres').mockReturnValue((0, _rxjs.of)(_mocks.topGenresMock));
             (0, _vitest.expect)(await (0, _rxjs.firstValueFrom)(statisticsController.topGenres('awd', {}))).toEqual(_mocks.topGenresMock);
         });
-        (0, _vitest.test)('should query top genres with limit argument', async ()=>{
+        (0, _vitest.test)('should get top genres with limit argument', async ()=>{
             const limit = 20;
             const genresWithLimitMock = {
                 genres: Array.from({
@@ -93,11 +93,11 @@ const _mocks = require("../../common/mocks");
         });
     });
     (0, _vitest.describe)('TopArtists', ()=>{
-        (0, _vitest.test)('should query top artists', async ()=>{
+        (0, _vitest.test)('should get top artists', async ()=>{
             _vitest.vi.spyOn(statisticsService, 'topArtists').mockReturnValue((0, _rxjs.of)(_mocks.formattedArtistsMock));
             (0, _vitest.expect)(await (0, _rxjs.firstValueFrom)(statisticsController.topArtists('awd', {}))).toEqual(_mocks.formattedArtistsMock);
         });
-        (0, _vitest.test)('should query top artists with limit argument', async ()=>{
+        (0, _vitest.test)('should get top artists with limit argument', async ()=>{
             const limit = 20;
             const formattedArtistsWithLimitMock = Array.from({
                 length: limit
@@ -108,7 +108,7 @@ const _mocks = require("../../common/mocks");
             }))).toEqual(formattedArtistsWithLimitMock);
         });
     });
-    (0, _vitest.test)('should query artist', async ()=>{
+    (0, _vitest.test)('should get artist', async ()=>{
         _vitest.vi.spyOn(statisticsService, 'artist').mockReturnValue((0, _rxjs.of)(_mocks.formattedArtistMock));
         (0, _vitest.expect)(await (0, _rxjs.firstValueFrom)(statisticsController.artist('awd', '123'))).toEqual(_mocks.formattedArtistMock);
     });

@@ -1,6 +1,6 @@
 import { IsOptional, Max } from 'class-validator'
 
-export abstract class LimitArguments {
+export abstract class LimitQuery {
   @IsOptional()
   @Max(50)
   limit?: number

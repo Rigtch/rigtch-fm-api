@@ -45,7 +45,7 @@ describe('StatisticsController', () => {
   })
 
   describe('LastTracks', () => {
-    test('should query last tracks', async () => {
+    test('should get last tracks', async () => {
       vi.spyOn(statisticsService, 'lastTracks').mockReturnValue(
         of([formattedTrackMock])
       )
@@ -55,7 +55,7 @@ describe('StatisticsController', () => {
       ).toEqual([formattedTrackMock])
     })
 
-    test('should query last tracks with limit argument', async () => {
+    test('should get last tracks with limit query', async () => {
       const limit = 20
 
       const formattedTrackWithLimitMock = Array.from(
@@ -74,7 +74,7 @@ describe('StatisticsController', () => {
   })
 
   describe('TopTracks', () => {
-    test('should query top tracks', async () => {
+    test('should get top tracks', async () => {
       vi.spyOn(statisticsService, 'topTracks').mockReturnValue(
         of([formattedTrackMock])
       )
@@ -84,7 +84,7 @@ describe('StatisticsController', () => {
       ).toEqual([formattedTrackMock])
     })
 
-    test('should query top tracks with limit argument', async () => {
+    test('should get top tracks with limit query', async () => {
       const limit = 20
 
       const formattedTrackWithLimitMock = Array.from(
@@ -103,7 +103,7 @@ describe('StatisticsController', () => {
   })
 
   describe('TopGenres', () => {
-    test('should query top genres', async () => {
+    test('should get top genres', async () => {
       vi.spyOn(statisticsService, 'topGenres').mockReturnValue(
         of(topGenresMock)
       )
@@ -113,7 +113,7 @@ describe('StatisticsController', () => {
       ).toEqual(topGenresMock)
     })
 
-    test('should query top genres with limit argument', async () => {
+    test('should get top genres with limit argument', async () => {
       const limit = 20
 
       const genresWithLimitMock = {
@@ -131,7 +131,7 @@ describe('StatisticsController', () => {
   })
 
   describe('TopArtists', () => {
-    test('should query top artists', async () => {
+    test('should get top artists', async () => {
       vi.spyOn(statisticsService, 'topArtists').mockReturnValue(
         of(formattedArtistsMock)
       )
@@ -141,7 +141,7 @@ describe('StatisticsController', () => {
       ).toEqual(formattedArtistsMock)
     })
 
-    test('should query top artists with limit argument', async () => {
+    test('should get top artists with limit argument', async () => {
       const limit = 20
 
       const formattedArtistsWithLimitMock = Array.from(
@@ -159,7 +159,7 @@ describe('StatisticsController', () => {
     })
   })
 
-  test('should query artist', async () => {
+  test('should get artist', async () => {
     vi.spyOn(statisticsService, 'artist').mockReturnValue(
       of(formattedArtistMock)
     )

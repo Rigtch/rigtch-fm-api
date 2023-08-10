@@ -12,6 +12,7 @@ const _axios = require("@nestjs/axios");
 const _common = require("@nestjs/common");
 const _rxjs = require("rxjs");
 const _utils = require("./utils/index");
+const _enums = require("./enums/index");
 const _utils1 = require("../../utils");
 const _adapters = require("../../common/adapters");
 function _ts_decorate(decorators, target, key, desc) {
@@ -30,14 +31,14 @@ let StatisticsService = class StatisticsService {
                     played_at
                 }))), (0, _rxjs.map)(_adapters.adaptTracks), (0, _rxjs.catchError)(_utils1.catchSpotifyError));
     }
-    topGenres(accessToken, limit = 10) {
-        return this.httpService.get(`/me/top/artists?limit=${50}&time_range=long_term`, (0, _utils1.applyAuthorizationHeader)(accessToken)).pipe((0, _rxjs.map)((response)=>response.data.items), (0, _rxjs.map)((items)=>(0, _adapters.adaptGenres)(items, limit)), (0, _rxjs.catchError)(_utils1.catchSpotifyError));
+    topGenres(accessToken, limit = 10, timeRange = _enums.TimeRange.LONG_TERM) {
+        return this.httpService.get(`/me/top/artists?limit=${50}&time_range=${timeRange}`, (0, _utils1.applyAuthorizationHeader)(accessToken)).pipe((0, _rxjs.map)((response)=>response.data.items), (0, _rxjs.map)((items)=>(0, _adapters.adaptGenres)(items, limit)), (0, _rxjs.catchError)(_utils1.catchSpotifyError));
     }
-    topArtists(accessToken, limit = 10) {
-        return this.httpService.get(`/me/top/artists?limit=${limit}&time_range=long_term`, (0, _utils1.applyAuthorizationHeader)(accessToken)).pipe((0, _rxjs.map)((response)=>response.data.items), (0, _rxjs.map)(_adapters.adaptArtists), (0, _rxjs.catchError)(_utils1.catchSpotifyError));
+    topArtists(accessToken, limit = 10, timeRange = _enums.TimeRange.LONG_TERM) {
+        return this.httpService.get(`/me/top/artists?limit=${limit}&time_range=${timeRange}`, (0, _utils1.applyAuthorizationHeader)(accessToken)).pipe((0, _rxjs.map)((response)=>response.data.items), (0, _rxjs.map)(_adapters.adaptArtists), (0, _rxjs.catchError)(_utils1.catchSpotifyError));
     }
-    topTracks(accessToken, limit = 10) {
-        return this.httpService.get(`/me/top/tracks?limit=${limit}&time_range=long_term`, (0, _utils1.applyAuthorizationHeader)(accessToken)).pipe((0, _rxjs.map)((response)=>response.data.items), (0, _rxjs.map)(_adapters.adaptTracks), (0, _rxjs.catchError)(_utils1.catchSpotifyError));
+    topTracks(accessToken, limit = 10, timeRange = _enums.TimeRange.LONG_TERM) {
+        return this.httpService.get(`/me/top/tracks?limit=${limit}&time_range=${timeRange}`, (0, _utils1.applyAuthorizationHeader)(accessToken)).pipe((0, _rxjs.map)((response)=>response.data.items), (0, _rxjs.map)(_adapters.adaptTracks), (0, _rxjs.catchError)(_utils1.catchSpotifyError));
     }
     artist(accessToken, id) {
         return this.httpService.get(`/artists/${id}`, (0, _utils1.applyAuthorizationHeader)(accessToken)).pipe((0, _rxjs.map)((response)=>response.data), (0, _rxjs.map)(_adapters.adaptArtist), (0, _rxjs.catchError)(_utils1.catchSpotifyError));
