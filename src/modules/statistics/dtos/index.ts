@@ -1,3 +1,3 @@
-export * from './limit-query.dto'
+export * from './item-query.dto'
 export * from './id.dto'
-export * from './top-items-query.dto'
+export * from './top-item-query.dto'
