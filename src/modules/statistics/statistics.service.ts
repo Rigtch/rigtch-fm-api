@@ -32,6 +32,11 @@ export class StatisticsService {
       limit: limit + '',
     })
 
+<<<<<<< HEAD
+=======
+    console.log(urlSearchParameters.toString())
+
+>>>>>>> 68a253b (feat(modules/statistics): implement pagination)
     return this.httpService
       .get<SpotifyResponse<{ track: SpotifyTrack; played_at: string }>>(
         `/me/player/recently-played?${urlSearchParameters.toString()}`,
