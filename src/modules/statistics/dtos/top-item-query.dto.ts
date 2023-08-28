@@ -2,9 +2,9 @@ import { IsEnum, IsOptional } from 'class-validator'
 
 import { TimeRange } from '../enums'
 
-import { LimitQuery } from './limit-query.dto'
+import { ItemQuery } from './item-query.dto'
 
-export abstract class TopItemsQuery extends LimitQuery {
+export abstract class TopItemQuery extends ItemQuery {
   @IsOptional()
   @IsEnum(TimeRange)
   timeRange?: TimeRange
