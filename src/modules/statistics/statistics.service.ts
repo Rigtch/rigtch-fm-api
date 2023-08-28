@@ -28,9 +28,13 @@ export class StatisticsService {
   constructor(private readonly httpService: HttpService) {}
 
   lastTracks(accessToken: string, limit = 20): Observable<FormattedTrack[]> {
+    const urlSearchParameters = new URLSearchParams({
+      limit: limit + '',
+    })
+
     return this.httpService
       .get<SpotifyResponse<{ track: SpotifyTrack; played_at: string }>>(
-        `/me/player/recently-played?limit=${limit}`,
+        `/me/player/recently-played?${urlSearchParameters.toString()}}`,
         applyAuthorizationHeader(accessToken)
       )
       .pipe(
@@ -49,11 +53,18 @@ export class StatisticsService {
   topGenres(
     accessToken: string,
     limit = 10,
-    timeRange = TimeRange.LONG_TERM
+    timeRange = TimeRange.LONG_TERM,
+    offset = 1
   ): Observable<Genres> {
+    const urlSearchParameters = new URLSearchParams({
+      limit: limit + '',
+      offset: offset + '',
+      time_range: timeRange,
+    })
+
     return this.httpService
       .get<SpotifyResponse<SpotifyArtist>>(
-        `/me/top/artists?limit=${50}&time_range=${timeRange}`,
+        `/me/top/artists?${urlSearchParameters.toString()}`,
         applyAuthorizationHeader(accessToken)
       )
       .pipe(
@@ -66,11 +77,18 @@ export class StatisticsService {
   topArtists(
     accessToken: string,
     limit = 10,
-    timeRange = TimeRange.LONG_TERM
+    timeRange = TimeRange.LONG_TERM,
+    offset = 1
   ): Observable<FormattedArtist[]> {
+    const urlSearchParameters = new URLSearchParams({
+      limit: limit + '',
+      offset: offset + '',
+      time_range: timeRange,
+    })
+
     return this.httpService
       .get<SpotifyResponse<SpotifyArtist>>(
-        `/me/top/artists?limit=${limit}&time_range=${timeRange}`,
+        `/me/top/artists?${urlSearchParameters.toString()}`,
         applyAuthorizationHeader(accessToken)
       )
       .pipe(
@@ -83,11 +101,18 @@ export class StatisticsService {
   topTracks(
     accessToken: string,
     limit = 10,
-    timeRange = TimeRange.LONG_TERM
+    timeRange = TimeRange.LONG_TERM,
+    offset = 1
   ): Observable<FormattedTrack[]> {
+    const urlSearchParameters = new URLSearchParams({
+      limit: limit + '',
+      offset: offset + '',
+      time_range: timeRange,
+    })
+
     return this.httpService
       .get<SpotifyResponse<SpotifyTrack>>(
-        `/me/top/tracks?limit=${limit}&time_range=${timeRange}`,
+        `/me/top/tracks?${urlSearchParameters.toString()}`,
         applyAuthorizationHeader(accessToken)
       )
       .pipe(

@@ -5,6 +5,8 @@ import {
 } from '@nestjs/common'
 
 export const catchSpotifyError = error => {
+  console.log(error)
+
   const {
     response: { data, status },
   } = error
