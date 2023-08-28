@@ -26,19 +26,37 @@ function _ts_metadata(k, v) {
 }
 let StatisticsService = class StatisticsService {
     lastTracks(accessToken, limit = 20) {
-        return this.httpService.get(`/me/player/recently-played?limit=${limit}`, (0, _utils1.applyAuthorizationHeader)(accessToken)).pipe((0, _rxjs.map)((response)=>response.data.items), (0, _rxjs.map)((items)=>items.map(({ track, played_at })=>({
+        const urlSearchParameters = new URLSearchParams({
+            limit: limit + ''
+        });
+        return this.httpService.get(`/me/player/recently-played?${urlSearchParameters.toString()}`, (0, _utils1.applyAuthorizationHeader)(accessToken)).pipe((0, _rxjs.map)((response)=>response.data.items), (0, _rxjs.map)((items)=>items.map(({ track, played_at })=>({
                     ...track,
                     played_at
                 }))), (0, _rxjs.map)(_adapters.adaptTracks), (0, _rxjs.catchError)(_utils1.catchSpotifyError));
     }
-    topGenres(accessToken, limit = 10, timeRange = _enums.TimeRange.LONG_TERM) {
-        return this.httpService.get(`/me/top/artists?limit=${50}&time_range=${timeRange}`, (0, _utils1.applyAuthorizationHeader)(accessToken)).pipe((0, _rxjs.map)((response)=>response.data.items), (0, _rxjs.map)((items)=>(0, _adapters.adaptGenres)(items, limit)), (0, _rxjs.catchError)(_utils1.catchSpotifyError));
+    topGenres(accessToken, limit = 10, timeRange = _enums.TimeRange.LONG_TERM, offset = 1) {
+        const urlSearchParameters = new URLSearchParams({
+            limit: limit + '',
+            offset: offset + '',
+            time_range: timeRange
+        });
+        return this.httpService.get(`/me/top/artists?${urlSearchParameters.toString()}`, (0, _utils1.applyAuthorizationHeader)(accessToken)).pipe((0, _rxjs.map)((response)=>response.data.items), (0, _rxjs.map)((items)=>(0, _adapters.adaptGenres)(items, limit)), (0, _rxjs.catchError)(_utils1.catchSpotifyError));
     }
-    topArtists(accessToken, limit = 10, timeRange = _enums.TimeRange.LONG_TERM) {
-        return this.httpService.get(`/me/top/artists?limit=${limit}&time_range=${timeRange}`, (0, _utils1.applyAuthorizationHeader)(accessToken)).pipe((0, _rxjs.map)((response)=>response.data.items), (0, _rxjs.map)(_adapters.adaptArtists), (0, _rxjs.catchError)(_utils1.catchSpotifyError));
+    topArtists(accessToken, limit = 10, timeRange = _enums.TimeRange.LONG_TERM, offset = 1) {
+        const urlSearchParameters = new URLSearchParams({
+            limit: limit + '',
+            offset: offset + '',
+            time_range: timeRange
+        });
+        return this.httpService.get(`/me/top/artists?${urlSearchParameters.toString()}`, (0, _utils1.applyAuthorizationHeader)(accessToken)).pipe((0, _rxjs.map)((response)=>response.data.items), (0, _rxjs.map)(_adapters.adaptArtists), (0, _rxjs.catchError)(_utils1.catchSpotifyError));
     }
-    topTracks(accessToken, limit = 10, timeRange = _enums.TimeRange.LONG_TERM) {
-        return this.httpService.get(`/me/top/tracks?limit=${limit}&time_range=${timeRange}`, (0, _utils1.applyAuthorizationHeader)(accessToken)).pipe((0, _rxjs.map)((response)=>response.data.items), (0, _rxjs.map)(_adapters.adaptTracks), (0, _rxjs.catchError)(_utils1.catchSpotifyError));
+    topTracks(accessToken, limit = 10, timeRange = _enums.TimeRange.LONG_TERM, offset = 1) {
+        const urlSearchParameters = new URLSearchParams({
+            limit: limit + '',
+            offset: offset + '',
+            time_range: timeRange
+        });
+        return this.httpService.get(`/me/top/tracks?${urlSearchParameters.toString()}`, (0, _utils1.applyAuthorizationHeader)(accessToken)).pipe((0, _rxjs.map)((response)=>response.data.items), (0, _rxjs.map)(_adapters.adaptTracks), (0, _rxjs.catchError)(_utils1.catchSpotifyError));
     }
     artist(accessToken, id) {
         return this.httpService.get(`/artists/${id}`, (0, _utils1.applyAuthorizationHeader)(accessToken)).pipe((0, _rxjs.map)((response)=>response.data), (0, _rxjs.map)(_adapters.adaptArtist), (0, _rxjs.catchError)(_utils1.catchSpotifyError));

@@ -2,15 +2,15 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-Object.defineProperty(exports, "TopItemsQuery", {
+Object.defineProperty(exports, "TopItemQuery", {
     enumerable: true,
     get: function() {
-        return TopItemsQuery;
+        return TopItemQuery;
     }
 });
 const _classvalidator = require("class-validator");
 const _enums = require("../enums/index");
-const _limitquerydto = require("./limit-query.dto");
+const _itemquerydto = require("./item-query.dto");
 function _ts_decorate(decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -20,12 +20,12 @@ function _ts_decorate(decorators, target, key, desc) {
 function _ts_metadata(k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 }
-let TopItemsQuery = class TopItemsQuery extends _limitquerydto.LimitQuery {
+let TopItemQuery = class TopItemQuery extends _itemquerydto.ItemQuery {
 };
 _ts_decorate([
     (0, _classvalidator.IsOptional)(),
     (0, _classvalidator.IsEnum)(_enums.TimeRange),
     _ts_metadata("design:type", typeof _enums.TimeRange === "undefined" ? Object : _enums.TimeRange)
-], TopItemsQuery.prototype, "timeRange", void 0);
+], TopItemQuery.prototype, "timeRange", void 0);
 
-//# sourceMappingURL=top-items-query.dto.js.map
+//# sourceMappingURL=top-item-query.dto.js.map

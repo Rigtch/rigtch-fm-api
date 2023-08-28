@@ -2,10 +2,10 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-Object.defineProperty(exports, "LimitQuery", {
+Object.defineProperty(exports, "ItemQuery", {
     enumerable: true,
     get: function() {
-        return LimitQuery;
+        return ItemQuery;
     }
 });
 const _classvalidator = require("class-validator");
@@ -18,12 +18,17 @@ function _ts_decorate(decorators, target, key, desc) {
 function _ts_metadata(k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 }
-let LimitQuery = class LimitQuery {
+let ItemQuery = class ItemQuery {
 };
 _ts_decorate([
     (0, _classvalidator.IsOptional)(),
     (0, _classvalidator.Max)(50),
     _ts_metadata("design:type", Number)
-], LimitQuery.prototype, "limit", void 0);
+], ItemQuery.prototype, "limit", void 0);
+_ts_decorate([
+    (0, _classvalidator.IsOptional)(),
+    (0, _classvalidator.IsNumber)(),
+    _ts_metadata("design:type", Number)
+], ItemQuery.prototype, "offset", void 0);
 
-//# sourceMappingURL=limit-query.dto.js.map
+//# sourceMappingURL=item-query.dto.js.map

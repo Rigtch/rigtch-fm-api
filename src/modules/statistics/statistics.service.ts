@@ -34,7 +34,7 @@ export class StatisticsService {
 
     return this.httpService
       .get<SpotifyResponse<{ track: SpotifyTrack; played_at: string }>>(
-        `/me/player/recently-played?${urlSearchParameters.toString()}}`,
+        `/me/player/recently-played?${urlSearchParameters.toString()}`,
         applyAuthorizationHeader(accessToken)
       )
       .pipe(

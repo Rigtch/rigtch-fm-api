@@ -12,9 +12,9 @@ const _common = require("@nestjs/common");
 const _swagger = require("@nestjs/swagger");
 const _statisticsservice = require("./statistics.service");
 const _dtos = require("./dtos/index");
-const _enums = require("./enums/index");
+const _decorators = require("./decorators/index");
 const _auth = require("../auth");
-const _enums1 = require("../auth/enums");
+const _enums = require("../auth/enums");
 const _dtos1 = require("../../common/dtos");
 function _ts_decorate(decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -34,14 +34,14 @@ let StatisticsController = class StatisticsController {
     lastTracks(accessToken, { limit }) {
         return this.statisticsService.lastTracks(accessToken, limit);
     }
-    topTracks(accessToken, { limit, timeRange }) {
-        return this.statisticsService.topTracks(accessToken, limit, timeRange);
+    topTracks(accessToken, { limit, timeRange, offset }) {
+        return this.statisticsService.topTracks(accessToken, limit, timeRange, offset);
     }
-    topGenres(accessToken, { limit, timeRange }) {
-        return this.statisticsService.topGenres(accessToken, limit, timeRange);
+    topGenres(accessToken, { limit, timeRange, offset }) {
+        return this.statisticsService.topGenres(accessToken, limit, timeRange, offset);
     }
-    topArtists(accessToken, { limit, timeRange }) {
-        return this.statisticsService.topArtists(accessToken, limit, timeRange);
+    topArtists(accessToken, { limit, timeRange, offset }) {
+        return this.statisticsService.topArtists(accessToken, limit, timeRange, offset);
     }
     artist(accessToken, id) {
         return this.statisticsService.artist(accessToken, id);
@@ -55,11 +55,7 @@ let StatisticsController = class StatisticsController {
 };
 _ts_decorate([
     (0, _common.Get)('/last-tracks'),
-    (0, _swagger.ApiQuery)({
-        name: 'limit',
-        type: Number,
-        required: false
-    }),
+    (0, _decorators.ApiItemQuery)(),
     (0, _swagger.ApiOkResponse)({
         description: 'Last tracks has been succesfully found',
         type: [
@@ -71,21 +67,12 @@ _ts_decorate([
     _ts_metadata("design:type", Function),
     _ts_metadata("design:paramtypes", [
         String,
-        typeof _dtos.LimitQuery === "undefined" ? Object : _dtos.LimitQuery
+        typeof _dtos.ItemQuery === "undefined" ? Object : _dtos.ItemQuery
     ])
 ], StatisticsController.prototype, "lastTracks", null);
 _ts_decorate([
     (0, _common.Get)('/top-tracks'),
-    (0, _swagger.ApiQuery)({
-        name: 'limit',
-        type: Number,
-        required: false
-    }),
-    (0, _swagger.ApiQuery)({
-        name: 'timeRange',
-        enum: _enums.TimeRange,
-        required: false
-    }),
+    (0, _decorators.ApiItemQuery)(true),
     (0, _swagger.ApiOkResponse)({
         description: 'Top tracks has been succesfully found',
         type: [
@@ -97,21 +84,12 @@ _ts_decorate([
     _ts_metadata("design:type", Function),
     _ts_metadata("design:paramtypes", [
         String,
-        typeof _dtos.TopItemsQuery === "undefined" ? Object : _dtos.TopItemsQuery
+        typeof _dtos.TopItemQuery === "undefined" ? Object : _dtos.TopItemQuery
     ])
 ], StatisticsController.prototype, "topTracks", null);
 _ts_decorate([
     (0, _common.Get)('/top-genres'),
-    (0, _swagger.ApiQuery)({
-        name: 'limit',
-        type: Number,
-        required: false
-    }),
-    (0, _swagger.ApiQuery)({
-        name: 'timeRange',
-        enum: _enums.TimeRange,
-        required: false
-    }),
+    (0, _decorators.ApiItemQuery)(true),
     (0, _swagger.ApiOkResponse)({
         description: 'Top genres has been succesfully found',
         type: _dtos1.Genres
@@ -121,21 +99,12 @@ _ts_decorate([
     _ts_metadata("design:type", Function),
     _ts_metadata("design:paramtypes", [
         String,
-        typeof _dtos.TopItemsQuery === "undefined" ? Object : _dtos.TopItemsQuery
+        typeof _dtos.TopItemQuery === "undefined" ? Object : _dtos.TopItemQuery
     ])
 ], StatisticsController.prototype, "topGenres", null);
 _ts_decorate([
     (0, _common.Get)('/top-artists'),
-    (0, _swagger.ApiQuery)({
-        name: 'limit',
-        type: Number,
-        required: false
-    }),
-    (0, _swagger.ApiQuery)({
-        name: 'timeRange',
-        enum: _enums.TimeRange,
-        required: false
-    }),
+    (0, _decorators.ApiItemQuery)(true),
     (0, _swagger.ApiOkResponse)({
         description: 'Top artists has been succesfully found',
         type: [
@@ -147,7 +116,7 @@ _ts_decorate([
     _ts_metadata("design:type", Function),
     _ts_metadata("design:paramtypes", [
         String,
-        typeof _dtos.TopItemsQuery === "undefined" ? Object : _dtos.TopItemsQuery
+        typeof _dtos.TopItemQuery === "undefined" ? Object : _dtos.TopItemQuery
     ])
 ], StatisticsController.prototype, "topArtists", null);
 _ts_decorate([
@@ -184,7 +153,7 @@ _ts_decorate([
 StatisticsController = _ts_decorate([
     (0, _common.Controller)('statistics'),
     (0, _swagger.ApiTags)('statistics'),
-    (0, _auth.ApiAuth)(_enums1.AuthenticationType.ACCESS_TOKEN),
+    (0, _auth.ApiAuth)(_enums.AuthenticationType.ACCESS_TOKEN),
     _ts_metadata("design:type", Function),
     _ts_metadata("design:paramtypes", [
         typeof _statisticsservice.StatisticsService === "undefined" ? Object : _statisticsservice.StatisticsService

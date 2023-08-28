@@ -2,9 +2,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-_export_star(require("./item-query.dto"), exports);
-_export_star(require("./id.dto"), exports);
-_export_star(require("./top-item-query.dto"), exports);
+_export_star(require("./api-item-query.decorator"), exports);
 function _export_star(from, to) {
     Object.keys(from).forEach(function(k) {
         if (k !== "default" && !Object.prototype.hasOwnProperty.call(to, k)) {

@@ -10,6 +10,7 @@ Object.defineProperty(exports, "catchSpotifyError", {
 });
 const _common = require("@nestjs/common");
 const catchSpotifyError = (error)=>{
+    console.log(error);
     const { response: { data, status } } = error;
     if (data?.error === 'invalid_grant') throw new _common.UnauthorizedException('Invalid token');
     if (status === 401) throw new _common.UnauthorizedException(data?.error?.message);
