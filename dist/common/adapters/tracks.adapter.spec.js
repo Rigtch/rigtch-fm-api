@@ -15,6 +15,12 @@ const _tracksadapter = require("./tracks.adapter");
     (0, _vitest.test)('should adapt tracks without playedAt field', ()=>{
         (0, _vitest.expect)((0, _tracksadapter.adaptTracks)(_mocks.spotifyTracksMock.map(({ played_at, ...rest })=>rest))).toEqual(_mocks.formattedTracksMock.map(({ playedAt, ...rest })=>rest));
     });
+    (0, _vitest.test)('should adapt paginated tracks', ()=>{
+        (0, _vitest.expect)((0, _tracksadapter.adaptPaginatedTracks)({
+            ...(0, _mocks.spotifyResponseMockFactory)(_mocks.spotifyTracksMock),
+            offset: 0
+        })).toEqual((0, _mocks.spotifyResponseMockFactory)(_mocks.formattedTracksMock));
+    });
 });
 
 //# sourceMappingURL=tracks.adapter.spec.js.map

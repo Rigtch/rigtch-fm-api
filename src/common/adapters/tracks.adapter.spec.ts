@@ -1,8 +1,12 @@
 import { test, describe, expect } from 'vitest'
 
-import { spotifyTracksMock, formattedTracksMock } from '../mocks'
+import {
+  spotifyTracksMock,
+  formattedTracksMock,
+  spotifyResponseMockFactory,
+} from '../mocks'
 
-import { adaptTracks } from './tracks.adapter'
+import { adaptPaginatedTracks, adaptTracks } from './tracks.adapter'
 
 describe('adaptTracks', () => {
   test('should adapt tracks', () => {
@@ -19,5 +23,14 @@ describe('adaptTracks', () => {
     expect(
       adaptTracks(spotifyTracksMock.map(({ played_at, ...rest }) => rest))
     ).toEqual(formattedTracksMock.map(({ playedAt, ...rest }) => rest))
+  })
+
+  test('should adapt paginated tracks', () => {
+    expect(
+      adaptPaginatedTracks({
+        ...spotifyResponseMockFactory(spotifyTracksMock),
+        offset: 0,
+      })
+    ).toEqual(spotifyResponseMockFactory(formattedTracksMock))
   })
 })

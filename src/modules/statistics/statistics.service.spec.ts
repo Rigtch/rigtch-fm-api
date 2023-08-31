@@ -16,6 +16,7 @@ import {
   formattedArtistMock,
   spotifyAudioFeaturesMock,
   analysisMock,
+  spotifyResponseMockFactory,
 } from '@common/mocks'
 import { axiosResponseMockFactory } from '~/utils'
 
@@ -48,36 +49,38 @@ describe('StatisticsService', () => {
   test('should get last tracks', async () => {
     vi.spyOn(httpService, 'get').mockReturnValue(
       of(
-        axiosResponseMockFactory({
-          items: Array.from({ length: 5 }).map(() => ({
-            track: spotifyTrackMock,
-            played_at: '2022-11-26T11:01:10.040Z',
-          })),
-        })
+        axiosResponseMockFactory(
+          spotifyResponseMockFactory(
+            Array.from({ length: 5 }).map(() => ({
+              track: spotifyTrackMock,
+              played_at: '2022-11-26T11:01:10.040Z',
+            }))
+          )
+        )
       )
     )
 
     expect(await firstValueFrom(statisticsService.lastTracks('awd'))).toEqual(
-      formattedTracksMock
+      spotifyResponseMockFactory(formattedTracksMock)
     )
   })
 
   test('should get top artists', async () => {
     vi.spyOn(httpService, 'get').mockReturnValue(
-      of(axiosResponseMockFactory({ items: spotifyArtistsMock }))
+      of(
+        axiosResponseMockFactory(spotifyResponseMockFactory(spotifyArtistsMock))
+      )
     )
 
     expect(await firstValueFrom(statisticsService.topArtists('awd'))).toEqual(
-      formattedArtistsMock
+      spotifyResponseMockFactory(formattedArtistsMock)
     )
   })
 
   test('should get top genres', async () => {
     vi.spyOn(httpService, 'get').mockReturnValue(
       of(
-        axiosResponseMockFactory({
-          items: spotifyArtistsMock,
-        })
+        axiosResponseMockFactory(spotifyResponseMockFactory(spotifyArtistsMock))
       )
     )
 
@@ -89,14 +92,12 @@ describe('StatisticsService', () => {
   test('should get top tracks', async () => {
     vi.spyOn(httpService, 'get').mockReturnValue(
       of(
-        axiosResponseMockFactory({
-          items: spotifyTracksMock,
-        })
+        axiosResponseMockFactory(spotifyResponseMockFactory(spotifyTracksMock))
       )
     )
 
     expect(await firstValueFrom(statisticsService.topTracks('awd'))).toEqual(
-      formattedTracksMock
+      spotifyResponseMockFactory(formattedTracksMock)
     )
   })
 
@@ -112,7 +113,7 @@ describe('StatisticsService', () => {
 
   test('should generate analysis', async () => {
     vi.spyOn(statisticsService, 'topTracks').mockReturnValue(
-      of(formattedTracksMock)
+      of(spotifyResponseMockFactory(formattedTracksMock))
     )
 
     vi.spyOn(httpService, 'get').mockReturnValue(

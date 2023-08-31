@@ -30,7 +30,7 @@ let StatisticsService = class StatisticsService {
             limit: limit + ''
         });
         console.log(urlSearchParameters.toString());
-        return this.httpService.get(`/me/player/recently-played?${urlSearchParameters.toString()}`, (0, _utils1.applyAuthorizationHeader)(accessToken)).pipe((0, _rxjs.map)((response)=>response.data.items), (0, _rxjs.map)((items)=>items.map(({ track, played_at })=>({
+        return this.httpService.get(`/me/player/recently-played?${urlSearchParameters.toString()}`, (0, _utils1.applyAuthorizationHeader)(accessToken)).pipe((0, _rxjs.map)((response)=>response.data), (0, _rxjs.map)(({ items })=>items.map(({ track, played_at })=>({
                     ...track,
                     played_at
                 }))), (0, _rxjs.map)(_adapters.adaptTracks), (0, _rxjs.catchError)(_utils1.catchSpotifyError));
@@ -49,7 +49,7 @@ let StatisticsService = class StatisticsService {
             offset: offset + '',
             time_range: timeRange
         });
-        return this.httpService.get(`/me/top/artists?${urlSearchParameters.toString()}`, (0, _utils1.applyAuthorizationHeader)(accessToken)).pipe((0, _rxjs.map)((response)=>response.data.items), (0, _rxjs.map)(_adapters.adaptArtists), (0, _rxjs.catchError)(_utils1.catchSpotifyError));
+        return this.httpService.get(`/me/top/artists?${urlSearchParameters.toString()}`, (0, _utils1.applyAuthorizationHeader)(accessToken)).pipe((0, _rxjs.map)((response)=>response.data), (0, _rxjs.map)(_adapters.adaptPaginatedArtists), (0, _rxjs.catchError)(_utils1.catchSpotifyError));
     }
     topTracks(accessToken, limit = 10, timeRange = _enums.TimeRange.LONG_TERM, offset = 1) {
         const urlSearchParameters = new URLSearchParams({
@@ -57,14 +57,14 @@ let StatisticsService = class StatisticsService {
             offset: offset + '',
             time_range: timeRange
         });
-        return this.httpService.get(`/me/top/tracks?${urlSearchParameters.toString()}`, (0, _utils1.applyAuthorizationHeader)(accessToken)).pipe((0, _rxjs.map)((response)=>response.data.items), (0, _rxjs.map)(_adapters.adaptTracks), (0, _rxjs.catchError)(_utils1.catchSpotifyError));
+        return this.httpService.get(`/me/top/tracks?${urlSearchParameters.toString()}`, (0, _utils1.applyAuthorizationHeader)(accessToken)).pipe((0, _rxjs.map)((response)=>response.data), (0, _rxjs.map)(_adapters.adaptPaginatedTracks), (0, _rxjs.catchError)(_utils1.catchSpotifyError));
     }
     artist(accessToken, id) {
         return this.httpService.get(`/artists/${id}`, (0, _utils1.applyAuthorizationHeader)(accessToken)).pipe((0, _rxjs.map)((response)=>response.data), (0, _rxjs.map)(_adapters.adaptArtist), (0, _rxjs.catchError)(_utils1.catchSpotifyError));
     }
     analysis(accessToken) {
         return this.topTracks(accessToken, 50).pipe((0, _rxjs.mergeMap)((tracks)=>{
-            const tracksIds = tracks.map(({ id })=>id).join(',');
+            const tracksIds = tracks.items.map(({ id })=>id).join(',');
             return this.httpService.get(`/audio-features?ids=${tracksIds}`, (0, _utils1.applyAuthorizationHeader)(accessToken)).pipe((0, _rxjs.map)((response)=>response.data.audio_features), (0, _rxjs.map)((audioFeatures)=>audioFeatures.map((audioFeature)=>(0, _adapters.adaptAudioFeatures)(audioFeature))), (0, _rxjs.map)(_utils.analysisFactory), (0, _rxjs.catchError)(_utils1.catchSpotifyError));
         }));
     }

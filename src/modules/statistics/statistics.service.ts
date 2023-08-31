@@ -17,9 +17,10 @@ import {
 import { applyAuthorizationHeader, catchSpotifyError } from '~/utils'
 import {
   adaptArtist,
-  adaptArtists,
   adaptAudioFeatures,
   adaptGenres,
+  adaptPaginatedArtists,
+  adaptPaginatedTracks,
   adaptTracks,
 } from '@common/adapters'
 
@@ -32,19 +33,16 @@ export class StatisticsService {
       limit: limit + '',
     })
 
-<<<<<<< HEAD
-=======
     console.log(urlSearchParameters.toString())
 
->>>>>>> 68a253b (feat(modules/statistics): implement pagination)
     return this.httpService
       .get<SpotifyResponse<{ track: SpotifyTrack; played_at: string }>>(
         `/me/player/recently-played?${urlSearchParameters.toString()}`,
         applyAuthorizationHeader(accessToken)
       )
       .pipe(
-        map(response => response.data.items),
-        map(items =>
+        map(response => response.data),
+        map(({ items }) =>
           items.map(({ track, played_at }) => ({
             ...track,
             played_at,
@@ -84,7 +82,7 @@ export class StatisticsService {
     limit = 10,
     timeRange = TimeRange.LONG_TERM,
     offset = 1
-  ): Observable<FormattedArtist[]> {
+  ): Observable<SpotifyResponse<FormattedArtist>> {
     const urlSearchParameters = new URLSearchParams({
       limit: limit + '',
       offset: offset + '',
@@ -97,8 +95,8 @@ export class StatisticsService {
         applyAuthorizationHeader(accessToken)
       )
       .pipe(
-        map(response => response.data.items),
-        map(adaptArtists),
+        map(response => response.data),
+        map(adaptPaginatedArtists),
         catchError(catchSpotifyError)
       )
   }
@@ -108,7 +106,7 @@ export class StatisticsService {
     limit = 10,
     timeRange = TimeRange.LONG_TERM,
     offset = 1
-  ): Observable<FormattedTrack[]> {
+  ): Observable<SpotifyResponse<FormattedTrack>> {
     const urlSearchParameters = new URLSearchParams({
       limit: limit + '',
       offset: offset + '',
@@ -121,8 +119,8 @@ export class StatisticsService {
         applyAuthorizationHeader(accessToken)
       )
       .pipe(
-        map(response => response.data.items),
-        map(adaptTracks),
+        map(response => response.data),
+        map(adaptPaginatedTracks),
         catchError(catchSpotifyError)
       )
   }
@@ -143,7 +141,7 @@ export class StatisticsService {
   analysis(accessToken: string): Observable<Analysis> {
     return this.topTracks(accessToken, 50).pipe(
       mergeMap(tracks => {
-        const tracksIds = tracks.map(({ id }) => id).join(',')
+        const tracksIds = tracks.items.map(({ id }) => id).join(',')
 
         return this.httpService
           .get<{ audio_features: SpotifyAudioFeatures[] }>(

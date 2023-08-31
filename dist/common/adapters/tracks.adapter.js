@@ -14,8 +14,12 @@ _export(exports, {
     },
     adaptTracks: function() {
         return adaptTracks;
+    },
+    adaptPaginatedTracks: function() {
+        return adaptPaginatedTracks;
     }
 });
+const _paginatedadapter = require("./paginated.adapter");
 const adaptTrack = ({ id, name, album, artists, external_urls: { spotify: href }, duration_ms, progress_ms, played_at })=>({
         id,
         name,
@@ -38,5 +42,6 @@ const adaptTrack = ({ id, name, album, artists, external_urls: { spotify: href }
         }
     });
 const adaptTracks = (tracks)=>tracks.map((track)=>adaptTrack(track));
+const adaptPaginatedTracks = (data)=>(0, _paginatedadapter.adaptPaginated)(data, adaptTracks);
 
 //# sourceMappingURL=tracks.adapter.js.map

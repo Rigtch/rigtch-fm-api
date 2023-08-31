@@ -49,8 +49,6 @@ let AuthController = class AuthController {
         const { accessToken, refreshToken } = await (0, _rxjs.firstValueFrom)(this.authService.token({
             code
         }));
-        console.log('acessToken', accessToken);
-        console.log('refreshToken', refreshToken);
         return {
             url: `${this.configService.get(CLIENT_CALLBACK_URL)}/api/authorize?${new URLSearchParams({
                 accessToken,

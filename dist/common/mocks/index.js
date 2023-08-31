@@ -9,6 +9,7 @@ _export_star(require("./device.mock"), exports);
 _export_star(require("./playback-state.mock"), exports);
 _export_star(require("./genres.mock"), exports);
 _export_star(require("./audio-features.mock"), exports);
+_export_star(require("./spotify-response.mock"), exports);
 function _export_star(from, to) {
     Object.keys(from).forEach(function(k) {
         if (k !== "default" && !Object.prototype.hasOwnProperty.call(to, k)) {
