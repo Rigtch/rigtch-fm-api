@@ -1,4 +1,6 @@
-import { FormattedTrack, SpotifyTrack } from '../types/spotify'
+import { FormattedTrack, SpotifyResponse, SpotifyTrack } from '../types/spotify'
+
+import { adaptPaginated } from './paginated.adapter'
 
 export const adaptTrack = ({
   id,
@@ -22,3 +24,7 @@ export const adaptTrack = ({
 
 export const adaptTracks = (tracks: SpotifyTrack[]): FormattedTrack[] =>
   tracks.map(track => adaptTrack(track))
+
+export const adaptPaginatedTracks = (
+  data: SpotifyResponse<SpotifyTrack, true>
+) => adaptPaginated(data, adaptTracks)

@@ -52,9 +52,6 @@ export class AuthController {
       this.authService.token({ code })
     )
 
-    console.log('acessToken', accessToken)
-    console.log('refreshToken', refreshToken)
-
     return {
       url: `${this.configService.get(
         CLIENT_CALLBACK_URL

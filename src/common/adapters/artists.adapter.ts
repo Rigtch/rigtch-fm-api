@@ -1,4 +1,10 @@
-import { FormattedArtist, SpotifyArtist } from '../types/spotify'
+import {
+  FormattedArtist,
+  SpotifyArtist,
+  SpotifyResponse,
+} from '../types/spotify'
+
+import { adaptPaginated } from './paginated.adapter'
 
 export const adaptArtist = ({
   id,
@@ -16,3 +22,7 @@ export const adaptArtist = ({
 
 export const adaptArtists = (artists: SpotifyArtist[]): FormattedArtist[] =>
   artists.map(artist => adaptArtist(artist))
+
+export const adaptPaginatedArtists = (
+  data: SpotifyResponse<SpotifyArtist, true>
+) => adaptPaginated(data, adaptArtists)
