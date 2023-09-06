@@ -29,10 +29,14 @@ let StatisticsService = class StatisticsService {
         const urlSearchParameters = new URLSearchParams({
             limit: limit + ''
         });
-        return this.httpService.get(`/me/player/recently-played?${urlSearchParameters.toString()}`, (0, _utils1.applyAuthorizationHeader)(accessToken)).pipe((0, _rxjs.map)((response)=>response.data), (0, _rxjs.map)(({ items })=>items.map(({ track, played_at })=>({
-                    ...track,
-                    played_at
-                }))), (0, _rxjs.map)(_adapters.adaptTracks), (0, _rxjs.catchError)(_utils1.catchSpotifyError));
+        console.log(urlSearchParameters.toString());
+        return this.httpService.get(`/me/player/recently-played?${urlSearchParameters.toString()}`, (0, _utils1.applyAuthorizationHeader)(accessToken)).pipe((0, _rxjs.map)((response)=>response.data), (0, _rxjs.map)(({ items, ...data })=>({
+                ...data,
+                items: items.map(({ track, played_at })=>({
+                        ...track,
+                        played_at
+                    }))
+            })), (0, _rxjs.map)(_adapters.adaptLastTracks), (0, _rxjs.catchError)(_utils1.catchSpotifyError));
     }
     topGenres(accessToken, limit = 10, timeRange = _enums.TimeRange.LONG_TERM, offset = 1) {
         const urlSearchParameters = new URLSearchParams({

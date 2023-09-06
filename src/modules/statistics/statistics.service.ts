@@ -13,22 +13,27 @@ import {
   SpotifyArtist,
   FormattedArtist,
   SpotifyAudioFeatures,
+  SpotifyResponseWithOffset,
+  SpotifyResponseWithCursors,
 } from '@common/types/spotify'
 import { applyAuthorizationHeader, catchSpotifyError } from '~/utils'
 import {
   adaptArtist,
   adaptAudioFeatures,
   adaptGenres,
+  adaptLastTracks,
   adaptPaginatedArtists,
   adaptPaginatedTracks,
-  adaptTracks,
 } from '@common/adapters'
 
 @Injectable()
 export class StatisticsService {
   constructor(private readonly httpService: HttpService) {}
 
-  lastTracks(accessToken: string, limit = 20): Observable<FormattedTrack[]> {
+  lastTracks(
+    accessToken: string,
+    limit = 20
+  ): Observable<SpotifyResponseWithCursors<FormattedTrack>> {
     const urlSearchParameters = new URLSearchParams({
       limit: limit + '',
     })
@@ -36,19 +41,22 @@ export class StatisticsService {
     console.log(urlSearchParameters.toString())
 
     return this.httpService
-      .get<SpotifyResponse<{ track: SpotifyTrack; played_at: string }>>(
+      .get<
+        SpotifyResponseWithCursors<{ track: SpotifyTrack; played_at: string }>
+      >(
         `/me/player/recently-played?${urlSearchParameters.toString()}`,
         applyAuthorizationHeader(accessToken)
       )
       .pipe(
         map(response => response.data),
-        map(({ items }) =>
-          items.map(({ track, played_at }) => ({
+        map(({ items, ...data }) => ({
+          ...data,
+          items: items.map(({ track, played_at }) => ({
             ...track,
             played_at,
-          }))
-        ),
-        map(adaptTracks),
+          })),
+        })),
+        map(adaptLastTracks),
         catchError(catchSpotifyError)
       )
   }
@@ -82,7 +90,7 @@ export class StatisticsService {
     limit = 10,
     timeRange = TimeRange.LONG_TERM,
     offset = 1
-  ): Observable<SpotifyResponse<FormattedArtist>> {
+  ): Observable<SpotifyResponseWithOffset<FormattedArtist>> {
     const urlSearchParameters = new URLSearchParams({
       limit: limit + '',
       offset: offset + '',
@@ -106,7 +114,7 @@ export class StatisticsService {
     limit = 10,
     timeRange = TimeRange.LONG_TERM,
     offset = 1
-  ): Observable<SpotifyResponse<FormattedTrack>> {
+  ): Observable<SpotifyResponseWithOffset<FormattedTrack>> {
     const urlSearchParameters = new URLSearchParams({
       limit: limit + '',
       offset: offset + '',
