@@ -36,34 +36,34 @@ const _mocks = require("../../common/mocks");
     });
     (0, _vitest.describe)('LastTracks', ()=>{
         (0, _vitest.test)('should get last tracks', async ()=>{
-            _vitest.vi.spyOn(statisticsService, 'lastTracks').mockReturnValue((0, _rxjs.of)(_mocks.formattedTracksMock));
-            (0, _vitest.expect)(await (0, _rxjs.firstValueFrom)(statisticsController.lastTracks('awd', {}))).toEqual(_mocks.formattedTracksMock);
+            _vitest.vi.spyOn(statisticsService, 'lastTracks').mockReturnValue((0, _rxjs.of)((0, _mocks.spotifyResponseWithCursorsMockFactory)(_mocks.formattedTracksMock)));
+            (0, _vitest.expect)(await (0, _rxjs.firstValueFrom)(statisticsController.lastTracks('awd', {}))).toEqual((0, _mocks.spotifyResponseWithCursorsMockFactory)(_mocks.formattedTracksMock));
         });
         (0, _vitest.test)('should get last tracks with limit query', async ()=>{
             const limit = 20;
             const formattedTracksWithLimitMock = Array.from({
                 length: limit
             }, ()=>_mocks.formattedTrackMock);
-            _vitest.vi.spyOn(statisticsService, 'lastTracks').mockReturnValue((0, _rxjs.of)(formattedTracksWithLimitMock));
+            _vitest.vi.spyOn(statisticsService, 'lastTracks').mockReturnValue((0, _rxjs.of)((0, _mocks.spotifyResponseWithCursorsMockFactory)(formattedTracksWithLimitMock)));
             (0, _vitest.expect)(await (0, _rxjs.firstValueFrom)(statisticsController.lastTracks('awd', {
                 limit
-            }))).toEqual(formattedTracksWithLimitMock);
+            }))).toEqual((0, _mocks.spotifyResponseWithCursorsMockFactory)(formattedTracksWithLimitMock));
         });
     });
     (0, _vitest.describe)('TopTracks', ()=>{
         (0, _vitest.test)('should get top tracks', async ()=>{
-            _vitest.vi.spyOn(statisticsService, 'topTracks').mockReturnValue((0, _rxjs.of)((0, _mocks.spotifyResponseMockFactory)(_mocks.formattedTracksMock)));
-            (0, _vitest.expect)(await (0, _rxjs.firstValueFrom)(statisticsController.topTracks('awd', {}))).toEqual((0, _mocks.spotifyResponseMockFactory)(_mocks.formattedTracksMock));
+            _vitest.vi.spyOn(statisticsService, 'topTracks').mockReturnValue((0, _rxjs.of)((0, _mocks.spotifyResponseWithOffsetMockFactory)(_mocks.formattedTracksMock)));
+            (0, _vitest.expect)(await (0, _rxjs.firstValueFrom)(statisticsController.topTracks('awd', {}))).toEqual((0, _mocks.spotifyResponseWithOffsetMockFactory)(_mocks.formattedTracksMock));
         });
         (0, _vitest.test)('should get top tracks with limit query', async ()=>{
             const limit = 20;
             const formattedTracksWithLimitMock = Array.from({
                 length: limit
             }, ()=>_mocks.formattedTrackMock);
-            _vitest.vi.spyOn(statisticsService, 'topTracks').mockReturnValue((0, _rxjs.of)((0, _mocks.spotifyResponseMockFactory)(formattedTracksWithLimitMock)));
+            _vitest.vi.spyOn(statisticsService, 'topTracks').mockReturnValue((0, _rxjs.of)((0, _mocks.spotifyResponseWithOffsetMockFactory)(formattedTracksWithLimitMock)));
             (0, _vitest.expect)(await (0, _rxjs.firstValueFrom)(statisticsController.topTracks('awd', {
                 limit
-            }))).toEqual((0, _mocks.spotifyResponseMockFactory)(formattedTracksWithLimitMock));
+            }))).toEqual((0, _mocks.spotifyResponseWithOffsetMockFactory)(formattedTracksWithLimitMock));
         });
     });
     (0, _vitest.describe)('TopGenres', ()=>{
@@ -86,18 +86,18 @@ const _mocks = require("../../common/mocks");
     });
     (0, _vitest.describe)('TopArtists', ()=>{
         (0, _vitest.test)('should get top artists', async ()=>{
-            _vitest.vi.spyOn(statisticsService, 'topArtists').mockReturnValue((0, _rxjs.of)((0, _mocks.spotifyResponseMockFactory)(_mocks.formattedArtistsMock)));
-            (0, _vitest.expect)(await (0, _rxjs.firstValueFrom)(statisticsController.topArtists('awd', {}))).toEqual((0, _mocks.spotifyResponseMockFactory)(_mocks.formattedArtistsMock));
+            _vitest.vi.spyOn(statisticsService, 'topArtists').mockReturnValue((0, _rxjs.of)((0, _mocks.spotifyResponseWithOffsetMockFactory)(_mocks.formattedArtistsMock)));
+            (0, _vitest.expect)(await (0, _rxjs.firstValueFrom)(statisticsController.topArtists('awd', {}))).toEqual((0, _mocks.spotifyResponseWithOffsetMockFactory)(_mocks.formattedArtistsMock));
         });
         (0, _vitest.test)('should get top artists with limit argument', async ()=>{
             const limit = 20;
             const formattedArtistsWithLimitMock = Array.from({
                 length: limit
             }, ()=>_mocks.formattedArtistMock);
-            _vitest.vi.spyOn(statisticsService, 'topArtists').mockReturnValue((0, _rxjs.of)((0, _mocks.spotifyResponseMockFactory)(formattedArtistsWithLimitMock)));
+            _vitest.vi.spyOn(statisticsService, 'topArtists').mockReturnValue((0, _rxjs.of)((0, _mocks.spotifyResponseWithOffsetMockFactory)(formattedArtistsWithLimitMock)));
             (0, _vitest.expect)(await (0, _rxjs.firstValueFrom)(statisticsController.topArtists('awd', {
                 limit
-            }))).toEqual((0, _mocks.spotifyResponseMockFactory)(formattedArtistsWithLimitMock));
+            }))).toEqual((0, _mocks.spotifyResponseWithOffsetMockFactory)(formattedArtistsWithLimitMock));
         });
     });
     (0, _vitest.test)('should get artist', async ()=>{

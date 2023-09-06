@@ -11,7 +11,8 @@ import {
   formattedArtistsMock,
   formattedTrackMock,
   formattedTracksMock,
-  spotifyResponseMockFactory,
+  spotifyResponseWithCursorsMockFactory,
+  spotifyResponseWithOffsetMockFactory,
   topGenresMock,
 } from '@common/mocks'
 
@@ -49,12 +50,12 @@ describe('StatisticsController', () => {
   describe('LastTracks', () => {
     test('should get last tracks', async () => {
       vi.spyOn(statisticsService, 'lastTracks').mockReturnValue(
-        of(formattedTracksMock)
+        of(spotifyResponseWithCursorsMockFactory(formattedTracksMock))
       )
 
       expect(
         await firstValueFrom(statisticsController.lastTracks('awd', {}))
-      ).toEqual(formattedTracksMock)
+      ).toEqual(spotifyResponseWithCursorsMockFactory(formattedTracksMock))
     })
 
     test('should get last tracks with limit query', async () => {
@@ -66,24 +67,26 @@ describe('StatisticsController', () => {
       )
 
       vi.spyOn(statisticsService, 'lastTracks').mockReturnValue(
-        of(formattedTracksWithLimitMock)
+        of(spotifyResponseWithCursorsMockFactory(formattedTracksWithLimitMock))
       )
 
       expect(
         await firstValueFrom(statisticsController.lastTracks('awd', { limit }))
-      ).toEqual(formattedTracksWithLimitMock)
+      ).toEqual(
+        spotifyResponseWithCursorsMockFactory(formattedTracksWithLimitMock)
+      )
     })
   })
 
   describe('TopTracks', () => {
     test('should get top tracks', async () => {
       vi.spyOn(statisticsService, 'topTracks').mockReturnValue(
-        of(spotifyResponseMockFactory(formattedTracksMock))
+        of(spotifyResponseWithOffsetMockFactory(formattedTracksMock))
       )
 
       expect(
         await firstValueFrom(statisticsController.topTracks('awd', {}))
-      ).toEqual(spotifyResponseMockFactory(formattedTracksMock))
+      ).toEqual(spotifyResponseWithOffsetMockFactory(formattedTracksMock))
     })
 
     test('should get top tracks with limit query', async () => {
@@ -95,12 +98,14 @@ describe('StatisticsController', () => {
       )
 
       vi.spyOn(statisticsService, 'topTracks').mockReturnValue(
-        of(spotifyResponseMockFactory(formattedTracksWithLimitMock))
+        of(spotifyResponseWithOffsetMockFactory(formattedTracksWithLimitMock))
       )
 
       expect(
         await firstValueFrom(statisticsController.topTracks('awd', { limit }))
-      ).toEqual(spotifyResponseMockFactory(formattedTracksWithLimitMock))
+      ).toEqual(
+        spotifyResponseWithOffsetMockFactory(formattedTracksWithLimitMock)
+      )
     })
   })
 
@@ -135,12 +140,12 @@ describe('StatisticsController', () => {
   describe('TopArtists', () => {
     test('should get top artists', async () => {
       vi.spyOn(statisticsService, 'topArtists').mockReturnValue(
-        of(spotifyResponseMockFactory(formattedArtistsMock))
+        of(spotifyResponseWithOffsetMockFactory(formattedArtistsMock))
       )
 
       expect(
         await firstValueFrom(statisticsController.topArtists('awd', {}))
-      ).toEqual(spotifyResponseMockFactory(formattedArtistsMock))
+      ).toEqual(spotifyResponseWithOffsetMockFactory(formattedArtistsMock))
     })
 
     test('should get top artists with limit argument', async () => {
@@ -152,12 +157,14 @@ describe('StatisticsController', () => {
       )
 
       vi.spyOn(statisticsService, 'topArtists').mockReturnValue(
-        of(spotifyResponseMockFactory(formattedArtistsWithLimitMock))
+        of(spotifyResponseWithOffsetMockFactory(formattedArtistsWithLimitMock))
       )
 
       expect(
         await firstValueFrom(statisticsController.topArtists('awd', { limit }))
-      ).toEqual(spotifyResponseMockFactory(formattedArtistsWithLimitMock))
+      ).toEqual(
+        spotifyResponseWithOffsetMockFactory(formattedArtistsWithLimitMock)
+      )
     })
   })
 
