@@ -29,7 +29,6 @@ let StatisticsService = class StatisticsService {
         const urlSearchParameters = new URLSearchParams({
             limit: limit + ''
         });
-        console.log(urlSearchParameters.toString());
         return this.httpService.get(`/me/player/recently-played?${urlSearchParameters.toString()}`, (0, _utils1.applyAuthorizationHeader)(accessToken)).pipe((0, _rxjs.map)((response)=>response.data), (0, _rxjs.map)(({ items, ...data })=>({
                 ...data,
                 items: items.map(({ track, played_at })=>({
