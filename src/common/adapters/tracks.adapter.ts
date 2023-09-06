@@ -1,4 +1,9 @@
-import { FormattedTrack, SpotifyResponse, SpotifyTrack } from '../types/spotify'
+import {
+  FormattedTrack,
+  SpotifyResponseWithCursors,
+  SpotifyResponseWithOffset,
+  SpotifyTrack,
+} from '../types/spotify'
 
 import { adaptPaginated } from './paginated.adapter'
 
@@ -26,5 +31,19 @@ export const adaptTracks = (tracks: SpotifyTrack[]): FormattedTrack[] =>
   tracks.map(track => adaptTrack(track))
 
 export const adaptPaginatedTracks = (
-  data: SpotifyResponse<SpotifyTrack, true>
+  data: SpotifyResponseWithOffset<SpotifyTrack>
 ) => adaptPaginated(data, adaptTracks)
+
+export const adaptLastTracks = ({
+  limit,
+  next,
+  href,
+  cursors,
+  items,
+}: SpotifyResponseWithCursors<SpotifyTrack>): SpotifyResponseWithCursors<FormattedTrack> => ({
+  limit,
+  next,
+  href,
+  cursors,
+  items: adaptTracks(items),
+})

@@ -3,10 +3,15 @@ import { test, describe, expect } from 'vitest'
 import {
   spotifyTracksMock,
   formattedTracksMock,
-  spotifyResponseMockFactory,
+  spotifyResponseWithCursorsMockFactory,
+  spotifyResponseWithOffsetMockFactory,
 } from '../mocks'
 
-import { adaptPaginatedTracks, adaptTracks } from './tracks.adapter'
+import {
+  adaptLastTracks,
+  adaptPaginatedTracks,
+  adaptTracks,
+} from './tracks.adapter'
 
 describe('adaptTracks', () => {
   test('should adapt tracks', () => {
@@ -27,10 +32,15 @@ describe('adaptTracks', () => {
 
   test('should adapt paginated tracks', () => {
     expect(
-      adaptPaginatedTracks({
-        ...spotifyResponseMockFactory(spotifyTracksMock),
-        offset: 0,
-      })
-    ).toEqual(spotifyResponseMockFactory(formattedTracksMock))
+      adaptPaginatedTracks(
+        spotifyResponseWithOffsetMockFactory(spotifyTracksMock)
+      )
+    ).toEqual(spotifyResponseWithOffsetMockFactory(formattedTracksMock))
+  })
+
+  test('should adapt last tracks', () => {
+    expect(
+      adaptLastTracks(spotifyResponseWithCursorsMockFactory(spotifyTracksMock))
+    ).toEqual(spotifyResponseWithCursorsMockFactory(formattedTracksMock))
   })
 })
