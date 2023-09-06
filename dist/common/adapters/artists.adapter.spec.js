@@ -13,10 +13,7 @@ const _artistsadapter = require("./artists.adapter");
         (0, _vitest.expect)((0, _artistsadapter.adaptArtists)(_mocks.spotifyArtistsMock)).toEqual(_mocks.formattedArtistsMock);
     });
     (0, _vitest.test)('should adapt paginated artists', ()=>{
-        (0, _vitest.expect)((0, _artistsadapter.adaptPaginatedArtists)({
-            ...(0, _mocks.spotifyResponseMockFactory)(_mocks.spotifyArtistsMock),
-            offset: 0
-        })).toEqual((0, _mocks.spotifyResponseMockFactory)(_mocks.formattedArtistsMock));
+        (0, _vitest.expect)((0, _artistsadapter.adaptPaginatedArtists)((0, _mocks.spotifyResponseWithOffsetMockFactory)(_mocks.spotifyArtistsMock))).toEqual((0, _mocks.spotifyResponseWithOffsetMockFactory)(_mocks.formattedArtistsMock));
     });
 });
 

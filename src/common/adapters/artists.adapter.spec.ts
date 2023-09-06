@@ -5,7 +5,7 @@ import {
   formattedArtistMock,
   spotifyArtistsMock,
   formattedArtistsMock,
-  spotifyResponseMockFactory,
+  spotifyResponseWithOffsetMockFactory,
 } from '../mocks'
 
 import {
@@ -25,10 +25,9 @@ describe('adaptArtists', () => {
 
   test('should adapt paginated artists', () => {
     expect(
-      adaptPaginatedArtists({
-        ...spotifyResponseMockFactory(spotifyArtistsMock),
-        offset: 0,
-      })
-    ).toEqual(spotifyResponseMockFactory(formattedArtistsMock))
+      adaptPaginatedArtists(
+        spotifyResponseWithOffsetMockFactory(spotifyArtistsMock)
+      )
+    ).toEqual(spotifyResponseWithOffsetMockFactory(formattedArtistsMock))
   })
 })

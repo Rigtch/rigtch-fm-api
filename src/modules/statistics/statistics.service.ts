@@ -38,8 +38,6 @@ export class StatisticsService {
       limit: limit + '',
     })
 
-    console.log(urlSearchParameters.toString())
-
     return this.httpService
       .get<
         SpotifyResponseWithCursors<{ track: SpotifyTrack; played_at: string }>
