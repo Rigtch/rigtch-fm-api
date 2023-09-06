@@ -1,9 +1,9 @@
-import { SpotifyResponse } from '../types/spotify'
+import { SpotifyResponseWithOffset } from '../types/spotify'
 
 export const adaptPaginated = <T, D>(
-  data: SpotifyResponse<T, true>,
+  data: SpotifyResponseWithOffset<T>,
   adaptFunction: (items: T[]) => D[]
-): SpotifyResponse<D, true> => {
+): SpotifyResponseWithOffset<D> => {
   const { items, next, href, limit, offset } = data
 
   return {
