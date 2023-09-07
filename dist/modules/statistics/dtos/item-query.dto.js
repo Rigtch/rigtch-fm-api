@@ -25,10 +25,5 @@ _ts_decorate([
     (0, _classvalidator.Max)(50),
     _ts_metadata("design:type", Number)
 ], ItemQuery.prototype, "limit", void 0);
-_ts_decorate([
-    (0, _classvalidator.IsOptional)(),
-    (0, _classvalidator.IsNumber)(),
-    _ts_metadata("design:type", Number)
-], ItemQuery.prototype, "offset", void 0);
 
 //# sourceMappingURL=item-query.dto.js.map

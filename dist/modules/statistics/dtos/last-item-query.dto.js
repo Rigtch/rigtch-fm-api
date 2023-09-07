@@ -2,14 +2,13 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-Object.defineProperty(exports, "TopItemQuery", {
+Object.defineProperty(exports, "LastItemQuery", {
     enumerable: true,
     get: function() {
-        return TopItemQuery;
+        return LastItemQuery;
     }
 });
 const _classvalidator = require("class-validator");
-const _enums = require("../enums/index");
 const _itemquerydto = require("./item-query.dto");
 function _ts_decorate(decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -20,17 +19,17 @@ function _ts_decorate(decorators, target, key, desc) {
 function _ts_metadata(k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 }
-let TopItemQuery = class TopItemQuery extends _itemquerydto.ItemQuery {
+let LastItemQuery = class LastItemQuery extends _itemquerydto.ItemQuery {
 };
 _ts_decorate([
     (0, _classvalidator.IsOptional)(),
-    (0, _classvalidator.IsEnum)(_enums.TimeRange),
-    _ts_metadata("design:type", typeof _enums.TimeRange === "undefined" ? Object : _enums.TimeRange)
-], TopItemQuery.prototype, "timeRange", void 0);
+    (0, _classvalidator.IsNumber)(),
+    _ts_metadata("design:type", String)
+], LastItemQuery.prototype, "before", void 0);
 _ts_decorate([
     (0, _classvalidator.IsOptional)(),
     (0, _classvalidator.IsNumber)(),
-    _ts_metadata("design:type", Number)
-], TopItemQuery.prototype, "offset", void 0);
+    _ts_metadata("design:type", String)
+], LastItemQuery.prototype, "after", void 0);
 
-//# sourceMappingURL=top-item-query.dto.js.map
+//# sourceMappingURL=last-item-query.dto.js.map

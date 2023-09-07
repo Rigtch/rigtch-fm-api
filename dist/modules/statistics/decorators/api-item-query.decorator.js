@@ -11,7 +11,7 @@ Object.defineProperty(exports, "ApiItemQuery", {
 const _common = require("@nestjs/common");
 const _swagger = require("@nestjs/swagger");
 const _enums = require("../enums/index");
-const ApiItemQuery = (isTopItem = false)=>(0, _common.applyDecorators)((0, _swagger.ApiQuery)({
+const ApiItemQuery = (options)=>(0, _common.applyDecorators)((0, _swagger.ApiQuery)({
         name: 'limit',
         type: Number,
         required: false
@@ -19,9 +19,15 @@ const ApiItemQuery = (isTopItem = false)=>(0, _common.applyDecorators)((0, _swag
         name: 'timeRange',
         enum: _enums.TimeRange,
         required: false
-    }), isTopItem ? (0, _swagger.ApiQuery)({
+    }), options?.withOffset ? (0, _swagger.ApiQuery)({
         name: 'offset',
         type: Number,
+        required: false
+    }) : ()=>{}, options?.withCursors ? (0, _swagger.ApiQuery)({
+        name: 'after',
+        required: false
+    }) : ()=>{}, options?.withCursors ? (0, _swagger.ApiQuery)({
+        name: 'before',
         required: false
     }) : ()=>{});
 
