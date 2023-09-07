@@ -1,3 +1,5 @@
+import { Cursors } from './cursors'
+
 export interface SpotifyResponse<T = unknown> {
   href: string
   limit: number
@@ -12,8 +14,5 @@ export interface SpotifyResponseWithOffset<T = unknown>
 
 export interface SpotifyResponseWithCursors<T = unknown>
   extends SpotifyResponse<T> {
-  cursors: {
-    after: string
-    before: string
-  }
+  cursors: Cursors
 }
