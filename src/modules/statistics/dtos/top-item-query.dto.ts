@@ -1,4 +1,4 @@
-import { IsEnum, IsOptional } from 'class-validator'
+import { IsEnum, IsNumber, IsOptional } from 'class-validator'
 
 import { TimeRange } from '../enums'
 
@@ -8,4 +8,8 @@ export abstract class TopItemQuery extends ItemQuery {
   @IsOptional()
   @IsEnum(TimeRange)
   timeRange?: TimeRange
+
+  @IsOptional()
+  @IsNumber()
+  offset?: number
 }
