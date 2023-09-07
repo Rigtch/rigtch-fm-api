@@ -31,8 +31,8 @@ function _ts_param(paramIndex, decorator) {
     };
 }
 let StatisticsController = class StatisticsController {
-    lastTracks(accessToken, { limit }) {
-        return this.statisticsService.lastTracks(accessToken, limit);
+    lastTracks(accessToken, { limit, before, after }) {
+        return this.statisticsService.lastTracks(accessToken, limit, before, after);
     }
     topTracks(accessToken, { limit, timeRange, offset }) {
         return this.statisticsService.topTracks(accessToken, limit, timeRange, offset);
@@ -55,7 +55,9 @@ let StatisticsController = class StatisticsController {
 };
 _ts_decorate([
     (0, _common.Get)('/last-tracks'),
-    (0, _decorators.ApiItemQuery)(),
+    (0, _decorators.ApiItemQuery)({
+        withCursors: true
+    }),
     (0, _swagger.ApiOkResponse)({
         description: 'Last tracks has been succesfully found',
         type: [
@@ -67,12 +69,14 @@ _ts_decorate([
     _ts_metadata("design:type", Function),
     _ts_metadata("design:paramtypes", [
         String,
-        typeof _dtos.ItemQuery === "undefined" ? Object : _dtos.ItemQuery
+        typeof _dtos.LastItemQuery === "undefined" ? Object : _dtos.LastItemQuery
     ])
 ], StatisticsController.prototype, "lastTracks", null);
 _ts_decorate([
     (0, _common.Get)('/top-tracks'),
-    (0, _decorators.ApiItemQuery)(true),
+    (0, _decorators.ApiItemQuery)({
+        withOffset: true
+    }),
     (0, _swagger.ApiOkResponse)({
         description: 'Top tracks has been succesfully found',
         type: [
@@ -89,7 +93,7 @@ _ts_decorate([
 ], StatisticsController.prototype, "topTracks", null);
 _ts_decorate([
     (0, _common.Get)('/top-genres'),
-    (0, _decorators.ApiItemQuery)(true),
+    (0, _decorators.ApiItemQuery)(),
     (0, _swagger.ApiOkResponse)({
         description: 'Top genres has been succesfully found',
         type: _dtos1.Genres
@@ -104,7 +108,9 @@ _ts_decorate([
 ], StatisticsController.prototype, "topGenres", null);
 _ts_decorate([
     (0, _common.Get)('/top-artists'),
-    (0, _decorators.ApiItemQuery)(true),
+    (0, _decorators.ApiItemQuery)({
+        withOffset: true
+    }),
     (0, _swagger.ApiOkResponse)({
         description: 'Top artists has been succesfully found',
         type: [

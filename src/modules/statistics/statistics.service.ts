@@ -32,11 +32,16 @@ export class StatisticsService {
 
   lastTracks(
     accessToken: string,
-    limit = 20
+    limit = 20,
+    before?: string,
+    after?: string
   ): Observable<SpotifyResponseWithCursors<FormattedTrack>> {
     const urlSearchParameters = new URLSearchParams({
       limit: limit + '',
     })
+
+    if (before) urlSearchParameters.append('before', before)
+    if (after) urlSearchParameters.append('after', after)
 
     return this.httpService
       .get<
