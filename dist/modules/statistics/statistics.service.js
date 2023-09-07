@@ -25,10 +25,12 @@ function _ts_metadata(k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 }
 let StatisticsService = class StatisticsService {
-    lastTracks(accessToken, limit = 20) {
+    lastTracks(accessToken, limit = 20, before, after) {
         const urlSearchParameters = new URLSearchParams({
             limit: limit + ''
         });
+        if (before) urlSearchParameters.append('before', before);
+        if (after) urlSearchParameters.append('after', after);
         return this.httpService.get(`/me/player/recently-played?${urlSearchParameters.toString()}`, (0, _utils1.applyAuthorizationHeader)(accessToken)).pipe((0, _rxjs.map)((response)=>response.data), (0, _rxjs.map)(({ items, ...data })=>({
                 ...data,
                 items: items.map(({ track, played_at })=>({

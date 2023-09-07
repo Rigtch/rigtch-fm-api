@@ -2,7 +2,7 @@ import { Controller, Get, Query } from '@nestjs/common'
 import { ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger'
 
 import { StatisticsService } from './statistics.service'
-import { ItemQuery, TopItemQuery } from './dtos'
+import { LastItemQuery, TopItemQuery } from './dtos'
 import { ApiItemQuery } from './decorators'
 
 import { Token, ApiAuth } from '@modules/auth'
@@ -16,17 +16,20 @@ export class StatisticsController {
   constructor(private readonly statisticsService: StatisticsService) {}
 
   @Get('/last-tracks')
-  @ApiItemQuery()
+  @ApiItemQuery({ withCursors: true })
   @ApiOkResponse({
     description: 'Last tracks has been succesfully found',
     type: [Track],
   })
-  lastTracks(@Token() accessToken: string, @Query() { limit }: ItemQuery) {
-    return this.statisticsService.lastTracks(accessToken, limit)
+  lastTracks(
+    @Token() accessToken: string,
+    @Query() { limit, before, after }: LastItemQuery
+  ) {
+    return this.statisticsService.lastTracks(accessToken, limit, before, after)
   }
 
   @Get('/top-tracks')
-  @ApiItemQuery(true)
+  @ApiItemQuery({ withOffset: true })
   @ApiOkResponse({
     description: 'Top tracks has been succesfully found',
     type: [Track],
@@ -44,7 +47,7 @@ export class StatisticsController {
   }
 
   @Get('/top-genres')
-  @ApiItemQuery(true)
+  @ApiItemQuery()
   @ApiOkResponse({
     description: 'Top genres has been succesfully found',
     type: Genres,
@@ -62,7 +65,7 @@ export class StatisticsController {
   }
 
   @Get('/top-artists')
-  @ApiItemQuery(true)
+  @ApiItemQuery({ withOffset: true })
   @ApiOkResponse({
     description: 'Top artists has been succesfully found',
     type: [Artist],
