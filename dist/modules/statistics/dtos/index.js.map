@@ -1,1 +1,1 @@
-{"version":3,"sources":["../../../../src/modules/statistics/dtos/index.ts"],"sourcesContent":["export * from './item-query.dto'\nexport * from './id.dto'\nexport * from './top-item-query.dto'\n"],"names":[],"mappings":";;;;qBAAc;qBACA;qBACA"}
+{"version":3,"sources":["../../../../src/modules/statistics/dtos/index.ts"],"sourcesContent":["export * from './item-query.dto'\nexport * from './id.dto'\nexport * from './top-item-query.dto'\nexport * from './last-item-query.dto'\n"],"names":[],"mappings":";;;;qBAAc;qBACA;qBACA;qBACA"}

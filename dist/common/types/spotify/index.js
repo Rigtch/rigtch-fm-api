@@ -12,6 +12,7 @@ _export_star(require("./spotify-token"), exports);
 _export_star(require("./device"), exports);
 _export_star(require("./playback-state"), exports);
 _export_star(require("./audio-features"), exports);
+_export_star(require("./cursors"), exports);
 function _export_star(from, to) {
     Object.keys(from).forEach(function(k) {
         if (k !== "default" && !Object.prototype.hasOwnProperty.call(to, k)) {
