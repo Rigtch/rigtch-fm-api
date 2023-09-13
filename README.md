@@ -15,8 +15,8 @@ Rigtch is website focused on displaying your all-time statistics such as favorit
 
 ## Deployment
 
-- [Production](https://rigtch-music-api.vercel.app)
-- [Documentation](https://rigtch-music-api.vercel.app/api)
+- [Production](https://rigtch-music-api-production.up.railway.app)
+- [Documentation](https://rigtch-music-api-production.up.railway.app/api)
 
 ### Related repositories
 
