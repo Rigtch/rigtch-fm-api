@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../../../src/modules/auth/enums/authentication-type.enum.ts"],"sourcesContent":["export enum AuthenticationType {\n  ACCESS_TOKEN = 'access-token',\n  REFRESH_TOKEN = 'refresh-token',\n}\n"],"names":["AuthenticationType","ACCESS_TOKEN","REFRESH_TOKEN"],"mappings":";;;;;;;;;;IAAO;UAAKA,kBAAkB;IAAlBA,mBACVC,kBAAe;IADLD,mBAEVE,mBAAgB;GAFNF,uBAAAA"}

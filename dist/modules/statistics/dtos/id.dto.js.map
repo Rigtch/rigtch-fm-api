@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../../../src/modules/statistics/dtos/id.dto.ts"],"sourcesContent":["import { IsString } from 'class-validator'\n\nexport abstract class IdArguments {\n  @IsString()\n  id: string\n}\n"],"names":["IdArguments","IsString"],"mappings":";;;;+BAEsBA;;;eAAAA;;;gCAFG;;;;;;;;;;AAElB,IAAA,AAAeA,cAAf,MAAeA;AAGtB;;IAFGC,IAAAA,wBAAQ;;GADWD"}
