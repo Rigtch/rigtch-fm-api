@@ -14,7 +14,7 @@ module.exports = {
     settings: {
       'import/resolver': {
         node: {
-          paths: ['~/', '@modules', '@common'],
+          paths: ['~/', '@modules', '@common', '@config'],
           extensions: ['.js', '.ts'],
         },
         alias: {
@@ -22,6 +22,7 @@ module.exports = {
             ['~', './'],
             ['@modules', './src/modules'],
             ['@common', './src/common'],
+            ['@config', './src/config'],
           ],
           extensions: ['.ts', '.js'],
         },

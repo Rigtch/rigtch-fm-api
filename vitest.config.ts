@@ -11,6 +11,7 @@ export default defineConfig({
       '~': './src',
       '@modules': './src/modules',
       '@common': './src/common',
+      '@config': './src/config',
     },
   },
   plugins: [
