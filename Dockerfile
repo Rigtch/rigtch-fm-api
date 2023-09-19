@@ -1,14 +1,15 @@
-FROM node:18-alpine As development
+FROM node:18-alpine as development
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY package.json ./
+COPY yarn.lock ./
 
-RUN npm install
+RUN yarn install
 
 COPY . .
 
-RUN npm run build
+RUN yarn build
 
 FROM node:18-alpine as production
 
@@ -18,10 +19,10 @@ ENV NODE_ENV=${NODE_ENV}
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY package.json ./
+COPY yarn.lock ./
 
-RUN npm pkg delete scripts.prepare
-RUN npm install --only=production
+RUN yarn install --ignore-scripts --production=true
 
 COPY . .
 
