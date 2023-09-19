@@ -5,7 +5,7 @@ import { ConfigService } from '@nestjs/config'
 import { PlayerService } from './player.service'
 import { PlayerController } from './player.controller'
 
-import { Environment } from '~/config'
+import { Environment } from '@config/environment'
 
 @Module({
   imports: [

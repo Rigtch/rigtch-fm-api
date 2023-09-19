@@ -8,7 +8,7 @@ import { Observable, map, catchError } from 'rxjs'
 import { SecretData } from './dtos'
 import { TokenOptions } from './types'
 
-import { Environment } from '~/config'
+import { Environment } from '@config/environment'
 import {
   SpotifyToken,
   FormattedProfile,
