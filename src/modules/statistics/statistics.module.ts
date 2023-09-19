@@ -6,7 +6,7 @@ import { StatisticsService } from './statistics.service'
 import { StatisticsController } from './statistics.controller'
 
 import { AuthModule } from '@modules/auth'
-import { Environment } from '~/config'
+import { Environment } from '@config/environment'
 
 @Module({
   imports: [

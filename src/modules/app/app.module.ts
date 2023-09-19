@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common'
-import * as Joi from 'joi'
-import { ConfigModule } from '@nestjs/config'
+import { ConfigModule, ConfigService } from '@nestjs/config'
+import { TypeOrmModule } from '@nestjs/typeorm'
 
+import { environmentSchema } from '@config/environment'
 import { AuthModule } from '@modules/auth'
 import { StatisticsModule } from '@modules/statistics'
 import { PlayerModule } from '@modules/player'
+import { typeorm } from '@config/database'
 
 @Module({
   imports: [
@@ -14,16 +16,14 @@ import { PlayerModule } from '@modules/player'
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: './.env',
-      validationSchema: Joi.object({
-        PORT: Joi.number().default(4000),
-        SPOTIFY_CLIENT_ID: Joi.string().required(),
-        SPOTIFY_CLIENT_SECRET: Joi.string().required(),
-        SPOTIFY_CALLBACK_URL: Joi.string().required(),
-        SPOTIFY_BASE_URL: Joi.string().required(),
-        SPOTIFY_ACCOUNTS_URL: Joi.string().required(),
-        CLIENT_CALLBACK_URL: Joi.string().required(),
-        JWT_SECRET: Joi.string().required(),
-      }),
+      validationSchema: environmentSchema,
+      load: [typeorm],
+    }),
+    TypeOrmModule.forRootAsync({
+      useFactory: (configService: ConfigService) =>
+        configService.get('typeorm'),
+      imports: [ConfigModule],
+      inject: [ConfigService],
     }),
   ],
 })

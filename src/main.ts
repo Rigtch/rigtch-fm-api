@@ -3,8 +3,7 @@ import { ConfigService } from '@nestjs/config'
 import cookieParser from 'cookie-parser'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 
-import { Environment } from './config'
-
+import { Environment } from '@config/environment'
 import { AppModule } from '@modules/app'
 import { AuthenticationType } from '@modules/auth/enums'
 import { BEARER } from '@modules/auth/constants'
@@ -39,7 +38,6 @@ async function bootstrap() {
 
   app.enableCors({
     origin: configService.get(Environment.CLIENT_CALLBACK_URL),
-    // origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   })

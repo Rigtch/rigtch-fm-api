@@ -9,7 +9,7 @@ import { RedirectResponse } from './types'
 import { Token, ApiAuth } from './decorators'
 import { ProfileDto, SecretData } from './dtos'
 
-import { Environment } from '~/config'
+import { Environment } from '@config/environment'
 import { AuthenticationType } from '@modules/auth/enums'
 
 const {
