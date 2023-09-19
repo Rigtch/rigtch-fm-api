@@ -6,9 +6,11 @@
     "*.ts": "$(capture).js, $(capture).*.ts, $(capture).*.js",
     "*.js": "$(capture).js.map, $(capture).*.ts, $(capture).*.js",
     "tsconfig.json": "tsconfig.*.json",
-    "docker-compose.yml": "docker-compose.*.yml",
-    ".env": ".env.*",
-    "package.json": ".npmrc, yarn.lock, .yarnrc, .nvmrc"
+    "Dockerfile": "docker-compose.yml, .dockerignore",
+    ".env": "*.env",
+    "package.json": ".npmrc, yarn.lock, .yarnrc, .nvmrc",
+    ".eslintrc.*": ".eslintignore, .eslintcache",
+    ".prettierrc": ".prettierignore"
   },
   "javascript.updateImportsOnFileMove.enabled": "always",
   "typescript.updateImportsOnFileMove.enabled": "always",
