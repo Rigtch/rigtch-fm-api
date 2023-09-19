@@ -6,7 +6,7 @@ import { HttpModule } from '@nestjs/axios'
 import { AuthService } from './auth.service'
 import { AuthController } from './auth.controller'
 
-import { Environment } from '~/config'
+import { Environment } from '@config/environment'
 
 @Module({
   imports: [
