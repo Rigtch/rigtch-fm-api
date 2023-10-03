@@ -1,5 +1,9 @@
 import { FormattedProfile, SpotifyProfile } from '../types/spotify'
 
+import { imagesMock } from './image.mock'
+
+import { Profile } from '@modules/profiles'
+
 export const spotifyProfileMock: SpotifyProfile = {
   country: 'US',
   display_name: 'Spotify User',
@@ -69,3 +73,11 @@ export const formattedProfileMock: FormattedProfile = {
     },
   ],
 }
+
+export const profileMock: Profile = {
+  ...formattedProfileMock,
+  id: '1',
+  images: imagesMock,
+}
+
+export const profilesMock = Array.from({ length: 3 }, () => profileMock)
