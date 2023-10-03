@@ -24,4 +24,13 @@ export abstract class ProfileDto implements FormattedProfile {
 
   @ApiProperty()
   href: string
+
+  @ApiProperty({ required: false })
+  product?: string
+
+  @ApiProperty()
+  type: string
+
+  @ApiProperty()
+  uri: string
 }

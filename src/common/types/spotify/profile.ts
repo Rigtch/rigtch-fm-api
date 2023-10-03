@@ -8,6 +8,9 @@ export interface FormattedProfile {
   country?: string
   email?: string
   href: string
+  product?: string
+  type: string
+  uri: string
 }
 
 export interface SpotifyProfile {
