@@ -52,6 +52,8 @@ export class AuthController {
       this.authService.token({ code })
     )
 
+    console.log(await firstValueFrom(this.authService.profile(accessToken)))
+
     return {
       url: `${this.configService.get(
         CLIENT_CALLBACK_URL
