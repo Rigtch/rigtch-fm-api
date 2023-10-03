@@ -6,6 +6,9 @@ export const adaptProfile = ({
   email,
   images,
   country,
+  product,
+  type,
+  uri,
   external_urls: { spotify: href },
   followers,
 }: SpotifyProfile): FormattedProfile => ({
@@ -15,5 +18,8 @@ export const adaptProfile = ({
   images,
   country,
   href,
+  product,
+  type,
+  uri,
   followers: followers.total,
 })
