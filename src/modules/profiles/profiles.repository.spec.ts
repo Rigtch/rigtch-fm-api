@@ -39,7 +39,7 @@ describe('ProfilesRepository', () => {
   })
 
   test('should find profile by id', async () => {
-    vi.spyOn(profilesRepository, 'findOneBy').mockResolvedValue(profileMock)
+    vi.spyOn(profilesRepository, 'findOne').mockResolvedValue(profileMock)
 
     const id = '1'
     const profile = await profilesRepository.findProfile(id)
@@ -60,7 +60,7 @@ describe('ProfilesRepository', () => {
   })
 
   test('should update profile', async () => {
-    vi.spyOn(profilesRepository, 'findOneBy').mockResolvedValue(profileMock)
+    vi.spyOn(profilesRepository, 'findOne').mockResolvedValue(profileMock)
     vi.spyOn(profilesRepository, 'save').mockResolvedValue(profileMock)
 
     const id = '1'
@@ -72,7 +72,7 @@ describe('ProfilesRepository', () => {
   })
 
   test('should remove profile', async () => {
-    vi.spyOn(profilesRepository, 'findOneBy').mockResolvedValue(profileMock)
+    vi.spyOn(profilesRepository, 'findOne').mockResolvedValue(profileMock)
     vi.spyOn(profilesRepository, 'remove').mockResolvedValue(profileMock)
 
     const id = '1'
