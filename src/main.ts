@@ -1,7 +1,8 @@
-import { NestFactory } from '@nestjs/core'
+import { NestFactory, Reflector } from '@nestjs/core'
 import { ConfigService } from '@nestjs/config'
 import cookieParser from 'cookie-parser'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
+import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common'
 
 import { Environment } from '@config/environment'
 import { AppModule } from '@modules/app'
@@ -10,6 +11,7 @@ import { BEARER } from '@modules/auth/constants'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
+  const reflector = app.get(Reflector)
   const configService = app.get(ConfigService)
 
   const documentConfig = new DocumentBuilder()
@@ -42,8 +44,9 @@ async function bootstrap() {
     credentials: true,
   })
   app.use(cookieParser())
+  app.useGlobalPipes(new ValidationPipe())
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(reflector))
 
-  await app.startAllMicroservices()
   await app.listen(+configService.get(Environment.PORT) || 4000)
 }
 bootstrap()
