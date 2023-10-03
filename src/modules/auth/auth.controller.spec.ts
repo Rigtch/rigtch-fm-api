@@ -8,7 +8,7 @@ import { AuthController } from './auth.controller'
 import { AuthService } from './auth.service'
 import { SecretData } from './dtos'
 
-import { FormattedProfile } from '@common/types/spotify'
+import { formattedProfileMock } from '@common/mocks'
 
 describe('AuthController', () => {
   const redirectUrl = 'http://test.com'
@@ -85,26 +85,10 @@ describe('AuthController', () => {
   })
 
   test('should return profile', async () => {
-    const profileMock: FormattedProfile = {
-      id: '123',
-      displayName: 'test',
-      email: 'email@test.com',
-      images: [
-        {
-          url: 'http://test.com',
-          height: 100,
-          width: 100,
-        },
-      ],
-      followers: 23,
-      country: 'BR',
-      href: 'http://test.com',
-    }
-
-    vi.spyOn(authService, 'profile').mockReturnValue(of(profileMock))
+    vi.spyOn(authService, 'profile').mockReturnValue(of(formattedProfileMock))
 
     expect(await firstValueFrom(authController.profile('123'))).toEqual(
-      profileMock
+      formattedProfileMock
     )
   })
 })

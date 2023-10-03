@@ -46,6 +46,9 @@ export const formattedProfileMock: FormattedProfile = {
   displayName: 'Spotify User',
   email: 'spotify-user@example.com',
   followers: 0,
+  product: 'premium',
+  type: 'user',
+  uri: 'spotify:user:spotify-user',
   id: 'spotify-user',
   href: 'https://open.spotify.com/user/spotify-user',
   images: [
