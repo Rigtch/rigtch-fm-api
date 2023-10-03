@@ -6,8 +6,9 @@ import { environmentSchema } from '@config/environment'
 import { AuthModule } from '@modules/auth'
 import { StatisticsModule } from '@modules/statistics'
 import { PlayerModule } from '@modules/player'
-import { typeorm } from '@config/database'
 import { ImagesModule } from '@modules/images'
+import { ProfilesModule } from '@modules/profiles'
+import { typeorm } from '@config/database'
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { ImagesModule } from '@modules/images'
     StatisticsModule,
     PlayerModule,
     ImagesModule,
+    ProfilesModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: './.env',
