@@ -7,12 +7,14 @@ import { AuthModule } from '@modules/auth'
 import { StatisticsModule } from '@modules/statistics'
 import { PlayerModule } from '@modules/player'
 import { typeorm } from '@config/database'
+import { ImagesModule } from '@modules/images'
 
 @Module({
   imports: [
     AuthModule,
     StatisticsModule,
     PlayerModule,
+    ImagesModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: './.env',
