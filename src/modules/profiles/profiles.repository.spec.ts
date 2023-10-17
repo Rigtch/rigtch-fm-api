@@ -42,7 +42,7 @@ describe('ProfilesRepository', () => {
     vi.spyOn(profilesRepository, 'findOne').mockResolvedValue(profileMock)
 
     const id = '1'
-    const profile = await profilesRepository.findProfile(id)
+    const profile = await profilesRepository.findProfileById(id)
 
     expect(profile).toEqual(profileMock)
     expect(profilesRepository.findOne).toHaveBeenCalledWith({
@@ -63,26 +63,30 @@ describe('ProfilesRepository', () => {
   })
 
   test('should update profile', async () => {
-    vi.spyOn(profilesRepository, 'findProfile').mockResolvedValue(profileMock)
+    vi.spyOn(profilesRepository, 'findProfileById').mockResolvedValue(
+      profileMock
+    )
     vi.spyOn(profilesRepository, 'save').mockResolvedValue(profileMock)
 
     const id = '1'
     const profile = await profilesRepository.updateProfile(id, profileMock)
 
     expect(profile).toEqual(profileMock)
-    expect(profilesRepository.findProfile).toHaveBeenCalledWith(id)
+    expect(profilesRepository.findProfileById).toHaveBeenCalledWith(id)
     expect(profilesRepository.save).toHaveBeenCalledWith(profileMock)
   })
 
   test('should remove profile', async () => {
-    vi.spyOn(profilesRepository, 'findProfile').mockResolvedValue(profileMock)
+    vi.spyOn(profilesRepository, 'findProfileById').mockResolvedValue(
+      profileMock
+    )
     vi.spyOn(profilesRepository, 'remove').mockResolvedValue(profileMock)
 
     const id = '1'
     const profile = await profilesRepository.removeProfile(id)
 
     expect(profile).toEqual(profileMock)
-    expect(profilesRepository.findProfile).toHaveBeenCalledWith(id)
+    expect(profilesRepository.findProfileById).toHaveBeenCalledWith(id)
     expect(profilesRepository.remove).toHaveBeenCalledWith(profileMock)
   })
 })
