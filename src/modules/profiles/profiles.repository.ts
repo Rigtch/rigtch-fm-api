@@ -15,7 +15,7 @@ export class ProfilesRepository extends Repository<Profile> {
     })
   }
 
-  findProfile(id: string) {
+  findProfileById(id: string) {
     return this.findOne({ where: { id }, relations: ['images'] })
   }
 
@@ -26,7 +26,7 @@ export class ProfilesRepository extends Repository<Profile> {
   }
 
   async updateProfile(id: string, profile: Partial<Profile>) {
-    const foundProfile = await this.findProfile(id)
+    const foundProfile = await this.findProfileById(id)
 
     Object.assign(foundProfile, profile)
 
@@ -34,7 +34,7 @@ export class ProfilesRepository extends Repository<Profile> {
   }
 
   async removeProfile(id: string) {
-    const profile = await this.findProfile(id)
+    const profile = await this.findProfileById(id)
 
     return await this.remove(profile)
   }
