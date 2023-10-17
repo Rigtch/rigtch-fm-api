@@ -20,10 +20,10 @@ export class UsersRepository extends Repository<User> {
     return this.findOne({ where: { id }, relations: ['profile'] })
   }
 
-  async createUser(user: CreateUser) {
+  createUser(user: CreateUser) {
     const userEntity = this.create(user)
 
-    return await this.save(userEntity)
+    return this.save(userEntity)
   }
 
   async updateUser(id: string, user: Partial<CreateUser>) {
@@ -31,7 +31,7 @@ export class UsersRepository extends Repository<User> {
 
     Object.assign(foundUser, user)
 
-    return await this.save(foundUser)
+    return this.save(foundUser)
   }
 
   async removeUser(id: string) {
