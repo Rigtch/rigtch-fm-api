@@ -30,10 +30,10 @@
     "test:e2e:watch": "jest --config jest-e2e.config.ts --watch",
     "stryker": "stryker run",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli",
-    "migration:run": "npm run typeorm -- migration:run -d ./src/config/typeorm.config.ts",
-    "migration:generate": "npm run typeorm -- migration:generate -d ./src/config/typeorm.config.ts ./src/migrations/migration",
+    "migration:run": "npm run typeorm -- migration:run -d ./src/config/database/typeorm.config.ts",
+    "migration:generate": "npm run typeorm -- migration:generate -d ./src/config/database/typeorm.config.ts ./src/migrations/migration",
     "migration:create": "npm run typeorm -- migration:create ./src/migrations/migration",
-    "migration:revert": "npm run typeorm -- migration:revert -d ./src/config/typeorm.config.ts",
+    "migration:revert": "npm run typeorm -- migration:revert -d ./src/config/database/typeorm.config.ts",
     "prepare": "husky install"
   },
   "sideEffects": false,
