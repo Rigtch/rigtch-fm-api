@@ -8,7 +8,7 @@ import {
 import { Exclude } from 'class-transformer'
 import { ApiProperty } from '@nestjs/swagger'
 
-import { Profile } from '../profiles'
+import { Profile } from '@modules/profiles'
 
 @Entity()
 export class User {
@@ -16,7 +16,9 @@ export class User {
   @ApiProperty()
   id: string
 
-  @OneToOne('Profile', 'user')
+  @OneToOne('Profile', 'user', {
+    cascade: true,
+  })
   @ApiProperty({ type: Profile })
   profile: Relation<Profile>
 
