@@ -7,6 +7,8 @@ import { AuthService } from './auth.service'
 import { AuthController } from './auth.controller'
 
 import { Environment } from '@config/environment'
+import { UsersModule } from '@modules/users'
+import { ProfilesModule } from '@modules/profiles'
 
 @Module({
   imports: [
@@ -31,6 +33,8 @@ import { Environment } from '@config/environment'
       },
       inject: [ConfigService],
     }),
+    ProfilesModule,
+    UsersModule,
   ],
   providers: [AuthService],
   controllers: [AuthController],

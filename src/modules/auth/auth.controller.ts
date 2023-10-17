@@ -11,6 +11,8 @@ import { ProfileDto, SecretData } from './dtos'
 
 import { Environment } from '@config/environment'
 import { AuthenticationType } from '@modules/auth/enums'
+import { UsersRepository } from '@modules/users'
+import { ProfilesRepository, ProfilesService } from '@modules/profiles'
 
 const {
   SPOTIFY_CALLBACK_URL,
@@ -24,7 +26,10 @@ const {
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
+    private readonly profilesService: ProfilesService,
+    private readonly profilesRepository: ProfilesRepository,
+    private readonly usersRepository: UsersRepository
   ) {}
 
   @Get('login')
@@ -52,7 +57,22 @@ export class AuthController {
       this.authService.token({ code })
     )
 
-    console.log(await firstValueFrom(this.authService.profile(accessToken)))
+    const spotifyProfile = await firstValueFrom(
+      this.authService.profile(accessToken)
+    )
+
+    const foundProfile = await this.profilesRepository.findProfileById(
+      spotifyProfile.id
+    )
+
+    if (!foundProfile) {
+      const profile = await this.profilesService.create(spotifyProfile)
+
+      await this.usersRepository.createUser({
+        profile,
+        refreshToken,
+      })
+    }
 
     return {
       url: `${this.configService.get(
