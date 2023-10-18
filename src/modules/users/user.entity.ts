@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   OneToOne,
   PrimaryGeneratedColumn,
   Relation,
@@ -16,9 +17,8 @@ export class User {
   @ApiProperty()
   id: string
 
-  @OneToOne('Profile', 'user', {
-    cascade: true,
-  })
+  @OneToOne(() => Profile, { cascade: true })
+  @JoinColumn()
   @ApiProperty({ type: Profile })
   profile: Relation<Profile>
 
