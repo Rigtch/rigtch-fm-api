@@ -5,17 +5,15 @@ import {
 } from '@nestjs/common'
 import { Request } from 'express'
 
-export const Token = createParamDecorator(
-  (data: unknown, context: ExecutionContext) => {
-    const request: Request = context.switchToHttp().getRequest()
+export function getToken(data: unknown, context: ExecutionContext) {
+  const { headers }: Request = context.switchToHttp().getRequest()
 
-    const token = request.headers?.authorization?.slice(7)
+  const token = headers?.authorization?.slice(7)
 
-    if (!token)
-      throw new UnauthorizedException(
-        'No value was provided for Authentication'
-      )
+  if (!token)
+    throw new UnauthorizedException('No value was provided for Authentication')
 
-    return token
-  }
-)
+  return token
+}
+
+export const Token = createParamDecorator(getToken)
