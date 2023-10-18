@@ -14,12 +14,11 @@ module.exports = {
     settings: {
       'import/resolver': {
         node: {
-          paths: ['~/', '@modules', '@common', '@config'],
+          paths: ['@modules', '@common', '@config'],
           extensions: ['.js', '.ts'],
         },
         alias: {
           map: [
-            ['~', './'],
             ['@modules', './src/modules'],
             ['@common', './src/common'],
             ['@config', './src/config'],
