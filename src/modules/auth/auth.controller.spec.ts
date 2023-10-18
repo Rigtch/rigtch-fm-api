@@ -9,7 +9,7 @@ import { AuthService } from './auth.service'
 import { SecretData } from './dtos'
 
 import { formattedProfileMock, profileMock, userMock } from '@common/mocks'
-import { ProfilesRepository, ProfilesService } from '@modules/profiles'
+import { ProfilesService } from '@modules/profiles'
 import { UsersRepository } from '@modules/users'
 
 describe('AuthController', () => {
@@ -17,7 +17,7 @@ describe('AuthController', () => {
 
   let authController: AuthController
   let authService: AuthService
-  let profilesRepository: ProfilesRepository
+
   let profilesService: ProfilesService
   let usersRepository: UsersRepository
 
@@ -45,15 +45,10 @@ describe('AuthController', () => {
           },
         },
         {
-          provide: ProfilesRepository,
-          useValue: {
-            findProfileById: vi.fn(),
-          },
-        },
-        {
           provide: UsersRepository,
           useValue: {
             createUser: vi.fn(),
+            findUserByProfileId: vi.fn(),
           },
         },
       ],
@@ -61,7 +56,6 @@ describe('AuthController', () => {
 
     authController = module.get<AuthController>(AuthController)
     authService = module.get<AuthService>(AuthService)
-    profilesRepository = module.get<ProfilesRepository>(ProfilesRepository)
     profilesService = module.get<ProfilesService>(ProfilesService)
     usersRepository = module.get<UsersRepository>(UsersRepository)
   })
@@ -109,9 +103,9 @@ describe('AuthController', () => {
       vi.spyOn(authService, 'token').mockReturnValue(of(tokenResponse))
       vi.spyOn(authService, 'profile').mockReturnValue(of(formattedProfileMock))
 
-      const findProfileByIdSpy = vi
-        .spyOn(profilesRepository, 'findProfileById')
-        .mockResolvedValue(profileMock)
+      const findUserByProfileId = vi
+        .spyOn(usersRepository, 'findUserByProfileId')
+        .mockResolvedValue(userMock)
       const createSpy = vi.spyOn(profilesService, 'create')
       const createUserSpy = vi.spyOn(usersRepository, 'createUser')
 
@@ -123,7 +117,7 @@ describe('AuthController', () => {
         statusCode: HttpStatus.PERMANENT_REDIRECT,
       })
 
-      expect(findProfileByIdSpy).toHaveBeenCalledWith(formattedProfileMock.id)
+      expect(findUserByProfileId).toHaveBeenCalledWith(formattedProfileMock.id)
       expect(createSpy).not.toHaveBeenCalled()
       expect(createUserSpy).not.toHaveBeenCalled()
     })
@@ -132,7 +126,10 @@ describe('AuthController', () => {
       vi.spyOn(authService, 'token').mockReturnValue(of(tokenResponse))
       vi.spyOn(authService, 'profile').mockReturnValue(of(formattedProfileMock))
 
-      const findProfileByIdSpy = vi.spyOn(profilesRepository, 'findProfileById')
+      const findUserByProfileId = vi.spyOn(
+        usersRepository,
+        'findUserByProfileId'
+      )
       const createSpy = vi
         .spyOn(profilesService, 'create')
         .mockResolvedValue(profileMock)
@@ -148,7 +145,7 @@ describe('AuthController', () => {
         statusCode: HttpStatus.PERMANENT_REDIRECT,
       })
 
-      expect(findProfileByIdSpy).toHaveBeenCalledWith(formattedProfileMock.id)
+      expect(findUserByProfileId).toHaveBeenCalledWith(formattedProfileMock.id)
       expect(createSpy).toHaveBeenCalledWith(formattedProfileMock)
       expect(createUserSpy).toHaveBeenCalledWith({
         profile: profileMock,
