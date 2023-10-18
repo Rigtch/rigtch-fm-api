@@ -60,6 +60,7 @@ describe('UsersRepository', () => {
     expect(user).toEqual(userMock)
     expect(usersRepository.findOne).toHaveBeenCalledWith({
       where: { profile: { id: profileId } },
+      relations: ['profile'],
     })
   })
 
