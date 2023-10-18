@@ -4,7 +4,7 @@ import { SpotifyToken } from '../types/spotify'
 
 import { adaptSecretData } from './secret-data.adapter'
 
-import { SecretData } from '~/modules/auth'
+import { SecretData } from '@modules/auth'
 
 describe('adaptSecretData', () => {
   test('should adapt secret data', () => {

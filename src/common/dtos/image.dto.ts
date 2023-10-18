@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 
-import { SpotifyImage } from '~/common/types/spotify'
+import { SpotifyImage } from '@common/types/spotify'
 
 export abstract class ImageDto implements SpotifyImage {
   @ApiProperty({ type: Number })

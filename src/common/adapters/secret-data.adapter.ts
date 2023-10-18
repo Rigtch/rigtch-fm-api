@@ -1,6 +1,6 @@
 import { SpotifyToken } from '../types/spotify'
 
-import { SecretData } from '~/modules/auth'
+import { SecretData } from '@modules/auth'
 
 export const adaptSecretData = ({
   access_token,

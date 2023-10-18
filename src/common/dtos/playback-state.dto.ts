@@ -6,7 +6,7 @@ import {
   FormattedPlaybackState,
   RepeatedState,
   ShuffleState,
-} from '~/common/types/spotify'
+} from '@common/types/spotify'
 
 export abstract class PlaybackState implements FormattedPlaybackState {
   @ApiProperty({ type: Device })
