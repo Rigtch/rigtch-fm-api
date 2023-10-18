@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger'
 
 import { Album, TrackArtist } from '.'
 
-import { FormattedTrack } from '~/common/types/spotify'
+import { FormattedTrack } from '@common/types/spotify'
 
 export abstract class Track implements FormattedTrack {
   @ApiProperty()
