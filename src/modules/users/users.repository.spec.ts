@@ -42,11 +42,24 @@ describe('UsersRepository', () => {
     vi.spyOn(usersRepository, 'findOne').mockResolvedValue(userMock)
 
     const id = '1'
-    const user = await usersRepository.findUser(id)
+    const user = await usersRepository.findUserById(id)
 
     expect(user).toEqual(userMock)
     expect(usersRepository.findOne).toHaveBeenCalledWith({
       where: { id },
+      relations: ['profile'],
+    })
+  })
+
+  test('should find user by display name', async () => {
+    vi.spyOn(usersRepository, 'findOne').mockResolvedValue(userMock)
+
+    const displayName = 'test'
+    const user = await usersRepository.findUserByDisplayName(displayName)
+
+    expect(user).toEqual(userMock)
+    expect(usersRepository.findOne).toHaveBeenCalledWith({
+      where: { profile: { displayName } },
       relations: ['profile'],
     })
   })
@@ -63,26 +76,26 @@ describe('UsersRepository', () => {
   })
 
   test('should update user', async () => {
-    vi.spyOn(usersRepository, 'findUser').mockResolvedValue(userMock)
+    vi.spyOn(usersRepository, 'findUserById').mockResolvedValue(userMock)
     vi.spyOn(usersRepository, 'save').mockResolvedValue(userMock)
 
     const id = '1'
     const user = await usersRepository.updateUser(id, userMock)
 
     expect(user).toEqual(userMock)
-    expect(usersRepository.findUser).toHaveBeenCalledWith(id)
+    expect(usersRepository.findUserById).toHaveBeenCalledWith(id)
     expect(usersRepository.save).toHaveBeenCalledWith(userMock)
   })
 
   test('should remove user', async () => {
-    vi.spyOn(usersRepository, 'findUser').mockResolvedValue(userMock)
+    vi.spyOn(usersRepository, 'findUserById').mockResolvedValue(userMock)
     vi.spyOn(usersRepository, 'remove').mockResolvedValue(userMock)
 
     const id = '1'
     const user = await usersRepository.removeUser(id)
 
     expect(user).toEqual(userMock)
-    expect(usersRepository.findUser).toHaveBeenCalledWith(id)
+    expect(usersRepository.findUserById).toHaveBeenCalledWith(id)
     expect(usersRepository.remove).toHaveBeenCalledWith(userMock)
   })
 })
