@@ -20,6 +20,10 @@ export class UsersRepository extends Repository<User> {
     return this.findOne({ where: { id }, relations: ['profile'] })
   }
 
+  findUserByProfileId(profileId: string) {
+    return this.findOne({ where: { profile: { id: profileId } } })
+  }
+
   findUserByDisplayName(displayName: string) {
     return this.findOne({
       where: { profile: { displayName } },

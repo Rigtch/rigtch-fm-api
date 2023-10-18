@@ -51,6 +51,18 @@ describe('UsersRepository', () => {
     })
   })
 
+  test('should find user by profile id', async () => {
+    vi.spyOn(usersRepository, 'findOne').mockResolvedValue(userMock)
+
+    const profileId = '1'
+    const user = await usersRepository.findUserByProfileId(profileId)
+
+    expect(user).toEqual(userMock)
+    expect(usersRepository.findOne).toHaveBeenCalledWith({
+      where: { profile: { id: profileId } },
+    })
+  })
+
   test('should find user by display name', async () => {
     vi.spyOn(usersRepository, 'findOne').mockResolvedValue(userMock)
 
