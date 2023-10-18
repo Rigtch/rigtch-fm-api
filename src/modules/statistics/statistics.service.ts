@@ -16,7 +16,7 @@ import {
   SpotifyResponseWithOffset,
   SpotifyResponseWithCursors,
 } from '@common/types/spotify'
-import { applyAuthorizationHeader, catchSpotifyError } from '~/utils'
+import { applyAuthorizationHeader, catchSpotifyError } from '@common/utils'
 import {
   adaptArtist,
   adaptAudioFeatures,

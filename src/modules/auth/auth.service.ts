@@ -14,7 +14,7 @@ import {
   FormattedProfile,
   SpotifyProfile,
 } from '@common/types/spotify'
-import { applyAuthorizationHeader, catchSpotifyError } from '~/utils'
+import { applyAuthorizationHeader, catchSpotifyError } from '@common/utils'
 import { adaptProfile, adaptSecretData } from '@common/adapters'
 
 @Injectable()
