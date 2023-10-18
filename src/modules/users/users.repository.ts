@@ -16,8 +16,15 @@ export class UsersRepository extends Repository<User> {
     })
   }
 
-  findUser(id: string) {
+  findUserById(id: string) {
     return this.findOne({ where: { id }, relations: ['profile'] })
+  }
+
+  findUserByDisplayName(displayName: string) {
+    return this.findOne({
+      where: { profile: { displayName } },
+      relations: ['profile'],
+    })
   }
 
   createUser(user: CreateUser) {
@@ -27,7 +34,7 @@ export class UsersRepository extends Repository<User> {
   }
 
   async updateUser(id: string, user: Partial<CreateUser>) {
-    const foundUser = await this.findUser(id)
+    const foundUser = await this.findUserById(id)
 
     Object.assign(foundUser, user)
 
@@ -35,7 +42,7 @@ export class UsersRepository extends Repository<User> {
   }
 
   async removeUser(id: string) {
-    const user = await this.findUser(id)
+    const user = await this.findUserById(id)
 
     return await this.remove(user)
   }
