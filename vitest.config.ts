@@ -36,7 +36,6 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '~': './src',
       '@modules': './src/modules',
       '@common': './src/common',
       '@config': './src/config',
