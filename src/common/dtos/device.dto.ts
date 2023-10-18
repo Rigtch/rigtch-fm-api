@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 
-import { FormattedDevice } from '~/common/types/spotify'
+import { FormattedDevice } from '@common/types/spotify'
 
 export abstract class Device implements FormattedDevice {
   @ApiProperty()

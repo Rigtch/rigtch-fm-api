@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger'
 
 import { ImageDto } from '.'
 
-import { FormattedArtist, FormattedTrackArtist } from '~/common/types/spotify'
+import { FormattedArtist, FormattedTrackArtist } from '@common/types/spotify'
 
 export abstract class Artist implements FormattedArtist {
   @ApiProperty()
