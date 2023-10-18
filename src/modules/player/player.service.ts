@@ -10,7 +10,7 @@ import {
   FormattedPlaybackState,
   SpotifyPlaybackState,
 } from '@common/types/spotify'
-import { applyAuthorizationHeader, catchSpotifyError } from '~/utils'
+import { applyAuthorizationHeader, catchSpotifyError } from '@common/utils'
 import { Success } from '@common/dtos'
 import { adaptDevices, adaptPlaybackState } from '@common/adapters'
 

@@ -12,7 +12,7 @@ import {
   spotifyDevicesMock,
   spotifyPlaybackStateMock,
 } from '~/common/mocks'
-import { axiosResponseMockFactory } from '~/utils'
+import { axiosResponseMockFactory } from '@common/utils'
 
 const forbiddenExceptionObserver = throwError(() => ({
   response: {
