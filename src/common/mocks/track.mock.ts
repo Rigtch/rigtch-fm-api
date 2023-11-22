@@ -149,7 +149,7 @@ export const formattedTrackMock: FormattedTrack = {
   },
   artists: [
     {
-      href: 'https://api.spotify.com/v1/artists/2rcnAZ6DvORQ365X3zVYpr',
+      href: 'https://open.spotify.com/artist/2rcnAZ6DvORQ365X3zVYpr',
       id: '2rcnAZ6DvORQ365X3zVYpr',
       name: 'Biosphere',
     },
