@@ -1,9 +1,9 @@
-import { SpotifyImage } from '.'
+import { SpotifyImage } from './image'
 
 export interface FormattedProfile {
   id: string
   displayName: string
-  images: SpotifyImage[]
+  images?: SpotifyImage[]
   followers: number
   country?: string
   email?: string
