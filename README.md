@@ -15,12 +15,13 @@ Rigtch is website focused on displaying your all-time statistics such as favorit
 
 ## Deployment
 
-- [Production](https://rigtch-music-api-production.up.railway.app)
-- [Documentation](https://rigtch-music-api-production.up.railway.app/api)
+- [Production](https://rigtch-fm-api-production.up.railway.app)
+- [Development](https://rigtch-fm-api-development.up.railway.app)
+- [Documentation](https://rigtch-fm-api-production.up.railway.app/api)
 
 ### Related repositories
 
-- [rigtch-music-www](https://github.com/Rigtch/rigtch-music-www)
+- [rigtch-fm-www](https://github.com/Rigtch/rigtch-fm-www)
 
 ## Stack
 
