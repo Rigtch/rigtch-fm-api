@@ -1,8 +1,8 @@
 # Rigtch Music Api
 
 [![ci](https://github.com/Rigtch/rigtch-music-api/actions/workflows/main.yml/badge.svg)](https://github.com/Rigtch/rigtch-music-api/actions/workflows/main.yml)
-[![codecov](https://codecov.io/gh/Rigtch/rigtch-music-api/branch/main/graph/badge.svg?token=Z03LXHHMGF)](https://codecov.io/gh/Rigtch/rigtch-music-api)
-![GitHub](https://img.shields.io/github/license/Rigtch/rigtch-music-api)
+[![codecov](https://codecov.io/gh/Rigtch/rigtch-fm-api/graph/badge.svg?token=gIEWRSKglY)](https://codecov.io/gh/Rigtch/rigtch-fm-api)
+![GitHub](https://img.shields.io/github/license/Rigtch/rigtch-fm-api)
 
 ![GitHub contributors](https://img.shields.io/github/contributors/Rigtch/rigtch-music-api)
 ![GitHub last commit](https://img.shields.io/github/last-commit/Rigtch/rigtch-music-api)
