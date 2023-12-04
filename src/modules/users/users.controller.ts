@@ -128,8 +128,6 @@ export class UsersController {
       })
     )
 
-    console.log(accessToken)
-
     return firstValueFrom(
       this.statisticsService.lastTracks(accessToken, limit, before, after)
     )
@@ -200,6 +198,40 @@ export class UsersController {
 
     return firstValueFrom(
       this.statisticsService.topGenres(accessToken, limit, timeRange, offset)
+    )
+  }
+
+  @Get(':id/top-artists')
+  @ApiOperation({
+    summary: "Getting user's top artists.",
+  })
+  @ApiParam({ name: 'id' })
+  @ApiItemQuery({ withOffset: true })
+  @ApiOkResponse({
+    description: ONE_SUCCESFULLY_FOUND(USER),
+  })
+  @ApiNotFoundResponse({
+    description: NOT_BEEN_FOUND(USER),
+  })
+  @ApiBadRequestResponse({
+    description: ONE_IS_INVALID('uuid'),
+  })
+  async getTopArtists(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Query() { limit, timeRange, offset }: TopItemQuery
+  ) {
+    const foundUser = await this.usersRepository.findUserById(id)
+
+    if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
+
+    const { accessToken } = await firstValueFrom(
+      this.authService.token({
+        refreshToken: foundUser.refreshToken,
+      })
+    )
+
+    return firstValueFrom(
+      this.statisticsService.topArtists(accessToken, limit, timeRange, offset)
     )
   }
 
