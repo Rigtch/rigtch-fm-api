@@ -1,6 +1,4 @@
 export function getMostFrequentItems(array: string[], limit = 1) {
-  console.log(array)
-
   if (array.length === 0) return array
 
   const frequencies = {}
@@ -23,11 +21,8 @@ export function getMostFrequentItems(array: string[], limit = 1) {
   const mostFrequentItems = []
 
   for (let index = 0; index < limit; index++) {
-    console.log(frequencyArray[index])
     frequencyArray[index] && mostFrequentItems.push(frequencyArray[index]?.[1])
   }
-
-  console.log(mostFrequentItems)
 
   return mostFrequentItems
 }

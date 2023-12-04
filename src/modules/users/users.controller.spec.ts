@@ -6,6 +6,7 @@ import { UsersController } from './users.controller'
 import { UsersRepository } from './users.repository'
 
 import {
+  formattedArtistsMock,
   formattedTracksMock,
   spotifyResponseWithCursorsMockFactory,
   spotifyResponseWithOffsetMockFactory,
@@ -60,6 +61,7 @@ describe('UsersController', () => {
             lastTracks: vi.fn(),
             topTracks: vi.fn(),
             topGenres: vi.fn(),
+            topArtists: vi.fn(),
           },
         },
       ],
@@ -318,6 +320,61 @@ describe('UsersController', () => {
       expect(usersRepository.findUserById).toHaveBeenCalledWith(id)
       expect(authService.token).toHaveBeenCalled()
       expect(statisticsService.topGenres).toHaveBeenCalledWith(
+        accessToken,
+        limit,
+        timeRange,
+        offset
+      )
+    })
+  })
+
+  describe('getTopArtists', () => {
+    test('should get user top artists', async () => {
+      vi.spyOn(usersRepository, 'findUserById').mockResolvedValue(userMock)
+      vi.spyOn(authService, 'token').mockReturnValue(of(secretDataMock))
+      vi.spyOn(statisticsService, 'topArtists').mockReturnValue(
+        of(spotifyResponseWithOffsetMockFactory(formattedArtistsMock))
+      )
+
+      expect(await usersController.getTopArtists(id, {})).toEqual(
+        spotifyResponseWithOffsetMockFactory(formattedArtistsMock)
+      )
+      expect(usersRepository.findUserById).toHaveBeenCalledWith(id)
+      expect(authService.token).toHaveBeenCalled()
+      expect(statisticsService.topArtists).toHaveBeenCalled()
+    })
+
+    test('should throw an error if no user is found', async () => {
+      vi.spyOn(usersRepository, 'findUserById')
+      vi.spyOn(authService, 'token')
+      vi.spyOn(statisticsService, 'topArtists')
+
+      const id = '1'
+
+      await expect(usersController.getTopArtists(id, {})).rejects.toThrowError()
+
+      expect(usersRepository.findUserById).toHaveBeenCalledWith(id)
+      expect(authService.token).not.toHaveBeenCalled()
+      expect(statisticsService.topArtists).not.toHaveBeenCalled()
+    })
+
+    test('should get user top artists with query', async () => {
+      vi.spyOn(usersRepository, 'findUserById').mockResolvedValue(userMock)
+      vi.spyOn(authService, 'token').mockReturnValue(of(secretDataMock))
+      vi.spyOn(statisticsService, 'topArtists').mockReturnValue(
+        of(spotifyResponseWithOffsetMockFactory(formattedArtistsMock))
+      )
+
+      expect(
+        await usersController.getTopArtists(id, {
+          limit,
+          timeRange,
+          offset,
+        })
+      ).toEqual(spotifyResponseWithOffsetMockFactory(formattedArtistsMock))
+      expect(usersRepository.findUserById).toHaveBeenCalledWith(id)
+      expect(authService.token).toHaveBeenCalled()
+      expect(statisticsService.topArtists).toHaveBeenCalledWith(
         accessToken,
         limit,
         timeRange,
