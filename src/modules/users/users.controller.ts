@@ -169,6 +169,40 @@ export class UsersController {
     )
   }
 
+  @Get(':id/top-genres')
+  @ApiOperation({
+    summary: "Getting user's top genres.",
+  })
+  @ApiParam({ name: 'id' })
+  @ApiItemQuery()
+  @ApiOkResponse({
+    description: ONE_SUCCESFULLY_FOUND(USER),
+  })
+  @ApiNotFoundResponse({
+    description: NOT_BEEN_FOUND(USER),
+  })
+  @ApiBadRequestResponse({
+    description: ONE_IS_INVALID('uuid'),
+  })
+  async getTopGenres(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Query() { limit, timeRange, offset }: TopItemQuery
+  ) {
+    const foundUser = await this.usersRepository.findUserById(id)
+
+    if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
+
+    const { accessToken } = await firstValueFrom(
+      this.authService.token({
+        refreshToken: foundUser.refreshToken,
+      })
+    )
+
+    return firstValueFrom(
+      this.statisticsService.topGenres(accessToken, limit, timeRange, offset)
+    )
+  }
+
   @Get('profile/:id')
   @ApiOperation({
     summary: 'Getting one user by profile id.',
