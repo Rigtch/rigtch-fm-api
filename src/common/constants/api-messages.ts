@@ -1,8 +1,6 @@
 export const UNAUTHORIZED =
   'The user is not authorized to access this resource.'
-export const FORBIDDEN =
-  'The user role has no permission to access this resource.'
-export const OPENAI_API_ERROR = 'The OpenAI API has returned an error.'
+export const FORBIDDEN = 'The user access to this resource is forbidden'
 
 export const ONE_SUCCESFULLY_FOUND = (entityName: string) =>
   `The ${entityName} has been successfully found.`
