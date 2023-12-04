@@ -8,11 +8,13 @@ import { UsersRepository } from './users.repository'
 import {
   formattedTracksMock,
   spotifyResponseWithCursorsMockFactory,
+  spotifyResponseWithOffsetMockFactory,
   userMock,
   usersMock,
 } from '@common/mocks'
 import { AuthService, SecretData } from '@modules/auth'
 import { StatisticsService } from '@modules/statistics'
+import { TimeRange } from '@modules/statistics/enums'
 
 describe('UsersController', () => {
   const accessToken = 'accessToken'
@@ -20,6 +22,8 @@ describe('UsersController', () => {
   const limit = 10
   const before = 'before'
   const after = 'after'
+  const offset = 0
+  const timeRange = TimeRange.MEDIUM_TERM
   const secretDataMock: SecretData = {
     accessToken: accessToken,
     expiresIn: 3600,
@@ -53,6 +57,7 @@ describe('UsersController', () => {
           provide: StatisticsService,
           useValue: {
             lastTracks: vi.fn(),
+            topTracks: vi.fn(),
           },
         },
       ],
@@ -207,6 +212,61 @@ describe('UsersController', () => {
         limit,
         before,
         after
+      )
+    })
+  })
+
+  describe('getTopTracks', () => {
+    test('should get user top tracks', async () => {
+      vi.spyOn(usersRepository, 'findUserById').mockResolvedValue(userMock)
+      vi.spyOn(authService, 'token').mockReturnValue(of(secretDataMock))
+      vi.spyOn(statisticsService, 'topTracks').mockReturnValue(
+        of(spotifyResponseWithOffsetMockFactory(formattedTracksMock))
+      )
+
+      expect(await usersController.getTopTracks(id, {})).toEqual(
+        spotifyResponseWithOffsetMockFactory(formattedTracksMock)
+      )
+      expect(usersRepository.findUserById).toHaveBeenCalledWith(id)
+      expect(authService.token).toHaveBeenCalled()
+      expect(statisticsService.topTracks).toHaveBeenCalled()
+    })
+
+    test('should throw an error if no user is found', async () => {
+      vi.spyOn(usersRepository, 'findUserById')
+      vi.spyOn(authService, 'token')
+      vi.spyOn(statisticsService, 'topTracks')
+
+      const id = '1'
+
+      await expect(usersController.getTopTracks(id, {})).rejects.toThrowError()
+
+      expect(usersRepository.findUserById).toHaveBeenCalledWith(id)
+      expect(authService.token).not.toHaveBeenCalled()
+      expect(statisticsService.topTracks).not.toHaveBeenCalled()
+    })
+
+    test('should get user top tracks with query', async () => {
+      vi.spyOn(usersRepository, 'findUserById').mockResolvedValue(userMock)
+      vi.spyOn(authService, 'token').mockReturnValue(of(secretDataMock))
+      vi.spyOn(statisticsService, 'topTracks').mockReturnValue(
+        of(spotifyResponseWithOffsetMockFactory(formattedTracksMock))
+      )
+
+      expect(
+        await usersController.getTopTracks(id, {
+          limit,
+          timeRange,
+          offset,
+        })
+      ).toEqual(spotifyResponseWithOffsetMockFactory(formattedTracksMock))
+      expect(usersRepository.findUserById).toHaveBeenCalledWith(id)
+      expect(authService.token).toHaveBeenCalled()
+      expect(statisticsService.topTracks).toHaveBeenCalledWith(
+        accessToken,
+        limit,
+        timeRange,
+        offset
       )
     })
   })
