@@ -1,4 +1,12 @@
-import { Controller, Get, HttpStatus, Query, Redirect } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  HttpStatus,
+  Inject,
+  Query,
+  Redirect,
+  forwardRef,
+} from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { firstValueFrom } from 'rxjs'
 import { ApiExcludeEndpoint, ApiOkResponse, ApiTags } from '@nestjs/swagger'
@@ -27,6 +35,7 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly configService: ConfigService,
+    @Inject(forwardRef(() => ProfilesService))
     private readonly profilesService: ProfilesService,
     private readonly usersRepository: UsersRepository
   ) {}

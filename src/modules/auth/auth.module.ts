@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common'
+import { Module, forwardRef } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { JwtModule } from '@nestjs/jwt'
 import { HttpModule } from '@nestjs/axios'
@@ -34,9 +34,10 @@ import { ProfilesModule } from '@modules/profiles'
       inject: [ConfigService],
     }),
     ProfilesModule,
-    UsersModule,
+    forwardRef(() => UsersModule),
   ],
   providers: [AuthService],
   controllers: [AuthController],
+  exports: [AuthService],
 })
 export class AuthModule {}
