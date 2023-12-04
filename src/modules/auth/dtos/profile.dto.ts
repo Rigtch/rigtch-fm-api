@@ -11,7 +11,7 @@ export abstract class ProfileDto implements FormattedProfile {
   displayName: string
 
   @ApiProperty({ type: [ImageDto] })
-  images: ImageDto[]
+  images?: ImageDto[]
 
   @ApiProperty({ type: Number })
   followers: number

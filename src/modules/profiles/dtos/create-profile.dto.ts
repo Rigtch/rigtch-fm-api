@@ -12,7 +12,7 @@ export abstract class CreateProfile implements Omit<Profile, 'images'> {
   displayName: string
 
   @ApiProperty()
-  images: SpotifyImage[]
+  images?: SpotifyImage[]
 
   @ApiProperty({ type: Number })
   followers: number

@@ -1,12 +1,12 @@
-import { Module } from '@nestjs/common'
+import { Module, forwardRef } from '@nestjs/common'
 import { HttpModule } from '@nestjs/axios'
 import { ConfigService } from '@nestjs/config'
 
 import { StatisticsService } from './statistics.service'
 import { StatisticsController } from './statistics.controller'
 
-import { AuthModule } from '@modules/auth'
 import { Environment } from '@config/environment'
+import { AuthModule } from '@modules/auth'
 
 @Module({
   imports: [
@@ -20,10 +20,10 @@ import { Environment } from '@config/environment'
       }),
       inject: [ConfigService],
     }),
-
-    AuthModule,
+    forwardRef(() => AuthModule),
   ],
   controllers: [StatisticsController],
   providers: [StatisticsService],
+  exports: [StatisticsService],
 })
 export class StatisticsModule {}
