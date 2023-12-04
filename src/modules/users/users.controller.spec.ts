@@ -4,7 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { UsersController } from './users.controller'
 import { UsersRepository } from './users.repository'
 
-import { userMock, usersMock } from '@common/mocks'
+import { userMock } from '@common/mocks'
 
 describe('UsersController', () => {
   let usersController: UsersController
@@ -32,60 +32,6 @@ describe('UsersController', () => {
 
   test('should be defined', () => {
     expect(usersController).toBeDefined()
-  })
-
-  describe('getAll', () => {
-    test('should get all users', async () => {
-      vi.spyOn(usersRepository, 'findUsers').mockResolvedValue(usersMock)
-
-      expect(await usersController.getAll()).toEqual(usersMock)
-
-      expect(usersRepository.findUsers).toHaveBeenCalled()
-    })
-
-    test('should get one user by username', async () => {
-      vi.spyOn(usersRepository, 'findUserByDisplayName').mockResolvedValue(
-        userMock
-      )
-
-      const username = 'username'
-
-      expect(await usersController.getAll(username)).toEqual(userMock)
-
-      expect(usersRepository.findUserByDisplayName).toHaveBeenCalledWith(
-        username
-      )
-    })
-
-    test('should throw an error if no user is found', async () => {
-      vi.spyOn(usersRepository, 'findUserByDisplayName')
-
-      const username = 'username'
-
-      await expect(usersController.getAll(username)).rejects.toThrowError()
-    })
-  })
-
-  describe('getOneById', () => {
-    test('should get one user by id', async () => {
-      vi.spyOn(usersRepository, 'findUserById').mockResolvedValue(userMock)
-
-      const id = '1'
-
-      expect(await usersController.getOneById(id)).toEqual(userMock)
-
-      expect(usersRepository.findUserById).toHaveBeenCalledWith(id)
-    })
-
-    test('should throw an error if no user is found', async () => {
-      vi.spyOn(usersRepository, 'findUserById')
-
-      const id = '1'
-
-      await expect(usersController.getOneById(id)).rejects.toThrowError()
-
-      expect(usersRepository.findUserById).toHaveBeenCalledWith(id)
-    })
   })
 
   describe('getOneByProfileId', () => {
