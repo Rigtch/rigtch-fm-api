@@ -7,8 +7,8 @@ import { ForbiddenException } from '@nestjs/common'
 import { PlayerService } from './player.service'
 
 import {
-  formattedDevicesMock,
-  formattedPlaybackStateMock,
+  devicesMock,
+  playbackStateMock,
   spotifyDevicesMock,
   spotifyPlaybackStateMock,
 } from '@common/mocks'
@@ -63,7 +63,7 @@ describe('PlayerService', () => {
 
       expect(
         await firstValueFrom(playerService.availableDevices('awd'))
-      ).toEqual(formattedDevicesMock)
+      ).toEqual(devicesMock)
     })
 
     test('should throw Forbidden expception because no device is currently playing', async () => {
@@ -93,7 +93,7 @@ describe('PlayerService', () => {
 
       expect(
         await firstValueFrom(playerService.currentPlaybackState('awd'))
-      ).toEqual(formattedPlaybackStateMock)
+      ).toEqual(playbackStateMock)
     })
 
     test('should throw Forbidden expception because No device is currently playing', async () => {

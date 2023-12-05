@@ -8,7 +8,7 @@ import {
 
 import { PlayerService } from './player.service'
 
-import { Device, PlaybackState, Success } from '@common/dtos'
+import { Success } from '@common/dtos'
 import { Token, ApiAuth, AuthenticationType } from '@modules/auth'
 
 @Controller('player')
@@ -19,7 +19,6 @@ export class PlayerController {
 
   @Get('/devices')
   @ApiOkResponse({
-    type: Device,
     description: 'Available devices has been succesfully found',
   })
   availableDevices(@Token() accessToken: string) {
@@ -28,7 +27,6 @@ export class PlayerController {
 
   @Get('/state')
   @ApiOkResponse({
-    type: PlaybackState,
     description: 'Current playback state has been succesfully found',
   })
   currentPlaybackState(@Token() accessToken: string) {

@@ -19,9 +19,12 @@ export interface SpotifyAudioFeatures {
   valence: number
 }
 
-export interface FormattedAudioFeatures {
+export interface AudioFeatures extends Analysis {
   id: string
   trackHref: string
+}
+
+export interface Analysis {
   danceability: number
   acousticness: number
   instrumentalness: number

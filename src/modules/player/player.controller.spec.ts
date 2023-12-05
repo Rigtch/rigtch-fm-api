@@ -5,7 +5,7 @@ import { firstValueFrom, of } from 'rxjs'
 import { PlayerController } from './player.controller'
 import { PlayerService } from './player.service'
 
-import { formattedDevicesMock, formattedPlaybackStateMock } from '@common/mocks'
+import { devicesMock, playbackStateMock } from '@common/mocks'
 
 describe('PlayerController', () => {
   let playerController: PlayerController
@@ -36,23 +36,21 @@ describe('PlayerController', () => {
   })
 
   test('should get available devices', async () => {
-    vi.spyOn(playerService, 'availableDevices').mockReturnValue(
-      of(formattedDevicesMock)
-    )
+    vi.spyOn(playerService, 'availableDevices').mockReturnValue(of(devicesMock))
 
     expect(
       await firstValueFrom(playerController.availableDevices('awd'))
-    ).toEqual(formattedDevicesMock)
+    ).toEqual(devicesMock)
   })
 
   test('should get currentPlaybackState', async () => {
     vi.spyOn(playerService, 'currentPlaybackState').mockReturnValue(
-      of(formattedPlaybackStateMock)
+      of(playbackStateMock)
     )
 
     expect(
       await firstValueFrom(playerController.currentPlaybackState('awd'))
-    ).toEqual(formattedPlaybackStateMock)
+    ).toEqual(playbackStateMock)
   })
 
   test('should pause player', async () => {

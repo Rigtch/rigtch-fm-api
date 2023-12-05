@@ -1,16 +1,11 @@
 import {
-  FormattedPlaybackState,
+  PlaybackState,
   RepeatedState,
   ShuffleState,
   SpotifyPlaybackState,
 } from '../types/spotify'
 
-import {
-  formattedDeviceMock,
-  formattedTrackMock,
-  spotifyDeviceMock,
-  spotifyTrackMock,
-} from '.'
+import { deviceMock, trackMock, spotifyDeviceMock, spotifyTrackMock } from '.'
 
 export const spotifyPlaybackStateMock: SpotifyPlaybackState = {
   device: spotifyDeviceMock,
@@ -20,10 +15,10 @@ export const spotifyPlaybackStateMock: SpotifyPlaybackState = {
   item: spotifyTrackMock,
 }
 
-export const formattedPlaybackStateMock: FormattedPlaybackState = {
-  device: formattedDeviceMock,
-  repeatState: RepeatedState.OFF,
-  shuffleState: ShuffleState.OFF,
-  isPlaying: true,
-  track: formattedTrackMock,
+export const playbackStateMock: PlaybackState = {
+  device: deviceMock,
+  repeatState: spotifyPlaybackStateMock.repeat_state,
+  shuffleState: spotifyPlaybackStateMock.shuffle_state,
+  isPlaying: spotifyPlaybackStateMock.is_playing,
+  track: trackMock,
 }

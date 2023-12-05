@@ -1,10 +1,11 @@
 import {
-  FormattedTrack,
+  Track,
   SpotifyResponseWithCursors,
   SpotifyResponseWithOffset,
   SpotifyTrack,
 } from '../types/spotify'
 
+import { adaptTrackArtists } from './artists.adapter'
 import { adaptPaginated } from './paginated.adapter'
 
 export const adaptTrack = ({
@@ -16,22 +17,26 @@ export const adaptTrack = ({
   duration_ms,
   progress_ms,
   played_at,
-}: SpotifyTrack): FormattedTrack => ({
+}: SpotifyTrack): Track => ({
   id,
   name,
-  album: { name: album.name, images: album.images },
-  artists: artists.map(({ name, id, external_urls: { spotify: href } }) => ({
-    name,
-    id,
-    href,
-  })),
+  album: {
+    id: album.id,
+    name: album.name,
+    images: album.images,
+    href: album.external_urls.spotify,
+    artists: adaptTrackArtists(album.artists),
+    releaseDate: album.release_date,
+    totalTracks: album.total_tracks,
+  },
+  artists: adaptTrackArtists(artists),
   href,
   duration: duration_ms,
   ...(progress_ms && { progress: progress_ms }),
   ...(played_at && { playedAt: played_at }),
 })
 
-export const adaptTracks = (tracks: SpotifyTrack[]): FormattedTrack[] =>
+export const adaptTracks = (tracks: SpotifyTrack[]): Track[] =>
   tracks.map(track => adaptTrack(track))
 
 export const adaptPaginatedTracks = (
@@ -44,7 +49,7 @@ export const adaptLastTracks = ({
   href,
   cursors,
   items,
-}: SpotifyResponseWithCursors<SpotifyTrack>): SpotifyResponseWithCursors<FormattedTrack> => ({
+}: SpotifyResponseWithCursors<SpotifyTrack>): SpotifyResponseWithCursors<Track> => ({
   limit,
   next,
   href,

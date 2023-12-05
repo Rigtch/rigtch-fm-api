@@ -5,16 +5,17 @@ import { Observable, map, catchError, mergeMap } from 'rxjs'
 import { analysisFactory } from './utils'
 import { TimeRange } from './enums'
 
-import { Genres, Analysis } from '@common/dtos'
 import {
-  FormattedTrack,
+  Track,
   SpotifyResponse,
   SpotifyTrack,
   SpotifyArtist,
-  FormattedArtist,
+  Artist,
   SpotifyAudioFeatures,
   SpotifyResponseWithOffset,
   SpotifyResponseWithCursors,
+  Genres,
+  Analysis,
 } from '@common/types/spotify'
 import { applyAuthorizationHeader, catchSpotifyError } from '@common/utils'
 import {
@@ -35,7 +36,7 @@ export class StatisticsService {
     limit = 20,
     before?: string,
     after?: string
-  ): Observable<SpotifyResponseWithCursors<FormattedTrack>> {
+  ): Observable<SpotifyResponseWithCursors<Track>> {
     const urlSearchParameters = new URLSearchParams({
       limit: limit + '',
     })
@@ -93,7 +94,7 @@ export class StatisticsService {
     limit = 10,
     timeRange = TimeRange.LONG_TERM,
     offset = 1
-  ): Observable<SpotifyResponseWithOffset<FormattedArtist>> {
+  ): Observable<SpotifyResponseWithOffset<Artist>> {
     const urlSearchParameters = new URLSearchParams({
       limit: limit + '',
       offset: offset + '',
@@ -117,7 +118,7 @@ export class StatisticsService {
     limit = 10,
     timeRange = TimeRange.LONG_TERM,
     offset = 1
-  ): Observable<SpotifyResponseWithOffset<FormattedTrack>> {
+  ): Observable<SpotifyResponseWithOffset<Track>> {
     const urlSearchParameters = new URLSearchParams({
       limit: limit + '',
       offset: offset + '',

@@ -2,18 +2,14 @@ import { HttpService } from '@nestjs/axios'
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
-import { Profile } from 'passport-spotify'
+import { Profile as PassportSpotifyProfile } from 'passport-spotify'
 import { Observable, map, catchError } from 'rxjs'
 
 import { SecretData } from './dtos'
 import { TokenOptions } from './types'
 
 import { Environment } from '@config/environment'
-import {
-  SpotifyToken,
-  FormattedProfile,
-  SpotifyProfile,
-} from '@common/types/spotify'
+import { SpotifyToken, Profile, SpotifyProfile } from '@common/types/spotify'
 import { applyAuthorizationHeader, catchSpotifyError } from '@common/utils'
 import { adaptProfile, adaptSecretData } from '@common/adapters'
 
@@ -25,7 +21,7 @@ export class AuthService {
     private readonly configService: ConfigService
   ) {}
 
-  login({ id, username }: Profile) {
+  login({ id, username }: PassportSpotifyProfile) {
     const payload = {
       name: username,
       sub: id,
@@ -74,7 +70,7 @@ export class AuthService {
       )
   }
 
-  profile(accessToken: string): Observable<FormattedProfile> {
+  profile(accessToken: string): Observable<Profile> {
     return this.httpService
       .get<SpotifyProfile>('/me', applyAuthorizationHeader(accessToken))
       .pipe(

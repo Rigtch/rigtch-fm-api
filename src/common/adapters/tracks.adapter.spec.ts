@@ -2,7 +2,7 @@ import { test, describe, expect } from 'vitest'
 
 import {
   spotifyTracksMock,
-  formattedTracksMock,
+  tracksMock,
   spotifyResponseWithCursorsMockFactory,
   spotifyResponseWithOffsetMockFactory,
 } from '../mocks'
@@ -15,19 +15,19 @@ import {
 
 describe('adaptTracks', () => {
   test('should adapt tracks', () => {
-    expect(adaptTracks(spotifyTracksMock)).toEqual(formattedTracksMock)
+    expect(adaptTracks(spotifyTracksMock)).toEqual(tracksMock)
   })
 
   test('should adapt tracks without duration', () => {
     expect(
       adaptTracks(spotifyTracksMock.map(({ progress_ms, ...rest }) => rest))
-    ).toEqual(formattedTracksMock.map(({ progress, ...rest }) => rest))
+    ).toEqual(tracksMock.map(({ progress, ...rest }) => rest))
   })
 
   test('should adapt tracks without playedAt field', () => {
     expect(
       adaptTracks(spotifyTracksMock.map(({ played_at, ...rest }) => rest))
-    ).toEqual(formattedTracksMock.map(({ playedAt, ...rest }) => rest))
+    ).toEqual(tracksMock.map(({ playedAt, ...rest }) => rest))
   })
 
   test('should adapt paginated tracks', () => {
@@ -35,12 +35,12 @@ describe('adaptTracks', () => {
       adaptPaginatedTracks(
         spotifyResponseWithOffsetMockFactory(spotifyTracksMock)
       )
-    ).toEqual(spotifyResponseWithOffsetMockFactory(formattedTracksMock))
+    ).toEqual(spotifyResponseWithOffsetMockFactory(tracksMock))
   })
 
   test('should adapt last tracks', () => {
     expect(
       adaptLastTracks(spotifyResponseWithCursorsMockFactory(spotifyTracksMock))
-    ).toEqual(spotifyResponseWithCursorsMockFactory(formattedTracksMock))
+    ).toEqual(spotifyResponseWithCursorsMockFactory(tracksMock))
   })
 })

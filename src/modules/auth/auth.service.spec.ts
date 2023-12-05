@@ -10,7 +10,7 @@ import { firstValueFrom, of } from 'rxjs'
 
 import { AuthService } from './auth.service'
 
-import { spotifyProfileMock, formattedProfileMock } from '@common/mocks'
+import { spotifyProfileMock, profileMock } from '@common/mocks'
 
 describe('AuthService', () => {
   let authService: AuthService
@@ -143,7 +143,7 @@ describe('AuthService', () => {
     httpService.get = vi.fn().mockReturnValue(of(response))
 
     expect(await firstValueFrom(authService.profile('token'))).toEqual(
-      formattedProfileMock
+      profileMock
     )
   })
 })

@@ -1,4 +1,11 @@
-import { FormattedArtist, SpotifyArtist } from '../types/spotify'
+import {
+  Artist,
+  SpotifyArtist,
+  SpotifyTrackArtist,
+  TrackArtist,
+} from '../types/spotify'
+
+import { imagesMock } from './image.mock'
 
 export const spotifyArtistMock: SpotifyArtist = {
   external_urls: {
@@ -19,23 +26,7 @@ export const spotifyArtistMock: SpotifyArtist = {
   ],
   href: 'https://api.spotify.com/v1/artists/7kWnE981vITXDnAD2cZmCV',
   id: '7kWnE981vITXDnAD2cZmCV',
-  images: [
-    {
-      height: 640,
-      url: 'https://i.scdn.co/image/ab6761610000e5eb0f08b008da9d91574819c92e',
-      width: 640,
-    },
-    {
-      height: 320,
-      url: 'https://i.scdn.co/image/ab676161000051740f08b008da9d91574819c92e',
-      width: 320,
-    },
-    {
-      height: 160,
-      url: 'https://i.scdn.co/image/ab6761610000f1780f08b008da9d91574819c92e',
-      width: 160,
-    },
-  ],
+  images: imagesMock,
   name: 'Darkthrone',
   popularity: 43,
   type: 'artist',
@@ -46,38 +37,35 @@ export const spotifyArtistsMock = Array.from({ length: 5 }).map(
   () => spotifyArtistMock
 )
 
-export const formattedArtistMock: FormattedArtist = {
-  id: '7kWnE981vITXDnAD2cZmCV',
-  name: 'Darkthrone',
-  genres: [
-    "black 'n' roll",
-    'black metal',
-    'blackened crust',
-    'metal',
-    'norwegian black metal',
-    'norwegian death metal',
-    'norwegian metal',
-  ],
-  href: 'https://open.spotify.com/artist/7kWnE981vITXDnAD2cZmCV',
-  images: [
-    {
-      height: 640,
-      url: 'https://i.scdn.co/image/ab6761610000e5eb0f08b008da9d91574819c92e',
-      width: 640,
-    },
-    {
-      height: 320,
-      url: 'https://i.scdn.co/image/ab676161000051740f08b008da9d91574819c92e',
-      width: 320,
-    },
-    {
-      height: 160,
-      url: 'https://i.scdn.co/image/ab6761610000f1780f08b008da9d91574819c92e',
-      width: 160,
-    },
-  ],
+export const artistMock: Artist = {
+  id: spotifyArtistMock.id,
+  name: spotifyArtistMock.name,
+  genres: spotifyArtistMock.genres,
+  href: spotifyArtistMock.external_urls.spotify,
+  images: imagesMock,
 }
 
-export const formattedArtistsMock = Array.from({ length: 5 }).map(
-  () => formattedArtistMock
+export const artistsMock = Array.from({ length: 5 }).map(() => artistMock)
+
+export const spotifyTrackArtistMock: SpotifyTrackArtist = {
+  external_urls: spotifyArtistMock.external_urls,
+  href: spotifyArtistMock.href,
+  id: spotifyArtistMock.id,
+  name: spotifyArtistMock.name,
+  type: spotifyArtistMock.type,
+  uri: spotifyArtistMock.uri,
+}
+
+export const spotifyTrackArtistsMock = Array.from({ length: 5 }).map(
+  () => spotifyTrackArtistMock
+)
+
+export const trackArtistMock: TrackArtist = {
+  id: spotifyTrackArtistMock.id,
+  name: spotifyTrackArtistMock.name,
+  href: spotifyTrackArtistMock.external_urls.spotify,
+}
+
+export const trackArtistsMock = Array.from({ length: 5 }).map(
+  () => trackArtistMock
 )

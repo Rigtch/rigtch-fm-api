@@ -1,15 +1,10 @@
-import {
-  FormattedTrackArtist,
-  SpotifyImage,
-  TrackAlbum,
-  SpotifyTrackArtist,
-} from '.'
+import { TrackArtist, SpotifyAlbum, SpotifyTrackArtist, Album } from '.'
 
-export interface FormattedTrack {
+export interface Track {
   id: string
   name: string
-  album: { name: string; images: SpotifyImage[] }
-  artists: FormattedTrackArtist[]
+  album: Album
+  artists: TrackArtist[]
   href: string
   duration: number
   progress?: number
@@ -34,6 +29,6 @@ export interface SpotifyTrack {
   preview_url: string
   track_number: number
   artists: SpotifyTrackArtist[]
-  album: TrackAlbum
+  album: SpotifyAlbum
   played_at?: string
 }

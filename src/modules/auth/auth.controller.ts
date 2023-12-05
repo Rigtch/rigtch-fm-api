@@ -15,7 +15,7 @@ import { AuthService } from './auth.service'
 import { spotifyAuthorizationScopes } from './config'
 import { RedirectResponse } from './types'
 import { Token, ApiAuth } from './decorators'
-import { ProfileDto, SecretData } from './dtos'
+import { SecretData } from './dtos'
 
 import { Environment } from '@config/environment'
 import { AuthenticationType } from '@modules/auth/enums'
@@ -107,7 +107,6 @@ export class AuthController {
   @ApiAuth(AuthenticationType.ACCESS_TOKEN)
   @ApiOkResponse({
     description: "User's profile has been succesfully found",
-    type: ProfileDto,
   })
   profile(@Token() accessToken: string) {
     return this.authService.profile(accessToken)

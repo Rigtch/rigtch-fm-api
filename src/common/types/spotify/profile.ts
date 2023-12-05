@@ -1,6 +1,6 @@
 import { SpotifyImage } from './image'
 
-export interface FormattedProfile {
+export interface Profile {
   id: string
   displayName: string
   images?: SpotifyImage[]

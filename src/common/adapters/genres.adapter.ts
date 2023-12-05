@@ -1,5 +1,4 @@
-import { Genres } from '../dtos'
-import { SpotifyArtist } from '../types/spotify'
+import { SpotifyArtist, Genres } from '../types/spotify'
 import { getMostFrequentItems } from '../utils'
 
 export const adaptGenres = (

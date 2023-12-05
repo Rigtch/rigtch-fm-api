@@ -2,9 +2,9 @@ import { describe, test, expect } from 'vitest'
 
 import {
   spotifyArtistMock,
-  formattedArtistMock,
+  artistMock,
   spotifyArtistsMock,
-  formattedArtistsMock,
+  artistsMock,
   spotifyResponseWithOffsetMockFactory,
 } from '../mocks'
 
@@ -16,11 +16,11 @@ import {
 
 describe('adaptArtists', () => {
   test('should adapt artist', () => {
-    expect(adaptArtist(spotifyArtistMock)).toEqual(formattedArtistMock)
+    expect(adaptArtist(spotifyArtistMock)).toEqual(artistMock)
   })
 
   test('should adapt artists', () => {
-    expect(adaptArtists(spotifyArtistsMock)).toEqual(formattedArtistsMock)
+    expect(adaptArtists(spotifyArtistsMock)).toEqual(artistsMock)
   })
 
   test('should adapt paginated artists', () => {
@@ -28,6 +28,6 @@ describe('adaptArtists', () => {
       adaptPaginatedArtists(
         spotifyResponseWithOffsetMockFactory(spotifyArtistsMock)
       )
-    ).toEqual(spotifyResponseWithOffsetMockFactory(formattedArtistsMock))
+    ).toEqual(spotifyResponseWithOffsetMockFactory(artistsMock))
   })
 })

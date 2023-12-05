@@ -5,9 +5,9 @@ import { Observable, map, catchError, tap, timer, exhaustMap } from 'rxjs'
 import { PlayerMessage } from './messages'
 
 import {
-  FormattedDevice,
+  Device,
   SpotifyDevice,
-  FormattedPlaybackState,
+  PlaybackState,
   SpotifyPlaybackState,
 } from '@common/types/spotify'
 import { applyAuthorizationHeader, catchSpotifyError } from '@common/utils'
@@ -18,7 +18,7 @@ import { adaptDevices, adaptPlaybackState } from '@common/adapters'
 export class PlayerService {
   constructor(private readonly httpService: HttpService) {}
 
-  availableDevices(accessToken: string): Observable<FormattedDevice[]> {
+  availableDevices(accessToken: string): Observable<Device[]> {
     return this.httpService
       .get<{ devices: SpotifyDevice[] }>(
         '/me/player/devices',
@@ -35,9 +35,7 @@ export class PlayerService {
       )
   }
 
-  currentPlaybackState(
-    accessToken: string
-  ): Observable<FormattedPlaybackState> {
+  currentPlaybackState(accessToken: string): Observable<PlaybackState> {
     return this.httpService
       .get<SpotifyPlaybackState>(
         '/me/player',

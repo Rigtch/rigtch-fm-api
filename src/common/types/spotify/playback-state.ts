@@ -1,4 +1,4 @@
-import { FormattedDevice, FormattedTrack, SpotifyDevice, SpotifyTrack } from '.'
+import { Device, Track, SpotifyDevice, SpotifyTrack } from '.'
 
 export enum RepeatedState {
   TRACK = 'track',
@@ -19,10 +19,10 @@ export interface SpotifyPlaybackState {
   item: SpotifyTrack
 }
 
-export interface FormattedPlaybackState {
-  device: FormattedDevice
+export interface PlaybackState {
+  device: Device
   repeatState: RepeatedState
   shuffleState: ShuffleState
   isPlaying: boolean
-  track: FormattedTrack
+  track: Track
 }

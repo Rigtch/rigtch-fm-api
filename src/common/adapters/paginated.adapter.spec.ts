@@ -1,7 +1,7 @@
 import { describe, test, expect } from 'vitest'
 
 import {
-  formattedArtistsMock,
+  artistsMock,
   spotifyArtistsMock,
   spotifyResponseMockFactory,
 } from '../mocks'
@@ -16,7 +16,7 @@ describe('adaptPaginated', () => {
   }
 
   const formattedArtistsResponseMock = {
-    ...spotifyResponseMockFactory(formattedArtistsMock),
+    ...spotifyResponseMockFactory(artistsMock),
     offset: 0,
   }
 

@@ -1,4 +1,4 @@
-import { FormattedProfile, SpotifyProfile } from '../types/spotify'
+import { SpotifyProfile } from '../types/spotify'
 
 import { imagesMock } from './image.mock'
 
@@ -23,61 +23,23 @@ export const spotifyProfileMock: SpotifyProfile = {
   },
   href: 'https://api.spotify.com/v1/users/spotify-user',
   id: 'spotify-user',
-  images: [
-    {
-      height: 640,
-      url: 'https://i.scdn.co/image/ab6761610000e5eb0f08b008da9d91574819c92e',
-      width: 640,
-    },
-    {
-      height: 320,
-      url: 'https://i.scdn.co/image/ab676161000051740f08b008da9d91574819c92e',
-      width: 320,
-    },
-    {
-      height: 160,
-      url: 'https://i.scdn.co/image/ab6761610000f1780f08b008da9d91574819c92e',
-      width: 160,
-    },
-  ],
+  images: imagesMock,
   product: 'premium',
   type: 'user',
   uri: 'spotify:user:spotify-user',
-}
-
-export const formattedProfileMock: FormattedProfile = {
-  country: 'US',
-  displayName: 'Spotify User',
-  email: 'spotify-user@example.com',
-  followers: 0,
-  product: 'premium',
-  type: 'user',
-  uri: 'spotify:user:spotify-user',
-  id: 'spotify-user',
-  href: 'https://open.spotify.com/user/spotify-user',
-  images: [
-    {
-      height: 640,
-      url: 'https://i.scdn.co/image/ab6761610000e5eb0f08b008da9d91574819c92e',
-      width: 640,
-    },
-    {
-      height: 320,
-      url: 'https://i.scdn.co/image/ab676161000051740f08b008da9d91574819c92e',
-      width: 320,
-    },
-    {
-      height: 160,
-      url: 'https://i.scdn.co/image/ab6761610000f1780f08b008da9d91574819c92e',
-      width: 160,
-    },
-  ],
 }
 
 export const profileMock: Profile = {
-  ...formattedProfileMock,
-  id: '1',
+  id: spotifyProfileMock.id,
+  displayName: spotifyProfileMock.display_name,
+  followers: spotifyProfileMock.followers.total,
   images: imagesMock,
+  href: spotifyProfileMock.external_urls.spotify,
+  type: spotifyProfileMock.type,
+  uri: spotifyProfileMock.uri,
+  product: spotifyProfileMock.product,
+  email: spotifyProfileMock.email,
+  country: spotifyProfileMock.country,
 }
 
 export const profilesMock = Array.from({ length: 3 }, () => profileMock)

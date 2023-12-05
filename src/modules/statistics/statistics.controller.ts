@@ -7,7 +7,6 @@ import { ApiItemQuery } from './decorators'
 
 import { Token, ApiAuth } from '@modules/auth'
 import { AuthenticationType } from '@modules/auth/enums'
-import { Analysis, Artist, Genres, Track } from '@common/dtos'
 
 @Controller('statistics')
 @ApiTags('statistics')
@@ -19,7 +18,6 @@ export class StatisticsController {
   @ApiItemQuery({ withCursors: true })
   @ApiOkResponse({
     description: 'Last tracks has been succesfully found',
-    type: [Track],
   })
   lastTracks(
     @Token() accessToken: string,
@@ -32,7 +30,6 @@ export class StatisticsController {
   @ApiItemQuery({ withOffset: true })
   @ApiOkResponse({
     description: 'Top tracks has been succesfully found',
-    type: [Track],
   })
   topTracks(
     @Token() accessToken: string,
@@ -50,7 +47,6 @@ export class StatisticsController {
   @ApiItemQuery()
   @ApiOkResponse({
     description: 'Top genres has been succesfully found',
-    type: Genres,
   })
   topGenres(
     @Token() accessToken: string,
@@ -68,7 +64,6 @@ export class StatisticsController {
   @ApiItemQuery({ withOffset: true })
   @ApiOkResponse({
     description: 'Top artists has been succesfully found',
-    type: [Artist],
   })
   topArtists(
     @Token() accessToken: string,
@@ -86,7 +81,6 @@ export class StatisticsController {
   @ApiQuery({ name: 'id', type: String, required: true })
   @ApiOkResponse({
     description: 'Artist has been succesfully found',
-    type: Artist,
   })
   artist(@Token() accessToken: string, @Query('id') id: string) {
     return this.statisticsService.artist(accessToken, id)
@@ -95,7 +89,6 @@ export class StatisticsController {
   @Get('/analysis')
   @ApiOkResponse({
     description: 'Analysis has been succesfully generated',
-    type: Analysis,
   })
   analysis(@Token() accessToken: string) {
     return this.statisticsService.analysis(accessToken)

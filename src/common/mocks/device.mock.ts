@@ -1,4 +1,4 @@
-import { FormattedDevice, SpotifyDevice } from '../types/spotify'
+import { Device, SpotifyDevice } from '../types/spotify'
 
 export const spotifyDeviceMock: SpotifyDevice = {
   id: 'id',
@@ -15,17 +15,14 @@ export const spotifyDevicesMock: SpotifyDevice[] = Array.from(
   () => spotifyDeviceMock
 )
 
-export const formattedDeviceMock: FormattedDevice = {
-  id: 'id',
-  name: 'name',
-  type: 'type',
-  isActive: true,
-  isPrivateSession: false,
-  isRestricted: false,
-  volumePercent: 100,
+export const deviceMock: Device = {
+  id: spotifyDeviceMock.id,
+  name: spotifyDeviceMock.name,
+  type: spotifyDeviceMock.type,
+  isActive: spotifyDeviceMock.is_active,
+  isPrivateSession: spotifyDeviceMock.is_private_session,
+  isRestricted: spotifyDeviceMock.is_restricted,
+  volumePercent: spotifyDeviceMock.volume_percent,
 }
 
-export const formattedDevicesMock: FormattedDevice[] = Array.from(
-  { length: 5 },
-  () => formattedDeviceMock
-)
+export const devicesMock: Device[] = Array.from({ length: 5 }, () => deviceMock)

@@ -7,13 +7,13 @@ import { StatisticsService } from './statistics.service'
 
 import {
   spotifyTrackMock,
-  formattedTracksMock,
+  tracksMock,
   spotifyArtistsMock,
-  formattedArtistsMock,
+  artistsMock,
   topGenresMock,
   spotifyTracksMock,
   spotifyArtistMock,
-  formattedArtistMock,
+  artistMock,
   spotifyAudioFeaturesMock,
   analysisMock,
   spotifyResponseMockFactory,
@@ -63,7 +63,7 @@ describe('StatisticsService', () => {
     )
 
     expect(await firstValueFrom(statisticsService.lastTracks('awd'))).toEqual(
-      spotifyResponseWithCursorsMockFactory(formattedTracksMock)
+      spotifyResponseWithCursorsMockFactory(tracksMock)
     )
   })
 
@@ -77,7 +77,7 @@ describe('StatisticsService', () => {
     )
 
     expect(await firstValueFrom(statisticsService.topArtists('awd'))).toEqual(
-      spotifyResponseWithOffsetMockFactory(formattedArtistsMock)
+      spotifyResponseWithOffsetMockFactory(artistsMock)
     )
   })
 
@@ -103,7 +103,7 @@ describe('StatisticsService', () => {
     )
 
     expect(await firstValueFrom(statisticsService.topTracks('awd'))).toEqual(
-      spotifyResponseWithOffsetMockFactory(formattedTracksMock)
+      spotifyResponseWithOffsetMockFactory(tracksMock)
     )
   })
 
@@ -114,12 +114,12 @@ describe('StatisticsService', () => {
 
     expect(
       await firstValueFrom(statisticsService.artist('awd', 'some id'))
-    ).toEqual(formattedArtistMock)
+    ).toEqual(artistMock)
   })
 
   test('should generate analysis', async () => {
     vi.spyOn(statisticsService, 'topTracks').mockReturnValue(
-      of(spotifyResponseWithOffsetMockFactory(formattedTracksMock))
+      of(spotifyResponseWithOffsetMockFactory(tracksMock))
     )
 
     vi.spyOn(httpService, 'get').mockReturnValue(

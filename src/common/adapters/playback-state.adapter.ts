@@ -1,4 +1,4 @@
-import { FormattedPlaybackState, SpotifyPlaybackState } from '../types/spotify'
+import { PlaybackState, SpotifyPlaybackState } from '../types/spotify'
 
 import { adaptDevices } from './devices.adapter'
 import { adaptTracks } from './tracks.adapter'
@@ -9,7 +9,7 @@ export const adaptPlaybackState = ({
   shuffle_state,
   is_playing,
   item,
-}: SpotifyPlaybackState): FormattedPlaybackState => {
+}: SpotifyPlaybackState): PlaybackState => {
   const [formattedDevice] = adaptDevices([device])
   const [formattedTrack] = adaptTracks([item])
 

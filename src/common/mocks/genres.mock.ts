@@ -1,4 +1,4 @@
-import { Genres } from '../dtos'
+import { Genres } from '../types/spotify'
 
 export const topGenresArrayMock = [
   "black 'n' roll",

@@ -1,4 +1,4 @@
-import { FormattedProfile, SpotifyProfile } from '../types/spotify'
+import { Profile, SpotifyProfile } from '../types/spotify'
 
 export const adaptProfile = ({
   id,
@@ -11,7 +11,7 @@ export const adaptProfile = ({
   uri,
   external_urls: { spotify: href },
   followers,
-}: SpotifyProfile): FormattedProfile => ({
+}: SpotifyProfile): Profile => ({
   id,
   displayName: display_name,
   email,

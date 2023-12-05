@@ -1,11 +1,8 @@
 import { audioFeaturesReducer } from './audio-features-reducer'
 
-import { FormattedAudioFeatures } from '@common/types/spotify'
-import { Analysis } from '@common/dtos'
+import { AudioFeatures, Analysis } from '@common/types/spotify'
 
-export const analysisFactory = (
-  audioFeatures: FormattedAudioFeatures[]
-): Analysis => ({
+export const analysisFactory = (audioFeatures: AudioFeatures[]): Analysis => ({
   danceability:
     audioFeatures
       .map(({ danceability }) => danceability)

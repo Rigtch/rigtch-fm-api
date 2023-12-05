@@ -9,10 +9,9 @@ import {
 import { ApiProperty } from '@nestjs/swagger'
 
 import { Image } from '@modules/images'
-import { FormattedProfile } from '@common/types/spotify'
 
 @Entity()
-export class Profile implements FormattedProfile {
+export class Profile {
   @PrimaryColumn()
   @ApiProperty()
   id: string

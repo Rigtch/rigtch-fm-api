@@ -1,6 +1,6 @@
-import { FormattedDevice, SpotifyDevice } from '../types/spotify'
+import { Device, SpotifyDevice } from '../types/spotify'
 
-export const adaptDevices = (devices: SpotifyDevice[]): FormattedDevice[] =>
+export const adaptDevices = (devices: SpotifyDevice[]): Device[] =>
   devices.map(
     ({
       id,

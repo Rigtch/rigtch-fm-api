@@ -8,7 +8,7 @@ import { AuthController } from './auth.controller'
 import { AuthService } from './auth.service'
 import { SecretData } from './dtos'
 
-import { formattedProfileMock, profileMock, userMock } from '@common/mocks'
+import { profileMock, userMock } from '@common/mocks'
 import { ProfilesService } from '@modules/profiles'
 import { UsersRepository } from '@modules/users'
 
@@ -86,7 +86,7 @@ describe('AuthController', () => {
         .mockReturnValue(of(tokenResponse))
       const profileSpy = vi
         .spyOn(authService, 'profile')
-        .mockReturnValue(of(formattedProfileMock))
+        .mockReturnValue(of(profileMock))
 
       expect(await authController.callback(code)).toEqual({
         url: `${redirectUrl}/api/authorize?${new URLSearchParams({
@@ -101,7 +101,7 @@ describe('AuthController', () => {
 
     test('should find profile by id', async () => {
       vi.spyOn(authService, 'token').mockReturnValue(of(tokenResponse))
-      vi.spyOn(authService, 'profile').mockReturnValue(of(formattedProfileMock))
+      vi.spyOn(authService, 'profile').mockReturnValue(of(profileMock))
 
       const findUserByProfileId = vi
         .spyOn(usersRepository, 'findUserByProfileId')
@@ -117,14 +117,14 @@ describe('AuthController', () => {
         statusCode: HttpStatus.PERMANENT_REDIRECT,
       })
 
-      expect(findUserByProfileId).toHaveBeenCalledWith(formattedProfileMock.id)
+      expect(findUserByProfileId).toHaveBeenCalledWith(profileMock.id)
       expect(createSpy).not.toHaveBeenCalled()
       expect(createUserSpy).not.toHaveBeenCalled()
     })
 
     test('should create profile and user', async () => {
       vi.spyOn(authService, 'token').mockReturnValue(of(tokenResponse))
-      vi.spyOn(authService, 'profile').mockReturnValue(of(formattedProfileMock))
+      vi.spyOn(authService, 'profile').mockReturnValue(of(profileMock))
 
       const findUserByProfileId = vi.spyOn(
         usersRepository,
@@ -145,8 +145,8 @@ describe('AuthController', () => {
         statusCode: HttpStatus.PERMANENT_REDIRECT,
       })
 
-      expect(findUserByProfileId).toHaveBeenCalledWith(formattedProfileMock.id)
-      expect(createSpy).toHaveBeenCalledWith(formattedProfileMock)
+      expect(findUserByProfileId).toHaveBeenCalledWith(profileMock.id)
+      expect(createSpy).toHaveBeenCalledWith(profileMock)
       expect(createUserSpy).toHaveBeenCalledWith({
         profile: profileMock,
         refreshToken,
@@ -168,10 +168,10 @@ describe('AuthController', () => {
   })
 
   test('should return profile', async () => {
-    vi.spyOn(authService, 'profile').mockReturnValue(of(formattedProfileMock))
+    vi.spyOn(authService, 'profile').mockReturnValue(of(profileMock))
 
     expect(await firstValueFrom(authController.profile('123'))).toEqual(
-      formattedProfileMock
+      profileMock
     )
   })
 })

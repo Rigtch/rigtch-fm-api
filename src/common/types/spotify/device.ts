@@ -1,4 +1,4 @@
-export interface FormattedDevice {
+export interface Device {
   id: string
   name: string
   type: string
