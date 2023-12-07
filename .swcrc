@@ -2,7 +2,6 @@
   "$schema": "https://json.schemastore.org/swcrc",
   "sourceMaps": true,
   "jsc": {
-    // "target": "esnext",
     "parser": {
       "syntax": "typescript",
       "decorators": true,
@@ -10,8 +9,5 @@
     },
     "baseUrl": "./"
   },
-  // "module": {
-  //   "type": "es6"
-  // },
   "minify": false
 }
