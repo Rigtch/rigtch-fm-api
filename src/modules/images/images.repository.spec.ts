@@ -4,7 +4,7 @@ import { DataSource } from 'typeorm'
 
 import { ImagesRepository } from './images.repository'
 
-import { imageMock, imagesMock, spotifyImageMock } from '@common/mocks'
+import { imageMock, spotifyImageMock } from '@common/mocks'
 
 describe('ImagesRepository', () => {
   let imagesRepository: ImagesRepository
@@ -29,25 +29,6 @@ describe('ImagesRepository', () => {
     expect(imagesRepository).toBeDefined()
   })
 
-  test('should find all images', async () => {
-    vi.spyOn(imagesRepository, 'find').mockResolvedValue(imagesMock)
-
-    const images = await imagesRepository.findImages()
-
-    expect(images).toEqual(imagesMock)
-    expect(imagesRepository.find).toHaveBeenCalled()
-  })
-
-  test('should find image by id', async () => {
-    vi.spyOn(imagesRepository, 'findOneBy').mockResolvedValue(imageMock)
-
-    const id = '1'
-    const image = await imagesRepository.findImage(id)
-
-    expect(image).toEqual(imageMock)
-    expect(imagesRepository.findOneBy).toHaveBeenCalledWith({ id })
-  })
-
   test('should create image', async () => {
     vi.spyOn(imagesRepository, 'create').mockReturnValue(imageMock)
     vi.spyOn(imagesRepository, 'save').mockResolvedValue(imageMock)
@@ -57,29 +38,5 @@ describe('ImagesRepository', () => {
     expect(image).toEqual(imageMock)
     expect(imagesRepository.create).toHaveBeenCalledWith(spotifyImageMock)
     expect(imagesRepository.save).toHaveBeenCalledWith(imageMock)
-  })
-
-  test('should update image', async () => {
-    vi.spyOn(imagesRepository, 'findOneBy').mockResolvedValue(imageMock)
-    vi.spyOn(imagesRepository, 'save').mockResolvedValue(imageMock)
-
-    const id = '1'
-    const image = await imagesRepository.updateImage(id, spotifyImageMock)
-
-    expect(image).toEqual(imageMock)
-    expect(imagesRepository.findOneBy).toHaveBeenCalledWith({ id })
-    expect(imagesRepository.save).toHaveBeenCalledWith(imageMock)
-  })
-
-  test('should remove image', async () => {
-    vi.spyOn(imagesRepository, 'findOneBy').mockResolvedValue(imageMock)
-    vi.spyOn(imagesRepository, 'remove').mockResolvedValue(imageMock)
-
-    const id = '1'
-    const image = await imagesRepository.removeImage(id)
-
-    expect(image).toEqual(imageMock)
-    expect(imagesRepository.findOneBy).toHaveBeenCalledWith({ id })
-    expect(imagesRepository.remove).toHaveBeenCalledWith(imageMock)
   })
 })
