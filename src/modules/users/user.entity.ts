@@ -17,7 +17,7 @@ export class User {
   @ApiProperty()
   id: string
 
-  @OneToOne('Profile', 'user', { cascade: true })
+  @OneToOne('Profile', 'user', { cascade: true, eager: true })
   @JoinColumn()
   @ApiProperty({ type: Profile })
   profile: Relation<Profile>
