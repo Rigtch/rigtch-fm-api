@@ -177,4 +177,32 @@ export class UsersProfileController {
       this.statisticsService.topGenres(accessToken, limit, timeRange, offset)
     )
   }
+
+  @Get('analysis')
+  @ApiOperation({
+    summary: "Getting user's analysis.",
+  })
+  @ApiParam({ name: 'id' })
+  @ApiOkResponse({
+    description: ONE_SUCCESFULLY_FOUND(USER),
+  })
+  @ApiNotFoundResponse({
+    description: NOT_BEEN_FOUND(USER),
+  })
+  @ApiBadRequestResponse({
+    description: ONE_IS_INVALID('uuid'),
+  })
+  async getAnalysis(@Param('id', ParseUUIDPipe) id: string) {
+    const foundUser = await this.usersRepository.findOneBy({ id })
+
+    if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
+
+    const { accessToken } = await firstValueFrom(
+      this.authService.token({
+        refreshToken: foundUser.refreshToken,
+      })
+    )
+
+    return firstValueFrom(this.statisticsService.analysis(accessToken))
+  }
 }
