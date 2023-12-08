@@ -30,13 +30,17 @@ describe('ProfilesRepository', () => {
   })
 
   test('should create profile', async () => {
-    vi.spyOn(profilesRepository, 'create').mockReturnValue(profileMock)
-    vi.spyOn(profilesRepository, 'save').mockResolvedValue(profileMock)
+    const createSpy = vi
+      .spyOn(profilesRepository, 'create')
+      .mockReturnValue(profileMock)
+    const saveSpy = vi
+      .spyOn(profilesRepository, 'save')
+      .mockResolvedValue(profileMock)
 
-    const profile = await profilesRepository.createProfile(profileMock)
-
-    expect(profile).toEqual(profileMock)
-    expect(profilesRepository.create).toHaveBeenCalledWith(profileMock)
-    expect(profilesRepository.save).toHaveBeenCalledWith(profileMock)
+    expect(await profilesRepository.createProfile(profileMock)).toEqual(
+      profileMock
+    )
+    expect(createSpy).toHaveBeenCalledWith(profileMock)
+    expect(saveSpy).toHaveBeenCalledWith(profileMock)
   })
 })
