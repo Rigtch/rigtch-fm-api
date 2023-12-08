@@ -1,4 +1,3 @@
-export * from './get-most-frequent-items'
+export * from './get-most-frequent-items.util'
 export * from './catch-spotify-error'
-export * from './apply-authorization-header'
-export * from '../mocks/axios-response-factory.mock'
+export * from './apply-authorization-header.util'

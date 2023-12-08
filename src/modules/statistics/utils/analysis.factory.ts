@@ -1,4 +1,4 @@
-import { audioFeaturesReducer } from './audio-features-reducer'
+import { audioFeaturesReducer } from './audio-features.reducer'
 
 import { AudioFeatures, Analysis } from '@common/types/spotify'
 

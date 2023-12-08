@@ -19,8 +19,8 @@ import {
   spotifyResponseMockFactory,
   spotifyResponseWithOffsetMockFactory,
   spotifyResponseWithCursorsMockFactory,
+  axiosResponseMockFactory,
 } from '@common/mocks'
-import { axiosResponseMockFactory } from '@common/utils'
 
 describe('StatisticsService', () => {
   let statisticsService: StatisticsService

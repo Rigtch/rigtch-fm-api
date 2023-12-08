@@ -1,6 +1,6 @@
 import { test, describe, expect } from 'vitest'
 
-import { applyAuthorizationHeader } from './apply-authorization-header'
+import { applyAuthorizationHeader } from './apply-authorization-header.util'
 
 describe('applyAuthorizationHeader', () => {
   test('should return valid object', () => {
