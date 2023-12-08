@@ -12,14 +12,14 @@ export class ProfilesService {
     private readonly imagesRepository: ImagesRepository
   ) {}
 
-  create({ images, ...newProfile }: CreateProfile) {
-    let imageEntities = []
+  async create({ images, ...newProfile }: CreateProfile) {
+    const imageEntities = []
 
-    images.map(async image => {
+    for (const image of images) {
       const newImage = await this.imagesRepository.createImage(image)
 
-      imageEntities = [newImage]
-    })
+      imageEntities.push(newImage)
+    }
 
     return this.profilesRepository.createProfile({
       ...newProfile,
