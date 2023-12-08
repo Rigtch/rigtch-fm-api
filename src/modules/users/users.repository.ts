@@ -10,24 +10,7 @@ export class UsersRepository extends Repository<User> {
     super(User, dataSource.createEntityManager())
   }
 
-  findUsers() {
-    return this.find({
-      relations: ['profile'],
-    })
-  }
-
-  findUserById(id: string) {
-    return this.findOne({ where: { id }, relations: ['profile'] })
-  }
-
-  findUserByProfileId(profileId: string) {
-    return this.findOne({
-      where: { profile: { id: profileId } },
-      relations: ['profile'],
-    })
-  }
-
-  findUserByDisplayName(displayName: string) {
+  findOneByDisplayName(displayName: string) {
     return this.findOne({
       where: { profile: { displayName } },
       relations: ['profile'],
@@ -38,19 +21,5 @@ export class UsersRepository extends Repository<User> {
     const userEntity = this.create(user)
 
     return this.save(userEntity)
-  }
-
-  async updateUser(id: string, user: Partial<CreateUser>) {
-    const foundUser = await this.findUserById(id)
-
-    Object.assign(foundUser, user)
-
-    return this.save(foundUser)
-  }
-
-  async removeUser(id: string) {
-    const user = await this.findUserById(id)
-
-    return await this.remove(user)
   }
 }

@@ -18,6 +18,7 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
+    "types": ["vitest/globals"],
     "paths": {
       "@modules/*": ["src/modules/*"],
       "@common/*": ["src/common/*"],
