@@ -22,6 +22,7 @@ export class Profile {
 
   @ManyToMany('Image', 'profiles', {
     cascade: true,
+    eager: true,
     nullable: true,
   })
   @JoinTable()
