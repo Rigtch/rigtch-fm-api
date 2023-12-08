@@ -261,4 +261,65 @@ describe('UsersProfileController', () => {
       )
     })
   })
+
+  describe('getTopTracks', () => {
+    test('should get user top tracks', async () => {
+      const findOneBySpy = vi
+        .spyOn(usersRepository, 'findOneBy')
+        .mockResolvedValue(userMock)
+      const tokenSpy = vi
+        .spyOn(authService, 'token')
+        .mockReturnValue(of(secretDataMock))
+      const topTracksSpy = vi
+        .spyOn(statisticsService, 'topTracks')
+        .mockReturnValue(of(spotifyResponseWithOffsetMockFactory(tracksMock)))
+
+      expect(await usersProfileController.getTopTracks(id, {})).toEqual(
+        spotifyResponseWithOffsetMockFactory(tracksMock)
+      )
+      expect(findOneBySpy).toHaveBeenCalledWith({ id })
+      expect(tokenSpy).toHaveBeenCalled()
+      expect(topTracksSpy).toHaveBeenCalled()
+    })
+
+    test('should throw an error if no user is found', () => {
+      const findOneBySpy = vi.spyOn(usersRepository, 'findOneBy')
+      const tokenSpy = vi.spyOn(authService, 'token')
+      const topTracksSpy = vi.spyOn(statisticsService, 'topTracks')
+
+      expect(usersProfileController.getTopTracks(id, {})).rejects.toThrowError()
+
+      expect(findOneBySpy).toHaveBeenCalledWith({ id })
+      expect(tokenSpy).not.toHaveBeenCalled()
+      expect(topTracksSpy).not.toHaveBeenCalled()
+    })
+
+    test('should get user top tracks with query', async () => {
+      const findOneBySpy = vi
+        .spyOn(usersRepository, 'findOneBy')
+        .mockResolvedValue(userMock)
+      const tokenSpy = vi
+        .spyOn(authService, 'token')
+        .mockReturnValue(of(secretDataMock))
+      const topTracksSpy = vi
+        .spyOn(statisticsService, 'topTracks')
+        .mockReturnValue(of(spotifyResponseWithOffsetMockFactory(tracksMock)))
+
+      expect(
+        await usersProfileController.getTopTracks(id, {
+          limit,
+          timeRange,
+          offset,
+        })
+      ).toEqual(spotifyResponseWithOffsetMockFactory(tracksMock))
+      expect(findOneBySpy).toHaveBeenCalledWith({ id })
+      expect(tokenSpy).toHaveBeenCalled()
+      expect(topTracksSpy).toHaveBeenCalledWith(
+        accessToken,
+        limit,
+        timeRange,
+        offset
+      )
+    })
+  })
 })
