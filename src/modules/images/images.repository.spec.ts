@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
-import { Test, TestingModule } from '@nestjs/testing'
+import { Test } from '@nestjs/testing'
 import { DataSource } from 'typeorm'
 
 import { ImagesRepository } from './images.repository'
@@ -10,7 +10,7 @@ describe('ImagesRepository', () => {
   let imagesRepository: ImagesRepository
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const module = await Test.createTestingModule({
       providers: [
         ImagesRepository,
         {
@@ -22,7 +22,7 @@ describe('ImagesRepository', () => {
       ],
     }).compile()
 
-    imagesRepository = module.get<ImagesRepository>(ImagesRepository)
+    imagesRepository = module.get(ImagesRepository)
   })
 
   test('should be defined', () => {
