@@ -4,7 +4,7 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm'
 import { ConfigService, registerAs } from '@nestjs/config'
 import { DataSource, DataSourceOptions } from 'typeorm'
 
-import { Environment } from '../environment/environment.enum'
+import { Environment } from '@config/environment'
 
 const configService = new ConfigService()
 
