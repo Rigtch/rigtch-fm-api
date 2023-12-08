@@ -64,9 +64,8 @@ export class UsersController {
   })
   async getAll(@Query('username') username?: string) {
     if (username) {
-      const foundUser = await this.usersRepository.findUserByDisplayName(
-        username
-      )
+      const foundUser =
+        await this.usersRepository.findOneByDisplayName(username)
 
       if (!foundUser)
         throw new HttpException(NOT_BEEN_FOUND(USER), HttpStatus.NO_CONTENT)
@@ -74,7 +73,7 @@ export class UsersController {
       return foundUser
     }
 
-    return await this.usersRepository.findUsers()
+    return await this.usersRepository.find()
   }
 
   @Get(':id')
@@ -92,7 +91,7 @@ export class UsersController {
     description: ONE_IS_INVALID('uuid'),
   })
   async getOneById(@Param('id', ParseUUIDPipe) id: string) {
-    const foundUser = await this.usersRepository.findUserById(id)
+    const foundUser = await this.usersRepository.findOneBy({ id })
 
     if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
 
@@ -118,7 +117,7 @@ export class UsersController {
     @Param('id', ParseUUIDPipe) id: string,
     @Query() { limit, before, after }: LastItemQuery
   ) {
-    const foundUser = await this.usersRepository.findUserById(id)
+    const foundUser = await this.usersRepository.findOneBy({ id })
 
     if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
 
@@ -152,7 +151,7 @@ export class UsersController {
     @Param('id', ParseUUIDPipe) id: string,
     @Query() { limit, timeRange, offset }: TopItemQuery
   ) {
-    const foundUser = await this.usersRepository.findUserById(id)
+    const foundUser = await this.usersRepository.findOneBy({ id })
 
     if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
 
@@ -186,7 +185,7 @@ export class UsersController {
     @Param('id', ParseUUIDPipe) id: string,
     @Query() { limit, timeRange, offset }: TopItemQuery
   ) {
-    const foundUser = await this.usersRepository.findUserById(id)
+    const foundUser = await this.usersRepository.findOneBy({ id })
 
     if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
 
@@ -220,7 +219,7 @@ export class UsersController {
     @Param('id', ParseUUIDPipe) id: string,
     @Query() { limit, timeRange, offset }: TopItemQuery
   ) {
-    const foundUser = await this.usersRepository.findUserById(id)
+    const foundUser = await this.usersRepository.findOneBy({ id })
 
     if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
 
@@ -233,24 +232,5 @@ export class UsersController {
     return firstValueFrom(
       this.statisticsService.topArtists(accessToken, limit, timeRange, offset)
     )
-  }
-
-  @Get('profile/:id')
-  @ApiOperation({
-    summary: 'Getting one user by profile id.',
-  })
-  @ApiParam({ name: 'id' })
-  @ApiOkResponse({
-    description: ONE_SUCCESFULLY_FOUND(USER),
-  })
-  @ApiNotFoundResponse({
-    description: NOT_BEEN_FOUND(USER),
-  })
-  async getOneByProfileId(@Param('id') id: string) {
-    const foundUser = await this.usersRepository.findUserByProfileId(id)
-
-    if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
-
-    return foundUser
   }
 }

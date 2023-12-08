@@ -95,7 +95,7 @@ describe('UsersController', () => {
 
       expect(await usersController.getAll(username)).toEqual(userMock)
 
-      expect(usersRepository.findUserByDisplayName).toHaveBeenCalledWith(
+      expect(usersRepository.findOneByDisplayName).toHaveBeenCalledWith(
         username
       )
     })
