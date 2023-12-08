@@ -1,13 +1,13 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
-import { Test, TestingModule } from '@nestjs/testing'
+import { Test } from '@nestjs/testing'
 import { mock } from 'vitest-mock-extended'
 
 import { ProfilesService } from './profiles.service'
 import { ProfilesRepository } from './profiles.repository'
 import { CreateProfile } from './dtos'
-import { Profile } from './profile.entity'
 
-import { Image, ImagesRepository } from '@modules/images'
+import { ImagesRepository } from '@modules/images'
+import { imageMock, imagesMock, profileMock } from '@common/mocks'
 
 describe('ProfilesService', () => {
   let profileService: ProfilesService
@@ -15,7 +15,7 @@ describe('ProfilesService', () => {
   let imagesRepository: ImagesRepository
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const module = await Test.createTestingModule({
       providers: [
         ProfilesService,
         {
@@ -33,9 +33,9 @@ describe('ProfilesService', () => {
       ],
     }).compile()
 
-    profileService = module.get<ProfilesService>(ProfilesService)
-    profileRepository = module.get<ProfilesRepository>(ProfilesRepository)
-    imagesRepository = module.get<ImagesRepository>(ImagesRepository)
+    profileService = module.get(ProfilesService)
+    profileRepository = module.get(ProfilesRepository)
+    imagesRepository = module.get(ImagesRepository)
   })
 
   test('should be defined', () => {
@@ -43,11 +43,9 @@ describe('ProfilesService', () => {
   })
 
   test('should create profile', async () => {
-    const imageMock = mock<Image>()
     const createProfileMock = mock<CreateProfile>({
-      images: [imageMock],
+      images: imagesMock,
     })
-    const profileMock = mock<Profile>()
 
     const createProfileSpy = vi
       .spyOn(profileRepository, 'createProfile')
