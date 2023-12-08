@@ -322,4 +322,23 @@ describe('UsersProfileController', () => {
       )
     })
   })
+
+  describe('getAnalysis', () => {
+    test('should get user analysis', async () => {
+      const findOneBySpy = vi
+        .spyOn(usersRepository, 'findOneBy')
+        .mockResolvedValue(userMock)
+
+      expect(await usersProfileController.getAnalysis(id)).toEqual(userMock)
+      expect(findOneBySpy).toHaveBeenCalledWith({ id })
+    })
+
+    test('should throw an error if no user is found', () => {
+      const findOneBySpy = vi.spyOn(usersRepository, 'findOneBy')
+
+      expect(usersProfileController.getAnalysis(id)).rejects.toThrowError()
+
+      expect(findOneBySpy).toHaveBeenCalledWith({ id })
+    })
+  })
 })
