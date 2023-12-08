@@ -1,18 +1,18 @@
 import { Cursors } from './cursors'
 
-export interface SpotifyResponse<T = unknown> {
+export interface SpotifyResponse<TItems = unknown> {
   href: string
   limit: number
   next: string
-  items: T[]
+  items: TItems[]
 }
 
-export interface SpotifyResponseWithOffset<T = unknown>
-  extends SpotifyResponse<T> {
+export interface SpotifyResponseWithOffset<TItems = unknown>
+  extends SpotifyResponse<TItems> {
   offset: number
 }
 
-export interface SpotifyResponseWithCursors<T = unknown>
-  extends SpotifyResponse<T> {
+export interface SpotifyResponseWithCursors<TItems = unknown>
+  extends SpotifyResponse<TItems> {
   cursors: Cursors
 }

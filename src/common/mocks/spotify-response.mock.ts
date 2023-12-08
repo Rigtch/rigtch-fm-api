@@ -4,25 +4,25 @@ import {
   SpotifyResponseWithOffset,
 } from '@common/types/spotify'
 
-export const spotifyResponseMockFactory = <T>(
-  items: T[]
-): SpotifyResponse<T> => ({
+export const spotifyResponseMockFactory = <TItems>(
+  items: TItems[]
+): SpotifyResponse<TItems> => ({
   href: 'https://api.spotify.com/v1/search?query=metallica&type=artist&offset=0&limit=20',
   limit: 20,
   next: 'https://api.spotify.com/v1/search?query=metallica&type=artist&offset=20&limit=20',
   items,
 })
 
-export const spotifyResponseWithOffsetMockFactory = <T>(
-  items: T[]
-): SpotifyResponseWithOffset<T> => ({
+export const spotifyResponseWithOffsetMockFactory = <TItems>(
+  items: TItems[]
+): SpotifyResponseWithOffset<TItems> => ({
   ...spotifyResponseMockFactory(items),
   offset: 0,
 })
 
-export const spotifyResponseWithCursorsMockFactory = <T>(
-  items: T[]
-): SpotifyResponseWithCursors<T> => ({
+export const spotifyResponseWithCursorsMockFactory = <TItems>(
+  items: TItems[]
+): SpotifyResponseWithCursors<TItems> => ({
   ...spotifyResponseMockFactory(items),
   cursors: {
     after: '1693946946214',
