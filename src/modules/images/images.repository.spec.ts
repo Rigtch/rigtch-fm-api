@@ -30,13 +30,17 @@ describe('ImagesRepository', () => {
   })
 
   test('should create image', async () => {
-    vi.spyOn(imagesRepository, 'create').mockReturnValue(imageMock)
-    vi.spyOn(imagesRepository, 'save').mockResolvedValue(imageMock)
+    const createSpy = vi
+      .spyOn(imagesRepository, 'create')
+      .mockReturnValue(imageMock)
+    const saveSpy = vi
+      .spyOn(imagesRepository, 'save')
+      .mockResolvedValue(imageMock)
 
-    const image = await imagesRepository.createImage(spotifyImageMock)
-
-    expect(image).toEqual(imageMock)
-    expect(imagesRepository.create).toHaveBeenCalledWith(spotifyImageMock)
-    expect(imagesRepository.save).toHaveBeenCalledWith(imageMock)
+    expect(await imagesRepository.createImage(spotifyImageMock)).toEqual(
+      imageMock
+    )
+    expect(createSpy).toHaveBeenCalledWith(spotifyImageMock)
+    expect(saveSpy).toHaveBeenCalledWith(imageMock)
   })
 })

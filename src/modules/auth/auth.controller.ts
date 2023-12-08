@@ -69,7 +69,7 @@ export class AuthController {
       this.authService.profile(accessToken)
     )
 
-    const foundUser = await this.usersRepository.findUserByProfileId(
+    const foundUser = await this.usersRepository.findOneByProfileId(
       spotifyProfile.id
     )
 
