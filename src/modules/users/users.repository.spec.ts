@@ -30,26 +30,45 @@ describe('UsersRepository', () => {
   })
 
   test('should find user by display name', async () => {
-    vi.spyOn(usersRepository, 'findOne').mockResolvedValue(userMock)
+    const findOneSpy = vi
+      .spyOn(usersRepository, 'findOne')
+      .mockResolvedValue(userMock)
 
     const displayName = 'test'
-    const user = await usersRepository.findOneByDisplayName(displayName)
 
-    expect(user).toEqual(userMock)
-    expect(usersRepository.findOne).toHaveBeenCalledWith({
+    expect(await usersRepository.findOneByDisplayName(displayName)).toEqual(
+      userMock
+    )
+    expect(findOneSpy).toHaveBeenCalledWith({
       where: { profile: { displayName } },
-      relations: ['profile'],
+    })
+  })
+
+  test('should find user by profile id', async () => {
+    const findOneSpy = vi
+      .spyOn(usersRepository, 'findOne')
+      .mockResolvedValue(userMock)
+
+    const profileId = 'test'
+
+    expect(await usersRepository.findOneByProfileId(profileId)).toEqual(
+      userMock
+    )
+    expect(findOneSpy).toHaveBeenCalledWith({
+      where: { profile: { id: profileId } },
     })
   })
 
   test('should create user', async () => {
-    vi.spyOn(usersRepository, 'create').mockReturnValue(userMock)
-    vi.spyOn(usersRepository, 'save').mockResolvedValue(userMock)
+    const createSpy = vi
+      .spyOn(usersRepository, 'create')
+      .mockReturnValue(userMock)
+    const saveSpy = vi
+      .spyOn(usersRepository, 'save')
+      .mockResolvedValue(userMock)
 
-    const user = await usersRepository.createUser(userMock)
-
-    expect(user).toEqual(userMock)
-    expect(usersRepository.create).toHaveBeenCalledWith(userMock)
-    expect(usersRepository.save).toHaveBeenCalledWith(userMock)
+    expect(await usersRepository.createUser(userMock)).toEqual(userMock)
+    expect(createSpy).toHaveBeenCalledWith(userMock)
+    expect(saveSpy).toHaveBeenCalledWith(userMock)
   })
 })
