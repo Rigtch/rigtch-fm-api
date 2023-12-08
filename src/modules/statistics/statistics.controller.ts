@@ -14,7 +14,7 @@ import { AuthenticationType } from '@modules/auth/enums'
 export class StatisticsController {
   constructor(private readonly statisticsService: StatisticsService) {}
 
-  @Get('/last-tracks')
+  @Get('last-tracks')
   @ApiOperation({
     summary: "Getting current user's last tracks.",
   })
@@ -29,7 +29,7 @@ export class StatisticsController {
     return this.statisticsService.lastTracks(accessToken, limit, before, after)
   }
 
-  @Get('/top-tracks')
+  @Get('top/tracks')
   @ApiOperation({
     summary: "Getting current user's top tracks.",
   })
@@ -49,7 +49,7 @@ export class StatisticsController {
     )
   }
 
-  @Get('/top-genres')
+  @Get('top/genres')
   @ApiOperation({
     summary: "Getting current user's top genres.",
   })
@@ -69,7 +69,7 @@ export class StatisticsController {
     )
   }
 
-  @Get('/top-artists')
+  @Get('top/artists')
   @ApiOperation({
     summary: "Getting current user's top artists.",
   })
@@ -89,7 +89,7 @@ export class StatisticsController {
     )
   }
 
-  @Get('/artist')
+  @Get('artist')
   @ApiOperation({
     summary: "Getting current user's artist.",
   })
@@ -101,7 +101,7 @@ export class StatisticsController {
     return this.statisticsService.artist(accessToken, id)
   }
 
-  @Get('/analysis')
+  @Get('analysis')
   @ApiOperation({
     summary: "Getting current user's analysis.",
   })
