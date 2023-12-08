@@ -9,7 +9,8 @@ import {
 import { PlayerService } from './player.service'
 
 import { Success } from '@common/dtos'
-import { Token, ApiAuth, AuthenticationType } from '@modules/auth'
+import { Token, ApiAuth } from '@modules/auth/decorators'
+import { AuthenticationType } from '@modules/auth/enums'
 
 @Controller('player')
 @ApiTags('player')

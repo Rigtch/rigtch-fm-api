@@ -5,7 +5,7 @@ import { StatisticsService } from './statistics.service'
 import { LastItemQuery, TopItemQuery } from './dtos'
 import { ApiItemQuery } from './decorators'
 
-import { Token, ApiAuth } from '@modules/auth'
+import { Token, ApiAuth } from '@modules/auth/decorators'
 import { AuthenticationType } from '@modules/auth/enums'
 
 @Controller('statistics')
