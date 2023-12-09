@@ -1,12 +1,12 @@
 import { BadGatewayException, UnauthorizedException } from '@nestjs/common'
 import { AxiosResponse } from 'axios'
 
-export abstract class SpotifyAuthError {
+export interface SpotifyAuthError {
   error: string
   error_description: string
 }
 
-export abstract class SpotifyError {
+export interface SpotifyError {
   error: {
     status: number
     message: string
@@ -17,18 +17,21 @@ export type SpotifyResponseError = AxiosResponse<
   SpotifyError | SpotifyAuthError
 >
 
+export const SPOTIFY_DEFAULT_ERROR_MESSAGE =
+  'Something went wrong with fetching data from spotify API:'
+
 export const catchSpotifyError = (response: SpotifyResponseError) => {
   console.log(response.data.error)
 
   const { data, status } = response
 
-  if (data instanceof SpotifyAuthError) {
+  if ('error_description' in data) {
+    console.log('ee')
     if (data.error === 'invalid_grant')
       throw new UnauthorizedException('Invalid token')
 
     throw new BadGatewayException(
-      'Something went wrong with fetching data from spotify API',
-      data?.error_description
+      SPOTIFY_DEFAULT_ERROR_MESSAGE + data.error_description
     )
   }
 
@@ -37,7 +40,6 @@ export const catchSpotifyError = (response: SpotifyResponseError) => {
   if (status === 401) throw new UnauthorizedException(data.error.message)
 
   throw new BadGatewayException(
-    'Something went wrong with fetching data from spotify API',
-    data.error.message
+    SPOTIFY_DEFAULT_ERROR_MESSAGE + data.error.message
   )
 }
