@@ -8,7 +8,7 @@ import { userMock, usersMock } from '@common/mocks'
 
 describe('UsersController', () => {
   const id = '1'
-  const username = 'username'
+  const displayName = 'displayName'
 
   let usersController: UsersController
   let usersRepository: UsersRepository
@@ -52,9 +52,9 @@ describe('UsersController', () => {
         .spyOn(usersRepository, 'findOneByDisplayName')
         .mockResolvedValue(userMock)
 
-      expect(await usersController.getAll(username)).toEqual(userMock)
+      expect(await usersController.getAll(displayName)).toEqual(userMock)
 
-      expect(findOneByDisplayNameSpy).toHaveBeenCalledWith(username)
+      expect(findOneByDisplayNameSpy).toHaveBeenCalledWith(displayName)
     })
 
     test('should throw an error if no user is found', () => {
@@ -63,8 +63,8 @@ describe('UsersController', () => {
         'findOneByDisplayName'
       )
 
-      expect(usersController.getAll(username)).rejects.toThrowError()
-      expect(findOneByDisplayNameSpy).toHaveBeenCalledWith(username)
+      expect(usersController.getAll(displayName)).rejects.toThrowError()
+      expect(findOneByDisplayNameSpy).toHaveBeenCalledWith(displayName)
     })
   })
 

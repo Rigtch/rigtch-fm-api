@@ -14,6 +14,7 @@ import {
   ApiOkResponse,
   ApiNotFoundResponse,
   ApiBadRequestResponse,
+  ApiTags,
 } from '@nestjs/swagger'
 import { firstValueFrom } from 'rxjs'
 
@@ -34,6 +35,7 @@ import {
 } from '@common/constants'
 
 @Controller('users/:id/profile')
+@ApiTags('users/{id}/profile')
 export class UsersProfileController {
   constructor(
     private readonly usersRepository: UsersRepository,
