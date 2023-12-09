@@ -1,5 +1,3 @@
-import { test, describe, expect } from 'vitest'
-
 import { SpotifyToken } from '../types/spotify'
 
 import { adaptSecretData } from './secret-data.adapter'
