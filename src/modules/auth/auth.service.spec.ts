@@ -1,6 +1,5 @@
 import { URLSearchParams } from 'node:url'
 
-import { test, describe, expect, beforeEach, vi } from 'vitest'
 import { HttpService } from '@nestjs/axios'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
