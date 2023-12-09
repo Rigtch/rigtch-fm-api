@@ -14,7 +14,7 @@ import { Profile } from '@modules/profiles'
 @Entity()
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  @ApiProperty()
+  @ApiProperty({ type: String })
   id: string
 
   @OneToOne('Profile', 'user', { cascade: true, eager: true })

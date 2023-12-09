@@ -9,7 +9,12 @@ import {
 } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { firstValueFrom } from 'rxjs'
-import { ApiExcludeEndpoint, ApiOkResponse, ApiTags } from '@nestjs/swagger'
+import {
+  ApiExcludeEndpoint,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger'
 
 import { AuthService } from './auth.service'
 import { spotifyAuthorizationScopes } from './config'
@@ -94,6 +99,9 @@ export class AuthController {
   }
 
   @Get('refresh')
+  @ApiOperation({
+    summary: 'Refreshing access token.',
+  })
   @ApiAuth(AuthenticationType.REFRESH_TOKEN)
   @ApiOkResponse({
     description: 'Access token has been succesfully refreshed',
@@ -104,6 +112,9 @@ export class AuthController {
   }
 
   @Get('profile')
+  @ApiOperation({
+    summary: "Getting current user's profile.",
+  })
   @ApiAuth(AuthenticationType.ACCESS_TOKEN)
   @ApiOkResponse({
     description: "User's profile has been succesfully found",

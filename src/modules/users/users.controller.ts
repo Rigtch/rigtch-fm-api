@@ -20,6 +20,7 @@ import {
 } from '@nestjs/swagger'
 
 import { UsersRepository } from './users.repository'
+import { User } from './user.entity'
 
 import {
   MANY_SUCCESFULLY_FOUND,
@@ -40,17 +41,18 @@ export class UsersController {
   @ApiOperation({
     summary: 'Getting all users.',
   })
-  @ApiQuery({ name: 'username', required: false })
+  @ApiQuery({ name: 'displayName', required: false })
   @ApiOkResponse({
-    description: MANY_SUCCESFULLY_FOUND(USERS),
+    description: MANY_SUCCESFULLY_FOUND(USER),
+    type: [User],
   })
   @ApiNoContentResponse({
     description: NOT_BEEN_FOUND(USER),
   })
-  async getAll(@Query('username') username?: string) {
-    if (username) {
+  async getAll(@Query('displayName') displayName?: string) {
+    if (displayName) {
       const foundUser =
-        await this.usersRepository.findOneByDisplayName(username)
+        await this.usersRepository.findOneByDisplayName(displayName)
 
       if (!foundUser)
         throw new HttpException(NOT_BEEN_FOUND(USER), HttpStatus.NO_CONTENT)
@@ -68,6 +70,7 @@ export class UsersController {
   @ApiParam({ name: 'id' })
   @ApiOkResponse({
     description: ONE_SUCCESFULLY_FOUND(USER),
+    type: User,
   })
   @ApiNotFoundResponse({
     description: NOT_BEEN_FOUND(USER),
