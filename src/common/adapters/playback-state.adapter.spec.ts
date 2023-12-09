@@ -1,5 +1,3 @@
-import { test, describe, expect } from 'vitest'
-
 import { spotifyPlaybackStateMock, playbackStateMock } from '../mocks'
 
 import { adaptPlaybackState } from './playback-state.adapter'

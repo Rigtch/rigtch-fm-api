@@ -1,5 +1,3 @@
-import { expect, test, describe } from 'vitest'
-
 import { spotifyAudioFeaturesMock, audioFeaturesMock } from '../mocks'
 
 import { adaptAudioFeatures } from './audio-features.adapter'

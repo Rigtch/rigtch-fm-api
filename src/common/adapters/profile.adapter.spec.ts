@@ -1,5 +1,3 @@
-import { test, describe, expect } from 'vitest'
-
 import { spotifyProfileMock, profileMock } from '../mocks'
 
 import { adaptProfile } from './profile.adapter'

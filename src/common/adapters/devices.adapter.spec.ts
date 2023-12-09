@@ -1,5 +1,3 @@
-import { expect, test, describe } from 'vitest'
-
 import { spotifyDevicesMock, devicesMock } from '../mocks'
 
 import { adaptDevices } from './devices.adapter'
