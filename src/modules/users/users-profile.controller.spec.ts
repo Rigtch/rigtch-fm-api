@@ -14,6 +14,7 @@ import {
   topGenresMock,
   spotifyResponseWithOffsetMockFactory,
   artistsMock,
+  analysisMock,
 } from '@common/mocks'
 import { SecretData } from '@modules/auth/dtos'
 
@@ -60,6 +61,7 @@ describe('UsersProfileController', () => {
             topTracks: vi.fn(),
             topGenres: vi.fn(),
             topArtists: vi.fn(),
+            analysis: vi.fn(),
           },
         },
       ],
@@ -320,6 +322,35 @@ describe('UsersProfileController', () => {
         timeRange,
         offset
       )
+    })
+  })
+
+  describe('getAnalysis', () => {
+    test('should get user analysis', async () => {
+      const findOneBySpy = vi
+        .spyOn(usersRepository, 'findOneBy')
+        .mockResolvedValue(userMock)
+      const tokenSpy = vi
+        .spyOn(authService, 'token')
+        .mockReturnValue(of(secretDataMock))
+      const analysisSpy = vi
+        .spyOn(statisticsService, 'analysis')
+        .mockReturnValue(of(analysisMock))
+
+      expect(await usersProfileController.getAnalysis(id)).toEqual(analysisMock)
+      expect(tokenSpy).toHaveBeenCalledWith({
+        refreshToken: userMock.refreshToken,
+      })
+      expect(analysisSpy).toHaveBeenCalledWith(accessToken)
+      expect(findOneBySpy).toHaveBeenCalledWith({ id })
+    })
+
+    test('should throw an error if no user is found', () => {
+      const findOneBySpy = vi.spyOn(usersRepository, 'findOneBy')
+
+      expect(usersProfileController.getAnalysis(id)).rejects.toThrowError()
+
+      expect(findOneBySpy).toHaveBeenCalledWith({ id })
     })
   })
 })
