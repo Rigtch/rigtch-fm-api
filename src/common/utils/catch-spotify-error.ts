@@ -1,29 +1,43 @@
-import {
-  ForbiddenException,
-  InternalServerErrorException,
-  UnauthorizedException,
-} from '@nestjs/common'
+import { BadGatewayException, UnauthorizedException } from '@nestjs/common'
+import { AxiosResponse } from 'axios'
 
-export const catchSpotifyError = error => {
-  console.log(error)
+export abstract class SpotifyAuthError {
+  error: string
+  error_description: string
+}
 
-  const {
-    response: { data, status },
-  } = error
+export abstract class SpotifyError {
+  error: {
+    status: number
+    message: string
+  }
+}
 
-  if (data?.error === 'invalid_grant')
-    throw new UnauthorizedException('Invalid token')
-  if (status === 401) throw new UnauthorizedException(data?.error?.message)
-  if (
-    status === 403 &&
-    data === 'User not registered in the Developer Dashboard'
-  )
-    throw new ForbiddenException(
-      'User not registered in the Developer Dashboard'
+export type SpotifyResponseError = AxiosResponse<
+  SpotifyError | SpotifyAuthError
+>
+
+export const catchSpotifyError = (response: SpotifyResponseError) => {
+  console.log(response.data.error)
+
+  const { data, status } = response
+
+  if (data instanceof SpotifyAuthError) {
+    if (data.error === 'invalid_grant')
+      throw new UnauthorizedException('Invalid token')
+
+    throw new BadGatewayException(
+      'Something went wrong with fetching data from spotify API',
+      data?.error_description
     )
+  }
 
-  throw new InternalServerErrorException(
+  console.log(status)
+
+  if (status === 401) throw new UnauthorizedException(data.error.message)
+
+  throw new BadGatewayException(
     'Something went wrong with fetching data from spotify API',
-    data?.error
+    data.error.message
   )
 }
