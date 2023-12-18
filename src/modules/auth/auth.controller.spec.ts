@@ -1,7 +1,6 @@
 import { HttpStatus } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { Test, TestingModule } from '@nestjs/testing'
-import { firstValueFrom, of } from 'rxjs'
 
 import { AuthController } from './auth.controller'
 import { AuthService } from './auth.service'
@@ -82,10 +81,10 @@ describe('AuthController', () => {
     test('callback should return valid redirect path', async () => {
       const tokenSpy = vi
         .spyOn(authService, 'token')
-        .mockReturnValue(of(tokenResponse))
+        .mockResolvedValue(tokenResponse)
       const profileSpy = vi
         .spyOn(authService, 'profile')
-        .mockReturnValue(of(profileMock))
+        .mockResolvedValue(profileMock)
 
       expect(await authController.callback(code)).toEqual({
         url: `${redirectUrl}/api/authorize?${new URLSearchParams({
@@ -99,8 +98,8 @@ describe('AuthController', () => {
     })
 
     test('should find profile by id', async () => {
-      vi.spyOn(authService, 'token').mockReturnValue(of(tokenResponse))
-      vi.spyOn(authService, 'profile').mockReturnValue(of(profileMock))
+      vi.spyOn(authService, 'token').mockResolvedValue(tokenResponse)
+      vi.spyOn(authService, 'profile').mockResolvedValue(profileMock)
 
       const findUserByProfileId = vi
         .spyOn(usersRepository, 'findOneByProfileId')
@@ -122,8 +121,8 @@ describe('AuthController', () => {
     })
 
     test('should create profile and user', async () => {
-      vi.spyOn(authService, 'token').mockReturnValue(of(tokenResponse))
-      vi.spyOn(authService, 'profile').mockReturnValue(of(profileMock))
+      vi.spyOn(authService, 'token').mockResolvedValue(tokenResponse)
+      vi.spyOn(authService, 'profile').mockResolvedValue(profileMock)
 
       const findUserByProfileId = vi.spyOn(
         usersRepository,
@@ -159,18 +158,14 @@ describe('AuthController', () => {
       expiresIn: 3600,
     }
 
-    vi.spyOn(authService, 'token').mockReturnValue(of(secretData))
+    vi.spyOn(authService, 'token').mockResolvedValue(secretData)
 
-    expect(await firstValueFrom(authController.refresh('123'))).toEqual(
-      secretData
-    )
+    expect(await authController.refresh('123')).toEqual(secretData)
   })
 
   test('should return profile', async () => {
-    vi.spyOn(authService, 'profile').mockReturnValue(of(profileMock))
+    vi.spyOn(authService, 'profile').mockResolvedValue(profileMock)
 
-    expect(await firstValueFrom(authController.profile('123'))).toEqual(
-      profileMock
-    )
+    expect(await authController.profile('123')).toEqual(profileMock)
   })
 })

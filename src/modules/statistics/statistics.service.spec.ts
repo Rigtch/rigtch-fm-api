@@ -61,7 +61,7 @@ describe('StatisticsService', () => {
       )
     )
 
-    expect(await firstValueFrom(statisticsService.lastTracks('awd'))).toEqual(
+    expect(await statisticsService.lastTracks('awd')).toEqual(
       spotifyResponseWithCursorsMockFactory(tracksMock)
     )
   })
@@ -75,7 +75,7 @@ describe('StatisticsService', () => {
       )
     )
 
-    expect(await firstValueFrom(statisticsService.topArtists('awd'))).toEqual(
+    expect(await statisticsService.topArtists('awd')).toEqual(
       spotifyResponseWithOffsetMockFactory(artistsMock)
     )
   })
@@ -87,9 +87,7 @@ describe('StatisticsService', () => {
       )
     )
 
-    expect(await firstValueFrom(statisticsService.topGenres('awd', 3))).toEqual(
-      topGenresMock
-    )
+    expect(await statisticsService.topGenres('awd', 3)).toEqual(topGenresMock)
   })
 
   test('should get top tracks', async () => {
@@ -101,7 +99,7 @@ describe('StatisticsService', () => {
       )
     )
 
-    expect(await firstValueFrom(statisticsService.topTracks('awd'))).toEqual(
+    expect(await statisticsService.topTracks('awd')).toEqual(
       spotifyResponseWithOffsetMockFactory(tracksMock)
     )
   })
@@ -117,20 +115,20 @@ describe('StatisticsService', () => {
   })
 
   test('should generate analysis', async () => {
-    vi.spyOn(statisticsService, 'topTracks').mockReturnValue(
-      of(spotifyResponseWithOffsetMockFactory(tracksMock))
-    )
+    vi.spyOn(httpService, 'get').mockImplementation((path: string) => {
+      return path === '/me/top/artists?limit=50'
+        ? of(
+            axiosResponseMockFactory(
+              spotifyResponseMockFactory(spotifyArtistsMock)
+            )
+          )
+        : of(
+            axiosResponseMockFactory({
+              audio_features: [spotifyAudioFeaturesMock],
+            })
+          )
+    })
 
-    vi.spyOn(httpService, 'get').mockReturnValue(
-      of(
-        axiosResponseMockFactory({
-          audio_features: [spotifyAudioFeaturesMock],
-        })
-      )
-    )
-
-    expect(await firstValueFrom(statisticsService.analysis('awd'))).toEqual(
-      analysisMock
-    )
+    expect(await statisticsService.analysis('awd')).toEqual(analysisMock)
   })
 })
