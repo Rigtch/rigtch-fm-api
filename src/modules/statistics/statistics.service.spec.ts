@@ -1,6 +1,6 @@
 import { HttpService } from '@nestjs/axios'
 import { TestingModule, Test } from '@nestjs/testing'
-import { firstValueFrom, of } from 'rxjs'
+import { of } from 'rxjs'
 
 import { StatisticsService } from './statistics.service'
 
@@ -109,9 +109,7 @@ describe('StatisticsService', () => {
       of(axiosResponseMockFactory(spotifyArtistMock))
     )
 
-    expect(
-      await firstValueFrom(statisticsService.artist('awd', 'some id'))
-    ).toEqual(artistMock)
+    expect(await statisticsService.artist('awd', 'some id')).toEqual(artistMock)
   })
 
   test('should generate analysis', async () => {
