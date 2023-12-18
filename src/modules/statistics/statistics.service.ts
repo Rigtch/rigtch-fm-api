@@ -146,16 +146,18 @@ export class StatisticsService {
   }
 
   artist(accessToken: string, id: string) {
-    return this.httpService
-      .get<SpotifyArtist>(
-        `/artists/${id}`,
-        applyAuthorizationHeader(accessToken)
-      )
-      .pipe(
-        map(response => response.data),
-        map(adaptArtist),
-        catchError(catchSpotifyError)
-      )
+    return firstValueFrom(
+      this.httpService
+        .get<SpotifyArtist>(
+          `/artists/${id}`,
+          applyAuthorizationHeader(accessToken)
+        )
+        .pipe(
+          map(response => response.data),
+          map(adaptArtist),
+          catchError(catchSpotifyError)
+        )
+    )
   }
 
   analysis(accessToken: string): Promise<Analysis> {
