@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 import { Profile as PassportSpotifyProfile } from 'passport-spotify'
-import { Observable, map, catchError } from 'rxjs'
+import { map, catchError, firstValueFrom } from 'rxjs'
 
 import { SecretData } from './dtos'
 import { TokenOptions } from './types'
@@ -30,7 +30,7 @@ export class AuthService {
     return this.jwtService.sign(payload)
   }
 
-  token({ refreshToken, code }: TokenOptions): Observable<SecretData> {
+  token({ refreshToken, code }: TokenOptions): Promise<SecretData> {
     const url = `${this.configService.get(
       Environment.SPOTIFY_ACCOUNTS_URL
     )}/api/token`
@@ -47,39 +47,43 @@ export class AuthService {
     const bufferedCredentials = Buffer.from(
       `${cliendId}:${clientSecret}`
     ).toString('base64')
-    const parameters = new URLSearchParams()
+    const params = new URLSearchParams()
 
     if (refreshToken) {
-      parameters.append('refresh_token', refreshToken)
-      parameters.append('grant_type', 'refresh_token')
+      params.append('refresh_token', refreshToken)
+      params.append('grant_type', 'refresh_token')
     }
     if (code) {
-      parameters.append('code', code)
-      parameters.append('grant_type', 'authorization_code')
-      callbackUrl && parameters.append('redirect_uri', callbackUrl)
+      params.append('code', code)
+      params.append('grant_type', 'authorization_code')
+      callbackUrl && params.append('redirect_uri', callbackUrl)
     }
 
-    return this.httpService
-      .post<SpotifyToken>(url, parameters, {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          Authorization: `Basic ${bufferedCredentials}`,
-        },
-      })
-      .pipe(
-        map(response => response.data),
-        map(adaptSecretData),
-        catchError(catchSpotifyError)
-      )
+    return firstValueFrom(
+      this.httpService
+        .post<SpotifyToken>(url, params, {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            Authorization: `Basic ${bufferedCredentials}`,
+          },
+        })
+        .pipe(
+          map(response => response.data),
+          map(adaptSecretData),
+          catchError(catchSpotifyError)
+        )
+    )
   }
 
-  profile(accessToken: string): Observable<Profile> {
-    return this.httpService
-      .get<SpotifyProfile>('/me', applyAuthorizationHeader(accessToken))
-      .pipe(
-        map(response => response.data),
-        map(adaptProfile),
-        catchError(catchSpotifyError)
-      )
+  profile(accessToken: string): Promise<Profile> {
+    return firstValueFrom(
+      this.httpService
+        .get<SpotifyProfile>('/me', applyAuthorizationHeader(accessToken))
+        .pipe(
+          map(response => response.data),
+          map(adaptProfile),
+          catchError(catchSpotifyError)
+        )
+    )
   }
 }

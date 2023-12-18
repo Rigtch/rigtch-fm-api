@@ -1,6 +1,6 @@
 import { HttpService } from '@nestjs/axios'
 import { Injectable } from '@nestjs/common'
-import { Observable, map, catchError, mergeMap } from 'rxjs'
+import { map, catchError, mergeMap, firstValueFrom } from 'rxjs'
 
 import { analysisFactory } from './utils'
 import { TimeRange } from './enums'
@@ -36,7 +36,7 @@ export class StatisticsService {
     limit = 20,
     before?: string,
     after?: string
-  ): Observable<SpotifyResponseWithCursors<Track>> {
+  ): Promise<SpotifyResponseWithCursors<Track>> {
     const urlSearchParameters = new URLSearchParams({
       limit: limit + '',
     })
@@ -44,25 +44,27 @@ export class StatisticsService {
     if (before) urlSearchParameters.append('before', before)
     if (after) urlSearchParameters.append('after', after)
 
-    return this.httpService
-      .get<
-        SpotifyResponseWithCursors<{ track: SpotifyTrack; played_at: string }>
-      >(
-        `/me/player/recently-played?${urlSearchParameters.toString()}`,
-        applyAuthorizationHeader(accessToken)
-      )
-      .pipe(
-        map(response => response.data),
-        map(({ items, ...data }) => ({
-          ...data,
-          items: items.map(({ track, played_at }) => ({
-            ...track,
-            played_at,
+    return firstValueFrom(
+      this.httpService
+        .get<
+          SpotifyResponseWithCursors<{ track: SpotifyTrack; played_at: string }>
+        >(
+          `/me/player/recently-played?${urlSearchParameters.toString()}`,
+          applyAuthorizationHeader(accessToken)
+        )
+        .pipe(
+          map(response => response.data),
+          map(({ items, ...data }) => ({
+            ...data,
+            items: items.map(({ track, played_at }) => ({
+              ...track,
+              played_at,
+            })),
           })),
-        })),
-        map(adaptLastTracks),
-        catchError(catchSpotifyError)
-      )
+          map(adaptLastTracks),
+          catchError(catchSpotifyError)
+        )
+    )
   }
 
   topGenres(
@@ -70,23 +72,25 @@ export class StatisticsService {
     limit = 10,
     timeRange = TimeRange.LONG_TERM,
     offset = 1
-  ): Observable<Genres> {
+  ): Promise<Genres> {
     const urlSearchParameters = new URLSearchParams({
       limit: limit + '',
       offset: offset + '',
       time_range: timeRange,
     })
 
-    return this.httpService
-      .get<SpotifyResponse<SpotifyArtist>>(
-        `/me/top/artists?${urlSearchParameters.toString()}`,
-        applyAuthorizationHeader(accessToken)
-      )
-      .pipe(
-        map(response => response.data.items),
-        map(items => adaptGenres(items, limit)),
-        catchError(catchSpotifyError)
-      )
+    return firstValueFrom(
+      this.httpService
+        .get<SpotifyResponse<SpotifyArtist>>(
+          `/me/top/artists?${urlSearchParameters.toString()}`,
+          applyAuthorizationHeader(accessToken)
+        )
+        .pipe(
+          map(response => response.data.items),
+          map(items => adaptGenres(items, limit)),
+          catchError(catchSpotifyError)
+        )
+    )
   }
 
   topArtists(
@@ -94,23 +98,25 @@ export class StatisticsService {
     limit = 10,
     timeRange = TimeRange.LONG_TERM,
     offset = 1
-  ): Observable<SpotifyResponseWithOffset<Artist>> {
+  ): Promise<SpotifyResponseWithOffset<Artist>> {
     const urlSearchParameters = new URLSearchParams({
       limit: limit + '',
       offset: offset + '',
       time_range: timeRange,
     })
 
-    return this.httpService
-      .get<SpotifyResponse<SpotifyArtist>>(
-        `/me/top/artists?${urlSearchParameters.toString()}`,
-        applyAuthorizationHeader(accessToken)
-      )
-      .pipe(
-        map(response => response.data),
-        map(adaptPaginatedArtists),
-        catchError(catchSpotifyError)
-      )
+    return firstValueFrom(
+      this.httpService
+        .get<SpotifyResponse<SpotifyArtist>>(
+          `/me/top/artists?${urlSearchParameters.toString()}`,
+          applyAuthorizationHeader(accessToken)
+        )
+        .pipe(
+          map(response => response.data),
+          map(adaptPaginatedArtists),
+          catchError(catchSpotifyError)
+        )
+    )
   }
 
   topTracks(
@@ -118,23 +124,25 @@ export class StatisticsService {
     limit = 10,
     timeRange = TimeRange.LONG_TERM,
     offset = 1
-  ): Observable<SpotifyResponseWithOffset<Track>> {
+  ): Promise<SpotifyResponseWithOffset<Track>> {
     const urlSearchParameters = new URLSearchParams({
       limit: limit + '',
       offset: offset + '',
       time_range: timeRange,
     })
 
-    return this.httpService
-      .get<SpotifyResponse<SpotifyTrack>>(
-        `/me/top/tracks?${urlSearchParameters.toString()}`,
-        applyAuthorizationHeader(accessToken)
-      )
-      .pipe(
-        map(response => response.data),
-        map(adaptPaginatedTracks),
-        catchError(catchSpotifyError)
-      )
+    return firstValueFrom(
+      this.httpService
+        .get<SpotifyResponse<SpotifyTrack>>(
+          `/me/top/tracks?${urlSearchParameters.toString()}`,
+          applyAuthorizationHeader(accessToken)
+        )
+        .pipe(
+          map(response => response.data),
+          map(adaptPaginatedTracks),
+          catchError(catchSpotifyError)
+        )
+    )
   }
 
   artist(accessToken: string, id: string) {
@@ -150,27 +158,39 @@ export class StatisticsService {
       )
   }
 
-  analysis(accessToken: string): Observable<Analysis> {
-    return this.topTracks(accessToken, 50).pipe(
-      mergeMap(tracks => {
-        const tracksIds = tracks.items.map(({ id }) => id).join(',')
+  analysis(accessToken: string): Promise<Analysis> {
+    return firstValueFrom(
+      this.httpService
+        .get<SpotifyResponse<SpotifyArtist>>(
+          `/me/top/artists?limit=50`,
+          applyAuthorizationHeader(accessToken)
+        )
+        .pipe(
+          map(response => response.data),
+          map(adaptPaginatedArtists),
+          catchError(catchSpotifyError)
+        )
+        .pipe(
+          mergeMap(tracks => {
+            const tracksIds = tracks.items.map(({ id }) => id).join(',')
 
-        return this.httpService
-          .get<{ audio_features: SpotifyAudioFeatures[] }>(
-            `/audio-features?ids=${tracksIds}`,
-            applyAuthorizationHeader(accessToken)
-          )
-          .pipe(
-            map(response => response.data.audio_features),
-            map(audioFeatures =>
-              audioFeatures.map(audioFeature =>
-                adaptAudioFeatures(audioFeature)
+            return this.httpService
+              .get<{ audio_features: SpotifyAudioFeatures[] }>(
+                `/audio-features?ids=${tracksIds}`,
+                applyAuthorizationHeader(accessToken)
               )
-            ),
-            map(analysisFactory),
-            catchError(catchSpotifyError)
-          )
-      })
+              .pipe(
+                map(response => response.data.audio_features),
+                map(audioFeatures =>
+                  audioFeatures.map(audioFeature =>
+                    adaptAudioFeatures(audioFeature)
+                  )
+                ),
+                map(analysisFactory),
+                catchError(catchSpotifyError)
+              )
+          })
+        )
     )
   }
 }

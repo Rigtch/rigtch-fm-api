@@ -1,6 +1,6 @@
 import { HttpService } from '@nestjs/axios'
 import { TestingModule, Test } from '@nestjs/testing'
-import { of, firstValueFrom, throwError, catchError } from 'rxjs'
+import { of, throwError } from 'rxjs'
 import { ForbiddenException } from '@nestjs/common'
 
 import { PlayerService } from './player.service'
@@ -12,7 +12,6 @@ import {
   spotifyPlaybackStateMock,
   axiosResponseMockFactory,
 } from '@common/mocks'
-import { SpotifyResponseError } from '@common/utils'
 
 const forbiddenExceptionObserver = throwError(() => ({
   data: {
@@ -59,9 +58,7 @@ describe('PlayerService', () => {
         )
       )
 
-      expect(
-        await firstValueFrom(playerService.availableDevices('awd'))
-      ).toEqual(devicesMock)
+      expect(await playerService.availableDevices('awd')).toEqual(devicesMock)
     })
 
     test('should throw Forbidden expception because no device is currently playing', async () => {
@@ -73,13 +70,9 @@ describe('PlayerService', () => {
         )
       )
 
-      expect(
-        await firstValueFrom(
-          playerService
-            .availableDevices('awd')
-            .pipe(catchError((error: SpotifyResponseError) => [error]))
-        )
-      ).toBeInstanceOf(ForbiddenException)
+      await expect(playerService.availableDevices('awd')).rejects.toThrowError(
+        ForbiddenException
+      )
     })
   })
 
@@ -89,29 +82,25 @@ describe('PlayerService', () => {
         of(axiosResponseMockFactory(spotifyPlaybackStateMock))
       )
 
-      expect(
-        await firstValueFrom(playerService.currentPlaybackState('awd'))
-      ).toEqual(playbackStateMock)
+      expect(await playerService.currentPlaybackState('awd')).toEqual(
+        playbackStateMock
+      )
     })
 
     test.skip('should throw Forbidden expception because No device is currently playing', async () => {
       vi.spyOn(httpService, 'get').mockReturnValue(
-        of(axiosResponseMockFactory(''))
+        of(axiosResponseMockFactory(forbiddenExceptionObserver))
       )
 
-      expect(
-        await firstValueFrom(
-          playerService
-            .currentPlaybackState('awd')
-            .pipe(catchError((error: SpotifyResponseError) => [error]))
-        )
-      ).toBeInstanceOf(ForbiddenException)
+      await expect(
+        playerService.currentPlaybackState('awd')
+      ).rejects.toThrowError(ForbiddenException)
     })
   })
 
   describe('pausePlayer', () => {
     test('should pause player', async () => {
-      expect(await firstValueFrom(playerService.pausePlayer('awd'))).toEqual({
+      expect(await playerService.pausePlayer('awd')).toEqual({
         success: true,
       })
     })
@@ -119,19 +108,15 @@ describe('PlayerService', () => {
     test('should throw Forbidden expception because no device is currently playing', async () => {
       vi.spyOn(httpService, 'put').mockReturnValue(forbiddenExceptionObserver)
 
-      expect(
-        await firstValueFrom(
-          playerService
-            .pausePlayer('awd')
-            .pipe(catchError((error: SpotifyResponseError) => [error]))
-        )
-      ).toBeInstanceOf(ForbiddenException)
+      await expect(playerService.pausePlayer('awd')).rejects.toThrowError(
+        ForbiddenException
+      )
     })
   })
 
   describe('resumePlayer', () => {
     test('should resume player', async () => {
-      expect(await firstValueFrom(playerService.resumePlayer('awd'))).toEqual({
+      expect(await playerService.resumePlayer('awd')).toEqual({
         success: true,
       })
     })
@@ -139,13 +124,9 @@ describe('PlayerService', () => {
     test('should throw Forbidden expception because no device is currently playing', async () => {
       vi.spyOn(httpService, 'put').mockReturnValue(forbiddenExceptionObserver)
 
-      expect(
-        await firstValueFrom(
-          playerService
-            .resumePlayer('awd')
-            .pipe(catchError((error: SpotifyResponseError) => [error]))
-        )
-      ).toBeInstanceOf(ForbiddenException)
+      await expect(playerService.resumePlayer('awd')).rejects.toThrowError(
+        ForbiddenException
+      )
     })
   })
 })
