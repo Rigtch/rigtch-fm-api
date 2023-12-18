@@ -16,7 +16,6 @@ import {
   ApiBadRequestResponse,
   ApiTags,
 } from '@nestjs/swagger'
-import { firstValueFrom } from 'rxjs'
 
 import { UsersRepository } from './users.repository'
 import { USER } from './users.controller'
@@ -67,15 +66,11 @@ export class UsersProfileController {
 
     if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
 
-    const { accessToken } = await firstValueFrom(
-      this.authService.token({
-        refreshToken: foundUser.refreshToken,
-      })
-    )
+    const { accessToken } = await this.authService.token({
+      refreshToken: foundUser.refreshToken,
+    })
 
-    return firstValueFrom(
-      this.statisticsService.lastTracks(accessToken, limit, before, after)
-    )
+    return this.statisticsService.lastTracks(accessToken, limit, before, after)
   }
 
   @Get('top/artists')
@@ -101,14 +96,15 @@ export class UsersProfileController {
 
     if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
 
-    const { accessToken } = await firstValueFrom(
-      this.authService.token({
-        refreshToken: foundUser.refreshToken,
-      })
-    )
+    const { accessToken } = await this.authService.token({
+      refreshToken: foundUser.refreshToken,
+    })
 
-    return firstValueFrom(
-      this.statisticsService.topArtists(accessToken, limit, timeRange, offset)
+    return this.statisticsService.topArtists(
+      accessToken,
+      limit,
+      timeRange,
+      offset
     )
   }
 
@@ -135,14 +131,15 @@ export class UsersProfileController {
 
     if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
 
-    const { accessToken } = await firstValueFrom(
-      this.authService.token({
-        refreshToken: foundUser.refreshToken,
-      })
-    )
+    const { accessToken } = await this.authService.token({
+      refreshToken: foundUser.refreshToken,
+    })
 
-    return firstValueFrom(
-      this.statisticsService.topTracks(accessToken, limit, timeRange, offset)
+    return this.statisticsService.topTracks(
+      accessToken,
+      limit,
+      timeRange,
+      offset
     )
   }
 
@@ -169,14 +166,15 @@ export class UsersProfileController {
 
     if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
 
-    const { accessToken } = await firstValueFrom(
-      this.authService.token({
-        refreshToken: foundUser.refreshToken,
-      })
-    )
+    const { accessToken } = await this.authService.token({
+      refreshToken: foundUser.refreshToken,
+    })
 
-    return firstValueFrom(
-      this.statisticsService.topGenres(accessToken, limit, timeRange, offset)
+    return this.statisticsService.topGenres(
+      accessToken,
+      limit,
+      timeRange,
+      offset
     )
   }
 
@@ -199,12 +197,10 @@ export class UsersProfileController {
 
     if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
 
-    const { accessToken } = await firstValueFrom(
-      this.authService.token({
-        refreshToken: foundUser.refreshToken,
-      })
-    )
+    const { accessToken } = await this.authService.token({
+      refreshToken: foundUser.refreshToken,
+    })
 
-    return firstValueFrom(this.statisticsService.analysis(accessToken))
+    return this.statisticsService.analysis(accessToken)
   }
 }

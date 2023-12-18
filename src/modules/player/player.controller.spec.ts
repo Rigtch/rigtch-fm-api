@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { firstValueFrom, of } from 'rxjs'
 
 import { PlayerController } from './player.controller'
 import { PlayerService } from './player.service'
@@ -35,39 +34,33 @@ describe('PlayerController', () => {
   })
 
   test('should get available devices', async () => {
-    vi.spyOn(playerService, 'availableDevices').mockReturnValue(of(devicesMock))
+    vi.spyOn(playerService, 'availableDevices').mockResolvedValue(devicesMock)
 
-    expect(
-      await firstValueFrom(playerController.availableDevices('awd'))
-    ).toEqual(devicesMock)
+    expect(await playerController.availableDevices('awd')).toEqual(devicesMock)
   })
 
   test('should get currentPlaybackState', async () => {
-    vi.spyOn(playerService, 'currentPlaybackState').mockReturnValue(
-      of(playbackStateMock)
+    vi.spyOn(playerService, 'currentPlaybackState').mockResolvedValue(
+      playbackStateMock
     )
 
-    expect(
-      await firstValueFrom(playerController.currentPlaybackState('awd'))
-    ).toEqual(playbackStateMock)
+    expect(await playerController.currentPlaybackState('awd')).toEqual(
+      playbackStateMock
+    )
   })
 
   test('should pause player', async () => {
-    vi.spyOn(playerService, 'pausePlayer').mockReturnValue(
-      of({ success: true })
-    )
+    vi.spyOn(playerService, 'pausePlayer').mockResolvedValue({ success: true })
 
-    expect(await firstValueFrom(playerController.pausePlayer('awd'))).toEqual({
+    expect(await playerController.pausePlayer('awd')).toEqual({
       success: true,
     })
   })
 
   test('should resume player', async () => {
-    vi.spyOn(playerService, 'resumePlayer').mockReturnValue(
-      of({ success: true })
-    )
+    vi.spyOn(playerService, 'resumePlayer').mockResolvedValue({ success: true })
 
-    expect(await firstValueFrom(playerController.resumePlayer('awd'))).toEqual({
+    expect(await playerController.resumePlayer('awd')).toEqual({
       success: true,
     })
   })

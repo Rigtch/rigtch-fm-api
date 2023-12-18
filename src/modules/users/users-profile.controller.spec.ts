@@ -1,5 +1,4 @@
 import { Test } from '@nestjs/testing'
-import { of } from 'rxjs'
 
 import { UsersProfileController } from './users-profile.controller'
 import { UsersRepository } from './users.repository'
@@ -84,10 +83,10 @@ describe('UsersProfileController', () => {
         .mockResolvedValue(userMock)
       const tokenSpy = vi
         .spyOn(authService, 'token')
-        .mockReturnValue(of(secretDataMock))
+        .mockResolvedValue(secretDataMock)
       const lastTracksSpy = vi
         .spyOn(statisticsService, 'lastTracks')
-        .mockReturnValue(of(spotifyResponseWithCursorsMockFactory(tracksMock)))
+        .mockResolvedValue(spotifyResponseWithCursorsMockFactory(tracksMock))
 
       expect(await usersProfileController.getLastTracks(id, {})).toEqual(
         spotifyResponseWithCursorsMockFactory(tracksMock)
@@ -117,10 +116,10 @@ describe('UsersProfileController', () => {
         .mockResolvedValue(userMock)
       const tokenSpy = vi
         .spyOn(authService, 'token')
-        .mockReturnValue(of(secretDataMock))
+        .mockResolvedValue(secretDataMock)
       const lastTracksSpy = vi
         .spyOn(statisticsService, 'lastTracks')
-        .mockReturnValue(of(spotifyResponseWithCursorsMockFactory(tracksMock)))
+        .mockResolvedValue(spotifyResponseWithCursorsMockFactory(tracksMock))
 
       expect(
         await usersProfileController.getLastTracks(id, {
@@ -147,10 +146,10 @@ describe('UsersProfileController', () => {
         .mockResolvedValue(userMock)
       const tokenSpy = vi
         .spyOn(authService, 'token')
-        .mockReturnValue(of(secretDataMock))
+        .mockResolvedValue(secretDataMock)
       const topGenresSpy = vi
         .spyOn(statisticsService, 'topGenres')
-        .mockReturnValue(of(topGenresMock))
+        .mockResolvedValue(topGenresMock)
 
       expect(await usersProfileController.getTopGenres(id, {})).toEqual(
         topGenresMock
@@ -180,10 +179,10 @@ describe('UsersProfileController', () => {
         .mockResolvedValue(userMock)
       const tokenSpy = vi
         .spyOn(authService, 'token')
-        .mockReturnValue(of(secretDataMock))
+        .mockResolvedValue(secretDataMock)
       const topGenresSpy = vi
         .spyOn(statisticsService, 'topGenres')
-        .mockReturnValue(of(topGenresMock))
+        .mockResolvedValue(topGenresMock)
 
       expect(
         await usersProfileController.getTopGenres(id, {
@@ -210,10 +209,10 @@ describe('UsersProfileController', () => {
         .mockResolvedValue(userMock)
       const tokenSpy = vi
         .spyOn(authService, 'token')
-        .mockReturnValue(of(secretDataMock))
+        .mockResolvedValue(secretDataMock)
       const topArtistsSpy = vi
         .spyOn(statisticsService, 'topArtists')
-        .mockReturnValue(of(spotifyResponseWithOffsetMockFactory(artistsMock)))
+        .mockResolvedValue(spotifyResponseWithOffsetMockFactory(artistsMock))
 
       expect(await usersProfileController.getTopArtists(id, {})).toEqual(
         spotifyResponseWithOffsetMockFactory(artistsMock)
@@ -243,10 +242,10 @@ describe('UsersProfileController', () => {
         .mockResolvedValue(userMock)
       const tokenSpy = vi
         .spyOn(authService, 'token')
-        .mockReturnValue(of(secretDataMock))
+        .mockResolvedValue(secretDataMock)
       const topArtistsSpy = vi
         .spyOn(statisticsService, 'topArtists')
-        .mockReturnValue(of(spotifyResponseWithOffsetMockFactory(artistsMock)))
+        .mockResolvedValue(spotifyResponseWithOffsetMockFactory(artistsMock))
 
       expect(
         await usersProfileController.getTopArtists(id, {
@@ -273,10 +272,10 @@ describe('UsersProfileController', () => {
         .mockResolvedValue(userMock)
       const tokenSpy = vi
         .spyOn(authService, 'token')
-        .mockReturnValue(of(secretDataMock))
+        .mockResolvedValue(secretDataMock)
       const topTracksSpy = vi
         .spyOn(statisticsService, 'topTracks')
-        .mockReturnValue(of(spotifyResponseWithOffsetMockFactory(tracksMock)))
+        .mockResolvedValue(spotifyResponseWithOffsetMockFactory(tracksMock))
 
       expect(await usersProfileController.getTopTracks(id, {})).toEqual(
         spotifyResponseWithOffsetMockFactory(tracksMock)
@@ -306,10 +305,10 @@ describe('UsersProfileController', () => {
         .mockResolvedValue(userMock)
       const tokenSpy = vi
         .spyOn(authService, 'token')
-        .mockReturnValue(of(secretDataMock))
+        .mockResolvedValue(secretDataMock)
       const topTracksSpy = vi
         .spyOn(statisticsService, 'topTracks')
-        .mockReturnValue(of(spotifyResponseWithOffsetMockFactory(tracksMock)))
+        .mockResolvedValue(spotifyResponseWithOffsetMockFactory(tracksMock))
 
       expect(
         await usersProfileController.getTopTracks(id, {
@@ -336,10 +335,10 @@ describe('UsersProfileController', () => {
         .mockResolvedValue(userMock)
       const tokenSpy = vi
         .spyOn(authService, 'token')
-        .mockReturnValue(of(secretDataMock))
+        .mockResolvedValue(secretDataMock)
       const analysisSpy = vi
         .spyOn(statisticsService, 'analysis')
-        .mockReturnValue(of(analysisMock))
+        .mockResolvedValue(analysisMock)
 
       expect(await usersProfileController.getAnalysis(id)).toEqual(analysisMock)
       expect(tokenSpy).toHaveBeenCalledWith({
