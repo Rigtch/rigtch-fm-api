@@ -5,7 +5,7 @@ import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 import { Test, TestingModule } from '@nestjs/testing'
 import { Profile } from 'passport-spotify'
-import { firstValueFrom, of } from 'rxjs'
+import { of } from 'rxjs'
 
 import { AuthService } from './auth.service'
 
@@ -93,14 +93,13 @@ describe('AuthService', () => {
       httpService.post = vi
         .fn()
         .mockImplementation((_url, parameters: URLSearchParams) => {
-          if (parameters.get('grant_type') === 'refresh_token') {
+          if (parameters.get('grant_type') === 'refresh_token')
             return of(response)
-          }
         })
 
-      expect(
-        await firstValueFrom(authService.token({ refreshToken: 'refresh' }))
-      ).toEqual(expectedResponse)
+      expect(await authService.token({ refreshToken: 'refresh' })).toEqual(
+        expectedResponse
+      )
     })
 
     test('should authorize and get tokens', async () => {
@@ -123,12 +122,11 @@ describe('AuthService', () => {
       httpService.post = vi
         .fn()
         .mockImplementation((_url, parameters: URLSearchParams) => {
-          if (parameters.get('grant_type') === 'authorization_code') {
+          if (parameters.get('grant_type') === 'authorization_code')
             return of(response)
-          }
         })
 
-      expect(await firstValueFrom(authService.token({ code: 'code' }))).toEqual(
+      expect(await authService.token({ code: 'code' })).toEqual(
         expectedResponse
       )
     })
@@ -141,8 +139,6 @@ describe('AuthService', () => {
 
     httpService.get = vi.fn().mockReturnValue(of(response))
 
-    expect(await firstValueFrom(authService.profile('token'))).toEqual(
-      profileMock
-    )
+    expect(await authService.profile('token')).toEqual(profileMock)
   })
 })

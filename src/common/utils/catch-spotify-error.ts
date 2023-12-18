@@ -21,12 +21,9 @@ export const SPOTIFY_DEFAULT_ERROR_MESSAGE =
   'Something went wrong with fetching data from spotify API:'
 
 export const catchSpotifyError = (response: SpotifyResponseError) => {
-  console.log(response.data.error)
-
   const { data, status } = response
 
   if ('error_description' in data) {
-    console.log('ee')
     if (data.error === 'invalid_grant')
       throw new UnauthorizedException('Invalid token')
 
@@ -34,8 +31,6 @@ export const catchSpotifyError = (response: SpotifyResponseError) => {
       SPOTIFY_DEFAULT_ERROR_MESSAGE + data.error_description
     )
   }
-
-  console.log(status)
 
   if (status === 401) throw new UnauthorizedException(data.error.message)
 

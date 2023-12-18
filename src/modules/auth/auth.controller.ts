@@ -8,7 +8,6 @@ import {
   forwardRef,
 } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { firstValueFrom } from 'rxjs'
 import {
   ApiExcludeEndpoint,
   ApiOkResponse,
@@ -70,13 +69,8 @@ export class AuthController {
   async callback(
     @Query('code') code: string
   ): Promise<RedirectResponse | undefined> {
-    const { accessToken, refreshToken } = await firstValueFrom(
-      this.authService.token({ code })
-    )
-
-    const spotifyProfile = await firstValueFrom(
-      this.authService.profile(accessToken)
-    )
+    const { accessToken, refreshToken } = await this.authService.token({ code })
+    const spotifyProfile = await this.authService.profile(accessToken)
 
     const foundUser = await this.usersRepository.findOneByProfileId(
       spotifyProfile.id
