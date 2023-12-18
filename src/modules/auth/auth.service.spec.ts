@@ -71,7 +71,7 @@ describe('AuthService', () => {
 
     jwtService.sign = vi.fn().mockReturnValue('token')
 
-    expect(authService.login(profile)).toEqual('token')
+    expect(authService.login(profile)).toBe('token')
   })
 
   describe('token', () => {

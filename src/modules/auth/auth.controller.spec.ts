@@ -91,7 +91,7 @@ describe('AuthController', () => {
         url: `${redirectUrl}/api/authorize?${new URLSearchParams({
           accessToken,
           refreshToken,
-        })}`,
+        }).toString()}`,
         statusCode: HttpStatus.PERMANENT_REDIRECT,
       })
       expect(tokenSpy).toHaveBeenCalledWith({ code })
@@ -112,7 +112,7 @@ describe('AuthController', () => {
         url: `${redirectUrl}/api/authorize?${new URLSearchParams({
           accessToken,
           refreshToken,
-        })}`,
+        }).toString()}`,
         statusCode: HttpStatus.PERMANENT_REDIRECT,
       })
 
@@ -140,7 +140,7 @@ describe('AuthController', () => {
         url: `${redirectUrl}/api/authorize?${new URLSearchParams({
           accessToken,
           refreshToken,
-        })}`,
+        }).toString()}`,
         statusCode: HttpStatus.PERMANENT_REDIRECT,
       })
 

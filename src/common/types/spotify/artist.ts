@@ -25,7 +25,7 @@ export interface TrackArtist {
 
 export interface SpotifyArtist {
   external_urls: { spotify: string }
-  followers: { href: string; total: number }
+  followers: { href: string | null; total: number }
   genres: string[]
   href: string
   id: string

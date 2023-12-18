@@ -34,10 +34,16 @@ export class AuthService {
     const url = `${this.configService.get(
       Environment.SPOTIFY_ACCOUNTS_URL
     )}/api/token`
-    const cliendId = this.configService.get(Environment.SPOTIFY_CLIENT_ID)
-    const clientSecret = this.configService.get(
+    const cliendId = this.configService.get<string>(
+      Environment.SPOTIFY_CLIENT_ID
+    )
+    const clientSecret = this.configService.get<string>(
       Environment.SPOTIFY_CLIENT_SECRET
     )
+    const callbackUrl = this.configService.get<string>(
+      Environment.SPOTIFY_CALLBACK_URL
+    )
+
     const bufferedCredentials = Buffer.from(
       `${cliendId}:${clientSecret}`
     ).toString('base64')
@@ -50,10 +56,7 @@ export class AuthService {
     if (code) {
       parameters.append('code', code)
       parameters.append('grant_type', 'authorization_code')
-      parameters.append(
-        'redirect_uri',
-        this.configService.get(Environment.SPOTIFY_CALLBACK_URL)
-      )
+      callbackUrl && parameters.append('redirect_uri', callbackUrl)
     }
 
     return this.httpService

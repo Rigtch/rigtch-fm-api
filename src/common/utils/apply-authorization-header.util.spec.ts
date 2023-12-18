@@ -6,6 +6,6 @@ describe('applyAuthorizationHeader', () => {
       headers: { Authorization },
     } = applyAuthorizationHeader('token')
 
-    expect(Authorization).toEqual('Bearer token')
+    expect(Authorization).toBe('Bearer token')
   })
 })

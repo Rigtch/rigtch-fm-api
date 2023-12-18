@@ -12,7 +12,7 @@ export const spotifyArtistMock: SpotifyArtist = {
     spotify: 'https://open.spotify.com/artist/7kWnE981vITXDnAD2cZmCV',
   },
   followers: {
-    href: undefined,
+    href: null,
     total: 265_520,
   },
   genres: [

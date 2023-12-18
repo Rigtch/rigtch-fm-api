@@ -4,6 +4,7 @@ export function getMostFrequentItems(array: string[], limit = 1) {
   const frequencies = {}
 
   for (const item of array) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     frequencies[item] =
       frequencies[item] === undefined ? 1 : frequencies[item] + 1
   }
@@ -11,7 +12,7 @@ export function getMostFrequentItems(array: string[], limit = 1) {
   const frequencyArray = []
 
   for (const key in frequencies) {
-    frequencyArray.push([frequencies[key], key])
+    frequencyArray.push([frequencies[key], key] as never)
   }
 
   frequencyArray.sort((a, b) => {

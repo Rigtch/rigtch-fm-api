@@ -1,8 +1,4 @@
-import { AxiosRequestConfig } from 'axios'
-
-export const applyAuthorizationHeader = (
-  accessToken: string
-): AxiosRequestConfig => ({
+export const applyAuthorizationHeader = (accessToken: string) => ({
   headers: {
     Authorization: `Bearer ${accessToken}`,
   },

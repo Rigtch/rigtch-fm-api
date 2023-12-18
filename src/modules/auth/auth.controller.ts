@@ -49,15 +49,17 @@ export class AuthController {
   @ApiExcludeEndpoint()
   @Redirect()
   login(): RedirectResponse {
+    const params = new URLSearchParams({
+      client_id: this.configService.get<string>(SPOTIFY_CLIENT_ID) ?? '',
+      response_type: 'code',
+      redirect_uri: this.configService.get<string>(SPOTIFY_CALLBACK_URL) ?? '',
+      scope: spotifyAuthorizationScopes.join(' '),
+    }).toString()
+
     return {
       url: `${this.configService.get(
         SPOTIFY_ACCOUNTS_URL
-      )}/authorize?${new URLSearchParams({
-        client_id: this.configService.get(SPOTIFY_CLIENT_ID),
-        response_type: 'code',
-        redirect_uri: this.configService.get(SPOTIFY_CALLBACK_URL),
-        scope: spotifyAuthorizationScopes.join(' '),
-      })}`,
+      )}/authorize?${params}`,
       statusCode: HttpStatus.PERMANENT_REDIRECT,
     }
   }
@@ -65,7 +67,9 @@ export class AuthController {
   @Get('callback')
   @ApiExcludeEndpoint()
   @Redirect()
-  async callback(@Query('code') code: string): Promise<RedirectResponse> {
+  async callback(
+    @Query('code') code: string
+  ): Promise<RedirectResponse | undefined> {
     const { accessToken, refreshToken } = await firstValueFrom(
       this.authService.token({ code })
     )
@@ -78,7 +82,7 @@ export class AuthController {
       spotifyProfile.id
     )
 
-    if (!foundUser) {
+    if (!foundUser && refreshToken) {
       const profile = await this.profilesService.create(spotifyProfile)
 
       await this.usersRepository.createUser({
@@ -87,14 +91,16 @@ export class AuthController {
       })
     }
 
-    return {
-      url: `${this.configService.get(
-        CLIENT_CALLBACK_URL
-      )}/api/authorize?${new URLSearchParams({
-        accessToken,
-        refreshToken,
-      })}`,
-      statusCode: HttpStatus.PERMANENT_REDIRECT,
+    if (refreshToken && accessToken) {
+      return {
+        url: `${this.configService.get(
+          CLIENT_CALLBACK_URL
+        )}/api/authorize?${new URLSearchParams({
+          accessToken,
+          refreshToken,
+        }).toString()}`,
+        statusCode: HttpStatus.PERMANENT_REDIRECT,
+      }
     }
   }
 

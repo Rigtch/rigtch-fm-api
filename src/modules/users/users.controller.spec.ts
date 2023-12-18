@@ -56,13 +56,13 @@ describe('UsersController', () => {
       expect(findOneByDisplayNameSpy).toHaveBeenCalledWith(displayName)
     })
 
-    test('should throw an error if no user is found', () => {
+    test('should throw an error if no user is found', async () => {
       const findOneByDisplayNameSpy = vi.spyOn(
         usersRepository,
         'findOneByDisplayName'
       )
 
-      expect(usersController.getAll(displayName)).rejects.toThrowError()
+      await expect(usersController.getAll(displayName)).rejects.toThrowError()
       expect(findOneByDisplayNameSpy).toHaveBeenCalledWith(displayName)
     })
   })
@@ -78,10 +78,10 @@ describe('UsersController', () => {
       expect(findOneBySpy).toHaveBeenCalledWith({ id })
     })
 
-    test('should throw an error if no user is found', () => {
+    test('should throw an error if no user is found', async () => {
       const findOneBySpy = vi.spyOn(usersRepository, 'findOneBy')
 
-      expect(usersController.getOneById(id)).rejects.toThrowError()
+      await expect(usersController.getOneById(id)).rejects.toThrowError()
 
       expect(findOneBySpy).toHaveBeenCalledWith({ id })
     })

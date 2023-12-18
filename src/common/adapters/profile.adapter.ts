@@ -13,7 +13,7 @@ export const adaptProfile = ({
   followers,
 }: SpotifyProfile): Profile => ({
   id,
-  displayName: display_name,
+  displayName: display_name ?? id,
   email,
   images,
   country,

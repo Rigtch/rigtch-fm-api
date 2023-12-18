@@ -160,12 +160,14 @@ describe('UsersProfileController', () => {
       expect(topGenresSpy).toHaveBeenCalled()
     })
 
-    test('should throw an error if no user is found', () => {
+    test('should throw an error if no user is found', async () => {
       const findOneBySpy = vi.spyOn(usersRepository, 'findOneBy')
       const tokenSpy = vi.spyOn(authService, 'token')
       const topGenresSpy = vi.spyOn(statisticsService, 'topGenres')
 
-      expect(usersProfileController.getTopGenres(id, {})).rejects.toThrowError()
+      await expect(
+        usersProfileController.getTopGenres(id, {})
+      ).rejects.toThrowError()
 
       expect(findOneBySpy).toHaveBeenCalledWith({ id })
       expect(tokenSpy).not.toHaveBeenCalled()
@@ -284,12 +286,14 @@ describe('UsersProfileController', () => {
       expect(topTracksSpy).toHaveBeenCalled()
     })
 
-    test('should throw an error if no user is found', () => {
+    test('should throw an error if no user is found', async () => {
       const findOneBySpy = vi.spyOn(usersRepository, 'findOneBy')
       const tokenSpy = vi.spyOn(authService, 'token')
       const topTracksSpy = vi.spyOn(statisticsService, 'topTracks')
 
-      expect(usersProfileController.getTopTracks(id, {})).rejects.toThrowError()
+      await expect(
+        usersProfileController.getTopTracks(id, {})
+      ).rejects.toThrowError()
 
       expect(findOneBySpy).toHaveBeenCalledWith({ id })
       expect(tokenSpy).not.toHaveBeenCalled()
@@ -345,10 +349,12 @@ describe('UsersProfileController', () => {
       expect(findOneBySpy).toHaveBeenCalledWith({ id })
     })
 
-    test('should throw an error if no user is found', () => {
+    test('should throw an error if no user is found', async () => {
       const findOneBySpy = vi.spyOn(usersRepository, 'findOneBy')
 
-      expect(usersProfileController.getAnalysis(id)).rejects.toThrowError()
+      await expect(
+        usersProfileController.getAnalysis(id)
+      ).rejects.toThrowError()
 
       expect(findOneBySpy).toHaveBeenCalledWith({ id })
     })

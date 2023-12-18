@@ -1,2 +1,4 @@
-export const audioFeaturesReducer = (accumulator, currentValue) =>
-  accumulator + currentValue
+export const audioFeaturesReducer = (
+  accumulator: number,
+  currentValue: number
+) => accumulator + currentValue

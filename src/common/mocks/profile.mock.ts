@@ -16,8 +16,6 @@ export const spotifyProfileMock: SpotifyProfile = {
     spotify: 'https://open.spotify.com/user/spotify-user',
   },
   followers: {
-    // Spotify Web API return here null, so We are using it instead of undefined.
-    // eslint-disable-next-line unicorn/no-null
     href: null,
     total: 0,
   },
@@ -31,7 +29,7 @@ export const spotifyProfileMock: SpotifyProfile = {
 
 export const profileMock: Profile = {
   id: spotifyProfileMock.id,
-  displayName: spotifyProfileMock.display_name,
+  displayName: spotifyProfileMock.display_name!,
   followers: spotifyProfileMock.followers.total,
   images: imagesMock,
   href: spotifyProfileMock.external_urls.spotify,

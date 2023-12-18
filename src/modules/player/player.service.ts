@@ -10,7 +10,11 @@ import {
   PlaybackState,
   SpotifyPlaybackState,
 } from '@common/types/spotify'
-import { applyAuthorizationHeader, catchSpotifyError } from '@common/utils'
+import {
+  SpotifyResponseError,
+  applyAuthorizationHeader,
+  catchSpotifyError,
+} from '@common/utils'
 import { Success } from '@common/dtos'
 import { adaptDevices, adaptPlaybackState } from '@common/adapters'
 
@@ -43,12 +47,12 @@ export class PlayerService {
       )
       .pipe(
         map(response => response.data),
-        catchError(catchSpotifyError),
         tap(playbackState => {
-          if (!playbackState.device)
+          if (!playbackState.device.is_active)
             throw new ForbiddenException(PlayerMessage.NO_PLAYING_DEVICE)
         }),
-        map(adaptPlaybackState)
+        map(adaptPlaybackState),
+        catchError(catchSpotifyError)
       )
   }
 
@@ -71,11 +75,14 @@ export class PlayerService {
             map(() => ({
               success: true,
             })),
-            catchError(error => {
-              if (error.response.data.error.status === 403)
+            catchError((response: SpotifyResponseError) => {
+              if (
+                !('error_description' in response.data) &&
+                response.data.error.status === 403
+              )
                 throw new ForbiddenException(PlayerMessage.NO_PLAYING_DEVICE)
 
-              return catchSpotifyError(error)
+              return catchSpotifyError(response)
             })
           )
       })
@@ -95,11 +102,14 @@ export class PlayerService {
         map(() => ({
           success: true,
         })),
-        catchError(error => {
-          if (error.response.data.error.status === 403)
+        catchError((response: SpotifyResponseError) => {
+          if (
+            !('error_description' in response.data) &&
+            response.data.error.status === 403
+          )
             throw new ForbiddenException(PlayerMessage.DEVICE_ALREADY_PLAYING)
 
-          return catchSpotifyError(error)
+          return catchSpotifyError(response)
         })
       )
   }
