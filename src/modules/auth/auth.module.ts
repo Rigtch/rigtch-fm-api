@@ -23,14 +23,12 @@ import { ProfilesModule } from '@modules/profiles'
       inject: [ConfigService],
     }),
     JwtModule.registerAsync({
-      useFactory: async (configService: ConfigService) => {
-        return {
-          secret: configService.get(Environment.JWT_SECRET),
-          signOptions: {
-            expiresIn: '3600s',
-          },
-        }
-      },
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get(Environment.JWT_SECRET),
+        signOptions: {
+          expiresIn: '3600s',
+        },
+      }),
       inject: [ConfigService],
     }),
     ProfilesModule,

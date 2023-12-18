@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
-import { TypeOrmModule } from '@nestjs/typeorm'
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm'
 
 import { environmentSchema } from '@config/environment'
 import { typeorm } from '@config/database'
@@ -27,7 +27,7 @@ import { UsersModule } from '@modules/users'
     }),
     TypeOrmModule.forRootAsync({
       useFactory: (configService: ConfigService) =>
-        configService.get('typeorm'),
+        configService.get<TypeOrmModuleOptions>('typeorm')!,
       imports: [ConfigModule],
       inject: [ConfigService],
     }),

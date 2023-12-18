@@ -25,7 +25,7 @@ export interface SpotifyProfile {
     spotify: string
   }
   followers: {
-    href?: string
+    href?: string | null
     total: number
   }
   href: string

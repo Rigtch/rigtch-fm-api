@@ -60,7 +60,7 @@ describe('catchSpotifyError', () => {
     )
   })
 
-  test('should throw BadGatewayException', () => {
+  test('should throw BadGatewayException as SpotifyAuthError', () => {
     const message = 'Bad Gateway'
 
     expect(() =>
