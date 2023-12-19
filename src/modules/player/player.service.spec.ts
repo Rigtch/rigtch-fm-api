@@ -60,20 +60,6 @@ describe('PlayerService', () => {
 
       expect(await playerService.availableDevices('awd')).toEqual(devicesMock)
     })
-
-    test('should throw Forbidden expception because no device is currently playing', async () => {
-      vi.spyOn(httpService, 'get').mockReturnValue(
-        of(
-          axiosResponseMockFactory({
-            devices: [],
-          })
-        )
-      )
-
-      await expect(playerService.availableDevices('awd')).rejects.toThrowError(
-        ForbiddenException
-      )
-    })
   })
 
   describe('currentPlaybackState', () => {
@@ -85,16 +71,6 @@ describe('PlayerService', () => {
       expect(await playerService.currentPlaybackState('awd')).toEqual(
         playbackStateMock
       )
-    })
-
-    test.skip('should throw Forbidden expception because No device is currently playing', async () => {
-      vi.spyOn(httpService, 'get').mockReturnValue(
-        of(axiosResponseMockFactory(forbiddenExceptionObserver))
-      )
-
-      await expect(
-        playerService.currentPlaybackState('awd')
-      ).rejects.toThrowError(ForbiddenException)
     })
   })
 

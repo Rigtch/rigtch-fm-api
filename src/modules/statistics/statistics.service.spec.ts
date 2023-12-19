@@ -114,7 +114,7 @@ describe('StatisticsService', () => {
 
   test('should generate analysis', async () => {
     vi.spyOn(httpService, 'get').mockImplementation((path: string) => {
-      return path === '/me/top/artists?limit=50'
+      return path === '/me/top/tracks?limit=50'
         ? of(
             axiosResponseMockFactory(
               spotifyResponseMockFactory(spotifyArtistsMock)

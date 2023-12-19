@@ -12,17 +12,17 @@ export enum ShuffleState {
 }
 
 export interface SpotifyPlaybackState {
-  device: SpotifyDevice
-  repeat_state: RepeatedState
-  shuffle_state: ShuffleState
-  is_playing: boolean
-  item: SpotifyTrack
+  device?: SpotifyDevice
+  repeat_state?: RepeatedState
+  shuffle_state?: ShuffleState
+  is_playing?: boolean
+  item?: SpotifyTrack
 }
 
 export interface PlaybackState {
-  device: Device
-  repeatState: RepeatedState
-  shuffleState: ShuffleState
-  isPlaying: boolean
-  track: Track
+  device?: Device
+  repeatState?: RepeatedState
+  shuffleState?: ShuffleState
+  isPlaying?: boolean
+  track?: Track
 }

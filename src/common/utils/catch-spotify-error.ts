@@ -21,6 +21,8 @@ export const SPOTIFY_DEFAULT_ERROR_MESSAGE =
   'Something went wrong with fetching data from spotify API:'
 
 export const catchSpotifyError = (response: SpotifyResponseError) => {
+  console.log('res', response)
+  console.log(response.data)
   const { data, status } = response
 
   if ('error_description' in data) {

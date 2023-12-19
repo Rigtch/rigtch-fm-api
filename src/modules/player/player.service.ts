@@ -1,6 +1,6 @@
 import { HttpService } from '@nestjs/axios'
 import { Injectable, ForbiddenException } from '@nestjs/common'
-import { map, catchError, tap, timer, exhaustMap, firstValueFrom } from 'rxjs'
+import { map, catchError, timer, exhaustMap, firstValueFrom } from 'rxjs'
 
 import { PlayerMessage } from './messages'
 
@@ -32,10 +32,6 @@ export class PlayerService {
         .pipe(
           map(response => response.data.devices),
           catchError(catchSpotifyError),
-          tap(devices => {
-            if (devices.length <= 0)
-              throw new ForbiddenException(PlayerMessage.NO_AVAIBLE_DEVICES)
-          }),
           map(adaptDevices)
         )
     )
@@ -50,10 +46,6 @@ export class PlayerService {
         )
         .pipe(
           map(response => response.data),
-          tap(playbackState => {
-            if (!playbackState.device.is_active)
-              throw new ForbiddenException(PlayerMessage.NO_PLAYING_DEVICE)
-          }),
           map(adaptPlaybackState),
           catchError(catchSpotifyError)
         )

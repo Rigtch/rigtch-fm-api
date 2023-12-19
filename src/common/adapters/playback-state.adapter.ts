@@ -1,7 +1,7 @@
 import { PlaybackState, SpotifyPlaybackState } from '../types/spotify'
 
 import { adaptDevices } from './devices.adapter'
-import { adaptTracks } from './tracks.adapter'
+import { adaptTrack } from './tracks.adapter'
 
 export const adaptPlaybackState = ({
   device,
@@ -10,14 +10,11 @@ export const adaptPlaybackState = ({
   is_playing,
   item,
 }: SpotifyPlaybackState): PlaybackState => {
-  const [formattedDevice] = adaptDevices([device])
-  const [formattedTrack] = adaptTracks([item])
-
   return {
-    device: formattedDevice,
+    device: device ? adaptDevices([device])[0] : undefined,
     repeatState: repeat_state,
     shuffleState: shuffle_state,
     isPlaying: is_playing,
-    track: formattedTrack,
+    track: item ? adaptTrack(item) : undefined,
   }
 }

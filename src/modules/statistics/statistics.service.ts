@@ -164,7 +164,7 @@ export class StatisticsService {
     return firstValueFrom(
       this.httpService
         .get<SpotifyResponse<SpotifyArtist>>(
-          `/me/top/artists?limit=50`,
+          '/me/top/tracks?limit=50',
           applyAuthorizationHeader(accessToken)
         )
         .pipe(
