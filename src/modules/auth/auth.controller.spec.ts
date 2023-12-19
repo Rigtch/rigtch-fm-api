@@ -164,8 +164,17 @@ describe('AuthController', () => {
   })
 
   test('should return profile', async () => {
-    vi.spyOn(authService, 'profile').mockResolvedValue(profileMock)
+    const accessToken = '123'
 
-    expect(await authController.profile('123')).toEqual(profileMock)
+    const profileSpy = vi
+      .spyOn(authService, 'profile')
+      .mockResolvedValue(profileMock)
+    const findOneByProfileIdSpy = vi
+      .spyOn(usersRepository, 'findOneByProfileId')
+      .mockResolvedValue(userMock)
+
+    expect(await authController.profile(accessToken)).toEqual(userMock)
+    expect(profileSpy).toHaveBeenCalledWith(accessToken)
+    expect(findOneByProfileIdSpy).toHaveBeenCalledWith(profileMock.id)
   })
 })

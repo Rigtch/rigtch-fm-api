@@ -76,16 +76,16 @@ export class AuthController {
       spotifyProfile.id
     )
 
-    if (!foundUser && refreshToken) {
-      const profile = await this.profilesService.create(spotifyProfile)
+    if (refreshToken) {
+      if (!foundUser) {
+        const profile = await this.profilesService.create(spotifyProfile)
 
-      await this.usersRepository.createUser({
-        profile,
-        refreshToken,
-      })
-    }
+        await this.usersRepository.createUser({
+          profile,
+          refreshToken,
+        })
+      }
 
-    if (refreshToken && accessToken) {
       return {
         url: `${this.configService.get(
           CLIENT_CALLBACK_URL
@@ -119,7 +119,9 @@ export class AuthController {
   @ApiOkResponse({
     description: "User's profile has been succesfully found",
   })
-  profile(@Token() accessToken: string) {
-    return this.authService.profile(accessToken)
+  async profile(@Token() accessToken: string) {
+    const { id } = await this.authService.profile(accessToken)
+
+    return this.usersRepository.findOneByProfileId(id)
   }
 }
