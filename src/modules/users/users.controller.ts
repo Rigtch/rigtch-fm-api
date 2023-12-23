@@ -28,12 +28,15 @@ import {
   ONE_IS_INVALID,
   ONE_SUCCESFULLY_FOUND,
 } from '@common/constants'
+import { AuthenticationType } from '@modules/auth/enums'
+import { ApiAuth, Token } from '@modules/auth/decorators'
 
 export const USER = 'user'
 export const USERS = 'users'
 
 @Controller(USERS)
 @ApiTags(USERS)
+@ApiAuth(AuthenticationType.ACCESS_TOKEN)
 export class UsersController {
   constructor(private readonly usersRepository: UsersRepository) {}
 
@@ -49,7 +52,10 @@ export class UsersController {
   @ApiNoContentResponse({
     description: NOT_BEEN_FOUND(USER),
   })
-  async getAll(@Query('displayName') displayName?: string) {
+  async getAll(
+    @Query('displayName') displayName?: string,
+    @Token() _token?: string
+  ) {
     if (displayName) {
       const foundUser =
         await this.usersRepository.findOneByDisplayName(displayName)
@@ -78,7 +84,10 @@ export class UsersController {
   @ApiBadRequestResponse({
     description: ONE_IS_INVALID('uuid'),
   })
-  async getOneById(@Param('id', ParseUUIDPipe) id: string) {
+  async getOneById(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Token() _token?: string
+  ) {
     const foundUser = await this.usersRepository.findOneBy({ id })
 
     if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))

@@ -32,9 +32,12 @@ import {
   NOT_BEEN_FOUND,
   ONE_IS_INVALID,
 } from '@common/constants'
+import { ApiAuth, Token } from '@modules/auth/decorators'
+import { AuthenticationType } from '@modules/auth/enums'
 
 @Controller('users/:id/profile')
 @ApiTags('users/{id}/profile')
+@ApiAuth(AuthenticationType.ACCESS_TOKEN)
 export class UsersProfileController {
   constructor(
     private readonly usersRepository: UsersRepository,
@@ -60,7 +63,8 @@ export class UsersProfileController {
   })
   async getLastTracks(
     @Param('id', ParseUUIDPipe) id: string,
-    @Query() { limit, before, after }: LastItemQuery
+    @Query() { limit, before, after }: LastItemQuery,
+    @Token() _token?: string
   ) {
     const foundUser = await this.usersRepository.findOneBy({ id })
 
@@ -90,7 +94,8 @@ export class UsersProfileController {
   })
   async getTopArtists(
     @Param('id', ParseUUIDPipe) id: string,
-    @Query() { limit, timeRange, offset }: TopItemQuery
+    @Query() { limit, timeRange, offset }: TopItemQuery,
+    @Token() _token?: string
   ) {
     const foundUser = await this.usersRepository.findOneBy({ id })
 
@@ -125,7 +130,8 @@ export class UsersProfileController {
   })
   async getTopTracks(
     @Param('id', ParseUUIDPipe) id: string,
-    @Query() { limit, timeRange, offset }: TopItemQuery
+    @Query() { limit, timeRange, offset }: TopItemQuery,
+    @Token() _token?: string
   ) {
     const foundUser = await this.usersRepository.findOneBy({ id })
 
@@ -160,7 +166,8 @@ export class UsersProfileController {
   })
   async getTopGenres(
     @Param('id', ParseUUIDPipe) id: string,
-    @Query() { limit, timeRange, offset }: TopItemQuery
+    @Query() { limit, timeRange, offset }: TopItemQuery,
+    @Token() _token?: string
   ) {
     const foundUser = await this.usersRepository.findOneBy({ id })
 
@@ -192,7 +199,10 @@ export class UsersProfileController {
   @ApiBadRequestResponse({
     description: ONE_IS_INVALID('uuid'),
   })
-  async getAnalysis(@Param('id', ParseUUIDPipe) id: string) {
+  async getAnalysis(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Token() _token?: string
+  ) {
     const foundUser = await this.usersRepository.findOneBy({ id })
 
     if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))

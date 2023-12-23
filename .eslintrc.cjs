@@ -69,7 +69,7 @@ module.exports = {
     'prefer-const': 'warn',
     '@typescript-eslint/no-unused-vars': [
       'error',
-      { ignoreRestSiblings: true },
+      { ignoreRestSiblings: true, argsIgnorePattern: '^_' },
     ],
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
