@@ -22,5 +22,6 @@ import { Environment } from '@config/environment'
   ],
   controllers: [PlayerController],
   providers: [PlayerService],
+  exports: [PlayerService],
 })
 export class PlayerModule {}
