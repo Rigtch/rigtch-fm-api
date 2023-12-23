@@ -14,8 +14,10 @@ import {
   spotifyResponseWithOffsetMockFactory,
   artistsMock,
   analysisMock,
+  playbackStateMock,
 } from '@common/mocks'
 import { SecretData } from '@modules/auth/dtos'
+import { PlayerService } from '@modules/player'
 
 describe('UsersProfileController', () => {
   const accessToken = 'accessToken'
@@ -34,6 +36,7 @@ describe('UsersProfileController', () => {
   let usersRepository: UsersRepository
   let authService: AuthService
   let statisticsService: StatisticsService
+  let playerService: PlayerService
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -63,6 +66,12 @@ describe('UsersProfileController', () => {
             analysis: vi.fn(),
           },
         },
+        {
+          provide: PlayerService,
+          useValue: {
+            currentPlaybackState: vi.fn(),
+          },
+        },
       ],
     }).compile()
 
@@ -70,6 +79,7 @@ describe('UsersProfileController', () => {
     usersRepository = module.get(UsersRepository)
     authService = module.get(AuthService)
     statisticsService = module.get(StatisticsService)
+    playerService = module.get(PlayerService)
   })
 
   test('should be defined', () => {
@@ -354,6 +364,37 @@ describe('UsersProfileController', () => {
       await expect(
         usersProfileController.getAnalysis(id)
       ).rejects.toThrowError()
+
+      expect(findOneBySpy).toHaveBeenCalledWith({ id })
+    })
+  })
+
+  describe('getState', () => {
+    test('should get user playback state', async () => {
+      const findOneBySpy = vi
+        .spyOn(usersRepository, 'findOneBy')
+        .mockResolvedValue(userMock)
+      const tokenSpy = vi
+        .spyOn(authService, 'token')
+        .mockResolvedValue(secretDataMock)
+      const currentPlaybackStateSpy = vi
+        .spyOn(playerService, 'currentPlaybackState')
+        .mockResolvedValue(playbackStateMock)
+
+      expect(await usersProfileController.getState(id)).toEqual(
+        playbackStateMock
+      )
+      expect(currentPlaybackStateSpy).toHaveBeenCalledWith(accessToken)
+      expect(findOneBySpy).toHaveBeenCalledWith({ id })
+      expect(tokenSpy).toHaveBeenCalledWith({
+        refreshToken: userMock.refreshToken,
+      })
+    })
+
+    test('should throw an error if no user is found', async () => {
+      const findOneBySpy = vi.spyOn(usersRepository, 'findOneBy')
+
+      await expect(usersProfileController.getState(id)).rejects.toThrowError()
 
       expect(findOneBySpy).toHaveBeenCalledWith({ id })
     })

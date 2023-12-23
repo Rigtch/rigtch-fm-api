@@ -20,6 +20,7 @@ import {
 import { UsersRepository } from './users.repository'
 import { USER } from './users.controller'
 
+import { PlayerService } from '@modules/player'
 import { ApiItemQuery } from '@modules/statistics/decorators'
 import {
   StatisticsService,
@@ -43,7 +44,8 @@ export class UsersProfileController {
     private readonly usersRepository: UsersRepository,
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
-    private readonly statisticsService: StatisticsService
+    private readonly statisticsService: StatisticsService,
+    private readonly playerService: PlayerService
   ) {}
 
   @Get('last-tracks')
@@ -212,5 +214,34 @@ export class UsersProfileController {
     })
 
     return this.statisticsService.analysis(accessToken)
+  }
+
+  @Get('state')
+  @ApiOperation({
+    summary: "Getting user's playback state.",
+  })
+  @ApiParam({ name: 'id' })
+  @ApiOkResponse({
+    description: ONE_SUCCESFULLY_FOUND(USER),
+  })
+  @ApiNotFoundResponse({
+    description: NOT_BEEN_FOUND(USER),
+  })
+  @ApiBadRequestResponse({
+    description: ONE_IS_INVALID('uuid'),
+  })
+  async getState(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Token() _token?: string
+  ) {
+    const foundUser = await this.usersRepository.findOneBy({ id })
+
+    if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
+
+    const { accessToken } = await this.authService.token({
+      refreshToken: foundUser.refreshToken,
+    })
+
+    return this.playerService.currentPlaybackState(accessToken)
   }
 }

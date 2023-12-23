@@ -8,12 +8,14 @@ import { UsersProfileController } from './users-profile.controller'
 
 import { AuthModule } from '@modules/auth'
 import { StatisticsModule } from '@modules/statistics'
+import { PlayerModule } from '@modules/player'
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
     forwardRef(() => AuthModule),
     StatisticsModule,
+    PlayerModule,
   ],
   providers: [UsersRepository],
   controllers: [UsersController, UsersProfileController],
