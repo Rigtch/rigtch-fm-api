@@ -129,7 +129,7 @@ export class UsersPlaybackController {
 
     if (foundUser.profile.id !== meProfile.id)
       throw new UnauthorizedException(
-        'You are not authorized to resume playback.'
+        'You are not allowed to resume playback.'
       )
 
     const token = await this.spotifyAuthService.token({
