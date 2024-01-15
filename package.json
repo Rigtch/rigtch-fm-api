@@ -52,6 +52,7 @@
     "@nestjs/platform-express": "^10.2.10",
     "@nestjs/swagger": "7.1.16",
     "@nestjs/typeorm": "10.0.1",
+    "@spotify/web-api-ts-sdk": "1.1.2",
     "@vitest/coverage-v8": "1.0.1",
     "axios": "1.6.2",
     "class-transformer": "0.5.1",
