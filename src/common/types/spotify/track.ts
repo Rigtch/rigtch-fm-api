@@ -26,7 +26,7 @@ export interface SpotifyTrack {
   id: string
   is_local: boolean
   popularity: number
-  preview_url: string
+  preview_url?: string | null
   track_number: number
   artists: SpotifyTrackArtist[]
   album: SpotifyAlbum

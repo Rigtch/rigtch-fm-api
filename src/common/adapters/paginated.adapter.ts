@@ -12,5 +12,6 @@ export const adaptPaginated = <TItems, TAdaptedItems>(
     next,
     href,
     items: adaptFunction(items),
+    total: items.length,
   }
 }

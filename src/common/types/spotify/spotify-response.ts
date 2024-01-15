@@ -3,7 +3,9 @@ import { Cursors } from './cursors'
 export interface SpotifyResponse<TItems = unknown> {
   href: string
   limit: number
-  next: string
+  next: string | null
+  previous?: string | null
+  total: number
   items: TItems[]
 }
 

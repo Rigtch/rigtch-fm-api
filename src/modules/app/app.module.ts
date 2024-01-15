@@ -5,8 +5,6 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm'
 import { environmentSchema } from '@config/environment'
 import { typeorm } from '@config/database'
 import { AuthModule } from '@modules/auth'
-import { StatisticsModule } from '@modules/statistics'
-import { PlayerModule } from '@modules/player'
 import { ImagesModule } from '@modules/images'
 import { ProfilesModule } from '@modules/profiles'
 import { UsersModule } from '@modules/users'
@@ -14,8 +12,6 @@ import { UsersModule } from '@modules/users'
 @Module({
   imports: [
     AuthModule,
-    StatisticsModule,
-    PlayerModule,
     ImagesModule,
     ProfilesModule,
     UsersModule,

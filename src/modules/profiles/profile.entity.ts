@@ -27,7 +27,7 @@ export class Profile {
   })
   @JoinTable()
   @ApiProperty({ type: Image, isArray: true })
-  images: Relation<Image>[]
+  images?: Relation<Image>[]
 
   @Column('int')
   @ApiProperty({ type: Number })

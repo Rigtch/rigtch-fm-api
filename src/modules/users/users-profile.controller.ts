@@ -1,12 +1,10 @@
 import {
   Controller,
   Get,
-  Inject,
   NotFoundException,
   Param,
   ParseUUIDPipe,
   Query,
-  forwardRef,
 } from '@nestjs/common'
 import {
   ApiOperation,
@@ -18,16 +16,10 @@ import {
 } from '@nestjs/swagger'
 
 import { UsersRepository } from './users.repository'
-import { USER } from './users.controller'
+import { USER } from './constants'
+import { ApiItemQuery } from './decorators'
+import { LastItemQuery, TopItemQuery } from './dtos'
 
-import { PlayerService } from '@modules/player'
-import { ApiItemQuery } from '@modules/statistics/decorators'
-import {
-  StatisticsService,
-  LastItemQuery,
-  TopItemQuery,
-} from '@modules/statistics'
-import { AuthService } from '@modules/auth'
 import {
   ONE_SUCCESFULLY_FOUND,
   NOT_BEEN_FOUND,
@@ -35,6 +27,9 @@ import {
 } from '@common/constants'
 import { ApiAuth, Token } from '@modules/auth/decorators'
 import { AuthenticationType } from '@modules/auth/enums'
+import { SpotifyAuthService } from '@modules/spotify/auth'
+import { SpotifyUsersService } from '@modules/spotify/users'
+import { SpotifyPlayerService } from '@modules/spotify/player'
 
 @Controller('users/:id/profile')
 @ApiTags('users/{id}/profile')
@@ -42,15 +37,43 @@ import { AuthenticationType } from '@modules/auth/enums'
 export class UsersProfileController {
   constructor(
     private readonly usersRepository: UsersRepository,
-    @Inject(forwardRef(() => AuthService))
-    private readonly authService: AuthService,
-    private readonly statisticsService: StatisticsService,
-    private readonly playerService: PlayerService
+    private readonly spotifyAuthService: SpotifyAuthService,
+    private readonly spotifyUsersService: SpotifyUsersService,
+    private readonly spotifyPlayerService: SpotifyPlayerService
   ) {}
 
-  @Get('last-tracks')
+  @Get()
   @ApiOperation({
-    summary: "Getting user's last tracks.",
+    summary: "Getting user's profile.",
+  })
+  @ApiParam({ name: 'id' })
+  @ApiOkResponse({
+    description: ONE_SUCCESFULLY_FOUND(USER),
+  })
+  @ApiNotFoundResponse({
+    description: NOT_BEEN_FOUND(USER),
+  })
+  @ApiBadRequestResponse({
+    description: ONE_IS_INVALID('uuid'),
+  })
+  async getProfile(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Token() _token?: string
+  ) {
+    const foundUser = await this.usersRepository.findOneBy({ id })
+
+    if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
+
+    const token = await this.spotifyAuthService.token({
+      refreshToken: foundUser.refreshToken,
+    })
+
+    return this.spotifyUsersService.profile(token)
+  }
+
+  @Get('recently-played')
+  @ApiOperation({
+    summary: "Getting user's recently played tracks.",
   })
   @ApiParam({ name: 'id' })
   @ApiItemQuery({ withCursors: true })
@@ -63,7 +86,7 @@ export class UsersProfileController {
   @ApiBadRequestResponse({
     description: ONE_IS_INVALID('uuid'),
   })
-  async getLastTracks(
+  async getRecentlyPlayed(
     @Param('id', ParseUUIDPipe) id: string,
     @Query() { limit, before, after }: LastItemQuery,
     @Token() _token?: string
@@ -72,11 +95,16 @@ export class UsersProfileController {
 
     if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
 
-    const { accessToken } = await this.authService.token({
+    const token = await this.spotifyAuthService.token({
       refreshToken: foundUser.refreshToken,
     })
 
-    return this.statisticsService.lastTracks(accessToken, limit, before, after)
+    return this.spotifyPlayerService.getRecentlyPlayedTracks(
+      token,
+      limit,
+      before,
+      after
+    )
   }
 
   @Get('top/artists')
@@ -103,14 +131,14 @@ export class UsersProfileController {
 
     if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
 
-    const { accessToken } = await this.authService.token({
+    const token = await this.spotifyAuthService.token({
       refreshToken: foundUser.refreshToken,
     })
 
-    return this.statisticsService.topArtists(
-      accessToken,
-      limit,
+    return this.spotifyUsersService.getTopArtists(
+      token,
       timeRange,
+      limit,
       offset
     )
   }
@@ -139,14 +167,14 @@ export class UsersProfileController {
 
     if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
 
-    const { accessToken } = await this.authService.token({
+    const token = await this.spotifyAuthService.token({
       refreshToken: foundUser.refreshToken,
     })
 
-    return this.statisticsService.topTracks(
-      accessToken,
-      limit,
+    return this.spotifyUsersService.getTopTracks(
+      token,
       timeRange,
+      limit,
       offset
     )
   }
@@ -175,14 +203,14 @@ export class UsersProfileController {
 
     if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
 
-    const { accessToken } = await this.authService.token({
+    const token = await this.spotifyAuthService.token({
       refreshToken: foundUser.refreshToken,
     })
 
-    return this.statisticsService.topGenres(
-      accessToken,
-      limit,
+    return this.spotifyUsersService.getTopGenres(
+      token,
       timeRange,
+      limit,
       offset
     )
   }
@@ -209,39 +237,39 @@ export class UsersProfileController {
 
     if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
 
-    const { accessToken } = await this.authService.token({
+    const token = await this.spotifyAuthService.token({
       refreshToken: foundUser.refreshToken,
     })
 
-    return this.statisticsService.analysis(accessToken)
+    return this.spotifyUsersService.getAnalysis(token)
   }
 
-  @Get('state')
-  @ApiOperation({
-    summary: "Getting user's playback state.",
-  })
-  @ApiParam({ name: 'id' })
-  @ApiOkResponse({
-    description: ONE_SUCCESFULLY_FOUND(USER),
-  })
-  @ApiNotFoundResponse({
-    description: NOT_BEEN_FOUND(USER),
-  })
-  @ApiBadRequestResponse({
-    description: ONE_IS_INVALID('uuid'),
-  })
-  async getState(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Token() _token?: string
-  ) {
-    const foundUser = await this.usersRepository.findOneBy({ id })
+  // @Get('state')
+  // @ApiOperation({
+  //   summary: "Getting user's playback state.",
+  // })
+  // @ApiParam({ name: 'id' })
+  // @ApiOkResponse({
+  //   description: ONE_SUCCESFULLY_FOUND(USER),
+  // })
+  // @ApiNotFoundResponse({
+  //   description: NOT_BEEN_FOUND(USER),
+  // })
+  // @ApiBadRequestResponse({
+  //   description: ONE_IS_INVALID('uuid'),
+  // })
+  // async getState(
+  //   @Param('id', ParseUUIDPipe) id: string,
+  //   @Token() _token?: string
+  // ) {
+  //   const foundUser = await this.usersRepository.findOneBy({ id })
 
-    if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
+  //   if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
 
-    const { accessToken } = await this.authService.token({
-      refreshToken: foundUser.refreshToken,
-    })
+  //   const token = await this.spotifyAuthService.token({
+  //     refreshToken: foundUser.refreshToken,
+  //   })
 
-    return this.playerService.currentPlaybackState(accessToken)
-  }
+  //   return this.spotifyPlayerService.getPlaybackState(token)
+  // }
 }

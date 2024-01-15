@@ -21,6 +21,7 @@ import {
 
 import { UsersRepository } from './users.repository'
 import { User } from './user.entity'
+import { USERS, USER } from './constants'
 
 import {
   MANY_SUCCESFULLY_FOUND,
@@ -30,9 +31,6 @@ import {
 } from '@common/constants'
 import { AuthenticationType } from '@modules/auth/enums'
 import { ApiAuth, Token } from '@modules/auth/decorators'
-
-export const USER = 'user'
-export const USERS = 'users'
 
 @Controller(USERS)
 @ApiTags(USERS)
