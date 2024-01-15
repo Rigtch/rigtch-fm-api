@@ -1,3 +1,5 @@
+import { Episode } from '@spotify/web-api-ts-sdk'
+
 import { Device, Track, SpotifyDevice, SpotifyTrack } from '.'
 
 export enum RepeatedState {
@@ -6,23 +8,18 @@ export enum RepeatedState {
   OFF = 'off',
 }
 
-export enum ShuffleState {
-  ON = 'on',
-  OFF = 'off',
-}
-
 export interface SpotifyPlaybackState {
   device?: SpotifyDevice
-  repeat_state?: RepeatedState
-  shuffle_state?: ShuffleState
+  repeat_state?: string
+  shuffle_state?: boolean
   is_playing?: boolean
-  item?: SpotifyTrack
+  item?: SpotifyTrack | Episode
 }
 
 export interface PlaybackState {
   device?: Device
   repeatState?: RepeatedState
-  shuffleState?: ShuffleState
+  shuffleState?: boolean
   isPlaying?: boolean
   track?: Track
 }

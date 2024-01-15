@@ -3,19 +3,25 @@ import { ConfigService } from '@nestjs/config'
 import { Test, TestingModule } from '@nestjs/testing'
 
 import { AuthController } from './auth.controller'
-import { AuthService } from './auth.service'
-import { SecretData } from './dtos'
 
-import { profileMock, userMock } from '@common/mocks'
+import {
+  accessToken,
+  accessTokenMock,
+  profileMock,
+  refreshToken,
+  userMock,
+} from '@common/mocks'
 import { ProfilesService } from '@modules/profiles'
 import { UsersRepository } from '@modules/users'
+import { SpotifyAuthService } from '@modules/spotify/auth'
+import { SpotifyUsersService } from '@modules/spotify/users'
 
 describe('AuthController', () => {
   const redirectUrl = 'http://test.com'
 
   let authController: AuthController
-  let authService: AuthService
-
+  let spotifyAuthService: SpotifyAuthService
+  let spotifyUsersService: SpotifyUsersService
   let profilesService: ProfilesService
   let usersRepository: UsersRepository
 
@@ -24,7 +30,7 @@ describe('AuthController', () => {
       providers: [
         AuthController,
         {
-          provide: AuthService,
+          provide: SpotifyAuthService,
           useValue: {
             token: vi.fn(),
             profile: vi.fn(),
@@ -49,13 +55,20 @@ describe('AuthController', () => {
             findOneByProfileId: vi.fn(),
           },
         },
+        {
+          provide: SpotifyUsersService,
+          useValue: {
+            profile: vi.fn(),
+          },
+        },
       ],
     }).compile()
 
-    authController = module.get<AuthController>(AuthController)
-    authService = module.get<AuthService>(AuthService)
-    profilesService = module.get<ProfilesService>(ProfilesService)
-    usersRepository = module.get<UsersRepository>(UsersRepository)
+    authController = module.get(AuthController)
+    spotifyAuthService = module.get(SpotifyAuthService)
+    profilesService = module.get(ProfilesService)
+    usersRepository = module.get(UsersRepository)
+    spotifyUsersService = module.get(SpotifyUsersService)
   })
 
   test('should be defined', () => {
@@ -71,35 +84,34 @@ describe('AuthController', () => {
 
   describe('callback', () => {
     const code = 'code'
-    const tokenResponse = {
-      accessToken: '123',
-      refreshToken: '456',
-      expiresIn: 3600,
-    }
-    const { accessToken, refreshToken } = tokenResponse
 
     test('callback should return valid redirect path', async () => {
       const tokenSpy = vi
-        .spyOn(authService, 'token')
-        .mockResolvedValue(tokenResponse)
+        .spyOn(spotifyAuthService, 'token')
+        .mockResolvedValue(accessTokenMock)
       const profileSpy = vi
-        .spyOn(authService, 'profile')
+        .spyOn(spotifyUsersService, 'profile')
         .mockResolvedValue(profileMock)
+      const findOneByProfileIdSpy = vi
+        .spyOn(usersRepository, 'findOneByProfileId')
+        .mockResolvedValue(userMock)
 
       expect(await authController.callback(code)).toEqual({
         url: `${redirectUrl}/api/authorize?${new URLSearchParams({
           accessToken,
           refreshToken,
+          id: userMock.id,
         }).toString()}`,
         statusCode: HttpStatus.PERMANENT_REDIRECT,
       })
       expect(tokenSpy).toHaveBeenCalledWith({ code })
-      expect(profileSpy).toHaveBeenCalledWith(accessToken)
+      expect(profileSpy).toHaveBeenCalledWith(accessTokenMock)
+      expect(findOneByProfileIdSpy).toHaveBeenCalledWith(profileMock.id)
     })
 
     test('should find profile by id', async () => {
-      vi.spyOn(authService, 'token').mockResolvedValue(tokenResponse)
-      vi.spyOn(authService, 'profile').mockResolvedValue(profileMock)
+      vi.spyOn(spotifyAuthService, 'token').mockResolvedValue(accessTokenMock)
+      vi.spyOn(spotifyUsersService, 'profile').mockResolvedValue(profileMock)
 
       const findUserByProfileId = vi
         .spyOn(usersRepository, 'findOneByProfileId')
@@ -111,18 +123,18 @@ describe('AuthController', () => {
         url: `${redirectUrl}/api/authorize?${new URLSearchParams({
           accessToken,
           refreshToken,
+          id: userMock.id,
         }).toString()}`,
         statusCode: HttpStatus.PERMANENT_REDIRECT,
       })
-
       expect(findUserByProfileId).toHaveBeenCalledWith(profileMock.id)
       expect(createSpy).not.toHaveBeenCalled()
       expect(createUserSpy).not.toHaveBeenCalled()
     })
 
     test('should create profile and user', async () => {
-      vi.spyOn(authService, 'token').mockResolvedValue(tokenResponse)
-      vi.spyOn(authService, 'profile').mockResolvedValue(profileMock)
+      vi.spyOn(spotifyAuthService, 'token').mockResolvedValue(accessTokenMock)
+      vi.spyOn(spotifyUsersService, 'profile').mockResolvedValue(profileMock)
 
       const findUserByProfileId = vi.spyOn(
         usersRepository,
@@ -139,10 +151,10 @@ describe('AuthController', () => {
         url: `${redirectUrl}/api/authorize?${new URLSearchParams({
           accessToken,
           refreshToken,
+          id: userMock.id,
         }).toString()}`,
         statusCode: HttpStatus.PERMANENT_REDIRECT,
       })
-
       expect(findUserByProfileId).toHaveBeenCalledWith(profileMock.id)
       expect(createSpy).toHaveBeenCalledWith(profileMock)
       expect(createUserSpy).toHaveBeenCalledWith({
@@ -153,28 +165,8 @@ describe('AuthController', () => {
   })
 
   test('should refresh token', async () => {
-    const secretData: SecretData = {
-      accessToken: '123',
-      expiresIn: 3600,
-    }
+    vi.spyOn(spotifyAuthService, 'token').mockResolvedValue(accessTokenMock)
 
-    vi.spyOn(authService, 'token').mockResolvedValue(secretData)
-
-    expect(await authController.refresh('123')).toEqual(secretData)
-  })
-
-  test('should return profile', async () => {
-    const accessToken = '123'
-
-    const profileSpy = vi
-      .spyOn(authService, 'profile')
-      .mockResolvedValue(profileMock)
-    const findOneByProfileIdSpy = vi
-      .spyOn(usersRepository, 'findOneByProfileId')
-      .mockResolvedValue(userMock)
-
-    expect(await authController.profile(accessToken)).toEqual(userMock)
-    expect(profileSpy).toHaveBeenCalledWith(accessToken)
-    expect(findOneByProfileIdSpy).toHaveBeenCalledWith(profileMock.id)
+    expect(await authController.refresh(refreshToken)).toEqual(accessTokenMock)
   })
 })

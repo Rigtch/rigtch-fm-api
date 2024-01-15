@@ -9,6 +9,7 @@ import { AuthController } from './auth.controller'
 import { Environment } from '@config/environment'
 import { UsersModule } from '@modules/users'
 import { ProfilesModule } from '@modules/profiles'
+import { SpotifyModule } from '@modules/spotify'
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { ProfilesModule } from '@modules/profiles'
       }),
       inject: [ConfigService],
     }),
+    SpotifyModule,
     ProfilesModule,
     forwardRef(() => UsersModule),
   ],

@@ -6,7 +6,7 @@ import {
   catchSpotifyError,
 } from './catch-spotify-error'
 
-import { axiosResponseMockFactory } from '@common/mocks'
+import { axiosErrorMockFactory } from '@common/mocks'
 
 describe('catchSpotifyError', () => {
   test('should throw UnauthorizedException', () => {
@@ -14,7 +14,7 @@ describe('catchSpotifyError', () => {
 
     expect(() =>
       catchSpotifyError(
-        axiosResponseMockFactory(
+        axiosErrorMockFactory(
           {
             error: {
               message,
@@ -32,7 +32,7 @@ describe('catchSpotifyError', () => {
 
     expect(() =>
       catchSpotifyError(
-        axiosResponseMockFactory(
+        axiosErrorMockFactory(
           {
             error: 'invalid_grant',
             error_description: message,
@@ -48,7 +48,7 @@ describe('catchSpotifyError', () => {
 
     expect(() =>
       catchSpotifyError(
-        axiosResponseMockFactory({
+        axiosErrorMockFactory({
           error: {
             message,
             status: 502,
@@ -65,7 +65,7 @@ describe('catchSpotifyError', () => {
 
     expect(() =>
       catchSpotifyError(
-        axiosResponseMockFactory<SpotifyAuthError>({
+        axiosErrorMockFactory<SpotifyAuthError>({
           error: message,
           error_description: message,
         })

@@ -55,4 +55,5 @@ export const adaptLastTracks = ({
   href,
   cursors,
   items: adaptTracks(items),
+  total: items.length,
 })
