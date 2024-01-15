@@ -110,7 +110,7 @@ describe('UsersPlaybackController', () => {
 
       expect(
         await usersPlaybackController.pausePlayback(id, accessToken)
-      ).toBeTruthy()
+      ).toEqual({ success: true })
       expect(pausePlaybackSpy).toHaveBeenCalledWith(accessTokenMock)
       expect(findOneBySpy).toHaveBeenCalledWith({ id })
       expect(tokenSpy).toHaveBeenCalledWith({
@@ -167,7 +167,7 @@ describe('UsersPlaybackController', () => {
 
       expect(
         await usersPlaybackController.resumePlayback(id, accessToken)
-      ).toBeTruthy()
+      ).toEqual({ success: true })
       expect(resumePlaybackSpy).toHaveBeenCalledWith(accessTokenMock)
       expect(findOneBySpy).toHaveBeenCalledWith({ id })
       expect(tokenSpy).toHaveBeenCalledWith({

@@ -27,6 +27,7 @@ import { ApiAuth, Token } from '@modules/auth/decorators'
 import { AuthenticationType } from '@modules/auth/enums'
 import { SpotifyAuthService } from '@modules/spotify/auth'
 import { SpotifyPlayerService } from '@modules/spotify/player'
+import { Success } from '@common/dtos'
 
 @Controller('users/:id/playback')
 @ApiTags('users/{id}/playback')
@@ -78,7 +79,10 @@ export class UsersPlaybackController {
   @ApiBadRequestResponse({
     description: ONE_IS_INVALID('uuid'),
   })
-  async pausePlayback(@Param('id') id: string, @Token() accessToken: string) {
+  async pausePlayback(
+    @Param('id') id: string,
+    @Token() accessToken: string
+  ): Promise<Success> {
     const foundUser = await this.usersRepository.findOneBy({ id })
 
     if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
@@ -94,7 +98,9 @@ export class UsersPlaybackController {
       refreshToken: foundUser.refreshToken,
     })
 
-    return this.spotifyPlayerService.pausePlayback(token)
+    return {
+      success: await this.spotifyPlayerService.pausePlayback(token),
+    }
   }
 
   @Put('resume')
@@ -111,7 +117,10 @@ export class UsersPlaybackController {
   @ApiBadRequestResponse({
     description: ONE_IS_INVALID('uuid'),
   })
-  async resumePlayback(@Param('id') id: string, @Token() accessToken: string) {
+  async resumePlayback(
+    @Param('id') id: string,
+    @Token() accessToken: string
+  ): Promise<Success> {
     const foundUser = await this.usersRepository.findOneBy({ id })
 
     if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
@@ -127,6 +136,8 @@ export class UsersPlaybackController {
       refreshToken: foundUser.refreshToken,
     })
 
-    return this.spotifyPlayerService.resumePlayback(token)
+    return {
+      success: await this.spotifyPlayerService.resumePlayback(token),
+    }
   }
 }
