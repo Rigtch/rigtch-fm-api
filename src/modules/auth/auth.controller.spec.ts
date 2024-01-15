@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config'
 import { Test, TestingModule } from '@nestjs/testing'
 
 import { AuthController } from './auth.controller'
+import { SecretData } from './dtos'
 
 import {
   accessToken,
@@ -165,8 +166,14 @@ describe('AuthController', () => {
   })
 
   test('should refresh token', async () => {
+    const secretDataMock: SecretData = {
+      accessToken,
+      refreshToken,
+      expiresIn: accessTokenMock.expires_in,
+    }
+
     vi.spyOn(spotifyAuthService, 'token').mockResolvedValue(accessTokenMock)
 
-    expect(await authController.refresh(refreshToken)).toEqual(accessTokenMock)
+    expect(await authController.refresh(refreshToken)).toEqual(secretDataMock)
   })
 })
