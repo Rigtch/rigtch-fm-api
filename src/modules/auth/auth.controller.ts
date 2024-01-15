@@ -26,6 +26,7 @@ import { AuthenticationType } from '@modules/auth/enums'
 import { UsersRepository } from '@modules/users'
 import { ProfilesService } from '@modules/profiles'
 import { SpotifyUsersService } from '@modules/spotify/users'
+import { adaptSecretData } from '@common/adapters'
 
 const {
   SPOTIFY_CALLBACK_URL,
@@ -121,6 +122,6 @@ export class AuthController {
     type: SecretData,
   })
   refresh(@Token() refreshToken: string) {
-    return this.spotifyAuthService.token({ refreshToken })
+    return this.spotifyAuthService.token({ refreshToken }).then(adaptSecretData)
   }
 }
