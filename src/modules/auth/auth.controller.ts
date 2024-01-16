@@ -1,14 +1,17 @@
 import {
+  Body,
   Controller,
   Get,
   HttpStatus,
   Inject,
+  Post,
   Query,
   Redirect,
   forwardRef,
 } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import {
+  ApiBody,
   ApiExcludeEndpoint,
   ApiOkResponse,
   ApiOperation,
@@ -17,12 +20,10 @@ import {
 
 import { spotifyAuthorizationScopes } from './config'
 import { RedirectResponse } from './types'
-import { Token, ApiAuth } from './decorators'
-import { SecretData } from './dtos'
+import { RefreshToken, SecretData } from './dtos'
 
 import { SpotifyAuthService } from '@modules/spotify/auth'
 import { Environment } from '@config/environment'
-import { AuthenticationType } from '@modules/auth/enums'
 import { UsersRepository } from '@modules/users'
 import { ProfilesService } from '@modules/profiles'
 import { SpotifyUsersService } from '@modules/spotify/users'
@@ -112,16 +113,18 @@ export class AuthController {
     }
   }
 
-  @Get('refresh')
+  @Post('refresh')
   @ApiOperation({
     summary: 'Refreshing access token.',
   })
-  @ApiAuth(AuthenticationType.REFRESH_TOKEN)
   @ApiOkResponse({
     description: 'Access token has been succesfully refreshed',
     type: SecretData,
   })
-  refresh(@Token() refreshToken: string) {
+  @ApiBody({
+    type: RefreshToken,
+  })
+  refresh(@Body() { refreshToken }: RefreshToken) {
     return this.spotifyAuthService.token({ refreshToken }).then(adaptSecretData)
   }
 }

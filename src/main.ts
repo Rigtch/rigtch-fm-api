@@ -6,7 +6,6 @@ import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common'
 
 import { Environment } from '@config/environment'
 import { AppModule } from '@modules/app'
-import { AuthenticationType } from '@modules/auth/enums'
 import { BEARER } from '@modules/auth/constants'
 
 async function bootstrap() {
@@ -22,15 +21,7 @@ async function bootstrap() {
         scheme: BEARER,
         bearerFormat: 'JWT',
       },
-      AuthenticationType.ACCESS_TOKEN
-    )
-    .addBearerAuth(
-      {
-        type: 'http',
-        scheme: BEARER,
-        bearerFormat: 'JWT',
-      },
-      AuthenticationType.REFRESH_TOKEN
+      BEARER
     )
     .build()
 
