@@ -1,144 +1,105 @@
-import { URLSearchParams } from 'node:url'
-
-import { HttpService } from '@nestjs/axios'
-import { ConfigService } from '@nestjs/config'
-import { JwtService } from '@nestjs/jwt'
-import { Test, TestingModule } from '@nestjs/testing'
-import { Profile } from 'passport-spotify'
-import { of } from 'rxjs'
+import { Test } from '@nestjs/testing'
 
 import { AuthService } from './auth.service'
 
-import { spotifyProfileMock, profileMock } from '@common/mocks'
+import { accessToken, refreshToken } from '@common/mocks'
+import { profileMock, userMock, accessTokenMock } from '@common/mocks'
+import { UsersRepository } from '@modules/users'
+import { ProfilesService } from '@modules/profiles'
+import { SpotifyUsersService } from '@modules/spotify/users'
 
 describe('AuthService', () => {
   let authService: AuthService
-  let jwtService: JwtService
-  let httpService: HttpService
-  let configService: ConfigService
+  let usersRepository: UsersRepository
+  let profilesService: ProfilesService
+  let spotifyUsersService: SpotifyUsersService
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const module = await Test.createTestingModule({
       providers: [
         AuthService,
-
         {
-          provide: JwtService,
+          provide: UsersRepository,
           useValue: {
-            sign: vi.fn(),
+            findOneByProfileId: vi.fn(),
+            createUser: vi.fn(),
           },
         },
         {
-          provide: HttpService,
+          provide: ProfilesService,
           useValue: {
-            post: vi.fn(),
-            get: vi.fn(),
+            create: vi.fn(),
           },
         },
         {
-          provide: ConfigService,
+          provide: SpotifyUsersService,
           useValue: {
-            get: vi.fn(),
+            profile: vi.fn(),
           },
         },
       ],
     }).compile()
 
-    authService = module.get<AuthService>(AuthService)
-    jwtService = module.get<JwtService>(JwtService)
-    httpService = module.get<HttpService>(HttpService)
-    configService = module.get<ConfigService>(ConfigService)
+    authService = module.get(AuthService)
+    usersRepository = module.get(UsersRepository)
+    profilesService = module.get(ProfilesService)
+    spotifyUsersService = module.get(SpotifyUsersService)
   })
 
   test('should be defined', () => {
     expect(authService).toBeDefined()
   })
 
-  test('should login', () => {
-    const profile: Profile = {
-      provider: 'spotify',
-      id: '123',
-      displayName: 'John Doe',
-      username: 'john.doe',
-      photos: ['example'],
-      profileUrl: 'example.com',
-      country: 'US',
-      followers: 0,
-      product: 'premium',
-      _raw: 'raw',
-      _json: {},
-    }
-
-    jwtService.sign = vi.fn().mockReturnValue('token')
-
-    expect(authService.login(profile)).toBe('token')
-  })
-
-  describe('token', () => {
-    test('should refresh token', async () => {
-      configService.get = vi.fn().mockReturnValue('value')
-
-      const response = {
-        data: {
-          access_token: 'token',
-          expires_in: 3600,
-        },
-      }
-
-      const expectedResponse = {
-        accessToken: 'token',
-        expiresIn: 3600,
-      }
-
-      httpService.post = vi
-        .fn()
-        .mockImplementation((_url, parameters: URLSearchParams) => {
-          if (parameters.get('grant_type') === 'refresh_token')
-            return of(response)
-        })
-
-      expect(await authService.token({ refreshToken: 'refresh' })).toEqual(
-        expectedResponse
+  describe('saveUser', () => {
+    test('should create new user', async () => {
+      const profileSpy = vi
+        .spyOn(spotifyUsersService, 'profile')
+        .mockResolvedValue(profileMock)
+      const findOneByProfileIdSpy = vi.spyOn(
+        usersRepository,
+        'findOneByProfileId'
       )
+      const createSpy = vi
+        .spyOn(profilesService, 'create')
+        .mockResolvedValue(profileMock)
+      const createUserSpy = vi
+        .spyOn(usersRepository, 'createUser')
+        .mockResolvedValue(userMock)
+
+      expect(await authService.saveUser(accessTokenMock)).toEqual({
+        accessToken,
+        refreshToken,
+        id: userMock.id,
+      })
+      expect(profileSpy).toHaveBeenCalledWith(accessTokenMock)
+      expect(findOneByProfileIdSpy).toHaveBeenCalledWith(profileMock.id)
+      expect(createSpy).toHaveBeenCalledWith(profileMock)
+      expect(createUserSpy).toHaveBeenCalledWith({
+        profile: profileMock,
+        refreshToken,
+      })
     })
 
-    test('should authorize and get tokens', async () => {
-      configService.get = vi.fn().mockReturnValue('value')
+    test('should return existing user', async () => {
+      const profileSpy = vi
+        .spyOn(spotifyUsersService, 'profile')
+        .mockResolvedValue(profileMock)
+      const findOneByProfileIdSpy = vi
+        .spyOn(usersRepository, 'findOneByProfileId')
+        .mockResolvedValue(userMock)
+      const createSpy = vi.spyOn(profilesService, 'create')
 
-      const response = {
-        data: {
-          access_token: 'token',
-          refresh_token: 'refresh',
-          expires_in: 3600,
-        },
-      }
+      const createUserSpy = vi.spyOn(usersRepository, 'createUser')
 
-      const expectedResponse = {
-        accessToken: 'token',
-        refreshToken: 'refresh',
-        expiresIn: 3600,
-      }
-
-      httpService.post = vi
-        .fn()
-        .mockImplementation((_url, parameters: URLSearchParams) => {
-          if (parameters.get('grant_type') === 'authorization_code')
-            return of(response)
-        })
-
-      expect(await authService.token({ code: 'code' })).toEqual(
-        expectedResponse
-      )
+      expect(await authService.saveUser(accessTokenMock)).toEqual({
+        accessToken,
+        refreshToken,
+        id: userMock.id,
+      })
+      expect(profileSpy).toHaveBeenCalledWith(accessTokenMock)
+      expect(findOneByProfileIdSpy).toHaveBeenCalledWith(profileMock.id)
+      expect(createSpy).not.toHaveBeenCalled()
+      expect(createUserSpy).not.toHaveBeenCalled()
     })
-  })
-
-  test('should return profile', async () => {
-    const response = {
-      data: spotifyProfileMock,
-    }
-
-    httpService.get = vi.fn().mockReturnValue(of(response))
-
-    expect(await authService.profile('token')).toEqual(profileMock)
   })
 })

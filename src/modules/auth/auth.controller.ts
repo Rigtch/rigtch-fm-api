@@ -3,11 +3,9 @@ import {
   Controller,
   Get,
   HttpStatus,
-  Inject,
   Post,
   Query,
   Redirect,
-  forwardRef,
 } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import {
@@ -21,12 +19,10 @@ import {
 import { spotifyAuthorizationScopes } from './config'
 import { RedirectResponse } from './types'
 import { RefreshToken, SecretData } from './dtos'
+import { AuthService } from './auth.service'
 
 import { SpotifyAuthService } from '@modules/spotify/auth'
 import { Environment } from '@config/environment'
-import { UsersRepository } from '@modules/users'
-import { ProfilesService } from '@modules/profiles'
-import { SpotifyUsersService } from '@modules/spotify/users'
 import { adaptSecretData } from '@common/adapters'
 
 const {
@@ -41,11 +37,8 @@ const {
 export class AuthController {
   constructor(
     private readonly configService: ConfigService,
-    @Inject(forwardRef(() => ProfilesService))
-    private readonly profilesService: ProfilesService,
-    private readonly usersRepository: UsersRepository,
-    private readonly spotifyAuthService: SpotifyAuthService,
-    private readonly spotifyUsersService: SpotifyUsersService
+    private readonly authService: AuthService,
+    private readonly spotifyAuthService: SpotifyAuthService
   ) {}
 
   @Get('login')
@@ -76,40 +69,14 @@ export class AuthController {
     const token = await this.spotifyAuthService.token({
       code,
     })
-    const spotifyProfile = await this.spotifyUsersService.profile(token)
 
-    const foundUser = await this.usersRepository.findOneByProfileId(
-      spotifyProfile.id
-    )
-
-    const { access_token: accessToken, refresh_token: refreshToken } = token
-
-    if (refreshToken) {
-      let id: string
-
-      if (foundUser) {
-        id = foundUser.id
-      } else {
-        const profile = await this.profilesService.create(spotifyProfile)
-
-        const { id: createdUserId } = await this.usersRepository.createUser({
-          profile,
-          refreshToken,
-        })
-
-        id = createdUserId
-      }
-
-      return {
-        url: `${this.configService.get(
-          CLIENT_CALLBACK_URL
-        )}/api/authorize?${new URLSearchParams({
-          accessToken,
-          refreshToken,
-          id,
-        }).toString()}`,
-        statusCode: HttpStatus.PERMANENT_REDIRECT,
-      }
+    return {
+      url: `${this.configService.get(
+        CLIENT_CALLBACK_URL
+      )}/api/authorize?${new URLSearchParams({
+        ...(await this.authService.saveUser(token)),
+      }).toString()}`,
+      statusCode: HttpStatus.PERMANENT_REDIRECT,
     }
   }
 
