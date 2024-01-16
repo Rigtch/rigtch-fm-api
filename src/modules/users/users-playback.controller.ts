@@ -3,6 +3,7 @@ import {
   Get,
   NotFoundException,
   Param,
+  ParseUUIDPipe,
   Put,
   UnauthorizedException,
 } from '@nestjs/common'
@@ -53,7 +54,10 @@ export class UsersPlaybackController {
   @ApiBadRequestResponse({
     description: ONE_IS_INVALID('uuid'),
   })
-  async getPlaybackState(@Param('id') id: string, @Token() _token?: string) {
+  async getPlaybackState(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Token() _token?: string
+  ) {
     const foundUser = await this.usersRepository.findOneBy({ id })
 
     if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
@@ -80,7 +84,7 @@ export class UsersPlaybackController {
     description: ONE_IS_INVALID('uuid'),
   })
   async pausePlayback(
-    @Param('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Token() accessToken: string
   ): Promise<Success> {
     const foundUser = await this.usersRepository.findOneBy({ id })
@@ -118,7 +122,7 @@ export class UsersPlaybackController {
     description: ONE_IS_INVALID('uuid'),
   })
   async resumePlayback(
-    @Param('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Token() accessToken: string
   ): Promise<Success> {
     const foundUser = await this.usersRepository.findOneBy({ id })
@@ -128,9 +132,7 @@ export class UsersPlaybackController {
     const meProfile = await this.spotifyAuthService.getMeProfile(accessToken)
 
     if (foundUser.profile.id !== meProfile.id)
-      throw new UnauthorizedException(
-        'You are not allowed to resume playback.'
-      )
+      throw new UnauthorizedException('You are not allowed to resume playback.')
 
     const token = await this.spotifyAuthService.token({
       refreshToken: foundUser.refreshToken,
