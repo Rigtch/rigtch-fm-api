@@ -243,33 +243,4 @@ export class UsersProfileController {
 
     return this.spotifyUsersService.getAnalysis(token)
   }
-
-  // @Get('state')
-  // @ApiOperation({
-  //   summary: "Getting user's playback state.",
-  // })
-  // @ApiParam({ name: 'id' })
-  // @ApiOkResponse({
-  //   description: ONE_SUCCESFULLY_FOUND(USER),
-  // })
-  // @ApiNotFoundResponse({
-  //   description: NOT_BEEN_FOUND(USER),
-  // })
-  // @ApiBadRequestResponse({
-  //   description: ONE_IS_INVALID('uuid'),
-  // })
-  // async getState(
-  //   @Param('id', ParseUUIDPipe) id: string,
-  //   @Token() _token?: string
-  // ) {
-  //   const foundUser = await this.usersRepository.findOneBy({ id })
-
-  //   if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
-
-  //   const token = await this.spotifyAuthService.token({
-  //     refreshToken: foundUser.refreshToken,
-  //   })
-
-  //   return this.spotifyPlayerService.getPlaybackState(token)
-  // }
 }
