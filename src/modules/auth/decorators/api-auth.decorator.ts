@@ -1,9 +1,9 @@
 import { applyDecorators } from '@nestjs/common'
 import { ApiBearerAuth, ApiUnauthorizedResponse } from '@nestjs/swagger'
 
-import { AuthenticationType } from '../enums'
+import { BEARER } from '../constants'
 
-export const ApiAuth = (authenticationType: AuthenticationType) =>
+export const ApiAuth = () =>
   applyDecorators(
     ApiUnauthorizedResponse({
       description: 'The access token expired',
@@ -14,5 +14,5 @@ export const ApiAuth = (authenticationType: AuthenticationType) =>
     ApiUnauthorizedResponse({
       description: 'No value was provided for Authentication',
     }),
-    ApiBearerAuth(authenticationType)
+    ApiBearerAuth(BEARER)
   )

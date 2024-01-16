@@ -26,14 +26,13 @@ import {
   ONE_IS_INVALID,
 } from '@common/constants'
 import { ApiAuth, Token } from '@modules/auth/decorators'
-import { AuthenticationType } from '@modules/auth/enums'
 import { SpotifyAuthService } from '@modules/spotify/auth'
 import { SpotifyUsersService } from '@modules/spotify/users'
 import { SpotifyPlayerService } from '@modules/spotify/player'
 
 @Controller('users/:id/profile')
 @ApiTags('users/{id}/profile')
-@ApiAuth(AuthenticationType.ACCESS_TOKEN)
+@ApiAuth()
 export class UsersProfileController {
   constructor(
     private readonly usersRepository: UsersRepository,

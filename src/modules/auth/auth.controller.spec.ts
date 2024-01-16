@@ -174,6 +174,8 @@ describe('AuthController', () => {
 
     vi.spyOn(spotifyAuthService, 'token').mockResolvedValue(accessTokenMock)
 
-    expect(await authController.refresh(refreshToken)).toEqual(secretDataMock)
+    expect(await authController.refresh({ refreshToken })).toEqual(
+      secretDataMock
+    )
   })
 })

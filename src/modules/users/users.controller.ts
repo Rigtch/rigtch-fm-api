@@ -29,12 +29,11 @@ import {
   ONE_IS_INVALID,
   ONE_SUCCESFULLY_FOUND,
 } from '@common/constants'
-import { AuthenticationType } from '@modules/auth/enums'
 import { ApiAuth, Token } from '@modules/auth/decorators'
 
 @Controller(USERS)
 @ApiTags(USERS)
-@ApiAuth(AuthenticationType.ACCESS_TOKEN)
+@ApiAuth()
 export class UsersController {
   constructor(private readonly usersRepository: UsersRepository) {}
 

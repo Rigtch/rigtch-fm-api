@@ -25,14 +25,13 @@ import {
   ONE_SUCCESFULLY_FOUND,
 } from '@common/constants'
 import { ApiAuth, Token } from '@modules/auth/decorators'
-import { AuthenticationType } from '@modules/auth/enums'
 import { SpotifyAuthService } from '@modules/spotify/auth'
 import { SpotifyPlayerService } from '@modules/spotify/player'
 import { Success } from '@common/dtos'
 
 @Controller('users/:id/playback')
 @ApiTags('users/{id}/playback')
-@ApiAuth(AuthenticationType.ACCESS_TOKEN)
+@ApiAuth()
 export class UsersPlaybackController {
   constructor(
     private readonly usersRepository: UsersRepository,
