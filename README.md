@@ -1,4 +1,4 @@
-# Rigtch FM Api
+# rigtch.fm api
 
 [![ci](https://github.com/Rigtch/rigtch-music-api/actions/workflows/main.yml/badge.svg)](https://github.com/Rigtch/rigtch-music-api/actions/workflows/main.yml)
 [![codecov](https://codecov.io/gh/Rigtch/rigtch-fm-api/graph/badge.svg?token=gIEWRSKglY)](https://codecov.io/gh/Rigtch/rigtch-fm-api)
