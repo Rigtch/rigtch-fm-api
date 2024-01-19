@@ -1,31 +1,56 @@
+import { Test } from '@nestjs/testing'
+
+import { ArtistsAdapter } from './artists.adapter'
+import { PaginatedAdapter } from './paginated.adapter'
+
 import {
-  spotifyArtistMock,
   artistMock,
-  spotifyArtistsMock,
-  artistsMock,
+  spotifyArtistMock,
   spotifyResponseWithOffsetMockFactory,
-} from '../mocks'
+  spotifyTrackArtistMock,
+  trackArtistMock,
+} from '@common/mocks'
 
-import {
-  adaptArtist,
-  adaptArtists,
-  adaptPaginatedArtists,
-} from './artists.adapter'
+describe('ArtistsAdapter', () => {
+  let artistsAdapter: ArtistsAdapter
 
-describe('adaptArtists', () => {
-  test('should adapt artist', () => {
-    expect(adaptArtist(spotifyArtistMock)).toEqual(artistMock)
+  beforeEach(async () => {
+    const module = await Test.createTestingModule({
+      providers: [ArtistsAdapter, PaginatedAdapter],
+    }).compile()
+
+    artistsAdapter = module.get(ArtistsAdapter)
   })
 
-  test('should adapt artists', () => {
-    expect(adaptArtists(spotifyArtistsMock)).toEqual(artistsMock)
+  test('should be defined', () => {
+    expect(artistsAdapter).toBeDefined()
   })
 
-  test('should adapt paginated artists', () => {
+  test('should adapt a single artist', () => {
+    expect(artistsAdapter.adapt(spotifyArtistMock)).toEqual(artistMock)
+  })
+
+  test('should adapt a single simplified artist', () => {
+    expect(artistsAdapter.adapt(spotifyTrackArtistMock)).toEqual(
+      trackArtistMock
+    )
+  })
+
+  test('should adapt an array of artists', () => {
+    expect(artistsAdapter.adapt([spotifyArtistMock])).toEqual([artistMock])
+  })
+
+  test('should adapt an array of simplified artists', () => {
+    expect(artistsAdapter.adapt([spotifyTrackArtistMock])).toEqual([
+      trackArtistMock,
+    ])
+  })
+
+  test('should adapt a paginated list of artists', () => {
     expect(
-      adaptPaginatedArtists(
-        spotifyResponseWithOffsetMockFactory(spotifyArtistsMock)
+      artistsAdapter.adapt(
+        spotifyResponseWithOffsetMockFactory([spotifyArtistMock])
       )
-    ).toEqual(spotifyResponseWithOffsetMockFactory(artistsMock))
+    ).toEqual(spotifyResponseWithOffsetMockFactory([artistMock]))
   })
 })

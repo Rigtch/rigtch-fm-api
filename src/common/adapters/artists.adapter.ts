@@ -1,44 +1,67 @@
+import { Injectable } from '@nestjs/common'
 import {
-  Artist,
-  SpotifyArtist,
-  SpotifyResponseWithOffset,
-  SpotifyTrackArtist,
-  TrackArtist,
-} from '../types/spotify'
+  Page,
+  SimplifiedArtist,
+  Artist as SpotifyArtist,
+} from '@spotify/web-api-ts-sdk'
 
-import { adaptPaginated } from './paginated.adapter'
+import { PaginatedAdapter } from './paginated.adapter'
 
-export const adaptArtist = ({
-  id,
-  name,
-  genres,
-  external_urls: { spotify: href },
-  images,
-}: SpotifyArtist): Artist => ({
-  id,
-  name,
-  genres,
-  href,
-  images,
-})
+import { Artist, TrackArtist } from '@common/types/spotify'
 
-export const adaptArtists = (artists: SpotifyArtist[]): Artist[] =>
-  artists.map(artist => adaptArtist(artist))
+@Injectable()
+export class ArtistsAdapter {
+  constructor(private readonly paginatedAdapter: PaginatedAdapter) {}
 
-export const adaptTrackArtist = ({
-  name,
-  id,
-  external_urls: { spotify: href },
-}: SpotifyTrackArtist): TrackArtist => ({
-  name,
-  id,
-  href,
-})
+  public adapt(data: SpotifyArtist[]): Artist[]
+  public adapt(data: SimplifiedArtist[]): TrackArtist[]
+  public adapt(data: SpotifyArtist): Artist
+  public adapt(data: SimplifiedArtist): TrackArtist
+  public adapt(data: Page<SpotifyArtist>): Page<Artist>
 
-export const adaptTrackArtists = (
-  artists: SpotifyTrackArtist[]
-): TrackArtist[] => artists.map(artist => adaptTrackArtist(artist))
+  adapt(
+    data:
+      | SpotifyArtist
+      | SimplifiedArtist
+      | (SpotifyArtist | SimplifiedArtist)[]
+      | Page<SpotifyArtist>
+  ) {
+    if (Array.isArray(data)) return this.adaptArtists(data)
 
-export const adaptPaginatedArtists = (
-  data: SpotifyResponseWithOffset<SpotifyArtist>
-) => adaptPaginated(data, adaptArtists)
+    if ('offset' in data) return this.adaptPaginatedArtists(data)
+
+    return this.adaptArtist(data)
+  }
+
+  adaptArtist({
+    name,
+    id,
+    external_urls: { spotify: href },
+    ...rest
+  }: SpotifyArtist | SimplifiedArtist): Artist | TrackArtist {
+    console.log(href)
+
+    return {
+      id,
+      name,
+      href,
+      ...('genres' in rest && {
+        genres: rest.genres,
+        images: rest.images,
+        popularity: rest.popularity,
+      }),
+    }
+  }
+
+  adaptArtists(
+    artists: (SpotifyArtist | SimplifiedArtist)[]
+  ): (Artist | TrackArtist)[] {
+    return artists.map(artist => this.adaptArtist(artist))
+  }
+
+  adaptPaginatedArtists(data: Page<SpotifyArtist>) {
+    return this.paginatedAdapter.adapt(data, artists =>
+      this.adaptArtists(artists)
+    )
+  }
+}

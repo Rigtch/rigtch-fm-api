@@ -6,6 +6,7 @@ export interface Artist {
   genres: string[]
   href: string
   images: SpotifyImage[]
+  popularity: number
 }
 
 export interface SpotifyTrackArtist {

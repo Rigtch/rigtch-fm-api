@@ -1,9 +1,25 @@
-import { spotifyProfileMock, profileMock } from '../mocks'
+import { Test } from '@nestjs/testing'
 
-import { adaptProfile } from './profile.adapter'
+import { ProfileAdapter } from './profile.adapter'
 
-describe('adaptProfile', () => {
-  test('should adapt profile', () => {
-    expect(adaptProfile(spotifyProfileMock)).toEqual(profileMock)
+import { profileMock, spotifyProfileMock } from '@common/mocks'
+
+describe('ProfileAdapter', () => {
+  let profileAdapter: ProfileAdapter
+
+  beforeEach(async () => {
+    const module = await Test.createTestingModule({
+      providers: [ProfileAdapter],
+    }).compile()
+
+    profileAdapter = module.get(ProfileAdapter)
+  })
+
+  test('should be defined', () => {
+    expect(profileAdapter).toBeDefined()
+  })
+
+  test('should adapt a user profile', () => {
+    expect(profileAdapter.adapt(spotifyProfileMock)).toEqual(profileMock)
   })
 })

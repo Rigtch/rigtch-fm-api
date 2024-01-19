@@ -1,25 +1,31 @@
-import {
-  PlaybackState,
-  RepeatedState,
-  SpotifyPlaybackState,
-} from '../types/spotify'
+import { Injectable } from '@nestjs/common'
+import { PlaybackState as SpotifyPlaybackState } from '@spotify/web-api-ts-sdk'
 
-import { adaptDevices } from './devices.adapter'
-import { adaptTrack } from './tracks.adapter'
+import { DevicesAdapter } from './devices.adapter'
+import { TracksAdapter } from './tracks.adapter'
 
-export const adaptPlaybackState = (
-  playbackState: SpotifyPlaybackState | null
-): PlaybackState | null => {
-  if (!playbackState) return playbackState
+import { PlaybackState, RepeatedState } from '@common/types/spotify'
 
-  const { device, repeat_state, shuffle_state, is_playing, item } =
-    playbackState
+@Injectable()
+export class PlaybackStateAdapter {
+  constructor(
+    private readonly devicesAdapter: DevicesAdapter,
+    private readonly tracksAdapter: TracksAdapter
+  ) {}
 
-  return {
-    device: device ? adaptDevices([device])[0] : undefined,
-    repeatState: repeat_state as RepeatedState,
-    shuffleState: shuffle_state,
-    isPlaying: is_playing,
-    track: item && 'is_local' in item ? adaptTrack(item) : undefined,
+  adapt(playbackState: SpotifyPlaybackState | null): PlaybackState | null {
+    if (!playbackState) return playbackState
+
+    const { device, repeat_state, shuffle_state, is_playing, item } =
+      playbackState
+
+    return {
+      device: this.devicesAdapter.adapt(device),
+      repeatState: repeat_state as RepeatedState,
+      shuffleState: shuffle_state,
+      isPlaying: is_playing,
+      track:
+        'is_local' in item ? this.tracksAdapter.adaptTrack(item) : undefined,
+    }
   }
 }
