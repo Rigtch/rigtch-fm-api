@@ -1,9 +1,9 @@
 import {
-  Artist,
-  SpotifyArtist,
-  SpotifyTrackArtist,
-  TrackArtist,
-} from '../types/spotify'
+  Artist as SpotifyArtist,
+  SimplifiedArtist,
+} from '@spotify/web-api-ts-sdk'
+
+import { Artist, TrackArtist } from '../types/spotify'
 
 import { imagesMock } from './image.mock'
 
@@ -43,11 +43,12 @@ export const artistMock: Artist = {
   genres: spotifyArtistMock.genres,
   href: spotifyArtistMock.external_urls.spotify,
   images: imagesMock,
+  popularity: spotifyArtistMock.popularity,
 }
 
 export const artistsMock = Array.from({ length: 5 }).map(() => artistMock)
 
-export const spotifyTrackArtistMock: SpotifyTrackArtist = {
+export const spotifyTrackArtistMock: SimplifiedArtist = {
   external_urls: spotifyArtistMock.external_urls,
   href: spotifyArtistMock.href,
   id: spotifyArtistMock.id,

@@ -1,17 +1,20 @@
-import { SpotifyResponseWithOffset } from '../types/spotify'
+import { Injectable } from '@nestjs/common'
+import { Page } from '@spotify/web-api-ts-sdk'
 
-export const adaptPaginated = <TItems, TAdaptedItems>(
-  data: SpotifyResponseWithOffset<TItems>,
-  adaptFunction: (items: TItems[]) => TAdaptedItems[]
-): SpotifyResponseWithOffset<TAdaptedItems> => {
-  const { items, next, href, limit, offset } = data
-
-  return {
-    offset,
-    limit,
-    next,
-    href,
-    items: adaptFunction(items),
-    total: items.length,
+@Injectable()
+export class PaginatedAdapter {
+  adapt<TItems, TAdaptedItems>(
+    { items, next, href, limit, offset, previous }: Page<TItems>,
+    adaptFunction: (items: TItems[]) => TAdaptedItems[]
+  ): Page<TAdaptedItems> {
+    return {
+      offset,
+      limit,
+      next,
+      previous,
+      href,
+      items: adaptFunction(items),
+      total: items.length,
+    }
   }
 }

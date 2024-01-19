@@ -4,7 +4,6 @@ export interface SpotifyResponse<TItems = unknown> {
   href: string
   limit: number
   next: string | null
-  previous?: string | null
   total: number
   items: TItems[]
 }
@@ -12,6 +11,7 @@ export interface SpotifyResponse<TItems = unknown> {
 export interface SpotifyResponseWithOffset<TItems = unknown>
   extends SpotifyResponse<TItems> {
   offset: number
+  previous: string | null
 }
 
 export interface SpotifyResponseWithCursors<TItems = unknown>

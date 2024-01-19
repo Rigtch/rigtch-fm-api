@@ -1,59 +1,95 @@
+import { Injectable } from '@nestjs/common'
 import {
-  Track,
-  SpotifyResponseWithCursors,
-  SpotifyResponseWithOffset,
-  SpotifyTrack,
-} from '../types/spotify'
+  Page,
+  RecentlyPlayedTracksPage,
+  Track as SpotifyTrack,
+} from '@spotify/web-api-ts-sdk'
 
-import { adaptTrackArtists } from './artists.adapter'
-import { adaptPaginated } from './paginated.adapter'
+import { PaginatedAdapter } from './paginated.adapter'
+import { ArtistsAdapter } from './artists.adapter'
 
-export const adaptTrack = ({
-  id,
-  name,
-  album,
-  artists,
-  external_urls: { spotify: href },
-  duration_ms,
-  progress_ms,
-  played_at,
-}: SpotifyTrack): Track => ({
-  id,
-  name,
-  album: {
-    id: album.id,
-    name: album.name,
-    images: album.images,
-    href: album.external_urls.spotify,
-    artists: adaptTrackArtists(album.artists),
-    releaseDate: album.release_date,
-    totalTracks: album.total_tracks,
-  },
-  artists: adaptTrackArtists(artists),
-  href,
-  duration: duration_ms,
-  ...(progress_ms && { progress: progress_ms }),
-  ...(played_at && { playedAt: played_at }),
-})
+import { SpotifyResponseWithCursors, Track } from '@common/types/spotify'
 
-export const adaptTracks = (tracks: SpotifyTrack[]): Track[] =>
-  tracks.map(track => adaptTrack(track))
+@Injectable()
+export class TracksAdapter {
+  constructor(
+    private readonly paginatedAdapter: PaginatedAdapter,
+    private readonly artistsAdapter: ArtistsAdapter
+  ) {}
 
-export const adaptPaginatedTracks = (
-  data: SpotifyResponseWithOffset<SpotifyTrack>
-) => adaptPaginated(data, adaptTracks)
+  public adapt(data: SpotifyTrack): Track
+  public adapt(data: SpotifyTrack[]): Track[]
+  public adapt(data: Page<SpotifyTrack>): Page<Track>
+  public adapt(
+    data: RecentlyPlayedTracksPage
+  ): SpotifyResponseWithCursors<Track>
 
-export const adaptLastTracks = ({
-  limit,
-  next,
-  href,
-  cursors,
-  items,
-}: SpotifyResponseWithCursors<SpotifyTrack>): SpotifyResponseWithCursors<Track> => ({
-  limit,
-  next,
-  href,
-  cursors,
-  items: adaptTracks(items),
-  total: items.length,
-})
+  adapt(
+    data:
+      | SpotifyTrack
+      | SpotifyTrack[]
+      | Page<SpotifyTrack>
+      | RecentlyPlayedTracksPage
+  ) {
+    if (Array.isArray(data)) return this.adaptTracks(data)
+    if ('items' in data) {
+      if ('cursors' in data) return this.adaptRecentlyPlayed(data)
+
+      return this.adaptPaginatedTracks(data)
+    }
+
+    return this.adaptTrack(data)
+  }
+
+  adaptTrack = ({
+    id,
+    name,
+    album,
+    artists,
+    external_urls: { spotify: href },
+    duration_ms,
+  }: SpotifyTrack): Track => ({
+    id,
+    name,
+    album: {
+      id: album.id,
+      name: album.name,
+      images: album.images,
+      href: album.external_urls.spotify,
+      artists: this.artistsAdapter.adapt(album.artists),
+      releaseDate: album.release_date,
+      totalTracks: album.total_tracks,
+    },
+    artists: this.artistsAdapter.adapt(artists),
+    href,
+    duration: duration_ms,
+  })
+
+  adaptTracks(tracks: SpotifyTrack[]): Track[] {
+    return tracks.map(track => this.adaptTrack(track))
+  }
+
+  adaptPaginatedTracks = (data: Page<SpotifyTrack>): Page<Track> => {
+    return this.paginatedAdapter.adapt(data, tracks => this.adaptTracks(tracks))
+  }
+
+  adaptRecentlyPlayed({
+    limit,
+    next,
+    href,
+    cursors,
+    items,
+  }: RecentlyPlayedTracksPage): SpotifyResponseWithCursors<Track> {
+    return {
+      limit,
+      next,
+      href,
+      cursors,
+      items: items.map(({ track, played_at }) => ({
+        ...this.adaptTrack(track),
+        playedAt: played_at,
+      })),
+      total: items.length,
+    }
+  }
+}

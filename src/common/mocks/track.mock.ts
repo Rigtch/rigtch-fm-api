@@ -1,13 +1,16 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 
-import { Track, SpotifyTrack } from '../types/spotify'
+import { SimplifiedTrack, Track as SpotifyTrack } from '@spotify/web-api-ts-sdk'
 
-import { albumMock, spotifyAlbumMock } from './album.mock'
+import { albumMock, spotifySimplifiedAlbumMock } from './album.mock'
 import { spotifyTrackArtistsMock, trackArtistsMock } from './artist.mock'
 
-export const spotifyTrackMock: SpotifyTrack = {
-  album: spotifyAlbumMock,
+import { Track } from '@common/types/spotify'
+
+export const spotifySimplifiedTrackMock: SimplifiedTrack = {
   artists: spotifyTrackArtistsMock,
+  track: true,
+  episode: false,
   available_markets: [
     'AD',
     'AE',
@@ -30,11 +33,7 @@ export const spotifyTrackMock: SpotifyTrack = {
   ],
   disc_number: 1,
   duration_ms: 1000,
-  progress_ms: 1000,
   explicit: false,
-  external_ids: {
-    isrc: 'NOBIP1701070',
-  },
   external_urls: {
     spotify: 'https://open.spotify.com/track/5O6MFTh1rd9PeN8XEn1yCS',
   },
@@ -42,13 +41,26 @@ export const spotifyTrackMock: SpotifyTrack = {
   id: '5O6MFTh1rd9PeN8XEn1yCS',
   is_local: false,
   name: 'Kobresia',
-  popularity: 34,
   preview_url:
     'https://p.scdn.co/mp3-preview/8c2821473d727e05b137d82d5a484076888aa4be?cid=774b29d4f13844c495f206cafdad9c86',
   track_number: 7,
   type: 'track',
   uri: 'spotify:track:5O6MFTh1rd9PeN8XEn1yCS',
-  played_at: '2022-11-26T11:01:10.040Z',
+}
+
+export const spotifySimplifiedTracksMock = Array.from({ length: 5 }).map(
+  () => spotifySimplifiedTrackMock
+)
+
+export const spotifyTrackMock: SpotifyTrack = {
+  ...spotifySimplifiedTrackMock,
+  album: spotifySimplifiedAlbumMock,
+  external_ids: {
+    isrc: 'GBBPC9700031',
+    upc: '5051083100020',
+    ean: '5051083100020',
+  },
+  popularity: 43,
 }
 
 export const spotifyTracksMock = Array.from({ length: 5 }).map(
@@ -61,9 +73,7 @@ export const trackMock: Track = {
   album: albumMock,
   name: spotifyTrackMock.name,
   duration: spotifyTrackMock.duration_ms,
-  progress: spotifyTrackMock.progress_ms,
   href: spotifyTrackMock.external_urls.spotify,
-  playedAt: spotifyTrackMock.played_at,
 }
 
 export const tracksMock = Array.from({ length: 5 }).map(() => trackMock)
