@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
 
-import { SpotifyImage } from '@common/types/spotify'
+import { SdkImage } from '@common/types/spotify'
 
 @Entity()
-export class Image implements SpotifyImage {
+export class Image implements SdkImage {
   @PrimaryGeneratedColumn('uuid')
   @ApiProperty()
   id: string

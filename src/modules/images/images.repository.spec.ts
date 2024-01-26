@@ -3,7 +3,7 @@ import { DataSource } from 'typeorm'
 
 import { ImagesRepository } from './images.repository'
 
-import { imageMock, spotifyImageMock } from '@common/mocks'
+import { imageMock, sdkImageMock } from '@common/mocks'
 
 describe('ImagesRepository', () => {
   let imagesRepository: ImagesRepository
@@ -36,10 +36,8 @@ describe('ImagesRepository', () => {
       .spyOn(imagesRepository, 'save')
       .mockResolvedValue(imageMock)
 
-    expect(await imagesRepository.createImage(spotifyImageMock)).toEqual(
-      imageMock
-    )
-    expect(createSpy).toHaveBeenCalledWith(spotifyImageMock)
+    expect(await imagesRepository.createImage(sdkImageMock)).toEqual(imageMock)
+    expect(createSpy).toHaveBeenCalledWith(sdkImageMock)
     expect(saveSpy).toHaveBeenCalledWith(imageMock)
   })
 })

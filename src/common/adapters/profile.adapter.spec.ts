@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing'
 
 import { ProfileAdapter } from './profile.adapter'
 
-import { profileMock, spotifyProfileMock } from '@common/mocks'
+import { profileMock, sdkProfileMock } from '@common/mocks'
 
 describe('ProfileAdapter', () => {
   let profileAdapter: ProfileAdapter
@@ -20,6 +20,6 @@ describe('ProfileAdapter', () => {
   })
 
   test('should adapt a user profile', () => {
-    expect(profileAdapter.adapt(spotifyProfileMock)).toEqual(profileMock)
+    expect(profileAdapter.adapt(sdkProfileMock)).toEqual(profileMock)
   })
 })

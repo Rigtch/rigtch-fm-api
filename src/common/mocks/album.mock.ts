@@ -1,18 +1,16 @@
-import { SimplifiedAlbum, Album as SpotifyAlbum } from '@spotify/web-api-ts-sdk'
-
 import {
-  spotifyArtistsMock,
-  spotifyTrackArtistsMock,
-  trackArtistsMock,
+  sdkArtistsMock,
+  sdkSimplifiedArtistsMock,
+  simplifiedArtistsMock,
 } from './artist.mock'
 import { imagesMock } from './image.mock'
-import { spotifySimplifiedTracksMock } from './track.mock'
-import { spotifyResponseWithOffsetMockFactory } from './spotify-response.mock'
+import { sdkSimplifiedTracksMock } from './track.mock'
+import { pageMockFactory } from './page.mock'
 import { topGenresArrayMock } from './genres.mock'
 
-import { Album } from '@common/types/spotify'
+import { Album, SdkAlbum, SdkSimplifiedAlbum } from '@common/types/spotify'
 
-export const spotifySimplifiedAlbumMock: SimplifiedAlbum = {
+export const sdkSimplifiedAlbumMock: SdkSimplifiedAlbum = {
   album_type: 'album',
   album_group: 'album',
   copyrights: [
@@ -28,7 +26,7 @@ export const spotifySimplifiedAlbumMock: SimplifiedAlbum = {
   genres: topGenresArrayMock,
   label: 'Beatservice Records',
   popularity: 36,
-  artists: spotifyTrackArtistsMock,
+  artists: sdkSimplifiedArtistsMock,
   available_markets: [
     'AD',
     'AE',
@@ -68,28 +66,26 @@ export const spotifySimplifiedAlbumMock: SimplifiedAlbum = {
   },
 }
 
-export const spotifySimplifiedAlbumsMock = Array.from({ length: 5 }).map(
-  () => spotifySimplifiedAlbumMock
+export const sdkSimplifiedAlbumsMock = Array.from({ length: 5 }).map(
+  () => sdkSimplifiedAlbumMock
 )
 
-export const spotifyAlbumMock: SpotifyAlbum = {
-  ...spotifySimplifiedAlbumMock,
-  tracks: spotifyResponseWithOffsetMockFactory(spotifySimplifiedTracksMock),
-  artists: spotifyArtistsMock,
+export const sdkAlbumMock: SdkAlbum = {
+  ...sdkSimplifiedAlbumMock,
+  tracks: pageMockFactory(sdkSimplifiedTracksMock),
+  artists: sdkArtistsMock,
 }
 
-export const spotifyAlbumsMock = Array.from({ length: 5 }).map(
-  () => spotifyAlbumMock
-)
+export const sdkAlbumsMock = Array.from({ length: 5 }).map(() => sdkAlbumMock)
 
 export const albumMock: Album = {
-  id: spotifyAlbumMock.id,
-  name: spotifyAlbumMock.name,
-  artists: trackArtistsMock,
+  id: sdkAlbumMock.id,
+  name: sdkAlbumMock.name,
+  artists: simplifiedArtistsMock,
   images: imagesMock,
-  releaseDate: spotifyAlbumMock.release_date,
-  totalTracks: spotifyAlbumMock.total_tracks,
-  href: spotifyAlbumMock.external_urls.spotify,
+  releaseDate: sdkAlbumMock.release_date,
+  totalTracks: sdkAlbumMock.total_tracks,
+  href: sdkAlbumMock.external_urls.spotify,
 }
 
 export const albumsMock = Array.from({ length: 5 }).map(() => albumMock)

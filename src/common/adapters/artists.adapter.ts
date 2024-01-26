@@ -1,67 +1,62 @@
 import { Injectable } from '@nestjs/common'
+import { Page } from '@spotify/web-api-ts-sdk'
+
+import { PageAdapter } from './page.adapter'
+
 import {
-  Page,
+  Artist,
+  SdkArtist,
+  SdkSimplifiedArtist,
   SimplifiedArtist,
-  Artist as SpotifyArtist,
-} from '@spotify/web-api-ts-sdk'
-
-import { PaginatedAdapter } from './paginated.adapter'
-
-import { Artist, TrackArtist } from '@common/types/spotify'
+} from '@common/types/spotify'
 
 @Injectable()
 export class ArtistsAdapter {
-  constructor(private readonly paginatedAdapter: PaginatedAdapter) {}
+  constructor(private readonly pageAdapter: PageAdapter) {}
 
-  public adapt(data: SpotifyArtist[]): Artist[]
-  public adapt(data: SimplifiedArtist[]): TrackArtist[]
-  public adapt(data: SpotifyArtist): Artist
-  public adapt(data: SimplifiedArtist): TrackArtist
-  public adapt(data: Page<SpotifyArtist>): Page<Artist>
+  public adapt(data: SdkArtist[]): Artist[]
+  public adapt(data: SdkSimplifiedArtist[]): SimplifiedArtist[]
+  public adapt(data: SdkArtist): Artist
+  public adapt(data: SdkSimplifiedArtist): SimplifiedArtist
+  public adapt(data: Page<SdkArtist>): Page<Artist>
 
   adapt(
     data:
-      | SpotifyArtist
-      | SimplifiedArtist
-      | (SpotifyArtist | SimplifiedArtist)[]
-      | Page<SpotifyArtist>
+      | SdkArtist
+      | SdkSimplifiedArtist
+      | (SdkArtist | SdkSimplifiedArtist)[]
+      | Page<SdkArtist>
   ) {
     if (Array.isArray(data)) return this.adaptArtists(data)
 
-    if ('offset' in data) return this.adaptPaginatedArtists(data)
+    if ('offset' in data) return this.adaptArtistsPage(data)
 
     return this.adaptArtist(data)
   }
 
-  adaptArtist({
+  adaptArtist = ({
     name,
     id,
     external_urls: { spotify: href },
     ...rest
-  }: SpotifyArtist | SimplifiedArtist): Artist | TrackArtist {
-    console.log(href)
-
-    return {
-      id,
-      name,
-      href,
-      ...('genres' in rest && {
-        genres: rest.genres,
-        images: rest.images,
-        popularity: rest.popularity,
-      }),
-    }
-  }
+  }: SdkArtist | SdkSimplifiedArtist): Artist | SimplifiedArtist => ({
+    id,
+    name,
+    href,
+    ...('genres' in rest && {
+      genres: rest.genres,
+      images: rest.images,
+      popularity: rest.popularity,
+    }),
+  })
 
   adaptArtists(
-    artists: (SpotifyArtist | SimplifiedArtist)[]
-  ): (Artist | TrackArtist)[] {
+    artists: (SdkArtist | SdkSimplifiedArtist)[]
+  ): (Artist | SimplifiedArtist)[] {
     return artists.map(artist => this.adaptArtist(artist))
   }
 
-  adaptPaginatedArtists(data: Page<SpotifyArtist>) {
-    return this.paginatedAdapter.adapt(data, artists =>
-      this.adaptArtists(artists)
-    )
+  adaptArtistsPage(data: Page<SdkArtist>) {
+    return this.pageAdapter.adapt(data, artists => this.adaptArtists(artists))
   }
 }

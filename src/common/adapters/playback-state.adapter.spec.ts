@@ -3,10 +3,10 @@ import { Test } from '@nestjs/testing'
 import { PlaybackStateAdapter } from './playback-state.adapter'
 import { DevicesAdapter } from './devices.adapter'
 import { TracksAdapter } from './tracks.adapter'
-import { PaginatedAdapter } from './paginated.adapter'
+import { PageAdapter } from './page.adapter'
 import { ArtistsAdapter } from './artists.adapter'
 
-import { playbackStateMock, spotifyPlaybackStateMock } from '@common/mocks'
+import { playbackStateMock, sdkPlaybackStateMock } from '@common/mocks'
 
 describe('PlaybackStateAdapter', () => {
   let playbackStateAdapter: PlaybackStateAdapter
@@ -17,7 +17,7 @@ describe('PlaybackStateAdapter', () => {
         PlaybackStateAdapter,
         DevicesAdapter,
         TracksAdapter,
-        PaginatedAdapter,
+        PageAdapter,
         ArtistsAdapter,
       ],
     }).compile()
@@ -30,7 +30,7 @@ describe('PlaybackStateAdapter', () => {
   })
 
   test('should adapt a single playback state', () => {
-    expect(playbackStateAdapter.adapt(spotifyPlaybackStateMock)).toEqual(
+    expect(playbackStateAdapter.adapt(sdkPlaybackStateMock)).toEqual(
       playbackStateMock
     )
   })

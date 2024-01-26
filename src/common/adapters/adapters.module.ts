@@ -1,28 +1,29 @@
-import { Module } from '@nestjs/common'
+import { Global, Module } from '@nestjs/common'
 
 import { ArtistsAdapter } from './artists.adapter'
 import { AudioFeaturesAdapter } from './audio-features.adapter'
 import { DevicesAdapter } from './devices.adapter'
 import { GenresAdapter } from './genres.adapter'
-import { PaginatedAdapter } from './paginated.adapter'
+import { PageAdapter } from './page.adapter'
 import { TracksAdapter } from './tracks.adapter'
 import { PlaybackStateAdapter } from './playback-state.adapter'
 import { ProfileAdapter } from './profile.adapter'
 import { SecretDataAdapter } from './secret-data.adapter'
 import { AdaptersService } from './adapters.service'
 
+@Global()
 @Module({
-  imports: [AdaptersService],
   providers: [
     ArtistsAdapter,
     TracksAdapter,
     AudioFeaturesAdapter,
     DevicesAdapter,
     GenresAdapter,
-    PaginatedAdapter,
+    PageAdapter,
     PlaybackStateAdapter,
     ProfileAdapter,
     SecretDataAdapter,
+    AdaptersService,
   ],
   exports: [AdaptersService],
 })
