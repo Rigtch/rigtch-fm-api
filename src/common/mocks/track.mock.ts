@@ -2,13 +2,13 @@
 
 import { SimplifiedTrack, Track as SpotifyTrack } from '@spotify/web-api-ts-sdk'
 
-import { albumMock, spotifySimplifiedAlbumMock } from './album.mock'
-import { spotifyTrackArtistsMock, trackArtistsMock } from './artist.mock'
+import { albumMock, sdkSimplifiedAlbumMock } from './album.mock'
+import { sdkSimplifiedArtistsMock, simplifiedArtistsMock } from './artist.mock'
 
 import { Track } from '@common/types/spotify'
 
-export const spotifySimplifiedTrackMock: SimplifiedTrack = {
-  artists: spotifyTrackArtistsMock,
+export const sdkSimplifiedTrackMock: SimplifiedTrack = {
+  artists: sdkSimplifiedArtistsMock,
   track: true,
   episode: false,
   available_markets: [
@@ -48,13 +48,13 @@ export const spotifySimplifiedTrackMock: SimplifiedTrack = {
   uri: 'spotify:track:5O6MFTh1rd9PeN8XEn1yCS',
 }
 
-export const spotifySimplifiedTracksMock = Array.from({ length: 5 }).map(
-  () => spotifySimplifiedTrackMock
+export const sdkSimplifiedTracksMock = Array.from({ length: 5 }).map(
+  () => sdkSimplifiedTrackMock
 )
 
-export const spotifyTrackMock: SpotifyTrack = {
-  ...spotifySimplifiedTrackMock,
-  album: spotifySimplifiedAlbumMock,
+export const sdkTrackMock: SpotifyTrack = {
+  ...sdkSimplifiedTrackMock,
+  album: sdkSimplifiedAlbumMock,
   external_ids: {
     isrc: 'GBBPC9700031',
     upc: '5051083100020',
@@ -63,17 +63,15 @@ export const spotifyTrackMock: SpotifyTrack = {
   popularity: 43,
 }
 
-export const spotifyTracksMock = Array.from({ length: 5 }).map(
-  () => spotifyTrackMock
-)
+export const sdkTracksMock = Array.from({ length: 5 }).map(() => sdkTrackMock)
 
 export const trackMock: Track = {
-  id: spotifyTrackMock.id,
-  artists: trackArtistsMock,
+  id: sdkTrackMock.id,
+  artists: simplifiedArtistsMock,
   album: albumMock,
-  name: spotifyTrackMock.name,
-  duration: spotifyTrackMock.duration_ms,
-  href: spotifyTrackMock.external_urls.spotify,
+  name: sdkTrackMock.name,
+  duration: sdkTrackMock.duration_ms,
+  href: sdkTrackMock.external_urls.spotify,
 }
 
 export const tracksMock = Array.from({ length: 5 }).map(() => trackMock)

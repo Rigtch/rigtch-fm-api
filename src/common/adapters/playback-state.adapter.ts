@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common'
-import { PlaybackState as SpotifyPlaybackState } from '@spotify/web-api-ts-sdk'
 
 import { DevicesAdapter } from './devices.adapter'
 import { TracksAdapter } from './tracks.adapter'
 
-import { PlaybackState, RepeatedState } from '@common/types/spotify'
+import {
+  PlaybackState,
+  RepeatedState,
+  SdkPlaybackState,
+} from '@common/types/spotify'
 
 @Injectable()
 export class PlaybackStateAdapter {
@@ -13,7 +16,7 @@ export class PlaybackStateAdapter {
     private readonly tracksAdapter: TracksAdapter
   ) {}
 
-  adapt(playbackState: SpotifyPlaybackState | null): PlaybackState | null {
+  adapt(playbackState: SdkPlaybackState | null): PlaybackState | null {
     if (!playbackState) return playbackState
 
     const { device, repeat_state, shuffle_state, is_playing, item } =

@@ -4,7 +4,7 @@ import { imagesMock } from './image.mock'
 
 import { Profile } from '@modules/profiles'
 
-export const spotifyProfileMock: UserProfile = {
+export const sdkProfileMock: UserProfile = {
   country: 'US',
   display_name: 'Spotify User',
   email: 'spotify-user@example.com',
@@ -28,16 +28,16 @@ export const spotifyProfileMock: UserProfile = {
 }
 
 export const profileMock: Profile = {
-  id: spotifyProfileMock.id,
-  displayName: spotifyProfileMock.display_name,
-  followers: spotifyProfileMock.followers.total,
+  id: sdkProfileMock.id,
+  displayName: sdkProfileMock.display_name,
+  followers: sdkProfileMock.followers.total,
   images: imagesMock,
-  href: spotifyProfileMock.external_urls.spotify,
-  type: spotifyProfileMock.type,
-  uri: spotifyProfileMock.uri,
-  product: spotifyProfileMock.product,
-  email: spotifyProfileMock.email,
-  country: spotifyProfileMock.country,
+  href: sdkProfileMock.external_urls.spotify,
+  type: sdkProfileMock.type,
+  uri: sdkProfileMock.uri,
+  product: sdkProfileMock.product,
+  email: sdkProfileMock.email,
+  country: sdkProfileMock.country,
 }
 
 export const profilesMock = Array.from({ length: 3 }, () => profileMock)

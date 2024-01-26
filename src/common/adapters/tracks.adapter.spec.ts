@@ -1,14 +1,14 @@
 import { Test } from '@nestjs/testing'
 
 import { TracksAdapter } from './tracks.adapter'
-import { PaginatedAdapter } from './paginated.adapter'
+import { PageAdapter } from './page.adapter'
 import { ArtistsAdapter } from './artists.adapter'
 
 import {
-  spotifyResponseWithCursorsMockFactory,
-  spotifyResponseWithOffsetMockFactory,
-  spotifyTrackMock,
-  spotifyTracksMock,
+  recentlyPlayedTracksPageMockFactory,
+  pageMockFactory,
+  sdkTrackMock,
+  sdkTracksMock,
   trackMock,
   tracksMock,
 } from '@common/mocks'
@@ -18,7 +18,7 @@ describe('TracksAdapter', () => {
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
-      providers: [TracksAdapter, PaginatedAdapter, ArtistsAdapter],
+      providers: [TracksAdapter, PageAdapter, ArtistsAdapter],
     }).compile()
 
     tracksAdapter = module.get(TracksAdapter)
@@ -29,26 +29,24 @@ describe('TracksAdapter', () => {
   })
 
   test('should adapt a single track', () => {
-    expect(tracksAdapter.adapt(spotifyTrackMock)).toEqual(trackMock)
+    expect(tracksAdapter.adapt(sdkTrackMock)).toEqual(trackMock)
   })
 
   test('should adapt multiple tracks', () => {
-    expect(tracksAdapter.adapt(spotifyTracksMock)).toEqual(tracksMock)
+    expect(tracksAdapter.adapt(sdkTracksMock)).toEqual(tracksMock)
   })
 
   test('should adapt a paginated list of tracks', () => {
-    expect(
-      tracksAdapter.adapt(
-        spotifyResponseWithOffsetMockFactory(spotifyTracksMock)
-      )
-    ).toEqual(spotifyResponseWithOffsetMockFactory(tracksMock))
+    expect(tracksAdapter.adapt(pageMockFactory(sdkTracksMock))).toEqual(
+      pageMockFactory(tracksMock)
+    )
   })
 
   test('should adapt recently played tracks page', () => {
     expect(
       tracksAdapter.adapt(
-        spotifyResponseWithCursorsMockFactory(
-          spotifyTracksMock.map(track => ({
+        recentlyPlayedTracksPageMockFactory(
+          sdkTracksMock.map(track => ({
             track,
             played_at: trackMock.playedAt!,
             context: {
@@ -63,6 +61,6 @@ describe('TracksAdapter', () => {
           }))
         )
       )
-    ).toEqual(spotifyResponseWithCursorsMockFactory(tracksMock))
+    ).toEqual(recentlyPlayedTracksPageMockFactory(tracksMock))
   })
 })

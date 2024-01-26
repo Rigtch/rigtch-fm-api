@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing'
 
 import { DevicesAdapter } from './devices.adapter'
 
-import { deviceMock, spotifyDeviceMock } from '@common/mocks'
+import { deviceMock, sdkDeviceMock } from '@common/mocks'
 
 describe('DevicesAdapter', () => {
   let devicesAdapter: DevicesAdapter
@@ -20,10 +20,10 @@ describe('DevicesAdapter', () => {
   })
 
   test('should adapt a single device', () => {
-    expect(devicesAdapter.adapt(spotifyDeviceMock)).toEqual(deviceMock)
+    expect(devicesAdapter.adapt(sdkDeviceMock)).toEqual(deviceMock)
   })
 
   test('should adapt an array of devices', () => {
-    expect(devicesAdapter.adapt([spotifyDeviceMock])).toEqual([deviceMock])
+    expect(devicesAdapter.adapt([sdkDeviceMock])).toEqual([deviceMock])
   })
 })

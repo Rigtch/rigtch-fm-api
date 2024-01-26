@@ -2,14 +2,14 @@ import { PlaybackState as SpotifyPlaybackState } from '@spotify/web-api-ts-sdk'
 
 import { PlaybackState, RepeatedState } from '../types/spotify'
 
-import { deviceMock, trackMock, spotifyDeviceMock, spotifyTrackMock } from '.'
+import { deviceMock, trackMock, sdkDeviceMock, sdkTrackMock } from '.'
 
-export const spotifyPlaybackStateMock: SpotifyPlaybackState = {
-  device: spotifyDeviceMock,
+export const sdkPlaybackStateMock: SpotifyPlaybackState = {
+  device: sdkDeviceMock,
   repeat_state: RepeatedState.OFF,
   shuffle_state: false,
   is_playing: true,
-  item: spotifyTrackMock,
+  item: sdkTrackMock,
   context: null,
   timestamp: 0,
   progress_ms: 0,
@@ -19,8 +19,8 @@ export const spotifyPlaybackStateMock: SpotifyPlaybackState = {
 
 export const playbackStateMock: PlaybackState = {
   device: deviceMock,
-  repeatState: spotifyPlaybackStateMock.repeat_state as RepeatedState,
-  shuffleState: spotifyPlaybackStateMock.shuffle_state,
-  isPlaying: spotifyPlaybackStateMock.is_playing,
+  repeatState: sdkPlaybackStateMock.repeat_state as RepeatedState,
+  shuffleState: sdkPlaybackStateMock.shuffle_state,
+  isPlaying: sdkPlaybackStateMock.is_playing,
   track: trackMock,
 }

@@ -1,14 +1,13 @@
 import { Injectable } from '@nestjs/common'
-import { AudioFeatures as SpotifyAudioFeatures } from '@spotify/web-api-ts-sdk'
 
-import { AudioFeatures } from '@common/types/spotify'
+import { AudioFeatures, SdkAudioFeatures } from '@common/types/spotify'
 
 @Injectable()
 export class AudioFeaturesAdapter {
-  public adapt(data: SpotifyAudioFeatures[]): AudioFeatures[]
-  public adapt(data: SpotifyAudioFeatures): AudioFeatures
+  public adapt(data: SdkAudioFeatures[]): AudioFeatures[]
+  public adapt(data: SdkAudioFeatures): AudioFeatures
 
-  adapt(data: SpotifyAudioFeatures | SpotifyAudioFeatures[]) {
+  adapt(data: SdkAudioFeatures | SdkAudioFeatures[]) {
     if (Array.isArray(data))
       return data.map(audioFeatures => this.adaptAudioFeatures(audioFeatures))
 
@@ -29,7 +28,7 @@ export class AudioFeaturesAdapter {
     mode,
     key,
     valence,
-  }: SpotifyAudioFeatures): AudioFeatures => ({
+  }: SdkAudioFeatures): AudioFeatures => ({
     id,
     trackHref: track_href,
     danceability,

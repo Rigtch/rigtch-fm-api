@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common'
-import { UserProfile } from '@spotify/web-api-ts-sdk'
 
-import { Profile } from '@common/types/spotify'
+import { Profile, SdkProfile } from '@common/types/spotify'
 
 @Injectable()
 export class ProfileAdapter {
@@ -16,7 +15,7 @@ export class ProfileAdapter {
     uri,
     external_urls: { spotify: href },
     followers,
-  }: UserProfile): Profile => ({
+  }: SdkProfile): Profile => ({
     id,
     displayName: display_name,
     email,

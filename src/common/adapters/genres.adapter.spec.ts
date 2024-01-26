@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing'
 
 import { GenresAdapter } from './genres.adapter'
 
-import { spotifyArtistMock, topGenresMock } from '@common/mocks'
+import { sdkArtistMock, topGenresMock } from '@common/mocks'
 
 describe('GenresAdapter', () => {
   let genresAdapter: GenresAdapter
@@ -20,10 +20,10 @@ describe('GenresAdapter', () => {
   })
 
   test('should adapt a single artist', () => {
-    expect(genresAdapter.adapt([spotifyArtistMock])).toEqual(topGenresMock)
+    expect(genresAdapter.adapt([sdkArtistMock])).toEqual(topGenresMock)
   })
 
   test('should adapt an array of artists', () => {
-    expect(genresAdapter.adapt([spotifyArtistMock])).toEqual(topGenresMock)
+    expect(genresAdapter.adapt([sdkArtistMock])).toEqual(topGenresMock)
   })
 })

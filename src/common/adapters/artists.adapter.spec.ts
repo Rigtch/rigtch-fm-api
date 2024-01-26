@@ -1,14 +1,14 @@
 import { Test } from '@nestjs/testing'
 
 import { ArtistsAdapter } from './artists.adapter'
-import { PaginatedAdapter } from './paginated.adapter'
+import { PageAdapter } from './page.adapter'
 
 import {
   artistMock,
-  spotifyArtistMock,
-  spotifyResponseWithOffsetMockFactory,
-  spotifyTrackArtistMock,
-  trackArtistMock,
+  sdkArtistMock,
+  pageMockFactory,
+  sdkSimplifiedArtistMock,
+  simplifiedArtistMock,
 } from '@common/mocks'
 
 describe('ArtistsAdapter', () => {
@@ -16,7 +16,7 @@ describe('ArtistsAdapter', () => {
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
-      providers: [ArtistsAdapter, PaginatedAdapter],
+      providers: [ArtistsAdapter, PageAdapter],
     }).compile()
 
     artistsAdapter = module.get(ArtistsAdapter)
@@ -27,30 +27,28 @@ describe('ArtistsAdapter', () => {
   })
 
   test('should adapt a single artist', () => {
-    expect(artistsAdapter.adapt(spotifyArtistMock)).toEqual(artistMock)
+    expect(artistsAdapter.adapt(sdkArtistMock)).toEqual(artistMock)
   })
 
   test('should adapt a single simplified artist', () => {
-    expect(artistsAdapter.adapt(spotifyTrackArtistMock)).toEqual(
-      trackArtistMock
+    expect(artistsAdapter.adapt(sdkSimplifiedArtistMock)).toEqual(
+      simplifiedArtistMock
     )
   })
 
   test('should adapt an array of artists', () => {
-    expect(artistsAdapter.adapt([spotifyArtistMock])).toEqual([artistMock])
+    expect(artistsAdapter.adapt([sdkArtistMock])).toEqual([artistMock])
   })
 
   test('should adapt an array of simplified artists', () => {
-    expect(artistsAdapter.adapt([spotifyTrackArtistMock])).toEqual([
-      trackArtistMock,
+    expect(artistsAdapter.adapt([sdkSimplifiedArtistMock])).toEqual([
+      simplifiedArtistMock,
     ])
   })
 
   test('should adapt a paginated list of artists', () => {
-    expect(
-      artistsAdapter.adapt(
-        spotifyResponseWithOffsetMockFactory([spotifyArtistMock])
-      )
-    ).toEqual(spotifyResponseWithOffsetMockFactory([artistMock]))
+    expect(artistsAdapter.adapt(pageMockFactory([sdkArtistMock]))).toEqual(
+      pageMockFactory([artistMock])
+    )
   })
 })

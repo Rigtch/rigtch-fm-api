@@ -1,14 +1,13 @@
 import { Injectable } from '@nestjs/common'
-import { Device as SpotifyDevice } from '@spotify/web-api-ts-sdk'
 
-import { Device } from '@common/types/spotify'
+import { Device, SdkDevice } from '@common/types/spotify'
 
 @Injectable()
 export class DevicesAdapter {
-  public adapt(data: SpotifyDevice[]): Device[]
-  public adapt(data: SpotifyDevice): Device
+  public adapt(data: SdkDevice[]): Device[]
+  public adapt(data: SdkDevice): Device
 
-  adapt(data: SpotifyDevice | SpotifyDevice[]) {
+  adapt(data: SdkDevice | SdkDevice[]) {
     if (Array.isArray(data)) return data.map(device => this.adaptDevice(device))
 
     return this.adaptDevice(data)
@@ -22,7 +21,7 @@ export class DevicesAdapter {
     is_private_session: isPrivateSession,
     is_restricted: isRestricted,
     volume_percent: volumePercent,
-  }: SpotifyDevice): Device => ({
+  }: SdkDevice): Device => ({
     id,
     name,
     type,

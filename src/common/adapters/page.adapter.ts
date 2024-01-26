@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { Page } from '@spotify/web-api-ts-sdk'
 
 @Injectable()
-export class PaginatedAdapter {
+export class PageAdapter {
   adapt<TItems, TAdaptedItems>(
     { items, next, href, limit, offset, previous }: Page<TItems>,
     adaptFunction: (items: TItems[]) => TAdaptedItems[]

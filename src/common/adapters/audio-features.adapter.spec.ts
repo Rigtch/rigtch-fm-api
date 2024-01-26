@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing'
 
 import { AudioFeaturesAdapter } from './audio-features.adapter'
 
-import { audioFeaturesMock, spotifyAudioFeaturesMock } from '@common/mocks'
+import { audioFeaturesMock, sdkAudioFeaturesMock } from '@common/mocks'
 
 describe('AudioFeaturesAdapter', () => {
   let audioFeaturesAdapter: AudioFeaturesAdapter
@@ -20,13 +20,13 @@ describe('AudioFeaturesAdapter', () => {
   })
 
   test('should adapt a single audio feature', () => {
-    expect(audioFeaturesAdapter.adapt(spotifyAudioFeaturesMock)).toEqual(
+    expect(audioFeaturesAdapter.adapt(sdkAudioFeaturesMock)).toEqual(
       audioFeaturesMock
     )
   })
 
   test('should adapt an array of audio features', () => {
-    expect(audioFeaturesAdapter.adapt([spotifyAudioFeaturesMock])).toEqual([
+    expect(audioFeaturesAdapter.adapt([sdkAudioFeaturesMock])).toEqual([
       audioFeaturesMock,
     ])
   })
