@@ -23,7 +23,7 @@ import { AuthService } from './auth.service'
 
 import { SpotifyAuthService } from '@modules/spotify/auth'
 import { Environment } from '@config/environment'
-import { adaptSecretData } from '@common/adapters'
+import { AdaptersService } from '@common/adapters'
 
 const {
   SPOTIFY_CALLBACK_URL,
@@ -38,7 +38,8 @@ export class AuthController {
   constructor(
     private readonly configService: ConfigService,
     private readonly authService: AuthService,
-    private readonly spotifyAuthService: SpotifyAuthService
+    private readonly spotifyAuthService: SpotifyAuthService,
+    private readonly adaptersService: AdaptersService
   ) {}
 
   @Get('login')
@@ -92,6 +93,8 @@ export class AuthController {
     type: RefreshToken,
   })
   refresh(@Body() { refreshToken }: RefreshToken) {
-    return this.spotifyAuthService.token({ refreshToken }).then(adaptSecretData)
+    return this.spotifyAuthService
+      .token({ refreshToken })
+      .then(data => this.adaptersService.secretData.adapt(data))
   }
 }

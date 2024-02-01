@@ -8,9 +8,11 @@ import { AuthModule } from '@modules/auth'
 import { ImagesModule } from '@modules/images'
 import { ProfilesModule } from '@modules/profiles'
 import { UsersModule } from '@modules/users'
+import { AdaptersModule } from '@common/adapters'
 
 @Module({
   imports: [
+    AdaptersModule,
     AuthModule,
     ImagesModule,
     ProfilesModule,

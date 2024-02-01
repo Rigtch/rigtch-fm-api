@@ -1,9 +1,17 @@
-import { SpotifyArtist, Genres } from '../types/spotify'
+import { Injectable } from '@nestjs/common'
+
 import { getMostFrequentItems } from '../utils'
 
-export const adaptGenres = (artists: SpotifyArtist[], limit = 20): Genres => ({
-  genres: getMostFrequentItems(
-    artists.flatMap(({ genres }) => genres),
-    limit
-  ),
-})
+import { Genres, SdkArtist } from '@common/types/spotify'
+
+@Injectable()
+export class GenresAdapter {
+  adapt(artists: SdkArtist[], limit = 20): Genres {
+    return {
+      genres: getMostFrequentItems(
+        artists.flatMap(({ genres }) => genres),
+        limit
+      ),
+    }
+  }
+}

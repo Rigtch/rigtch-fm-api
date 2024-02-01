@@ -1,13 +1,13 @@
 import {
   Artist,
-  SpotifyArtist,
-  SpotifyTrackArtist,
-  TrackArtist,
+  SdkArtist,
+  SdkSimplifiedArtist,
+  SimplifiedArtist,
 } from '../types/spotify'
 
 import { imagesMock } from './image.mock'
 
-export const spotifyArtistMock: SpotifyArtist = {
+export const sdkArtistMock: SdkArtist = {
   external_urls: {
     spotify: 'https://open.spotify.com/artist/7kWnE981vITXDnAD2cZmCV',
   },
@@ -33,39 +33,38 @@ export const spotifyArtistMock: SpotifyArtist = {
   uri: 'spotify:artist:7kWnE981vITXDnAD2cZmCV',
 }
 
-export const spotifyArtistsMock = Array.from({ length: 5 }).map(
-  () => spotifyArtistMock
-)
+export const sdkArtistsMock = Array.from({ length: 5 }).map(() => sdkArtistMock)
 
 export const artistMock: Artist = {
-  id: spotifyArtistMock.id,
-  name: spotifyArtistMock.name,
-  genres: spotifyArtistMock.genres,
-  href: spotifyArtistMock.external_urls.spotify,
+  id: sdkArtistMock.id,
+  name: sdkArtistMock.name,
+  genres: sdkArtistMock.genres,
+  href: sdkArtistMock.external_urls.spotify,
   images: imagesMock,
+  popularity: sdkArtistMock.popularity,
 }
 
 export const artistsMock = Array.from({ length: 5 }).map(() => artistMock)
 
-export const spotifyTrackArtistMock: SpotifyTrackArtist = {
-  external_urls: spotifyArtistMock.external_urls,
-  href: spotifyArtistMock.href,
-  id: spotifyArtistMock.id,
-  name: spotifyArtistMock.name,
-  type: spotifyArtistMock.type,
-  uri: spotifyArtistMock.uri,
+export const sdkSimplifiedArtistMock: SdkSimplifiedArtist = {
+  external_urls: sdkArtistMock.external_urls,
+  href: sdkArtistMock.href,
+  id: sdkArtistMock.id,
+  name: sdkArtistMock.name,
+  type: sdkArtistMock.type,
+  uri: sdkArtistMock.uri,
 }
 
-export const spotifyTrackArtistsMock = Array.from({ length: 5 }).map(
-  () => spotifyTrackArtistMock
+export const sdkSimplifiedArtistsMock = Array.from({ length: 5 }).map(
+  () => sdkSimplifiedArtistMock
 )
 
-export const trackArtistMock: TrackArtist = {
-  id: spotifyTrackArtistMock.id,
-  name: spotifyTrackArtistMock.name,
-  href: spotifyTrackArtistMock.external_urls.spotify,
+export const simplifiedArtistMock: SimplifiedArtist = {
+  id: sdkSimplifiedArtistMock.id,
+  name: sdkSimplifiedArtistMock.name,
+  href: sdkSimplifiedArtistMock.external_urls.spotify,
 }
 
-export const trackArtistsMock = Array.from({ length: 5 }).map(
-  () => trackArtistMock
+export const simplifiedArtistsMock = Array.from({ length: 5 }).map(
+  () => simplifiedArtistMock
 )

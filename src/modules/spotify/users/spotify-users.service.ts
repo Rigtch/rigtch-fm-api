@@ -6,19 +6,16 @@ import { analysisFactory } from './utils'
 import { TimeRange } from './enums'
 
 import { Environment } from '@config/environment'
-import {
-  adaptAudioFeatures,
-  adaptGenres,
-  adaptPaginatedArtists,
-  adaptPaginatedTracks,
-  adaptProfile,
-} from '@common/adapters'
+import { AdaptersService } from '@common/adapters'
 
 @Injectable()
 export class SpotifyUsersService {
   private spotifySdk: SpotifyApi | undefined
 
-  constructor(private readonly configService: ConfigService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly adaptersService: AdaptersService
+  ) {}
 
   async profile(token: AccessToken) {
     this.spotifySdk = SpotifyApi.withAccessToken(
@@ -26,7 +23,9 @@ export class SpotifyUsersService {
       token
     )
 
-    return this.spotifySdk.currentUser.profile().then(adaptProfile)
+    return this.spotifySdk.currentUser
+      .profile()
+      .then(data => this.adaptersService.profile.adapt(data))
   }
 
   async getTopArtists(
@@ -42,7 +41,7 @@ export class SpotifyUsersService {
 
     return this.spotifySdk.currentUser
       .topItems('artists', timeRange, limit, offset)
-      .then(adaptPaginatedArtists)
+      .then(data => this.adaptersService.artists.adapt(data))
   }
 
   async getTopTracks(
@@ -58,7 +57,7 @@ export class SpotifyUsersService {
 
     return this.spotifySdk.currentUser
       .topItems('tracks', timeRange, limit, offset)
-      .then(adaptPaginatedTracks)
+      .then(data => this.adaptersService.tracks.adapt(data))
   }
 
   async getTopGenres(
@@ -74,7 +73,7 @@ export class SpotifyUsersService {
 
     return this.spotifySdk.currentUser
       .topItems('artists', timeRange, 50, offset)
-      .then(({ items }) => adaptGenres(items, limit))
+      .then(({ items }) => this.adaptersService.genres.adapt(items, limit))
   }
 
   async getAnalysis(token: AccessToken, timeRange = TimeRange.LONG_TERM) {
@@ -83,15 +82,18 @@ export class SpotifyUsersService {
       token
     )
 
-    const { items } = await this.spotifySdk.currentUser
-      .topItems('tracks', timeRange, 50, 0)
-      .then(adaptPaginatedTracks)
+    const { items } = await this.spotifySdk.currentUser.topItems(
+      'tracks',
+      timeRange,
+      50,
+      0
+    )
 
     const tracksIds = items.map(({ id }) => id)
 
     return this.spotifySdk.tracks
       .audioFeatures(tracksIds)
-      .then(audioFeatures => audioFeatures.map(adaptAudioFeatures))
+      .then(data => this.adaptersService.audioFeatures.adapt(data))
       .then(analysisFactory)
   }
 }

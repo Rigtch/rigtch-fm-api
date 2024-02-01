@@ -14,6 +14,8 @@ import {
   userMock,
 } from '@common/mocks'
 import { SpotifyAuthService } from '@modules/spotify/auth'
+import { AdaptersService } from '@common/adapters'
+import { SecretDataAdapter } from '@common/adapters'
 
 describe('AuthController', () => {
   const redirectUrl = 'http://test.com'
@@ -26,6 +28,12 @@ describe('AuthController', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthController,
+        {
+          provide: AdaptersService,
+          useValue: {
+            secretData: new SecretDataAdapter(),
+          },
+        },
         {
           provide: SpotifyAuthService,
           useValue: {
