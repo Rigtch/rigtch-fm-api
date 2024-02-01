@@ -10,9 +10,10 @@ import { SpotifyToken } from './types/spotify'
 import {
   axiosResponseMockFactory,
   profileMock,
-  spotifyProfileMock,
+  sdkProfileMock,
 } from '@common/mocks'
-import { SpotifyProfile } from '@common/types/spotify'
+import { SdkProfile } from '@common/types/spotify'
+import { AdaptersService, ProfileAdapter } from '@common/adapters'
 
 describe('SpotifyAuthService', () => {
   let spotifyAuthService: SpotifyAuthService
@@ -24,6 +25,12 @@ describe('SpotifyAuthService', () => {
       imports: [HttpModule],
       providers: [
         SpotifyAuthService,
+        {
+          provide: AdaptersService,
+          useValue: {
+            profile: new ProfileAdapter(),
+          },
+        },
         {
           provide: ConfigService,
           useValue: {
@@ -81,9 +88,7 @@ describe('SpotifyAuthService', () => {
   test('should get me profile', async () => {
     const getSpy = vi
       .spyOn(httpService, 'get')
-      .mockReturnValue(
-        of(axiosResponseMockFactory<SpotifyProfile>(spotifyProfileMock))
-      )
+      .mockReturnValue(of(axiosResponseMockFactory<SdkProfile>(sdkProfileMock)))
 
     expect(await spotifyAuthService.getMeProfile('token')).toEqual(profileMock)
     expect(getSpy).toHaveBeenCalled()

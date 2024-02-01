@@ -1,44 +1,66 @@
+import { Test } from '@nestjs/testing'
+
+import { TracksAdapter } from './tracks.adapter'
+import { PageAdapter } from './page.adapter'
+import { ArtistsAdapter } from './artists.adapter'
+
 import {
-  spotifyTracksMock,
+  recentlyPlayedTracksPageMockFactory,
+  pageMockFactory,
+  sdkTrackMock,
+  sdkTracksMock,
+  trackMock,
   tracksMock,
-  spotifyResponseWithCursorsMockFactory,
-  spotifyResponseWithOffsetMockFactory,
-} from '../mocks'
+} from '@common/mocks'
 
-import {
-  adaptLastTracks,
-  adaptPaginatedTracks,
-  adaptTracks,
-} from './tracks.adapter'
+describe('TracksAdapter', () => {
+  let tracksAdapter: TracksAdapter
 
-describe('adaptTracks', () => {
-  test('should adapt tracks', () => {
-    expect(adaptTracks(spotifyTracksMock)).toEqual(tracksMock)
+  beforeEach(async () => {
+    const module = await Test.createTestingModule({
+      providers: [TracksAdapter, PageAdapter, ArtistsAdapter],
+    }).compile()
+
+    tracksAdapter = module.get(TracksAdapter)
   })
 
-  test('should adapt tracks without duration', () => {
-    expect(
-      adaptTracks(spotifyTracksMock.map(({ progress_ms, ...rest }) => rest))
-    ).toEqual(tracksMock.map(({ progress, ...rest }) => rest))
+  test('should be defined', () => {
+    expect(tracksAdapter).toBeDefined()
   })
 
-  test('should adapt tracks without playedAt field', () => {
-    expect(
-      adaptTracks(spotifyTracksMock.map(({ played_at, ...rest }) => rest))
-    ).toEqual(tracksMock.map(({ playedAt, ...rest }) => rest))
+  test('should adapt a single track', () => {
+    expect(tracksAdapter.adapt(sdkTrackMock)).toEqual(trackMock)
   })
 
-  test('should adapt paginated tracks', () => {
+  test('should adapt multiple tracks', () => {
+    expect(tracksAdapter.adapt(sdkTracksMock)).toEqual(tracksMock)
+  })
+
+  test('should adapt a paginated list of tracks', () => {
+    expect(tracksAdapter.adapt(pageMockFactory(sdkTracksMock))).toEqual(
+      pageMockFactory(tracksMock)
+    )
+  })
+
+  test('should adapt recently played tracks page', () => {
     expect(
-      adaptPaginatedTracks(
-        spotifyResponseWithOffsetMockFactory(spotifyTracksMock)
+      tracksAdapter.adapt(
+        recentlyPlayedTracksPageMockFactory(
+          sdkTracksMock.map(track => ({
+            track,
+            played_at: trackMock.playedAt!,
+            context: {
+              type: 'playlist',
+              href: 'https://api.spotify.com/v1/playlists/37i9dQZF1DXcBWIGoYBM5M',
+              uri: 'spotify:user:spotify:playlist:37i9dQZF1DXcBWIGoYBM5M',
+              external_urls: {
+                spotify:
+                  'https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M',
+              },
+            },
+          }))
+        )
       )
-    ).toEqual(spotifyResponseWithOffsetMockFactory(tracksMock))
-  })
-
-  test('should adapt last tracks', () => {
-    expect(
-      adaptLastTracks(spotifyResponseWithCursorsMockFactory(spotifyTracksMock))
-    ).toEqual(spotifyResponseWithCursorsMockFactory(tracksMock))
+    ).toEqual(recentlyPlayedTracksPageMockFactory(tracksMock))
   })
 })

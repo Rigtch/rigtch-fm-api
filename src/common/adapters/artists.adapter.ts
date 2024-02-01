@@ -1,44 +1,62 @@
+import { Injectable } from '@nestjs/common'
+import { Page } from '@spotify/web-api-ts-sdk'
+
+import { PageAdapter } from './page.adapter'
+
 import {
   Artist,
-  SpotifyArtist,
-  SpotifyResponseWithOffset,
-  SpotifyTrackArtist,
-  TrackArtist,
-} from '../types/spotify'
+  SdkArtist,
+  SdkSimplifiedArtist,
+  SimplifiedArtist,
+} from '@common/types/spotify'
 
-import { adaptPaginated } from './paginated.adapter'
+@Injectable()
+export class ArtistsAdapter {
+  constructor(private readonly pageAdapter: PageAdapter) {}
 
-export const adaptArtist = ({
-  id,
-  name,
-  genres,
-  external_urls: { spotify: href },
-  images,
-}: SpotifyArtist): Artist => ({
-  id,
-  name,
-  genres,
-  href,
-  images,
-})
+  public adapt(data: SdkArtist[]): Artist[]
+  public adapt(data: SdkSimplifiedArtist[]): SimplifiedArtist[]
+  public adapt(data: SdkArtist): Artist
+  public adapt(data: SdkSimplifiedArtist): SimplifiedArtist
+  public adapt(data: Page<SdkArtist>): Page<Artist>
 
-export const adaptArtists = (artists: SpotifyArtist[]): Artist[] =>
-  artists.map(artist => adaptArtist(artist))
+  adapt(
+    data:
+      | SdkArtist
+      | SdkSimplifiedArtist
+      | (SdkArtist | SdkSimplifiedArtist)[]
+      | Page<SdkArtist>
+  ) {
+    if (Array.isArray(data)) return this.adaptArtists(data)
 
-export const adaptTrackArtist = ({
-  name,
-  id,
-  external_urls: { spotify: href },
-}: SpotifyTrackArtist): TrackArtist => ({
-  name,
-  id,
-  href,
-})
+    if ('offset' in data) return this.adaptArtistsPage(data)
 
-export const adaptTrackArtists = (
-  artists: SpotifyTrackArtist[]
-): TrackArtist[] => artists.map(artist => adaptTrackArtist(artist))
+    return this.adaptArtist(data)
+  }
 
-export const adaptPaginatedArtists = (
-  data: SpotifyResponseWithOffset<SpotifyArtist>
-) => adaptPaginated(data, adaptArtists)
+  adaptArtist = ({
+    name,
+    id,
+    external_urls: { spotify: href },
+    ...rest
+  }: SdkArtist | SdkSimplifiedArtist): Artist | SimplifiedArtist => ({
+    id,
+    name,
+    href,
+    ...('genres' in rest && {
+      genres: rest.genres,
+      images: rest.images,
+      popularity: rest.popularity,
+    }),
+  })
+
+  adaptArtists(
+    artists: (SdkArtist | SdkSimplifiedArtist)[]
+  ): (Artist | SimplifiedArtist)[] {
+    return artists.map(artist => this.adaptArtist(artist))
+  }
+
+  adaptArtistsPage(data: Page<SdkArtist>) {
+    return this.pageAdapter.adapt(data, artists => this.adaptArtists(artists))
+  }
+}

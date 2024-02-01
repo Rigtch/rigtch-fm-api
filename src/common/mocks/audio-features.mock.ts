@@ -1,6 +1,6 @@
-import { AudioFeatures, SpotifyAudioFeatures, Analysis } from '../types/spotify'
+import { AudioFeatures, SdkAudioFeatures, Analysis } from '../types/spotify'
 
-export const spotifyAudioFeaturesMock: SpotifyAudioFeatures = {
+export const sdkAudioFeaturesMock: SdkAudioFeatures = {
   acousticness: 0.016,
   analysis_url:
     'https://api.spotify.com/v1/audio-analysis/2JIRtFAIUkd86PQD12Hm7r',
@@ -23,21 +23,21 @@ export const spotifyAudioFeaturesMock: SpotifyAudioFeatures = {
 }
 
 export const analysisMock: Analysis = {
-  acousticness: spotifyAudioFeaturesMock.acousticness,
-  danceability: spotifyAudioFeaturesMock.danceability,
-  energy: spotifyAudioFeaturesMock.energy,
-  instrumentalness: spotifyAudioFeaturesMock.instrumentalness,
-  liveness: spotifyAudioFeaturesMock.liveness,
-  loudness: spotifyAudioFeaturesMock.loudness,
-  speechiness: spotifyAudioFeaturesMock.speechiness,
-  tempo: spotifyAudioFeaturesMock.tempo,
-  valence: spotifyAudioFeaturesMock.valence,
-  mode: spotifyAudioFeaturesMock.mode,
-  key: spotifyAudioFeaturesMock.key,
+  acousticness: sdkAudioFeaturesMock.acousticness,
+  danceability: sdkAudioFeaturesMock.danceability,
+  energy: sdkAudioFeaturesMock.energy,
+  instrumentalness: sdkAudioFeaturesMock.instrumentalness,
+  liveness: sdkAudioFeaturesMock.liveness,
+  loudness: sdkAudioFeaturesMock.loudness,
+  speechiness: sdkAudioFeaturesMock.speechiness,
+  tempo: sdkAudioFeaturesMock.tempo,
+  valence: sdkAudioFeaturesMock.valence,
+  mode: sdkAudioFeaturesMock.mode,
+  key: sdkAudioFeaturesMock.key,
 }
 
 export const audioFeaturesMock: AudioFeatures = {
-  id: spotifyAudioFeaturesMock.id,
-  trackHref: spotifyAudioFeaturesMock.track_href,
+  id: sdkAudioFeaturesMock.id,
+  trackHref: sdkAudioFeaturesMock.track_href,
   ...analysisMock,
 }
