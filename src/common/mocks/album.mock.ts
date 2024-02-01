@@ -1,11 +1,32 @@
-import { spotifyTrackArtistsMock, trackArtistsMock } from './artist.mock'
+import {
+  sdkArtistsMock,
+  sdkSimplifiedArtistsMock,
+  simplifiedArtistsMock,
+} from './artist.mock'
 import { imagesMock } from './image.mock'
+import { sdkSimplifiedTracksMock } from './track.mock'
+import { pageMockFactory } from './page.mock'
+import { topGenresArrayMock } from './genres.mock'
 
-import { Album, SpotifyAlbum } from '@common/types/spotify'
+import { Album, SdkAlbum, SdkSimplifiedAlbum } from '@common/types/spotify'
 
-export const spotifyAlbumMock: SpotifyAlbum = {
+export const sdkSimplifiedAlbumMock: SdkSimplifiedAlbum = {
   album_type: 'album',
-  artists: spotifyTrackArtistsMock,
+  album_group: 'album',
+  copyrights: [
+    {
+      text: '1997 Beatservice Records',
+      type: 'C',
+    },
+    {
+      text: '1997 Beatservice Records',
+      type: 'P',
+    },
+  ],
+  genres: topGenresArrayMock,
+  label: 'Beatservice Records',
+  popularity: 36,
+  artists: sdkSimplifiedArtistsMock,
   available_markets: [
     'AD',
     'AE',
@@ -38,20 +59,33 @@ export const spotifyAlbumMock: SpotifyAlbum = {
   total_tracks: 21,
   type: 'album',
   uri: 'spotify:album:5QIf4hNIAksV1uMCXHVkAZ',
+  external_ids: {
+    upc: '5051083100020',
+    isrc: 'GBBPC9700031',
+    ean: '5051083100020',
+  },
 }
 
-export const spotifyAlbumsMock = Array.from({ length: 5 }).map(
-  () => spotifyAlbumMock
+export const sdkSimplifiedAlbumsMock = Array.from({ length: 5 }).map(
+  () => sdkSimplifiedAlbumMock
 )
 
+export const sdkAlbumMock: SdkAlbum = {
+  ...sdkSimplifiedAlbumMock,
+  tracks: pageMockFactory(sdkSimplifiedTracksMock),
+  artists: sdkArtistsMock,
+}
+
+export const sdkAlbumsMock = Array.from({ length: 5 }).map(() => sdkAlbumMock)
+
 export const albumMock: Album = {
-  id: spotifyAlbumMock.id,
-  name: spotifyAlbumMock.name,
-  artists: trackArtistsMock,
+  id: sdkAlbumMock.id,
+  name: sdkAlbumMock.name,
+  artists: simplifiedArtistsMock,
   images: imagesMock,
-  releaseDate: spotifyAlbumMock.release_date,
-  totalTracks: spotifyAlbumMock.total_tracks,
-  href: spotifyAlbumMock.external_urls.spotify,
+  releaseDate: sdkAlbumMock.release_date,
+  totalTracks: sdkAlbumMock.total_tracks,
+  href: sdkAlbumMock.external_urls.spotify,
 }
 
 export const albumsMock = Array.from({ length: 5 }).map(() => albumMock)

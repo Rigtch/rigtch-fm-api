@@ -8,14 +8,15 @@ import { TokenOptions } from './types'
 
 import { Environment } from '@config/environment'
 import { applyAuthorizationHeader, catchSpotifyError } from '@common/utils'
-import { Profile, SpotifyProfile } from '@common/types/spotify'
-import { adaptProfile } from '@common/adapters'
+import { Profile, SdkProfile } from '@common/types/spotify'
+import { AdaptersService } from '@common/adapters'
 
 @Injectable()
 export class SpotifyAuthService {
   constructor(
     private readonly httpService: HttpService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
+    private readonly adaptersService: AdaptersService
   ) {}
 
   token({ refreshToken, code }: TokenOptions) {
@@ -65,10 +66,9 @@ export class SpotifyAuthService {
   getMeProfile(accessToken: string): Promise<Profile> {
     return firstValueFrom(
       this.httpService
-        .get<SpotifyProfile>('/me', applyAuthorizationHeader(accessToken))
+        .get<SdkProfile>('/me', applyAuthorizationHeader(accessToken))
         .pipe(
-          map(response => response.data),
-          map(adaptProfile),
+          map(response => this.adaptersService.profile.adapt(response.data)),
           catchError(catchSpotifyError)
         )
     )
