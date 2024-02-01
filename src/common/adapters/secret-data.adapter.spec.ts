@@ -1,25 +1,29 @@
-import { SpotifyToken } from '../types/spotify'
+import { Test } from '@nestjs/testing'
 
-import { adaptSecretData } from './secret-data.adapter'
+import { SecretDataAdapter } from './secret-data.adapter'
 
-import { SecretData } from '@modules/auth/dtos'
+import { accessTokenMock } from '@common/mocks'
 
-describe('adaptSecretData', () => {
-  test('should adapt secret data', () => {
-    const spotifyTokenMock: SpotifyToken = {
-      access_token: 'accessToken',
-      token_type: 'tokenType',
-      scope: 'scope',
-      expires_in: 3600,
-      refresh_token: 'refreshToken',
-    }
+describe('SecretDataAdapter', () => {
+  let secretDataAdapter: SecretDataAdapter
 
-    const secretDataMock: SecretData = {
-      accessToken: 'accessToken',
-      expiresIn: 3600,
-      refreshToken: 'refreshToken',
-    }
+  beforeEach(async () => {
+    const module = await Test.createTestingModule({
+      providers: [SecretDataAdapter],
+    }).compile()
 
-    expect(adaptSecretData(spotifyTokenMock)).toEqual(secretDataMock)
+    secretDataAdapter = module.get(SecretDataAdapter)
+  })
+
+  test('should be defined', () => {
+    expect(secretDataAdapter).toBeDefined()
+  })
+
+  test('should adapt an access token', () => {
+    expect(secretDataAdapter.adapt(accessTokenMock)).toEqual({
+      accessToken: accessTokenMock.access_token,
+      expiresIn: accessTokenMock.expires_in,
+      refreshToken: accessTokenMock.refresh_token,
+    })
   })
 })

@@ -6,10 +6,10 @@ import { UsersRepository } from './users.repository'
 
 import { TimeRange } from '@modules/spotify/users/enums'
 import {
-  spotifyResponseWithCursorsMockFactory,
+  recentlyPlayedTracksPageMockFactory,
   tracksMock,
   topGenresMock,
-  spotifyResponseWithOffsetMockFactory,
+  pageMockFactory,
   artistsMock,
   analysisMock,
   userMock,
@@ -126,10 +126,10 @@ describe('UsersProfileController', () => {
         .mockResolvedValue(accessTokenMock)
       const getRecentlyPlayedTracksSpy = vi
         .spyOn(spotifyPlayerService, 'getRecentlyPlayedTracks')
-        .mockResolvedValue(spotifyResponseWithCursorsMockFactory(tracksMock))
+        .mockResolvedValue(recentlyPlayedTracksPageMockFactory(tracksMock))
 
       expect(await usersProfileController.getRecentlyPlayed(id, {})).toEqual(
-        spotifyResponseWithCursorsMockFactory(tracksMock)
+        recentlyPlayedTracksPageMockFactory(tracksMock)
       )
       expect(findOneBySpy).toHaveBeenCalledWith({ id })
       expect(tokenSpy).toHaveBeenCalled()
@@ -167,7 +167,7 @@ describe('UsersProfileController', () => {
         .mockResolvedValue(accessTokenMock)
       const getRecentlyPlayedTracksSpy = vi
         .spyOn(spotifyPlayerService, 'getRecentlyPlayedTracks')
-        .mockResolvedValue(spotifyResponseWithCursorsMockFactory(tracksMock))
+        .mockResolvedValue(recentlyPlayedTracksPageMockFactory(tracksMock))
 
       expect(
         await usersProfileController.getRecentlyPlayed(id, {
@@ -175,7 +175,7 @@ describe('UsersProfileController', () => {
           before,
           after,
         })
-      ).toEqual(spotifyResponseWithCursorsMockFactory(tracksMock))
+      ).toEqual(recentlyPlayedTracksPageMockFactory(tracksMock))
       expect(findOneBySpy).toHaveBeenCalledWith({ id })
       expect(tokenSpy).toHaveBeenCalled()
       expect(getRecentlyPlayedTracksSpy).toHaveBeenCalledWith(
@@ -197,10 +197,10 @@ describe('UsersProfileController', () => {
         .mockResolvedValue(accessTokenMock)
       const getTopArtistsSpy = vi
         .spyOn(spotifyUsersService, 'getTopArtists')
-        .mockResolvedValue(spotifyResponseWithOffsetMockFactory(artistsMock))
+        .mockResolvedValue(pageMockFactory(artistsMock))
 
       expect(await usersProfileController.getTopArtists(id, {})).toEqual(
-        spotifyResponseWithOffsetMockFactory(artistsMock)
+        pageMockFactory(artistsMock)
       )
       expect(findOneBySpy).toHaveBeenCalledWith({ id })
       expect(tokenSpy).toHaveBeenCalled()
@@ -235,7 +235,7 @@ describe('UsersProfileController', () => {
         .mockResolvedValue(accessTokenMock)
       const getTopArtistsSpy = vi
         .spyOn(spotifyUsersService, 'getTopArtists')
-        .mockResolvedValue(spotifyResponseWithOffsetMockFactory(artistsMock))
+        .mockResolvedValue(pageMockFactory(artistsMock))
 
       expect(
         await usersProfileController.getTopArtists(id, {
@@ -243,7 +243,7 @@ describe('UsersProfileController', () => {
           timeRange,
           offset,
         })
-      ).toEqual(spotifyResponseWithOffsetMockFactory(artistsMock))
+      ).toEqual(pageMockFactory(artistsMock))
       expect(findOneBySpy).toHaveBeenCalledWith({ id })
       expect(tokenSpy).toHaveBeenCalled()
       expect(getTopArtistsSpy).toHaveBeenCalledWith(
@@ -265,10 +265,10 @@ describe('UsersProfileController', () => {
         .mockResolvedValue(accessTokenMock)
       const getTopTracksSpy = vi
         .spyOn(spotifyUsersService, 'getTopTracks')
-        .mockResolvedValue(spotifyResponseWithOffsetMockFactory(tracksMock))
+        .mockResolvedValue(pageMockFactory(tracksMock))
 
       expect(await usersProfileController.getTopTracks(id, {})).toEqual(
-        spotifyResponseWithOffsetMockFactory(tracksMock)
+        pageMockFactory(tracksMock)
       )
       expect(findOneBySpy).toHaveBeenCalledWith({ id })
       expect(tokenSpy).toHaveBeenCalled()
@@ -303,7 +303,7 @@ describe('UsersProfileController', () => {
         .mockResolvedValue(accessTokenMock)
       const getTopTracksSpy = vi
         .spyOn(spotifyUsersService, 'getTopTracks')
-        .mockResolvedValue(spotifyResponseWithOffsetMockFactory(tracksMock))
+        .mockResolvedValue(pageMockFactory(tracksMock))
 
       expect(
         await usersProfileController.getTopTracks(id, {
@@ -311,7 +311,7 @@ describe('UsersProfileController', () => {
           timeRange,
           offset,
         })
-      ).toEqual(spotifyResponseWithOffsetMockFactory(tracksMock))
+      ).toEqual(pageMockFactory(tracksMock))
       expect(findOneBySpy).toHaveBeenCalledWith({ id })
       expect(tokenSpy).toHaveBeenCalled()
       expect(getTopTracksSpy).toHaveBeenCalledWith(

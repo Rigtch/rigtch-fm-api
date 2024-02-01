@@ -1,9 +1,9 @@
-import { SpotifyImage } from './image'
+import { SdkImage } from '.'
 
 export interface Profile {
   id: string
   displayName: string
-  images?: SpotifyImage[]
+  images?: SdkImage[]
   followers: number
   country?: string
   email?: string
@@ -13,25 +13,4 @@ export interface Profile {
   uri: string
 }
 
-export interface SpotifyProfile {
-  country?: string
-  display_name?: string
-  email?: string
-  explicit_content?: {
-    filter_enabled: boolean
-    filter_locked: boolean
-  }
-  external_urls: {
-    spotify: string
-  }
-  followers: {
-    href?: string | null
-    total: number
-  }
-  href: string
-  id: string
-  images: SpotifyImage[]
-  product?: string
-  type: string
-  uri: string
-}
+export { UserProfile as SdkProfile } from '@spotify/web-api-ts-sdk'

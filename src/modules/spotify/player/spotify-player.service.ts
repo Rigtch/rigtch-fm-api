@@ -3,13 +3,16 @@ import { ConfigService } from '@nestjs/config'
 import { AccessToken, MaxInt, SpotifyApi } from '@spotify/web-api-ts-sdk'
 
 import { Environment } from '@config/environment'
-import { adaptPlaybackState, adaptTrack } from '@common/adapters'
+import { AdaptersService } from '@common/adapters'
 
 @Injectable()
 export class SpotifyPlayerService {
   private spotifySdk: SpotifyApi | undefined
 
-  constructor(private readonly configService: ConfigService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly adaptersService: AdaptersService
+  ) {}
 
   async getRecentlyPlayedTracks(
     token: AccessToken,
@@ -37,12 +40,7 @@ export class SpotifyPlayerService {
               }
             : undefined
       )
-      .then(({ items, ...rest }) => ({
-        ...rest,
-        items: items.map(({ track, played_at }) =>
-          adaptTrack({ ...track, played_at })
-        ),
-      }))
+      .then(data => this.adaptersService.tracks.adapt(data))
   }
 
   async getPlaybackState(token: AccessToken) {
@@ -51,7 +49,9 @@ export class SpotifyPlayerService {
       token
     )
 
-    return this.spotifySdk.player.getPlaybackState().then(adaptPlaybackState)
+    return this.spotifySdk.player
+      .getPlaybackState()
+      .then(data => this.adaptersService.playbackState.adapt(data))
   }
 
   async pausePlayback(token: AccessToken) {
