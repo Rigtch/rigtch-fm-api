@@ -2,15 +2,26 @@ import { Injectable } from '@nestjs/common'
 import { DataSource, Repository } from 'typeorm'
 
 import { Profile } from './profile.entity'
+import { CreateProfile } from './dtos'
+
+import { ImagesRepository } from '@modules/images'
 
 @Injectable()
 export class ProfilesRepository extends Repository<Profile> {
-  constructor(private readonly dataSource: DataSource) {
+  constructor(
+    private readonly dataSource: DataSource,
+    private readonly imagesRepository: ImagesRepository
+  ) {
     super(Profile, dataSource.createEntityManager())
   }
 
-  createProfile(profile: Profile) {
-    const profileEntity = this.create(profile)
+  async createProfile({ images, ...profile }: CreateProfile) {
+    const imageEntities = await this.imagesRepository.findOrCreateImages(images)
+
+    const profileEntity = this.create({
+      ...profile,
+      images: imageEntities,
+    })
 
     return this.save(profileEntity)
   }

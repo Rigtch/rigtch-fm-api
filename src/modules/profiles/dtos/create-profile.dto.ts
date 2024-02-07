@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger'
 
 import { Profile } from '../profile.entity'
 
-import { SdkImage } from '@common/types/spotify'
+import { CreateImage } from '@modules/images/dtos'
 
 export abstract class CreateProfile implements Omit<Profile, 'images'> {
   @ApiProperty()
@@ -12,7 +12,7 @@ export abstract class CreateProfile implements Omit<Profile, 'images'> {
   displayName: string
 
   @ApiProperty()
-  images?: SdkImage[]
+  images?: CreateImage[]
 
   @ApiProperty({ type: Number })
   followers: number
