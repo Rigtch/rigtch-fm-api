@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger'
 
-import { Image } from '../image.entity'
+import { SdkImage } from '@common/types/spotify'
 
-export abstract class CreateImage implements Omit<Image, 'id'> {
+export abstract class CreateImage implements SdkImage {
   @ApiProperty({ type: Number })
   height: number
 
