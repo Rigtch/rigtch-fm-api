@@ -92,6 +92,7 @@ module.exports = {
     'unicorn/no-null': 'off',
     'unicorn/no-array-callback-reference': 'off',
     'unicorn/prefer-top-level-await': 'off',
+    'unicorn/no-useless-undefined': 'off',
     'unicorn/prevent-abbreviations': [
       'error',
       {
