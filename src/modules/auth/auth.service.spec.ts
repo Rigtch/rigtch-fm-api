@@ -5,13 +5,13 @@ import { AuthService } from './auth.service'
 import { accessToken, refreshToken } from '@common/mocks'
 import { profileMock, userMock, accessTokenMock } from '@common/mocks'
 import { UsersRepository } from '@modules/users'
-import { ProfilesService } from '@modules/profiles'
+import { ProfilesRepository } from '@modules/profiles'
 import { SpotifyUsersService } from '@modules/spotify/users'
 
 describe('AuthService', () => {
   let authService: AuthService
   let usersRepository: UsersRepository
-  let profilesService: ProfilesService
+  let profilesRepository: ProfilesRepository
   let spotifyUsersService: SpotifyUsersService
 
   beforeEach(async () => {
@@ -26,9 +26,9 @@ describe('AuthService', () => {
           },
         },
         {
-          provide: ProfilesService,
+          provide: ProfilesRepository,
           useValue: {
-            create: vi.fn(),
+            createProfile: vi.fn(),
           },
         },
         {
@@ -42,7 +42,7 @@ describe('AuthService', () => {
 
     authService = module.get(AuthService)
     usersRepository = module.get(UsersRepository)
-    profilesService = module.get(ProfilesService)
+    profilesRepository = module.get(ProfilesRepository)
     spotifyUsersService = module.get(SpotifyUsersService)
   })
 
@@ -59,8 +59,8 @@ describe('AuthService', () => {
         usersRepository,
         'findOneByProfileId'
       )
-      const createSpy = vi
-        .spyOn(profilesService, 'create')
+      const createProfileSpy = vi
+        .spyOn(profilesRepository, 'createProfile')
         .mockResolvedValue(profileMock)
       const createUserSpy = vi
         .spyOn(usersRepository, 'createUser')
@@ -73,7 +73,7 @@ describe('AuthService', () => {
       })
       expect(profileSpy).toHaveBeenCalledWith(accessTokenMock)
       expect(findOneByProfileIdSpy).toHaveBeenCalledWith(profileMock.id)
-      expect(createSpy).toHaveBeenCalledWith(profileMock)
+      expect(createProfileSpy).toHaveBeenCalledWith(profileMock)
       expect(createUserSpy).toHaveBeenCalledWith({
         profile: profileMock,
         refreshToken,
@@ -87,7 +87,7 @@ describe('AuthService', () => {
       const findOneByProfileIdSpy = vi
         .spyOn(usersRepository, 'findOneByProfileId')
         .mockResolvedValue(userMock)
-      const createSpy = vi.spyOn(profilesService, 'create')
+      const createProfileSpy = vi.spyOn(profilesRepository, 'createProfile')
 
       const createUserSpy = vi.spyOn(usersRepository, 'createUser')
 
@@ -98,7 +98,7 @@ describe('AuthService', () => {
       })
       expect(profileSpy).toHaveBeenCalledWith(accessTokenMock)
       expect(findOneByProfileIdSpy).toHaveBeenCalledWith(profileMock.id)
-      expect(createSpy).not.toHaveBeenCalled()
+      expect(createProfileSpy).not.toHaveBeenCalled()
       expect(createUserSpy).not.toHaveBeenCalled()
     })
   })
