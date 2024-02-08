@@ -4,14 +4,14 @@ import { AccessToken } from '@spotify/web-api-ts-sdk'
 import { AuthorizeParams } from './types'
 
 import { UsersRepository } from '@modules/users'
-import { ProfilesService } from '@modules/profiles'
+import { ProfilesRepository } from '@modules/profiles'
 import { SpotifyUsersService } from '@modules/spotify/users'
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersRepository: UsersRepository,
-    private readonly profilesService: ProfilesService,
+    private readonly profilesRepository: ProfilesRepository,
     private readonly spotifyUsersService: SpotifyUsersService
   ) {}
 
@@ -29,7 +29,8 @@ export class AuthService {
     if (foundUser) {
       id = foundUser.id
     } else {
-      const profile = await this.profilesService.create(spotifyProfile)
+      const profile =
+        await this.profilesRepository.createProfile(spotifyProfile)
 
       const createdUser = await this.usersRepository.createUser({
         profile,
