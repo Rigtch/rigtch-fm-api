@@ -10,6 +10,7 @@ import { PlaybackStateAdapter } from './playback-state.adapter'
 import { ProfileAdapter } from './profile.adapter'
 import { SecretDataAdapter } from './secret-data.adapter'
 import { AdaptersService } from './adapters.service'
+import { AlbumsAdapter } from './albums.adapter'
 
 @Global()
 @Module({
@@ -23,6 +24,7 @@ import { AdaptersService } from './adapters.service'
     PlaybackStateAdapter,
     ProfileAdapter,
     SecretDataAdapter,
+    AlbumsAdapter,
     AdaptersService,
   ],
   exports: [AdaptersService],
