@@ -11,6 +11,10 @@ import {
   sdkTracksMock,
   trackMock,
   tracksMock,
+  sdkSimplifiedTrackMock,
+  simplifiedTrackMock,
+  simplifiedTracksMock,
+  sdkSimplifiedTracksMock,
 } from '@common/mocks'
 
 describe('TracksAdapter', () => {
@@ -34,6 +38,18 @@ describe('TracksAdapter', () => {
 
   test('should adapt multiple tracks', () => {
     expect(tracksAdapter.adapt(sdkTracksMock)).toEqual(tracksMock)
+  })
+
+  test('should adapt simplified track', () => {
+    expect(tracksAdapter.adapt(sdkSimplifiedTrackMock)).toEqual(
+      simplifiedTrackMock
+    )
+  })
+
+  test('should adapt multiple simplified tracks', () => {
+    expect(tracksAdapter.adapt(sdkSimplifiedTracksMock)).toEqual(
+      simplifiedTracksMock
+    )
   })
 
   test('should adapt a paginated list of tracks', () => {

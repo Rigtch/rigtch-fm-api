@@ -7,6 +7,8 @@ import {
 
 import { imagesMock } from './image.mock'
 
+import { Artist as ArtistEntity } from '@modules/artists'
+
 export const sdkArtistMock: SdkArtist = {
   external_urls: {
     spotify: 'https://open.spotify.com/artist/7kWnE981vITXDnAD2cZmCV',
@@ -42,9 +44,25 @@ export const artistMock: Artist = {
   href: sdkArtistMock.external_urls.spotify,
   images: imagesMock,
   popularity: sdkArtistMock.popularity,
+  followers: sdkArtistMock.followers.total,
 }
 
 export const artistsMock = Array.from({ length: 5 }).map(() => artistMock)
+
+export const artistEntityMock: ArtistEntity = {
+  id: sdkArtistMock.id,
+  externalId: sdkArtistMock.id,
+  name: sdkArtistMock.name,
+  genres: sdkArtistMock.genres,
+  href: sdkArtistMock.external_urls.spotify,
+  images: imagesMock,
+  popularity: sdkArtistMock.popularity,
+  followers: sdkArtistMock.followers.total,
+}
+
+export const artistEntitiesMock = Array.from({ length: 5 }).map(
+  () => artistEntityMock
+)
 
 export const sdkSimplifiedArtistMock: SdkSimplifiedArtist = {
   external_urls: sdkArtistMock.external_urls,

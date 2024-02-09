@@ -7,6 +7,7 @@ export interface Artist {
   href: string
   images: SdkImage[]
   popularity: number
+  followers: number
 }
 
 export interface SimplifiedArtist {
