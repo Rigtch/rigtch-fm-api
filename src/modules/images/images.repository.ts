@@ -29,16 +29,12 @@ export class ImagesRepository extends Repository<Image> {
   }
 
   async findOrCreateImages(images?: CreateImage[]) {
-    if (!images) return []
+    if (!images || images.length === 0) return []
 
-    const imageEntities: Image[] = []
-
-    for (const image of images) {
-      const newImage = await this.findOrCreateImage(image)
-
-      imageEntities.push(newImage)
-    }
-
-    return imageEntities
+    return Promise.all(
+      images.map(async image => {
+        return this.findOrCreateImage(image)
+      })
+    )
   }
 }
