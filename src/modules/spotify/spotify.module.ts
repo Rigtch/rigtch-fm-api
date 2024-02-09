@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config'
 import { SpotifyAuthService } from './auth'
 import { SpotifyUsersService } from './users'
 import { SpotifyPlayerService } from './player'
+import { SpotifyArtistsService } from './artists'
 
 import { Environment } from '@config/environment'
 
@@ -21,7 +22,17 @@ import { Environment } from '@config/environment'
       inject: [ConfigService],
     }),
   ],
-  providers: [SpotifyAuthService, SpotifyUsersService, SpotifyPlayerService],
-  exports: [SpotifyAuthService, SpotifyUsersService, SpotifyPlayerService],
+  providers: [
+    SpotifyAuthService,
+    SpotifyUsersService,
+    SpotifyPlayerService,
+    SpotifyArtistsService,
+  ],
+  exports: [
+    SpotifyAuthService,
+    SpotifyUsersService,
+    SpotifyPlayerService,
+    SpotifyArtistsService,
+  ],
 })
 export class SpotifyModule {}
