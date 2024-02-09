@@ -61,34 +61,31 @@ describe('ImagesRepository', () => {
 
   describe('findOrCreateImage', () => {
     test('should find image by url', async () => {
-      const findOneSpy = vi
-        .spyOn(imagesRepository, 'findOne')
+      const findImageByUrlSpy = vi
+        .spyOn(imagesRepository, 'findImageByUrl')
         .mockResolvedValue(imageMock)
       const createImageSpy = vi.spyOn(imagesRepository, 'createImage')
 
       expect(await imagesRepository.findOrCreateImage(sdkImageMock)).toEqual(
         imageMock
       )
-      expect(findOneSpy).toHaveBeenCalledWith({
-        where: { url: sdkImageMock.url },
-      })
+      expect(findImageByUrlSpy).toHaveBeenCalledWith(sdkImageMock.url)
       expect(createImageSpy).not.toHaveBeenCalled()
     })
 
     test('should create image', async () => {
-      vi.spyOn(imagesRepository, 'findOne').mockResolvedValue(null)
       const createImageSpy = vi
         .spyOn(imagesRepository, 'createImage')
         .mockResolvedValue(imageMock)
-      const findOneSpy = vi.spyOn(imagesRepository, 'findOne')
+      const findImageByUrlSpy = vi
+        .spyOn(imagesRepository, 'findImageByUrl')
+        .mockResolvedValue(null)
 
       expect(await imagesRepository.findOrCreateImage(sdkImageMock)).toEqual(
         imageMock
       )
       expect(createImageSpy).toHaveBeenCalledWith(sdkImageMock)
-      expect(findOneSpy).toHaveBeenCalledWith({
-        where: { url: sdkImageMock.url },
-      })
+      expect(findImageByUrlSpy).toHaveBeenCalledWith(sdkImageMock.url)
     })
   })
 
