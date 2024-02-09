@@ -27,8 +27,7 @@ export class PlaybackStateAdapter {
       repeatState: repeat_state as RepeatedState,
       shuffleState: shuffle_state,
       isPlaying: is_playing,
-      track:
-        'is_local' in item ? this.tracksAdapter.adaptTrack(item) : undefined,
+      track: 'is_local' in item ? this.tracksAdapter.adapt(item) : undefined,
     }
   }
 }

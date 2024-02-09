@@ -1,10 +1,10 @@
-import { Album } from './album'
+import { SimplifiedAlbum } from './album'
 import { SimplifiedArtist } from './artist'
 
 export interface Track {
   id: string
   name: string
-  album: Album
+  album: SimplifiedAlbum
   artists: SimplifiedArtist[]
   href: string
   duration: number
@@ -12,4 +12,15 @@ export interface Track {
   playedAt?: string
 }
 
-export { Track as SdkTrack } from '@spotify/web-api-ts-sdk'
+export interface SimplifiedTrack {
+  artists: SimplifiedArtist[]
+  duration: number
+  href: string
+  id: string
+  name: string
+}
+
+export {
+  Track as SdkTrack,
+  SimplifiedTrack as SdkSimplifiedTrack,
+} from '@spotify/web-api-ts-sdk'

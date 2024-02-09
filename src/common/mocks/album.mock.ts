@@ -1,14 +1,21 @@
 import {
+  artistEntitiesMock,
+  artistsMock,
   sdkArtistsMock,
   sdkSimplifiedArtistsMock,
-  simplifiedArtistsMock,
 } from './artist.mock'
 import { imagesMock } from './image.mock'
-import { sdkSimplifiedTracksMock } from './track.mock'
+import { sdkSimplifiedTracksMock, simplifiedTracksMock } from './track.mock'
 import { pageMockFactory } from './page.mock'
 import { topGenresArrayMock } from './genres.mock'
 
-import { Album, SdkAlbum, SdkSimplifiedAlbum } from '@common/types/spotify'
+import { Album as AlbumEntity } from '@modules/albums'
+import {
+  Album,
+  SdkAlbum,
+  SdkSimplifiedAlbum,
+  SimplifiedAlbum,
+} from '@common/types/spotify'
 
 export const sdkSimplifiedAlbumMock: SdkSimplifiedAlbum = {
   album_type: 'album',
@@ -81,11 +88,41 @@ export const sdkAlbumsMock = Array.from({ length: 5 }).map(() => sdkAlbumMock)
 export const albumMock: Album = {
   id: sdkAlbumMock.id,
   name: sdkAlbumMock.name,
-  artists: simplifiedArtistsMock,
+  artists: artistsMock,
   images: imagesMock,
-  releaseDate: sdkAlbumMock.release_date,
-  totalTracks: sdkAlbumMock.total_tracks,
+  releaseDate: sdkSimplifiedAlbumMock.release_date,
+  totalTracks: sdkSimplifiedAlbumMock.total_tracks,
   href: sdkAlbumMock.external_urls.spotify,
+  tracks: simplifiedTracksMock,
+  genres: topGenresArrayMock,
+  popularity: sdkAlbumMock.popularity,
 }
 
 export const albumsMock = Array.from({ length: 5 }).map(() => albumMock)
+
+export const simplifiedAlbumMock: SimplifiedAlbum = {
+  id: sdkAlbumMock.id,
+  name: sdkAlbumMock.name,
+  href: sdkAlbumMock.external_urls.spotify,
+  genres: topGenresArrayMock,
+  popularity: sdkAlbumMock.popularity,
+  images: imagesMock,
+  releaseDate: sdkSimplifiedAlbumMock.release_date,
+  totalTracks: sdkSimplifiedAlbumMock.total_tracks,
+}
+
+export const simplifiedAlbumsMock = Array.from({ length: 5 }).map(
+  () => simplifiedAlbumMock
+)
+
+export const albumEntityMock: AlbumEntity = {
+  ...albumMock,
+  externalId: albumMock.id,
+  artists: artistEntitiesMock,
+  releaseDate: new Date(albumMock.releaseDate),
+  images: imagesMock,
+}
+
+export const albumsEntitiesMock = Array.from({ length: 5 }).map(
+  () => albumEntityMock
+)

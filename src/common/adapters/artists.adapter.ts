@@ -47,6 +47,7 @@ export class ArtistsAdapter {
       genres: rest.genres,
       images: rest.images,
       popularity: rest.popularity,
+      followers: rest.followers.total,
     }),
   })
 

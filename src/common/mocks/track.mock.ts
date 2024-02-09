@@ -1,13 +1,14 @@
-/* eslint-disable sonarjs/no-duplicate-string */
-
-import { SimplifiedTrack, Track as SpotifyTrack } from '@spotify/web-api-ts-sdk'
-
-import { albumMock, sdkSimplifiedAlbumMock } from './album.mock'
+import { sdkSimplifiedAlbumMock, simplifiedAlbumMock } from './album.mock'
 import { sdkSimplifiedArtistsMock, simplifiedArtistsMock } from './artist.mock'
 
-import { Track } from '@common/types/spotify'
+import {
+  SdkSimplifiedTrack,
+  SdkTrack,
+  SimplifiedTrack,
+  Track,
+} from '@common/types/spotify'
 
-export const sdkSimplifiedTrackMock: SimplifiedTrack = {
+export const sdkSimplifiedTrackMock: SdkSimplifiedTrack = {
   artists: sdkSimplifiedArtistsMock,
   track: true,
   episode: false,
@@ -52,8 +53,7 @@ export const sdkSimplifiedTracksMock = Array.from({ length: 5 }).map(
   () => sdkSimplifiedTrackMock
 )
 
-export const sdkTrackMock: SpotifyTrack = {
-  ...sdkSimplifiedTrackMock,
+export const sdkTrackMock: SdkTrack = {
   album: sdkSimplifiedAlbumMock,
   external_ids: {
     isrc: 'GBBPC9700031',
@@ -61,6 +61,7 @@ export const sdkTrackMock: SpotifyTrack = {
     ean: '5051083100020',
   },
   popularity: 43,
+  ...sdkSimplifiedTrackMock,
 }
 
 export const sdkTracksMock = Array.from({ length: 5 }).map(() => sdkTrackMock)
@@ -68,11 +69,22 @@ export const sdkTracksMock = Array.from({ length: 5 }).map(() => sdkTrackMock)
 export const trackMock: Track = {
   id: sdkTrackMock.id,
   artists: simplifiedArtistsMock,
-  album: albumMock,
+  album: simplifiedAlbumMock,
   name: sdkTrackMock.name,
   duration: sdkTrackMock.duration_ms,
   href: sdkTrackMock.external_urls.spotify,
 }
 
 export const tracksMock = Array.from({ length: 5 }).map(() => trackMock)
-/* eslint-enable sonarjs/no-duplicate-string */
+
+export const simplifiedTrackMock: SimplifiedTrack = {
+  id: sdkTrackMock.id,
+  name: sdkTrackMock.name,
+  artists: simplifiedArtistsMock,
+  href: sdkTrackMock.external_urls.spotify,
+  duration: sdkTrackMock.duration_ms,
+}
+
+export const simplifiedTracksMock = Array.from({ length: 5 }).map(
+  () => simplifiedTrackMock
+)

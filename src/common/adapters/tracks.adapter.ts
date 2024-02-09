@@ -7,7 +7,9 @@ import { ArtistsAdapter } from './artists.adapter'
 import {
   RecentlyPlayedTracksPage,
   SdkRecentlyPlayedTracksPage,
+  SdkSimplifiedTrack,
   SdkTrack,
+  SimplifiedTrack,
   Track,
 } from '@common/types/spotify'
 
@@ -20,11 +22,20 @@ export class TracksAdapter {
 
   public adapt(data: SdkTrack): Track
   public adapt(data: SdkTrack[]): Track[]
+  public adapt(data: SdkSimplifiedTrack): SimplifiedTrack
+  public adapt(data: SdkSimplifiedTrack[]): SimplifiedTrack[]
   public adapt(data: Page<SdkTrack>): Page<Track>
+  public adapt(data: Page<SdkSimplifiedTrack>): Page<SimplifiedTrack>
   public adapt(data: SdkRecentlyPlayedTracksPage): RecentlyPlayedTracksPage
 
   adapt(
-    data: SdkTrack | SdkTrack[] | Page<SdkTrack> | SdkRecentlyPlayedTracksPage
+    data:
+      | SdkTrack
+      | SdkSimplifiedTrack
+      | (SdkTrack | SdkSimplifiedTrack)[]
+      | Page<SdkTrack>
+      | Page<SdkSimplifiedTrack>
+      | SdkRecentlyPlayedTracksPage
   ) {
     if (Array.isArray(data)) return this.adaptTracks(data)
     if ('items' in data) {
@@ -39,32 +50,37 @@ export class TracksAdapter {
   adaptTrack = ({
     id,
     name,
-    album,
     artists,
     external_urls: { spotify: href },
     duration_ms,
-  }: SdkTrack): Track => ({
+    ...rest
+  }: SdkTrack | SdkSimplifiedTrack): Track | SimplifiedTrack => ({
     id,
     name,
-    album: {
-      id: album.id,
-      name: album.name,
-      images: album.images,
-      href: album.external_urls.spotify,
-      artists: this.artistsAdapter.adapt(album.artists),
-      releaseDate: album.release_date,
-      totalTracks: album.total_tracks,
-    },
+    ...('album' in rest && {
+      album: {
+        id: rest.album.id,
+        name: rest.album.name,
+        images: rest.album.images,
+        href: rest.album.external_urls.spotify,
+        genres: rest.album.genres,
+        popularity: rest.album.popularity,
+        releaseDate: rest.album.release_date,
+        totalTracks: rest.album.total_tracks,
+      },
+    }),
     artists: this.artistsAdapter.adapt(artists),
     href,
     duration: duration_ms,
   })
 
-  adaptTracks(tracks: SdkTrack[]): Track[] {
+  adaptTracks(
+    tracks: (SdkTrack | SdkSimplifiedTrack)[]
+  ): (Track | SimplifiedTrack)[] {
     return tracks.map(track => this.adaptTrack(track))
   }
 
-  adaptTracksPage = (data: Page<SdkTrack>): Page<Track> => {
+  adaptTracksPage(data: Page<SdkTrack | SdkSimplifiedTrack>) {
     return this.pageAdapter.adapt(data, tracks => this.adaptTracks(tracks))
   }
 
@@ -81,7 +97,7 @@ export class TracksAdapter {
       href,
       cursors,
       items: items.map(({ track, played_at }) => ({
-        ...this.adaptTrack(track),
+        ...(this.adaptTrack(track) as Track),
         playedAt: played_at,
       })),
       total: items.length,
