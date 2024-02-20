@@ -17,11 +17,17 @@ export class ArtistsRepository extends Repository<Artist> {
     super(Artist, dataSource.createEntityManager())
   }
 
-  async createArtist({ images, id, ...newArtist }: CreateArtist) {
+  async createArtist({
+    images,
+    id,
+    followers: { total: followers },
+    ...newArtist
+  }: CreateArtist) {
     const imageEntities = await this.imagesRepository.findOrCreateImages(images)
 
     const artistEntity = this.create({
       ...newArtist,
+      followers,
       externalId: id,
       images: imageEntities,
     })
@@ -35,7 +41,7 @@ export class ArtistsRepository extends Repository<Artist> {
     if (artist) return artist
 
     const { id: _id, ...foundArtist } =
-      await this.spotifyArtistsService.getArtist(id)
+      await this.spotifyArtistsService.getArtist(id, false)
 
     return this.createArtist({ id, ...foundArtist })
   }

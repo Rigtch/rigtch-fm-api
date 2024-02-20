@@ -4,7 +4,12 @@ import { Test } from '@nestjs/testing'
 import { ArtistsRepository } from './artists.repository'
 
 import { ImagesRepository } from '@modules/images'
-import { artistEntityMock, artistMock, imagesMock } from '@common/mocks'
+import {
+  artistEntityMock,
+  artistMock,
+  imagesMock,
+  sdkArtistMock,
+} from '@common/mocks'
 import { SpotifyArtistsService } from '@modules/spotify/artists'
 
 describe('ArtistsRepository', () => {
@@ -57,7 +62,7 @@ describe('ArtistsRepository', () => {
       .spyOn(artistsRepository, 'save')
       .mockResolvedValue(artistEntityMock)
 
-    expect(await artistsRepository.createArtist(artistMock)).toEqual(
+    expect(await artistsRepository.createArtist(sdkArtistMock)).toEqual(
       artistEntityMock
     )
     expect(createImageSpy).toHaveBeenCalledWith(imagesMock)
@@ -90,7 +95,7 @@ describe('ArtistsRepository', () => {
         .mockResolvedValue(artistEntityMock)
       const getArtistSpy = vi
         .spyOn(spotifyArtistsService, 'getArtist')
-        .mockResolvedValue(artistMock)
+        .mockResolvedValue(sdkArtistMock)
 
       expect(await artistsRepository.findOrCreateArtist(artistMock.id)).toEqual(
         artistEntityMock
@@ -98,8 +103,8 @@ describe('ArtistsRepository', () => {
       expect(findOneSpy).toHaveBeenCalledWith({
         where: { externalId: artistMock.id },
       })
-      expect(getArtistSpy).toHaveBeenCalledWith(artistMock.id)
-      expect(createArtistSpy).toHaveBeenCalledWith(artistMock)
+      expect(getArtistSpy).toHaveBeenCalledWith(artistMock.id, false)
+      expect(createArtistSpy).toHaveBeenCalledWith(sdkArtistMock)
     })
   })
 
