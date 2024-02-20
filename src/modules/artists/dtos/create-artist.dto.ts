@@ -3,8 +3,18 @@ import { IsInt, IsOptional, IsString } from 'class-validator'
 
 import { Image } from '@modules/images'
 import { CreateImage } from '@modules/images/dtos'
+import { SdkArtist } from '@common/types/spotify'
 
-export abstract class CreateArtist {
+export abstract class Followers {
+  @IsInt()
+  @ApiProperty({ type: Number })
+  total: number
+}
+
+export abstract class CreateArtist
+  implements
+    Omit<SdkArtist, 'images' | 'followers' | 'external_urls' | 'type' | 'uri'>
+{
   @IsString()
   @ApiProperty()
   id: string
@@ -25,9 +35,8 @@ export abstract class CreateArtist {
   @ApiProperty({ type: Number })
   popularity: number
 
-  @IsInt()
-  @ApiProperty({ type: Number })
-  followers: number
+  @ApiProperty({ type: Followers })
+  followers: Followers
 
   @IsOptional()
   @ApiProperty({ type: Image, isArray: true })
