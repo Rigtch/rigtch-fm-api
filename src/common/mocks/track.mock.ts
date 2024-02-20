@@ -1,5 +1,13 @@
-import { sdkSimplifiedAlbumMock, simplifiedAlbumMock } from './album.mock'
-import { sdkSimplifiedArtistsMock, simplifiedArtistsMock } from './artist.mock'
+import {
+  albumEntityMock,
+  sdkSimplifiedAlbumMock,
+  simplifiedAlbumMock,
+} from './album.mock'
+import {
+  artistEntitiesMock,
+  sdkSimplifiedArtistsMock,
+  simplifiedArtistsMock,
+} from './artist.mock'
 
 import {
   SdkSimplifiedTrack,
@@ -7,6 +15,7 @@ import {
   SimplifiedTrack,
   Track,
 } from '@common/types/spotify'
+import { Track as TrackEntity } from '@modules/tracks'
 
 export const sdkSimplifiedTrackMock: SdkSimplifiedTrack = {
   artists: sdkSimplifiedArtistsMock,
@@ -87,4 +96,15 @@ export const simplifiedTrackMock: SimplifiedTrack = {
 
 export const simplifiedTracksMock = Array.from({ length: 5 }).map(
   () => simplifiedTrackMock
+)
+
+export const trackEntityMock: TrackEntity = {
+  ...trackMock,
+  externalId: trackMock.id,
+  album: albumEntityMock,
+  artists: artistEntitiesMock,
+}
+
+export const trackEntitiesMock = Array.from({ length: 5 }).map(
+  () => trackEntityMock
 )
