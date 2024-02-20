@@ -25,7 +25,7 @@ export class Album {
   @ApiProperty()
   name: string
 
-  @Column('timestampz')
+  @Column('timestamptz')
   @ApiProperty({ type: Date })
   releaseDate: Date
 
