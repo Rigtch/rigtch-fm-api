@@ -4,6 +4,7 @@ import {
   Controller,
   Get,
   NotFoundException,
+  Param,
   Post,
   Query,
 } from '@nestjs/common'
@@ -36,6 +37,7 @@ export class ArtistsController {
     summary: 'Getting all artists.',
   })
   @ApiQuery({ name: 'name', required: false })
+  @ApiQuery({ name: 'external-id', required: false })
   @ApiOkResponse({
     description: 'Artists successfully found.',
     type: [Artist],
@@ -43,11 +45,22 @@ export class ArtistsController {
   @ApiNotFoundResponse({
     description: NOT_BEEN_FOUND('artist'),
   })
-  async getAll(@Query('name') name?: string, @Token() _token?: string) {
+  async getArtists(
+    @Query('name') name?: string,
+    @Query('external-id') externalId?: string,
+    @Token() _token?: string
+  ) {
     if (name) {
-      const foundArtist = await this.artistsRepository.findOne({
-        where: { name },
-      })
+      const foundArtist = await this.artistsRepository.findArtistByName(name)
+
+      if (!foundArtist) throw new NotFoundException(NOT_BEEN_FOUND('artist'))
+
+      return foundArtist
+    }
+
+    if (externalId) {
+      const foundArtist =
+        await this.artistsRepository.findArtistByExternalId(externalId)
 
       if (!foundArtist) throw new NotFoundException(NOT_BEEN_FOUND('artist'))
 
@@ -71,8 +84,8 @@ export class ArtistsController {
   @ApiBadRequestResponse({
     description: ONE_IS_INVALID('uuid'),
   })
-  async getOneById(@Query('id') id: string, @Token() _token?: string) {
-    const foundArtist = await this.artistsRepository.findOne({ where: { id } })
+  async getArtistById(@Param('id') id: string, @Token() _token?: string) {
+    const foundArtist = await this.artistsRepository.findArtistByExternalId(id)
 
     if (!foundArtist) throw new NotFoundException(NOT_BEEN_FOUND('artist'))
 

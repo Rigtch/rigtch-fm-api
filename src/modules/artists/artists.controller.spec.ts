@@ -18,7 +18,9 @@ describe('ArtistsController', () => {
           provide: ArtistsRepository,
           useValue: {
             find: vi.fn(),
-            findOne: vi.fn(),
+            findArtistByName: vi.fn(),
+            findArtistById: vi.fn(),
+            findArtistByExternalId: vi.fn(),
             findOrCreateArtists: vi.fn(),
           },
         },
@@ -39,52 +41,86 @@ describe('ArtistsController', () => {
         .spyOn(artistsRepository, 'find')
         .mockResolvedValue(artistEntitiesMock)
 
-      expect(await artistsController.getAll()).toEqual(artistEntitiesMock)
+      expect(await artistsController.getArtists()).toEqual(artistEntitiesMock)
       expect(findSpy).toHaveBeenCalledWith()
     })
 
-    test('should get artist by name', async () => {
+    describe('By Name', () => {
       const name = 'name'
 
-      const findOneSpy = vi
-        .spyOn(artistsRepository, 'findOne')
-        .mockResolvedValue(artistEntityMock)
+      test('should get artist by name', async () => {
+        const findArtistByNameSpy = vi
+          .spyOn(artistsRepository, 'findArtistByName')
+          .mockResolvedValue(artistEntityMock)
 
-      expect(await artistsController.getAll(name)).toEqual(artistEntityMock)
-      expect(findOneSpy).toHaveBeenCalledWith({
-        where: { name },
+        expect(await artistsController.getArtists(name)).toEqual(
+          artistEntityMock
+        )
+        expect(findArtistByNameSpy).toHaveBeenCalledWith(name)
+      })
+
+      test('should not get artist because of not found', async () => {
+        const findArtistByNameSpy = vi
+          .spyOn(artistsRepository, 'findArtistByName')
+          .mockResolvedValue(null)
+
+        await expect(artistsController.getArtists(name)).rejects.toThrowError(
+          NotFoundException
+        )
+        expect(findArtistByNameSpy).toHaveBeenCalledWith(name)
       })
     })
 
-    test('should not get artist because of not found', async () => {
-      const name = 'name'
+    describe('By ExternalId', () => {
+      const externalId = 'externalId'
 
-      vi.spyOn(artistsRepository, 'findOne').mockResolvedValue(null)
+      test('should get artist by externalId', async () => {
+        const findArtistByExternalIdSpy = vi
+          .spyOn(artistsRepository, 'findArtistByExternalId')
+          .mockResolvedValue(artistEntityMock)
 
-      await expect(artistsController.getAll(name)).rejects.toThrowError(
-        NotFoundException
-      )
+        expect(
+          await artistsController.getArtists(undefined, externalId)
+        ).toEqual(artistEntityMock)
+        expect(findArtistByExternalIdSpy).toHaveBeenCalledWith(externalId)
+      })
+
+      test('should not get artist because of not found', async () => {
+        const findArtistByExternalIdSpy = vi
+          .spyOn(artistsRepository, 'findArtistByExternalId')
+          .mockResolvedValue(null)
+
+        await expect(
+          artistsController.getArtists(undefined, externalId)
+        ).rejects.toThrowError(NotFoundException)
+        expect(findArtistByExternalIdSpy).toHaveBeenCalledWith(externalId)
+      })
     })
   })
 
-  describe('getOneById', () => {
+  describe('getArtistById', () => {
     const id = 'id'
 
     test('should get artist by id', async () => {
-      const findOneSpy = vi
-        .spyOn(artistsRepository, 'findOne')
+      const findArtistByExternalIdSpy = vi
+        .spyOn(artistsRepository, 'findArtistByExternalId')
         .mockResolvedValue(artistEntityMock)
 
-      expect(await artistsController.getOneById(id)).toEqual(artistEntityMock)
-      expect(findOneSpy).toHaveBeenCalledWith({ where: { id } })
+      expect(await artistsController.getArtistById(id)).toEqual(
+        artistEntityMock
+      )
+      expect(findArtistByExternalIdSpy).toHaveBeenCalledWith(id)
     })
 
     test('should not get artist because of not found', async () => {
-      vi.spyOn(artistsRepository, 'findOne').mockResolvedValue(null)
+      const findArtistByExternalIdSpy = vi
+        .spyOn(artistsRepository, 'findArtistByExternalId')
+        .mockResolvedValue(null)
 
-      await expect(artistsController.getOneById(id)).rejects.toThrowError(
+      await expect(artistsController.getArtistById(id)).rejects.toThrowError(
         NotFoundException
       )
+      expect(findArtistByExternalIdSpy).toHaveBeenCalledWith(id)
     })
   })
 })
