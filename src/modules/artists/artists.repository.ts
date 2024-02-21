@@ -17,6 +17,18 @@ export class ArtistsRepository extends Repository<Artist> {
     super(Artist, dataSource.createEntityManager())
   }
 
+  async findArtistByExternalId(externalId: string) {
+    return this.findOne({ where: { externalId } })
+  }
+
+  async findArtistById(id: string) {
+    return this.findOne({ where: { id } })
+  }
+
+  async findArtistByName(name: string) {
+    return this.findOne({ where: { name } })
+  }
+
   async createArtist({
     images,
     id,
@@ -35,22 +47,31 @@ export class ArtistsRepository extends Repository<Artist> {
     return this.save(artistEntity)
   }
 
-  async findOrCreateArtist(id: string) {
-    const artist = await this.findOne({ where: { externalId: id } })
+  async findOrCreateArtist(newArtist: CreateArtist) {
+    const foundArtist = await this.findArtistByExternalId(newArtist.id)
 
-    if (artist) return artist
+    if (foundArtist) return foundArtist
 
-    const { id: _id, ...foundArtist } =
-      await this.spotifyArtistsService.getArtist(id, false)
-
-    return this.createArtist({ id, ...foundArtist })
+    return this.createArtist(newArtist)
   }
 
-  findOrCreateArtists(ids: string[]) {
+  findOrCreateArtists(newArtists: CreateArtist[]) {
     return Promise.all(
-      ids.map(async id => {
-        return this.findOrCreateArtist(id)
-      })
+      newArtists.map(newArtist => this.findOrCreateArtist(newArtist))
     )
+  }
+
+  async findOrCreateArtistById(id: string) {
+    const foundArtist = await this.findArtistByExternalId(id)
+
+    if (foundArtist) return foundArtist
+
+    const newArtist = await this.spotifyArtistsService.getArtist(id, false)
+
+    return this.createArtist(newArtist)
+  }
+
+  async findOrCreateArtistsByIds(ids: string[]) {
+    return Promise.all(ids.map(id => this.findOrCreateArtistById(id)))
   }
 }
