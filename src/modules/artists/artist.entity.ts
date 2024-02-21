@@ -8,7 +8,7 @@ import {
   Relation,
 } from 'typeorm'
 
-import { Image } from '@modules/images'
+import type { Image } from '@modules/images'
 
 @Entity()
 export class Artist {
@@ -46,6 +46,6 @@ export class Artist {
     nullable: true,
   })
   @JoinTable()
-  @ApiProperty({ type: Image, isArray: true })
+  @ApiProperty()
   images?: Relation<Image>[]
 }
