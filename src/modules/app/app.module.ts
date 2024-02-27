@@ -10,6 +10,7 @@ import { ProfilesModule } from '@modules/profiles'
 import { UsersModule } from '@modules/users'
 import { AdaptersModule } from '@common/adapters'
 import { ArtistsModule } from '@modules/artists'
+import { AlbumsModule } from '@modules/albums'
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { ArtistsModule } from '@modules/artists'
     ProfilesModule,
     UsersModule,
     ArtistsModule,
+    AlbumsModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: './.env',
