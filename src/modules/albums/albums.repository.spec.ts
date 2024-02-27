@@ -1,13 +1,14 @@
 import { DataSource } from 'typeorm'
 import { Test } from '@nestjs/testing'
 
-import { AlbumsRepository } from './albums.repository'
+import { AlbumsRepository, relations } from './albums.repository'
 
 import { ArtistsRepository } from '@modules/artists'
 import { ImagesRepository } from '@modules/images'
 import {
   albumEntityMock,
   albumMock,
+  albumsEntitiesMock,
   artistEntitiesMock,
   imagesMock,
   sdkAlbumMock,
@@ -62,6 +63,15 @@ describe('AlbumsRepository', () => {
     expect(albumsRepository).toBeDefined()
   })
 
+  test('should find albums', async () => {
+    const findSpy = vi
+      .spyOn(albumsRepository, 'find')
+      .mockResolvedValue(albumsEntitiesMock)
+
+    expect(await albumsRepository.findAlbums()).toEqual(albumsEntitiesMock)
+    expect(findSpy).toHaveBeenCalledWith({ relations })
+  })
+
   test('should find album by external id', async () => {
     const externalId = 'externalId'
 
@@ -74,6 +84,7 @@ describe('AlbumsRepository', () => {
     )
     expect(findOneSpy).toHaveBeenCalledWith({
       where: { externalId },
+      relations,
     })
   })
 
@@ -87,6 +98,7 @@ describe('AlbumsRepository', () => {
     expect(await albumsRepository.findAlbumById(id)).toEqual(albumEntityMock)
     expect(findOneSpy).toHaveBeenCalledWith({
       where: { id },
+      relations,
     })
   })
 
@@ -102,6 +114,7 @@ describe('AlbumsRepository', () => {
     )
     expect(findOneSpy).toHaveBeenCalledWith({
       where: { name },
+      relations,
     })
   })
 
