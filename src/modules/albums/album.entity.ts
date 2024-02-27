@@ -4,12 +4,14 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
   Relation,
 } from 'typeorm'
 
-import { Image } from '@modules/images'
-import { Artist } from '@modules/artists'
+import type { Image } from '@modules/images'
+import type { Artist } from '@modules/artists'
+import type { Track } from '@modules/tracks'
 
 @Entity()
 export class Album {
@@ -29,6 +31,10 @@ export class Album {
   @ApiProperty({ type: Date })
   releaseDate: Date
 
+  @Column('varchar')
+  @ApiProperty()
+  albumType: string
+
   @Column('int')
   @ApiProperty({ type: Number })
   totalTracks: number
@@ -43,14 +49,19 @@ export class Album {
     nullable: true,
   })
   @JoinTable()
-  @ApiProperty({ type: Image, isArray: true })
-  images?: Relation<Image>[]
+  images?: Relation<Image[]>
+
+  @OneToMany('Track', 'album', {
+    nullable: true,
+    cascade: true,
+    eager: true,
+  })
+  tracks?: Relation<Track[]>
 
   @ManyToMany('Artist', 'albums', {
     cascade: true,
     eager: true,
   })
   @JoinTable()
-  @ApiProperty({ type: Artist, isArray: true })
-  artists: Relation<Artist>[]
+  artists: Relation<Artist[]>
 }
