@@ -35,6 +35,7 @@ export class AlbumsController {
     summary: 'Getting all albums.',
   })
   @ApiQuery({ name: 'name', required: false })
+  @ApiQuery({ name: 'external-id', required: false })
   @ApiOkResponse({
     description: 'Albums successfully found.',
     type: [Album],
@@ -42,18 +43,29 @@ export class AlbumsController {
   @ApiNotFoundResponse({
     description: NOT_BEEN_FOUND('album'),
   })
-  async getAll(@Query('name') name?: string, @Token() _token?: string) {
+  async getAlbums(
+    @Query('name') name?: string,
+    @Query('external-id') externalId?: string,
+    @Token() _token?: string
+  ) {
     if (name) {
-      const foundAlbum = await this.albumsRepository.findOne({
-        where: { name },
-      })
+      const foundAlbum = await this.albumsRepository.findAlbumByName(name)
 
       if (!foundAlbum) throw new NotFoundException(NOT_BEEN_FOUND('album'))
 
       return foundAlbum
     }
 
-    return this.albumsRepository.find()
+    if (externalId) {
+      const foundAlbum =
+        await this.albumsRepository.findAlbumByExternalId(externalId)
+
+      if (!foundAlbum) throw new NotFoundException(NOT_BEEN_FOUND('album'))
+
+      return foundAlbum
+    }
+
+    return this.albumsRepository.findAlbums()
   }
 
   @Get(':id')
@@ -67,8 +79,8 @@ export class AlbumsController {
   @ApiNotFoundResponse({
     description: NOT_BEEN_FOUND('album'),
   })
-  async getOne(@Query('id') id: string, @Token() _token?: string) {
-    const foundAlbum = await this.albumsRepository.findOne({ where: { id } })
+  async getAlbumById(@Query('id') id: string, @Token() _token?: string) {
+    const foundAlbum = await this.albumsRepository.findAlbumById(id)
 
     if (!foundAlbum) throw new NotFoundException(NOT_BEEN_FOUND('album'))
 
@@ -87,9 +99,9 @@ export class AlbumsController {
     description: 'Album already exists.',
   })
   async create(@Body() newAlbum: CreateAlbum, @Token() _token?: string) {
-    const foundAlbum = await this.albumsRepository.findOne({
-      where: { externalId: newAlbum.id },
-    })
+    const foundAlbum = await this.albumsRepository.findAlbumByExternalId(
+      newAlbum.id
+    )
 
     if (foundAlbum) throw new ConflictException('Album already exists.')
 
