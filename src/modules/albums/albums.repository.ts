@@ -6,7 +6,7 @@ import { CreateAlbum } from './dtos'
 
 import { ImagesRepository } from '@modules/images'
 import { ArtistsRepository } from '@modules/artists'
-import { SpotifyAlbumsService } from '@modules/spotify/albums'
+import { TracksRepository } from '@modules/tracks'
 
 @Injectable()
 export class AlbumsRepository extends Repository<Album> {
@@ -14,42 +14,54 @@ export class AlbumsRepository extends Repository<Album> {
     private readonly dataSource: DataSource,
     private readonly imagesRepository: ImagesRepository,
     private readonly artistsRepository: ArtistsRepository,
-    private readonly spotifyAlbumsService: SpotifyAlbumsService
+    private readonly tracksRepository: TracksRepository
   ) {
     super(Album, dataSource.createEntityManager())
   }
 
-  async createAlbum({ images, artists, id, ...newAlbum }: CreateAlbum) {
-    const imageEntities = await this.imagesRepository.findOrCreateImages(images)
-    const artistEntities = await this.artistsRepository.findOrCreateArtists(
-      artists.map(artist => artist.id)
-    )
+  async findAlbumByExternalId(externalId: string) {
+    return this.findOne({ where: { externalId } })
+  }
 
-    const albumEntity = this.create({
-      ...newAlbum,
+  async findAlbumById(id: string) {
+    return this.findOne({ where: { id } })
+  }
+
+  async findAlbumByName(name: string) {
+    return this.findOne({ where: { name } })
+  }
+
+  async createAlbum({
+    images,
+    artists,
+    tracks,
+    id,
+    album_type,
+    release_date,
+    total_tracks,
+    ...newAlbum
+  }: CreateAlbum) {
+    const imageEntities = await this.imagesRepository.findOrCreateImages(images)
+    const artistEntities =
+      await this.artistsRepository.findOrCreateArtists(artists)
+
+    const albumEntity: Album = this.create({
+      externalId: id,
+      albumType: album_type,
+      releaseDate: release_date,
+      totalTracks: total_tracks,
       images: imageEntities,
       artists: artistEntities,
+      ...newAlbum,
     })
 
-    return this.save(albumEntity)
-  }
+    const album = await this.save(albumEntity)
 
-  async findOrCreateAlbum(id: string) {
-    const album = await this.findOne({ where: { externalId: id } })
-
-    if (album) return album
-
-    const { id: _id, ...foundAlbum } =
-      await this.spotifyAlbumsService.getAlbum(id)
-
-    return this.createAlbum({ id, ...foundAlbum })
-  }
-
-  findOrCreateAlbums(ids: string[]) {
-    return Promise.all(
-      ids.map(async id => {
-        return this.findOrCreateAlbum(id)
-      })
+    await this.tracksRepository.createTracksFromExternalIds(
+      tracks.items.map(track => track.id),
+      album
     )
+
+    return album
   }
 }

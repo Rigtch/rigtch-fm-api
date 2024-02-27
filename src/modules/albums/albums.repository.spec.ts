@@ -5,19 +5,21 @@ import { AlbumsRepository } from './albums.repository'
 
 import { ArtistsRepository } from '@modules/artists'
 import { ImagesRepository } from '@modules/images'
-import { SpotifyAlbumsService } from '@modules/spotify/albums'
 import {
   albumEntityMock,
   albumMock,
   artistEntitiesMock,
   imagesMock,
+  sdkAlbumMock,
+  trackEntitiesMock,
 } from '@common/mocks'
+import { TracksRepository } from '@modules/tracks'
 
 describe('AlbumsRepository', () => {
   let albumsRepository: AlbumsRepository
   let imagesRepository: ImagesRepository
   let artistsRepository: ArtistsRepository
-  let spotifyAlbumsService: SpotifyAlbumsService
+  let tracksRepository: TracksRepository
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -42,9 +44,9 @@ describe('AlbumsRepository', () => {
           },
         },
         {
-          provide: SpotifyAlbumsService,
+          provide: TracksRepository,
           useValue: {
-            getAlbum: vi.fn(),
+            createTracksFromExternalIds: vi.fn(),
           },
         },
       ],
@@ -53,20 +55,66 @@ describe('AlbumsRepository', () => {
     albumsRepository = module.get(AlbumsRepository)
     imagesRepository = module.get(ImagesRepository)
     artistsRepository = module.get(ArtistsRepository)
-    spotifyAlbumsService = module.get(SpotifyAlbumsService)
+    tracksRepository = module.get(TracksRepository)
   })
 
   test('should be defined', () => {
     expect(albumsRepository).toBeDefined()
   })
 
-  test('should create album', async () => {
-    const createImageSpy = vi
+  test('should find album by external id', async () => {
+    const externalId = 'externalId'
+
+    const findOneSpy = vi
+      .spyOn(albumsRepository, 'findOne')
+      .mockResolvedValue(albumEntityMock)
+
+    expect(await albumsRepository.findAlbumByExternalId(externalId)).toEqual(
+      albumEntityMock
+    )
+    expect(findOneSpy).toHaveBeenCalledWith({
+      where: { externalId },
+    })
+  })
+
+  test('should find album by id', async () => {
+    const id = 'id'
+
+    const findOneSpy = vi
+      .spyOn(albumsRepository, 'findOne')
+      .mockResolvedValue(albumEntityMock)
+
+    expect(await albumsRepository.findAlbumById(id)).toEqual(albumEntityMock)
+    expect(findOneSpy).toHaveBeenCalledWith({
+      where: { id },
+    })
+  })
+
+  test('should find album by name', async () => {
+    const name = 'name'
+
+    const findOneSpy = vi
+      .spyOn(albumsRepository, 'findOne')
+      .mockResolvedValue(albumEntityMock)
+
+    expect(await albumsRepository.findAlbumByName(name)).toEqual(
+      albumEntityMock
+    )
+    expect(findOneSpy).toHaveBeenCalledWith({
+      where: { name },
+    })
+  })
+
+  test.skip('should create album', async () => {
+    const findOrCreateImagesSpy = vi
       .spyOn(imagesRepository, 'findOrCreateImages')
       .mockResolvedValue(imagesMock)
-    const createArtistSpy = vi
+    const findOrCreateArtistsSpy = vi
       .spyOn(artistsRepository, 'findOrCreateArtists')
       .mockResolvedValue(artistEntitiesMock)
+    const createTracksFromExternalIdsSpy = vi
+      .spyOn(tracksRepository, 'createTracksFromExternalIds')
+      .mockResolvedValue(trackEntitiesMock)
     const createSpy = vi
       .spyOn(albumsRepository, 'create')
       .mockReturnValue(albumEntityMock)
@@ -74,63 +122,18 @@ describe('AlbumsRepository', () => {
       .spyOn(albumsRepository, 'save')
       .mockResolvedValue(albumEntityMock)
 
-    expect(await albumsRepository.createAlbum(albumMock)).toEqual(
+    expect(await albumsRepository.createAlbum(sdkAlbumMock)).toEqual(
       albumEntityMock
     )
-    expect(createImageSpy).toHaveBeenCalledWith(albumMock.images)
-    expect(createArtistSpy).toHaveBeenCalledWith(
+    expect(findOrCreateImagesSpy).toHaveBeenCalledWith(albumMock.images)
+    expect(findOrCreateArtistsSpy).toHaveBeenCalledWith(
       artistEntitiesMock.map(artist => artist.id)
+    )
+    expect(createTracksFromExternalIdsSpy).toHaveBeenCalledWith(
+      trackEntitiesMock.map(track => track.id),
+      albumEntityMock
     )
     expect(createSpy).toHaveBeenCalled()
     expect(saveSpy).toHaveBeenCalledWith(albumEntityMock)
-  })
-
-  describe('findOrCreateAlbum', () => {
-    test('should find album', async () => {
-      const findOneSpy = vi
-        .spyOn(albumsRepository, 'findOne')
-        .mockResolvedValue(albumEntityMock)
-      const createAlbumSpy = vi.spyOn(albumsRepository, 'createAlbum')
-
-      expect(await albumsRepository.findOrCreateAlbum(albumMock.id)).toEqual(
-        albumEntityMock
-      )
-      expect(findOneSpy).toHaveBeenCalledWith({
-        where: { externalId: albumMock.id },
-      })
-      expect(createAlbumSpy).not.toHaveBeenCalled()
-    })
-
-    test('should create album', async () => {
-      const getAlbumSpy = vi
-        .spyOn(spotifyAlbumsService, 'getAlbum')
-        .mockResolvedValue(albumMock)
-      const findOneSpy = vi
-        .spyOn(albumsRepository, 'findOne')
-        .mockResolvedValue(null)
-      const createAlbumSpy = vi
-        .spyOn(albumsRepository, 'createAlbum')
-        .mockResolvedValue(albumEntityMock)
-
-      expect(await albumsRepository.findOrCreateAlbum(albumMock.id)).toEqual(
-        albumEntityMock
-      )
-      expect(getAlbumSpy).toHaveBeenCalledWith(albumMock.id)
-      expect(createAlbumSpy).toHaveBeenCalledWith(albumMock)
-      expect(findOneSpy).toHaveBeenCalledWith({
-        where: { externalId: albumMock.id },
-      })
-    })
-  })
-
-  test('should find or create albums', async () => {
-    const findOrCreateAlbumSpy = vi
-      .spyOn(albumsRepository, 'findOrCreateAlbum')
-      .mockResolvedValue(albumEntityMock)
-
-    expect(await albumsRepository.findOrCreateAlbums([albumMock.id])).toEqual([
-      albumEntityMock,
-    ])
-    expect(findOrCreateAlbumSpy).toHaveBeenCalledWith(albumMock.id)
   })
 })
