@@ -2,16 +2,15 @@ import { ApiProperty } from '@nestjs/swagger'
 import {
   Column,
   Entity,
-  JoinColumn,
   JoinTable,
   ManyToMany,
-  OneToMany,
+  ManyToOne,
   PrimaryGeneratedColumn,
   Relation,
 } from 'typeorm'
 
-import { Album } from '@modules/albums'
-import { Artist } from '@modules/artists'
+import type { Album } from '@modules/albums'
+import type { Artist } from '@modules/artists'
 
 @Entity()
 export class Track {
@@ -35,19 +34,15 @@ export class Track {
   @ApiProperty({ type: Number })
   duration: number
 
-  @OneToMany('Album', 'track', {
-    cascade: true,
-    eager: true,
+  @ManyToOne('Album', 'tracks', {
+    nullable: true,
   })
-  @JoinColumn()
-  @ApiProperty({ type: Album })
-  album: Relation<Album>
+  album?: Relation<Album>
 
-  @ManyToMany('Artist', 'tracks', {
+  @ManyToMany('Artist', 'albums', {
     cascade: true,
     eager: true,
   })
   @JoinTable()
-  @ApiProperty({ type: Artist, isArray: true })
   artists: Relation<Artist[]>
 }
