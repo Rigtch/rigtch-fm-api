@@ -35,14 +35,24 @@ describe('ArtistsController', () => {
     expect(artistsController).toBeDefined()
   })
 
-  describe('getAll', () => {
+  describe('getArtists', () => {
     test('should get all artists', async () => {
       const findSpy = vi
         .spyOn(artistsRepository, 'find')
         .mockResolvedValue(artistEntitiesMock)
+      const findArtistByNameSpy = vi.spyOn(
+        artistsRepository,
+        'findArtistByName'
+      )
+      const findArtistByExternalIdSpy = vi.spyOn(
+        artistsRepository,
+        'findArtistByExternalId'
+      )
 
       expect(await artistsController.getArtists()).toEqual(artistEntitiesMock)
       expect(findSpy).toHaveBeenCalledWith()
+      expect(findArtistByNameSpy).not.toHaveBeenCalled()
+      expect(findArtistByExternalIdSpy).not.toHaveBeenCalled()
     })
 
     describe('By Name', () => {

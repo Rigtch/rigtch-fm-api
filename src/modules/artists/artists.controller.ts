@@ -104,9 +104,9 @@ export class ArtistsController {
     description: 'Artist already exists.',
   })
   async create(@Body() newArtist: CreateArtist, @Token() _token?: string) {
-    const foundArtist = await this.artistsRepository.findOne({
-      where: { externalId: newArtist.id },
-    })
+    const foundArtist = await this.artistsRepository.findArtistByExternalId(
+      newArtist.id
+    )
 
     if (foundArtist) throw new ConflictException('Artist already exists.')
 
