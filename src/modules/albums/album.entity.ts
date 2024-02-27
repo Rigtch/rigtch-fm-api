@@ -54,13 +54,11 @@ export class Album {
   @OneToMany('Track', 'album', {
     nullable: true,
     cascade: true,
-    eager: true,
   })
   tracks?: Relation<Track[]>
 
   @ManyToMany('Artist', 'albums', {
     cascade: true,
-    eager: true,
   })
   @JoinTable()
   artists: Relation<Artist[]>
