@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { DataSource, Repository } from 'typeorm'
+import { DataSource, FindOptionsRelations, Repository } from 'typeorm'
 
 import { Album } from './album.entity'
 import { CreateAlbum } from './dtos'
@@ -7,6 +7,11 @@ import { CreateAlbum } from './dtos'
 import { ImagesRepository } from '@modules/images'
 import { ArtistsRepository } from '@modules/artists'
 import { TracksRepository } from '@modules/tracks'
+
+export const relations: FindOptionsRelations<Album> = {
+  artists: true,
+  tracks: true,
+}
 
 @Injectable()
 export class AlbumsRepository extends Repository<Album> {
@@ -19,16 +24,22 @@ export class AlbumsRepository extends Repository<Album> {
     super(Album, dataSource.createEntityManager())
   }
 
-  async findAlbumByExternalId(externalId: string) {
-    return this.findOne({ where: { externalId } })
+  findAlbums() {
+    return this.find({
+      relations,
+    })
   }
 
-  async findAlbumById(id: string) {
-    return this.findOne({ where: { id } })
+  findAlbumByExternalId(externalId: string) {
+    return this.findOne({ where: { externalId }, relations })
   }
 
-  async findAlbumByName(name: string) {
-    return this.findOne({ where: { name } })
+  findAlbumById(id: string) {
+    return this.findOne({ where: { id }, relations })
+  }
+
+  findAlbumByName(name: string) {
+    return this.findOne({ where: { name }, relations })
   }
 
   async createAlbum({
