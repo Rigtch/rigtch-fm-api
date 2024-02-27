@@ -1,5 +1,5 @@
 import { Inject, Injectable, forwardRef } from '@nestjs/common'
-import { DataSource, In, Repository } from 'typeorm'
+import { DataSource, FindOptionsRelations, In, Repository } from 'typeorm'
 
 import { Track } from './track.entity'
 import { CreateTrack } from './dtos'
@@ -7,6 +7,11 @@ import { CreateTrack } from './dtos'
 import { Album } from '@modules/albums'
 import { ArtistsRepository } from '@modules/artists'
 import { SpotifyTracksService } from '@modules/spotify/tracks'
+
+export const relations: FindOptionsRelations<Track> = {
+  album: true,
+  artists: true,
+}
 
 @Injectable()
 export class TracksRepository extends Repository<Track> {
@@ -19,20 +24,38 @@ export class TracksRepository extends Repository<Track> {
     super(Track, dataSource.createEntityManager())
   }
 
+  findTracks() {
+    return this.find({
+      relations,
+    })
+  }
+
   findTrackByExternalId(externalId: string) {
-    return this.findOne({ where: { externalId } })
+    return this.findOne({
+      where: { externalId },
+      relations,
+    })
   }
 
   findTrackById(id: string) {
-    return this.findOne({ where: { id } })
+    return this.findOne({
+      where: { id },
+      relations,
+    })
   }
 
   findTrackByName(name: string) {
-    return this.findOne({ where: { name } })
+    return this.findOne({
+      where: { name },
+      relations,
+    })
   }
 
   findTracksByExternalIds(externalIds: string[]) {
-    return this.find({ where: { externalId: In(externalIds) } })
+    return this.find({
+      where: { externalId: In(externalIds) },
+      relations,
+    })
   }
 
   async createTrack(

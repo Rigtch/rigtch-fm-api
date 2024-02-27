@@ -41,7 +41,6 @@ export class Track {
 
   @ManyToMany('Artist', 'albums', {
     cascade: true,
-    eager: true,
   })
   @JoinTable()
   artists: Relation<Artist[]>

@@ -1,7 +1,7 @@
 import { DataSource, In } from 'typeorm'
 import { Test } from '@nestjs/testing'
 
-import { TracksRepository } from './tracks.repository'
+import { TracksRepository, relations } from './tracks.repository'
 
 import { ArtistsRepository } from '@modules/artists'
 import { SpotifyTracksService } from '@modules/spotify/tracks'
@@ -58,6 +58,17 @@ describe('TracksRepository', () => {
     expect(tracksRepository).toBeDefined()
   })
 
+  test('should find tracks', async () => {
+    const findSpy = vi
+      .spyOn(tracksRepository, 'find')
+      .mockResolvedValue(trackEntitiesMock)
+
+    expect(await tracksRepository.findTracks()).toEqual(trackEntitiesMock)
+    expect(findSpy).toHaveBeenCalledWith({
+      relations,
+    })
+  })
+
   test('should find track by external id', async () => {
     const externalId = 'externalId'
 
@@ -70,6 +81,7 @@ describe('TracksRepository', () => {
     )
     expect(findOneSpy).toHaveBeenCalledWith({
       where: { externalId },
+      relations,
     })
   })
 
@@ -83,6 +95,7 @@ describe('TracksRepository', () => {
     expect(await tracksRepository.findTrackById(id)).toEqual(trackEntityMock)
     expect(findOneSpy).toHaveBeenCalledWith({
       where: { id },
+      relations,
     })
   })
 
@@ -98,6 +111,7 @@ describe('TracksRepository', () => {
     )
     expect(findOneSpy).toHaveBeenCalledWith({
       where: { name },
+      relations,
     })
   })
 
@@ -113,6 +127,7 @@ describe('TracksRepository', () => {
     )
     expect(findSpy).toHaveBeenCalledWith({
       where: { externalId: In(externalIds) },
+      relations,
     })
   })
 
