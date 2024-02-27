@@ -1,4 +1,4 @@
-import { DataSource, Repository } from 'typeorm'
+import { DataSource, In, Repository } from 'typeorm'
 import { Injectable } from '@nestjs/common'
 
 import { Artist } from './artist.entity'
@@ -17,16 +17,20 @@ export class ArtistsRepository extends Repository<Artist> {
     super(Artist, dataSource.createEntityManager())
   }
 
-  async findArtistByExternalId(externalId: string) {
+  findArtistByExternalId(externalId: string) {
     return this.findOne({ where: { externalId } })
   }
 
-  async findArtistById(id: string) {
+  findArtistById(id: string) {
     return this.findOne({ where: { id } })
   }
 
-  async findArtistByName(name: string) {
+  findArtistByName(name: string) {
     return this.findOne({ where: { name } })
+  }
+
+  findArtistsByExternalIds(externalIds: string[]) {
+    return this.find({ where: { externalId: In(externalIds) } })
   }
 
   async createArtist({
@@ -61,17 +65,38 @@ export class ArtistsRepository extends Repository<Artist> {
     )
   }
 
-  async findOrCreateArtistById(id: string) {
-    const foundArtist = await this.findArtistByExternalId(id)
+  async findOrCreateArtistByExternalId(externalId: string) {
+    const foundArtist = await this.findArtistByExternalId(externalId)
 
     if (foundArtist) return foundArtist
 
-    const newArtist = await this.spotifyArtistsService.getArtist(id, false)
+    const newArtist = await this.spotifyArtistsService.getArtist(
+      externalId,
+      false
+    )
 
     return this.createArtist(newArtist)
   }
 
-  async findOrCreateArtistsByIds(ids: string[]) {
-    return Promise.all(ids.map(id => this.findOrCreateArtistById(id)))
+  async findOrCreateArtistsByExternalIds(externalIds: string[]) {
+    const foundArtists = await this.findArtistsByExternalIds(externalIds)
+
+    const artistIdsToCreate = externalIds.filter(
+      externalId =>
+        !foundArtists.some(artist => artist.externalId === externalId)
+    )
+
+    if (artistIdsToCreate.length === 0) return foundArtists
+
+    const artistsToCreate = await this.spotifyArtistsService.getArtists(
+      artistIdsToCreate,
+      false
+    )
+
+    const newArtists = await Promise.all(
+      artistsToCreate.map(artist => this.createArtist(artist))
+    )
+
+    return [...foundArtists, ...newArtists]
   }
 }

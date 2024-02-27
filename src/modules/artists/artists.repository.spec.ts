@@ -1,4 +1,4 @@
-import { DataSource } from 'typeorm'
+import { DataSource, In } from 'typeorm'
 import { Test } from '@nestjs/testing'
 
 import { ArtistsRepository } from './artists.repository'
@@ -39,6 +39,7 @@ describe('ArtistsRepository', () => {
           provide: SpotifyArtistsService,
           useValue: {
             getArtist: vi.fn(),
+            getArtists: vi.fn(),
           },
         },
       ],
@@ -89,6 +90,19 @@ describe('ArtistsRepository', () => {
     )
     expect(findOneSpy).toHaveBeenCalledWith({
       where: { name: artistMock.name },
+    })
+  })
+
+  test('should find artists by external ids', async () => {
+    const findSpy = vi
+      .spyOn(artistsRepository, 'find')
+      .mockResolvedValue(artistEntitiesMock)
+
+    expect(
+      await artistsRepository.findArtistsByExternalIds([artistMock.id])
+    ).toEqual(artistEntitiesMock)
+    expect(findSpy).toHaveBeenCalledWith({
+      where: { externalId: In([artistMock.id]) },
     })
   })
 
@@ -152,7 +166,7 @@ describe('ArtistsRepository', () => {
     expect(findOrCreateArtistSpy).toHaveBeenCalledWith(sdkArtistMock)
   })
 
-  describe('findOrCreateArtistById', () => {
+  describe('findOrCreateArtistByExternalId', () => {
     test('should find artist by id', async () => {
       const findArtistByExternalId = vi
         .spyOn(artistsRepository, 'findArtistByExternalId')
@@ -163,7 +177,7 @@ describe('ArtistsRepository', () => {
       const createArtistSpy = vi.spyOn(artistsRepository, 'createArtist')
 
       expect(
-        await artistsRepository.findOrCreateArtistById(sdkArtistMock.id)
+        await artistsRepository.findOrCreateArtistByExternalId(sdkArtistMock.id)
       ).toEqual(artistEntityMock)
       expect(findArtistByExternalId).toHaveBeenCalledWith(sdkArtistMock.id)
       expect(getArtistSpy).not.toHaveBeenCalled()
@@ -182,7 +196,7 @@ describe('ArtistsRepository', () => {
         .mockResolvedValue(artistEntityMock)
 
       expect(
-        await artistsRepository.findOrCreateArtistById(sdkArtistMock.id)
+        await artistsRepository.findOrCreateArtistByExternalId(sdkArtistMock.id)
       ).toEqual(artistEntityMock)
       expect(findArtistByExternalId).toHaveBeenCalledWith(sdkArtistMock.id)
       expect(getArtistSpy).toHaveBeenCalledWith(sdkArtistMock.id, false)
@@ -190,22 +204,41 @@ describe('ArtistsRepository', () => {
     })
   })
 
-  test('should find or create artists by ids', async () => {
-    const findArtistByExternalId = vi
-      .spyOn(artistsRepository, 'findArtistByExternalId')
-      .mockResolvedValue(artistEntityMock)
-    const getArtistSpy = vi
-      .spyOn(spotifyArtistsService, 'getArtist')
-      .mockResolvedValue(sdkArtistMock)
-    const createArtistSpy = vi
-      .spyOn(artistsRepository, 'createArtist')
-      .mockResolvedValue(artistEntityMock)
+  describe('findOrCreateArtistsByExternalIds', () => {
+    const ids = sdkArtistsMock.map(artist => artist.id)
 
-    expect(
-      await artistsRepository.findOrCreateArtistsByIds([sdkArtistMock.id])
-    ).toEqual([artistEntityMock])
-    expect(findArtistByExternalId).toHaveBeenCalledWith(sdkArtistMock.id)
-    expect(getArtistSpy).not.toHaveBeenCalled()
-    expect(createArtistSpy).not.toHaveBeenCalled()
+    test('should find artists by external ids', async () => {
+      const findArtistsByExternalIds = vi
+        .spyOn(artistsRepository, 'findArtistsByExternalIds')
+        .mockResolvedValue(artistEntitiesMock)
+      const getArtistsSpy = vi.spyOn(spotifyArtistsService, 'getArtists')
+      const createArtistSpy = vi.spyOn(artistsRepository, 'createArtist')
+
+      expect(
+        await artistsRepository.findOrCreateArtistsByExternalIds(ids)
+      ).toEqual(artistEntitiesMock)
+      expect(findArtistsByExternalIds).toHaveBeenCalledWith(ids)
+      expect(createArtistSpy).not.toHaveBeenCalled()
+      expect(getArtistsSpy).not.toHaveBeenCalled()
+    })
+
+    test('should create artists by external ids', async () => {
+      const findArtistsByExternalIds = vi
+        .spyOn(artistsRepository, 'findArtistsByExternalIds')
+        .mockResolvedValue([])
+      const getArtistsSpy = vi
+        .spyOn(spotifyArtistsService, 'getArtists')
+        .mockResolvedValue(sdkArtistsMock)
+      const createArtistSpy = vi
+        .spyOn(artistsRepository, 'createArtist')
+        .mockResolvedValue(artistEntityMock)
+
+      expect(
+        await artistsRepository.findOrCreateArtistsByExternalIds(ids)
+      ).toEqual(artistEntitiesMock)
+      expect(findArtistsByExternalIds).toHaveBeenCalledWith(ids)
+      expect(getArtistsSpy).toHaveBeenCalledWith(ids, false)
+      expect(createArtistSpy).toHaveBeenCalledWith(sdkArtistMock)
+    })
   })
 })
