@@ -1,18 +1,30 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { IsArray, IsInt, IsString } from 'class-validator'
 
-import {
-  SdkAlbum,
-  SdkArtist,
-  SdkSimplifiedAlbum,
-  SdkSimplifiedArtist,
-  SimplifiedAlbum,
-  SimplifiedArtist,
-} from '@common/types/spotify'
-import { Album } from '@modules/albums'
+import { SdkSimplifiedArtist, SdkTrack } from '@common/types/spotify'
 import { Artist } from '@modules/artists'
 
-export abstract class CreateTrack {
+export abstract class CreateTrack
+  implements
+    Omit<
+      SdkTrack,
+      | 'images'
+      | 'external_urls'
+      | 'external_ids'
+      | 'popularity'
+      | 'available_markets'
+      | 'preview_url'
+      | 'disc_number'
+      | 'track_number'
+      | 'explicit'
+      | 'is_local'
+      | 'type'
+      | 'uri'
+      | 'track'
+      | 'episode'
+      | 'album'
+    >
+{
   @IsString()
   @ApiProperty()
   id: string
@@ -27,12 +39,9 @@ export abstract class CreateTrack {
 
   @IsInt()
   @ApiProperty({ type: Number })
-  duration: number
-
-  @ApiProperty({ type: Album })
-  album: SdkAlbum | SdkSimplifiedAlbum | SimplifiedAlbum
+  duration_ms: number
 
   @IsArray()
   @ApiProperty({ type: Artist, isArray: true })
-  artists: (SdkArtist | SdkSimplifiedArtist | SimplifiedArtist)[]
+  artists: SdkSimplifiedArtist[]
 }
