@@ -28,4 +28,18 @@ export class SpotifyArtistsService {
 
     return adapt ? this.adaptersService.artists.adapt(data) : data
   }
+
+  public getArtists(ids: string[], adapt: true): Promise<Artist[]>
+  public getArtists(ids: string[], adapt: false): Promise<SdkArtist[]>
+
+  async getArtists(ids: string[], adapt = true) {
+    this.spotifySdk = SpotifyApi.withClientCredentials(
+      this.configService.get<string>(Environment.SPOTIFY_CLIENT_ID)!,
+      this.configService.get<string>(Environment.SPOTIFY_CLIENT_SECRET)!
+    )
+
+    const data = await this.spotifySdk.artists.get(ids)
+
+    return adapt ? this.adaptersService.artists.adapt(data) : data
+  }
 }
