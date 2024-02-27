@@ -5,7 +5,11 @@ import {
   sdkSimplifiedArtistsMock,
 } from './artist.mock'
 import { imagesMock } from './image.mock'
-import { sdkSimplifiedTracksMock, simplifiedTracksMock } from './track.mock'
+import {
+  sdkSimplifiedTracksMock,
+  simplifiedTracksMock,
+  trackEntitiesMock,
+} from './track.mock'
 import { pageMockFactory } from './page.mock'
 import { topGenresArrayMock } from './genres.mock'
 
@@ -119,7 +123,9 @@ export const albumEntityMock: AlbumEntity = {
   ...albumMock,
   externalId: albumMock.id,
   artists: artistEntitiesMock,
+  tracks: trackEntitiesMock,
   releaseDate: new Date(albumMock.releaseDate),
+  albumType: sdkAlbumMock.album_type,
   images: imagesMock,
 }
 
