@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common'
+import { Module, forwardRef } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
 import { Track } from './track.entity'
@@ -12,8 +12,8 @@ import { ArtistsModule } from '@modules/artists'
   imports: [
     TypeOrmModule.forFeature([Track]),
     SpotifyModule,
-    AlbumsModule,
-    ArtistsModule,
+    forwardRef(() => AlbumsModule),
+    forwardRef(() => ArtistsModule),
   ],
   providers: [TracksRepository],
   exports: [TracksRepository],
