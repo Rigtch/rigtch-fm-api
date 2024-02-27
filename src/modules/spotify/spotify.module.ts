@@ -7,6 +7,7 @@ import { SpotifyUsersService } from './users'
 import { SpotifyPlayerService } from './player'
 import { SpotifyArtistsService } from './artists'
 import { SpotifyTracksService } from './tracks'
+import { SpotifyAlbumsService } from './albums'
 
 import { Environment } from '@config/environment'
 
@@ -29,6 +30,7 @@ import { Environment } from '@config/environment'
     SpotifyPlayerService,
     SpotifyArtistsService,
     SpotifyTracksService,
+    SpotifyAlbumsService,
   ],
   exports: [
     SpotifyAuthService,
@@ -36,6 +38,7 @@ import { Environment } from '@config/environment'
     SpotifyPlayerService,
     SpotifyArtistsService,
     SpotifyTracksService,
+    SpotifyAlbumsService,
   ],
 })
 export class SpotifyModule {}

@@ -4,6 +4,7 @@ import { SpotifyApi } from '@spotify/web-api-ts-sdk'
 
 import { Environment } from '@config/environment'
 import { AdaptersService } from '@common/adapters'
+import { Album, SdkAlbum } from '@common/types/spotify'
 
 @Injectable()
 export class SpotifyAlbumsService {
@@ -14,14 +15,31 @@ export class SpotifyAlbumsService {
     private readonly adaptersService: AdaptersService
   ) {}
 
-  async getAlbum(id: string) {
+  public getAlbum(id: string, adapt: false): Promise<SdkAlbum>
+  public getAlbum(id: string, adapt: true): Promise<Album>
+
+  async getAlbum(id: string, adapt = false) {
     this.spotifySdk = SpotifyApi.withClientCredentials(
       this.configService.get<string>(Environment.SPOTIFY_CLIENT_ID)!,
       this.configService.get<string>(Environment.SPOTIFY_CLIENT_SECRET)!
     )
 
-    return this.spotifySdk.albums
-      .get(id)
-      .then(data => this.adaptersService.albums.adapt(data))
+    const data = await this.spotifySdk.albums.get(id)
+
+    return adapt ? this.adaptersService.albums.adapt(data) : data
+  }
+
+  public getAlbums(ids: string[], adapt: false): Promise<SdkAlbum[]>
+  public getAlbums(ids: string[], adapt: true): Promise<Album[]>
+
+  async getAlbums(ids: string[], adapt = false) {
+    this.spotifySdk = SpotifyApi.withClientCredentials(
+      this.configService.get<string>(Environment.SPOTIFY_CLIENT_ID)!,
+      this.configService.get<string>(Environment.SPOTIFY_CLIENT_SECRET)!
+    )
+
+    const data = await this.spotifySdk.albums.get(ids)
+
+    return adapt ? this.adaptersService.albums.adapt(data) : data
   }
 }
