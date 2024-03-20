@@ -5,12 +5,14 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   Relation,
 } from 'typeorm'
 
 import type { Album } from '@modules/albums'
 import type { Artist } from '@modules/artists'
+import type { HistoryTrack } from '@modules/history/tracks'
 
 @Entity()
 export class Track {
@@ -18,7 +20,9 @@ export class Track {
   @ApiProperty()
   id: string
 
-  @Column('varchar')
+  @Column('varchar', {
+    unique: true,
+  })
   @ApiProperty()
   externalId: string
 
@@ -26,7 +30,9 @@ export class Track {
   @ApiProperty()
   name: string
 
-  @Column('varchar')
+  @Column('varchar', {
+    unique: true,
+  })
   @ApiProperty()
   href: string
 
@@ -39,9 +45,13 @@ export class Track {
   })
   album?: Relation<Album>
 
-  @ManyToMany('Artist', 'albums', {
+  @OneToMany('HistoryTrack', 'track', {
+    nullable: true,
     cascade: true,
   })
+  historyTracks?: Relation<HistoryTrack[]>
+
+  @ManyToMany('Artist', 'albums')
   @JoinTable()
   artists: Relation<Artist[]>
 }

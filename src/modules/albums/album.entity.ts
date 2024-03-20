@@ -19,7 +19,9 @@ export class Album {
   @ApiProperty()
   id: string
 
-  @Column('varchar')
+  @Column('varchar', {
+    unique: true,
+  })
   @ApiProperty()
   externalId: string
 
@@ -39,7 +41,9 @@ export class Album {
   @ApiProperty({ type: Number })
   totalTracks: number
 
-  @Column('varchar')
+  @Column('varchar', {
+    unique: true,
+  })
   @ApiProperty()
   href: string
 
