@@ -2,8 +2,14 @@ import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { AccessToken, MaxInt, SpotifyApi } from '@spotify/web-api-ts-sdk'
 
+import { QueryRange } from './types'
+
 import { Environment } from '@config/environment'
 import { AdaptersService } from '@common/adapters'
+import {
+  RecentlyPlayedTracksPage,
+  SdkRecentlyPlayedTracksPage,
+} from '@common/types/spotify'
 
 @Injectable()
 export class SpotifyPlayerService {
@@ -14,33 +20,46 @@ export class SpotifyPlayerService {
     private readonly adaptersService: AdaptersService
   ) {}
 
+  public getRecentlyPlayedTracks(
+    token: AccessToken,
+    limit: MaxInt<50>,
+    queryRange?: QueryRange,
+    adapt?: false
+  ): Promise<SdkRecentlyPlayedTracksPage>
+  public getRecentlyPlayedTracks(
+    token: AccessToken,
+    limit: MaxInt<50>,
+    queryRange?: QueryRange,
+    adapt?: true
+  ): Promise<RecentlyPlayedTracksPage>
+
   async getRecentlyPlayedTracks(
     token: AccessToken,
     limit: MaxInt<50> = 20,
-    before?: number,
-    after?: number
+    { before, after }: QueryRange = {},
+    adapt = true
   ) {
     this.spotifySdk = SpotifyApi.withAccessToken(
       this.configService.get<string>(Environment.SPOTIFY_CLIENT_ID)!,
       token
     )
 
-    return this.spotifySdk.player
-      .getRecentlyPlayedTracks(
-        limit,
-        before
+    const data = await this.spotifySdk.player.getRecentlyPlayedTracks(
+      limit,
+      before
+        ? {
+            timestamp: +before,
+            type: 'before',
+          }
+        : after
           ? {
-              timestamp: +before,
-              type: 'before',
+              timestamp: +after,
+              type: 'after',
             }
-          : after
-            ? {
-                timestamp: +after,
-                type: 'after',
-              }
-            : undefined
-      )
-      .then(data => this.adaptersService.tracks.adapt(data))
+          : undefined
+    )
+
+    return adapt ? this.adaptersService.tracks.adapt(data) : data
   }
 
   async getPlaybackState(token: AccessToken) {
