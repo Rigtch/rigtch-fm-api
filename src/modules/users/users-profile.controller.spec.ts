@@ -135,9 +135,8 @@ describe('UsersProfileController', () => {
       expect(tokenSpy).toHaveBeenCalled()
       expect(getRecentlyPlayedTracksSpy).toHaveBeenCalledWith(
         accessTokenMock,
-        undefined,
-        undefined,
-        undefined
+        10,
+        {}
       )
     })
 
@@ -181,8 +180,7 @@ describe('UsersProfileController', () => {
       expect(getRecentlyPlayedTracksSpy).toHaveBeenCalledWith(
         accessTokenMock,
         limit,
-        before,
-        after
+        { before, after }
       )
     })
   })

@@ -63,7 +63,7 @@ export class UsersController {
       return foundUser
     }
 
-    return this.usersRepository.find()
+    return this.usersRepository.findUsers()
   }
 
   @Get(':id')
