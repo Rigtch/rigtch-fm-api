@@ -57,7 +57,7 @@ export class AlbumsRepository extends Repository<Album> {
   }: CreateAlbum) {
     const imageEntities = await this.imagesRepository.findOrCreateImages(images)
     const artistEntities =
-      await this.artistsRepository.findOrCreateArtistsByExternalIds(
+      await this.artistsRepository.findOrCreateArtistsFromExternalIds(
         artists.map(artist => artist.id)
       )
 

@@ -36,14 +36,16 @@ export class ArtistsRepository extends Repository<Artist> {
   async createArtist({
     images,
     id,
-    followers: { total: followers },
+    followers,
+    external_urls: { spotify: href },
     ...newArtist
   }: CreateArtist) {
     const imageEntities = await this.imagesRepository.findOrCreateImages(images)
 
     const artistEntity = this.create({
       ...newArtist,
-      followers,
+      href,
+      followers: followers?.total ?? 0,
       externalId: id,
       images: imageEntities,
     })
@@ -51,34 +53,34 @@ export class ArtistsRepository extends Repository<Artist> {
     return this.save(artistEntity)
   }
 
-  async findOrCreateArtist(newArtist: CreateArtist) {
-    const foundArtist = await this.findArtistByExternalId(newArtist.id)
+  async findOrCreateArtist(artistToCreate: CreateArtist) {
+    const foundArtist = await this.findArtistByExternalId(artistToCreate.id)
 
     if (foundArtist) return foundArtist
 
-    return this.createArtist(newArtist)
+    return this.createArtist(artistToCreate)
   }
 
-  findOrCreateArtists(newArtists: CreateArtist[]) {
+  findOrCreateArtists(artistsToCreate: CreateArtist[]) {
     return Promise.all(
-      newArtists.map(newArtist => this.findOrCreateArtist(newArtist))
+      artistsToCreate.map(newArtist => this.findOrCreateArtist(newArtist))
     )
   }
 
-  async findOrCreateArtistByExternalId(externalId: string) {
+  async findOrCreateArtistFromExternalId(externalId: string) {
     const foundArtist = await this.findArtistByExternalId(externalId)
 
     if (foundArtist) return foundArtist
 
-    const newArtist = await this.spotifyArtistsService.getArtist(
+    const artistToCreate = await this.spotifyArtistsService.getArtist(
       externalId,
       false
     )
 
-    return this.createArtist(newArtist)
+    return this.createArtist(artistToCreate)
   }
 
-  async findOrCreateArtistsByExternalIds(externalIds: string[]) {
+  async findOrCreateArtistsFromExternalIds(externalIds: string[]) {
     const foundArtists = await this.findArtistsByExternalIds(externalIds)
 
     const artistIdsToCreate = externalIds.filter(
