@@ -3,6 +3,7 @@ import {
   IsArray,
   IsDateString,
   IsInt,
+  IsObject,
   IsOptional,
   IsString,
 } from 'class-validator'
@@ -24,7 +25,7 @@ export abstract class CreateAlbum
       SdkAlbum,
       | 'images'
       | 'available_markets'
-      | 'external_urls'
+      | 'href'
       | 'copyrights'
       | 'external_ids'
       | 'genres'
@@ -37,37 +38,39 @@ export abstract class CreateAlbum
 {
   @IsString()
   @ApiProperty()
-  id: string
+  readonly id: string
 
   @IsString()
   @ApiProperty()
-  name: string
+  readonly name: string
 
   @IsString()
   @ApiProperty()
-  album_type: string
+  readonly album_type: string
 
   @IsInt()
   @ApiProperty({ type: Number })
-  total_tracks: number
+  readonly total_tracks: number
 
-  @IsString()
   @ApiProperty()
-  href: string
+  @IsObject()
+  readonly external_urls: {
+    readonly spotify: string
+  }
 
   @IsDateString()
   @ApiProperty()
-  release_date: string
+  readonly release_date: string
 
   @IsOptional()
   @IsArray()
   @ApiProperty({ type: Image, isArray: true })
-  images?: SdkImage[]
+  readonly images?: SdkImage[]
 
   @IsArray()
   @ApiProperty({ type: Artist, isArray: true })
-  artists: SdkArtist[]
+  readonly artists: SdkArtist[]
 
   @ApiProperty({ type: Track, isArray: true })
-  tracks: Page<SdkSimplifiedTrack>
+  readonly tracks: Page<SdkSimplifiedTrack>
 }
