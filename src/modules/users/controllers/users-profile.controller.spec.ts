@@ -1,8 +1,9 @@
 import { Test } from '@nestjs/testing'
 import { mock } from 'vitest-mock-extended'
 
+import { UsersRepository } from '../users.repository'
+
 import { UsersProfileController } from './users-profile.controller'
-import { UsersRepository } from './users.repository'
 
 import { TimeRange } from '@modules/spotify/users/enums'
 import {

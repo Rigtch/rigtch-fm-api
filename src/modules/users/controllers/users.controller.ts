@@ -19,9 +19,9 @@ import {
   ApiTags,
 } from '@nestjs/swagger'
 
-import { UsersRepository } from './users.repository'
-import { User } from './user.entity'
-import { USERS, USER } from './constants'
+import { UsersRepository } from '../users.repository'
+import { User } from '../user.entity'
+import { USERS, USER } from '../constants'
 
 import {
   MANY_SUCCESFULLY_FOUND,
@@ -55,7 +55,7 @@ export class UsersController {
   ) {
     if (displayName) {
       const foundUser =
-        await this.usersRepository.findOneByDisplayName(displayName)
+        await this.usersRepository.findUserByDisplayName(displayName)
 
       if (!foundUser)
         throw new HttpException(NOT_BEEN_FOUND(USER), HttpStatus.NO_CONTENT)
@@ -85,7 +85,7 @@ export class UsersController {
     @Param('id', ParseUUIDPipe) id: string,
     @Token() _token?: string
   ) {
-    const foundUser = await this.usersRepository.findOneBy({ id })
+    const foundUser = await this.usersRepository.findUserById(id)
 
     if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
 

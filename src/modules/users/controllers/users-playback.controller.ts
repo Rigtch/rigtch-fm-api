@@ -16,8 +16,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger'
 
-import { UsersRepository } from './users.repository'
-import { USER } from './constants'
+import { UsersRepository } from '../users.repository'
+import { USER } from '../constants'
 
 import {
   NOT_BEEN_FOUND,
