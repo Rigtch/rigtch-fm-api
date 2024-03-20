@@ -3,7 +3,7 @@ import { DataSource } from 'typeorm'
 
 import { UsersRepository } from './users.repository'
 
-import { userMock } from '@common/mocks'
+import { userMock, usersMock } from '@common/mocks'
 
 describe('UsersRepository', () => {
   let usersRepository: UsersRepository
@@ -26,6 +26,15 @@ describe('UsersRepository', () => {
 
   test('should be defined', () => {
     expect(usersRepository).toBeDefined()
+  })
+
+  test('should find all users', async () => {
+    const findOneSpy = vi
+      .spyOn(usersRepository, 'find')
+      .mockResolvedValue(usersMock)
+
+    expect(await usersRepository.findUsers()).toEqual(usersMock)
+    expect(findOneSpy).toHaveBeenCalledWith()
   })
 
   test('should find user by display name', async () => {

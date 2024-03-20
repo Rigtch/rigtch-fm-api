@@ -19,7 +19,7 @@ describe('UsersController', () => {
         {
           provide: UsersRepository,
           useValue: {
-            find: vi.fn(),
+            findUsers: vi.fn(),
             findOneBy: vi.fn(),
             findOneByDisplayName: vi.fn(),
           },
@@ -38,7 +38,7 @@ describe('UsersController', () => {
   describe('getAll', () => {
     test('should get all users', async () => {
       const findSpy = vi
-        .spyOn(usersRepository, 'find')
+        .spyOn(usersRepository, 'findUsers')
         .mockResolvedValue(usersMock)
 
       expect(await usersController.getAll()).toEqual(usersMock)

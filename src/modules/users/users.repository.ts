@@ -10,6 +10,10 @@ export class UsersRepository extends Repository<User> {
     super(User, dataSource.createEntityManager())
   }
 
+  findUsers() {
+    return this.find()
+  }
+
   findOneByDisplayName(displayName: string) {
     return this.findOne({
       where: { profile: { displayName } },
