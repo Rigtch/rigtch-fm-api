@@ -21,7 +21,7 @@ describe('AuthService', () => {
         {
           provide: UsersRepository,
           useValue: {
-            findOneByProfileId: vi.fn(),
+            findUserByProfileId: vi.fn(),
             createUser: vi.fn(),
           },
         },
@@ -57,7 +57,7 @@ describe('AuthService', () => {
         .mockResolvedValue(profileMock)
       const findOneByProfileIdSpy = vi.spyOn(
         usersRepository,
-        'findOneByProfileId'
+        'findUserByProfileId'
       )
       const createProfileSpy = vi
         .spyOn(profilesRepository, 'createProfile')
@@ -85,7 +85,7 @@ describe('AuthService', () => {
         .spyOn(spotifyUsersService, 'profile')
         .mockResolvedValue(profileMock)
       const findOneByProfileIdSpy = vi
-        .spyOn(usersRepository, 'findOneByProfileId')
+        .spyOn(usersRepository, 'findUserByProfileId')
         .mockResolvedValue(userMock)
       const createProfileSpy = vi.spyOn(profilesRepository, 'createProfile')
 
