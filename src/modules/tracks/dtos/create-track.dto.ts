@@ -9,8 +9,8 @@ export abstract class CreateTrack
     Omit<
       SdkTrack,
       | 'images'
-      | 'external_urls'
       | 'external_ids'
+      | 'href'
       | 'popularity'
       | 'available_markets'
       | 'preview_url'
@@ -27,21 +27,23 @@ export abstract class CreateTrack
 {
   @IsString()
   @ApiProperty()
-  id: string
+  readonly id: string
 
   @IsString()
   @ApiProperty()
-  name: string
+  readonly name: string
 
   @IsString()
   @ApiProperty()
-  href: string
+  readonly external_urls: {
+    readonly spotify: string
+  }
 
   @IsInt()
   @ApiProperty({ type: Number })
-  duration_ms: number
+  readonly duration_ms: number
 
   @IsArray()
   @ApiProperty({ type: Artist, isArray: true })
-  artists: SdkSimplifiedArtist[]
+  readonly artists: SdkSimplifiedArtist[]
 }
