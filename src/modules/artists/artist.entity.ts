@@ -16,7 +16,9 @@ export class Artist {
   @ApiProperty()
   id: string
 
-  @Column('varchar')
+  @Column('varchar', {
+    unique: true,
+  })
   @ApiProperty()
   externalId: string
 
@@ -24,7 +26,9 @@ export class Artist {
   @ApiProperty()
   name: string
 
-  @Column('varchar')
+  @Column('varchar', {
+    unique: true,
+  })
   @ApiProperty()
   href: string
 

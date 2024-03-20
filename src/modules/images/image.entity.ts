@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Column, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm'
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
 
 import { SdkImage } from '@common/types/spotify'
 
@@ -17,8 +17,9 @@ export class Image implements SdkImage {
   @ApiProperty({ type: Number })
   width: number
 
-  @Column()
+  @Column('varchar', {
+    unique: true,
+  })
   @ApiProperty()
-  @Unique(['url'])
   url: string
 }
