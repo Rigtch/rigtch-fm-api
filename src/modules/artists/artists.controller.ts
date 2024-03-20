@@ -67,7 +67,7 @@ export class ArtistsController {
       return foundArtist
     }
 
-    return this.artistsRepository.find()
+    return this.artistsRepository.findArtists()
   }
 
   @Get(':id')

@@ -17,7 +17,7 @@ describe('ArtistsController', () => {
         {
           provide: ArtistsRepository,
           useValue: {
-            find: vi.fn(),
+            findArtists: vi.fn(),
             findArtistByName: vi.fn(),
             findArtistById: vi.fn(),
             findArtistByExternalId: vi.fn(),
@@ -38,7 +38,7 @@ describe('ArtistsController', () => {
   describe('getArtists', () => {
     test('should get all artists', async () => {
       const findSpy = vi
-        .spyOn(artistsRepository, 'find')
+        .spyOn(artistsRepository, 'findArtists')
         .mockResolvedValue(artistEntitiesMock)
       const findArtistByNameSpy = vi.spyOn(
         artistsRepository,
