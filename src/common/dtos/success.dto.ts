@@ -2,8 +2,8 @@ import { ApiProperty } from '@nestjs/swagger'
 
 export abstract class Success {
   @ApiProperty({ type: Boolean })
-  success: boolean
+  readonly success: boolean
 
   @ApiProperty({ required: false })
-  message?: string
+  readonly message?: string
 }

@@ -6,32 +6,32 @@ import { CreateImage } from '@modules/images/dtos'
 
 export abstract class CreateProfile implements Omit<Profile, 'images'> {
   @ApiProperty()
-  id: string
+  readonly id: string
 
   @ApiProperty()
-  displayName: string
+  readonly displayName: string
 
   @ApiProperty()
-  images?: CreateImage[]
+  readonly images?: CreateImage[]
 
   @ApiProperty({ type: Number })
-  followers: number
+  readonly followers: number
 
   @ApiProperty({ nullable: true })
-  country?: string
+  readonly country?: string
 
   @ApiProperty({ nullable: true })
-  email?: string
+  readonly email?: string
 
   @ApiProperty()
-  href: string
+  readonly href: string
 
   @ApiProperty({ nullable: true })
-  product?: string
+  readonly product?: string
 
   @ApiProperty()
-  type: string
+  readonly type: string
 
   @ApiProperty()
-  uri: string
+  readonly uri: string
 }

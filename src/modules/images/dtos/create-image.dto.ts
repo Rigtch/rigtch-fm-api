@@ -4,11 +4,11 @@ import { SdkImage } from '@common/types/spotify'
 
 export abstract class CreateImage implements SdkImage {
   @ApiProperty({ type: Number })
-  height: number
+  readonly height: number
 
   @ApiProperty({ type: Number })
-  width: number
+  readonly width: number
 
   @ApiProperty()
-  url: string
+  readonly url: string
 }
