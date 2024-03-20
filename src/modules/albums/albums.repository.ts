@@ -7,6 +7,7 @@ import { CreateAlbum } from './dtos'
 import { ImagesRepository } from '@modules/images'
 import { ArtistsRepository } from '@modules/artists'
 import { TracksRepository } from '@modules/tracks'
+import { SpotifyAlbumsService } from '@modules/spotify/albums'
 
 export const relations: FindOptionsRelations<Album> = {
   artists: true,
@@ -19,7 +20,8 @@ export class AlbumsRepository extends Repository<Album> {
     private readonly dataSource: DataSource,
     private readonly imagesRepository: ImagesRepository,
     private readonly artistsRepository: ArtistsRepository,
-    private readonly tracksRepository: TracksRepository
+    private readonly tracksRepository: TracksRepository,
+    private readonly spotifyAlbumsService: SpotifyAlbumsService
   ) {
     super(Album, dataSource.createEntityManager())
   }
@@ -49,21 +51,25 @@ export class AlbumsRepository extends Repository<Album> {
     id,
     album_type,
     release_date,
+    external_urls: { spotify: href },
     total_tracks,
     ...newAlbum
   }: CreateAlbum) {
     const imageEntities = await this.imagesRepository.findOrCreateImages(images)
     const artistEntities =
-      await this.artistsRepository.findOrCreateArtists(artists)
+      await this.artistsRepository.findOrCreateArtistsByExternalIds(
+        artists.map(artist => artist.id)
+      )
 
     const albumEntity: Album = this.create({
+      ...newAlbum,
       externalId: id,
+      href,
       albumType: album_type,
-      releaseDate: release_date,
+      releaseDate: new Date(release_date),
       totalTracks: total_tracks,
       images: imageEntities,
       artists: artistEntities,
-      ...newAlbum,
     })
 
     const album = await this.save(albumEntity)
@@ -74,5 +80,25 @@ export class AlbumsRepository extends Repository<Album> {
     )
 
     return album
+  }
+
+  async createAlbumFromExternalId(externalId: string) {
+    const albumToCreate = await this.spotifyAlbumsService.getAlbum(
+      externalId,
+      false
+    )
+
+    return this.createAlbum(albumToCreate)
+  }
+
+  async createAlbumsFromExternalIds(externalIds: string[]) {
+    const albumsToCreate = await this.spotifyAlbumsService.getAlbums(
+      externalIds,
+      false
+    )
+
+    return Promise.all(
+      albumsToCreate.map(newAlbum => this.createAlbum(newAlbum))
+    )
   }
 }
