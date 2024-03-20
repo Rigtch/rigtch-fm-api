@@ -7,38 +7,39 @@ import { SdkArtist } from '@common/types/spotify'
 
 export abstract class Followers {
   @IsInt()
-  @ApiProperty({ type: Number })
-  total: number
+  @ApiProperty({ type: Number, nullable: true })
+  total?: number
 }
 
 export abstract class CreateArtist
-  implements
-    Omit<SdkArtist, 'images' | 'followers' | 'external_urls' | 'type' | 'uri'>
+  implements Omit<SdkArtist, 'images' | 'followers' | 'href' | 'type' | 'uri'>
 {
   @IsString()
   @ApiProperty()
-  id: string
+  readonly id: string
 
   @IsString()
   @ApiProperty()
-  name: string
+  readonly name: string
 
   @IsString()
   @ApiProperty()
-  href: string
+  readonly external_urls: {
+    readonly spotify: string
+  }
 
   @IsString({ each: true })
   @ApiProperty({ type: [String] })
-  genres: string[]
+  readonly genres: string[]
 
   @IsInt()
   @ApiProperty({ type: Number })
-  popularity: number
+  readonly popularity: number
 
   @ApiProperty({ type: Followers })
-  followers: Followers
+  readonly followers?: Followers
 
   @IsOptional()
   @ApiProperty({ type: Image, isArray: true })
-  images?: CreateImage[]
+  readonly images?: CreateImage[]
 }
