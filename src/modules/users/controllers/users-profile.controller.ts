@@ -15,10 +15,10 @@ import {
   ApiTags,
 } from '@nestjs/swagger'
 
-import { UsersRepository } from './users.repository'
-import { USER } from './constants'
-import { ApiItemQuery } from './decorators'
-import { LastItemQuery, TopItemQuery } from './dtos'
+import { UsersRepository } from '../users.repository'
+import { USER } from '../constants'
+import { ApiItemQuery } from '../decorators'
+import { LastItemQuery, TopItemQuery } from '../dtos'
 
 import {
   ONE_SUCCESFULLY_FOUND,

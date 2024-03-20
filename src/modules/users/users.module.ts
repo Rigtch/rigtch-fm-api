@@ -3,9 +3,11 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 
 import { User } from './user.entity'
 import { UsersRepository } from './users.repository'
-import { UsersController } from './users.controller'
-import { UsersProfileController } from './users-profile.controller'
-import { UsersPlaybackController } from './users-playback.controller'
+import {
+  UsersController,
+  UsersPlaybackController,
+  UsersProfileController,
+} from './controllers'
 
 import { AuthModule } from '@modules/auth'
 import { SpotifyModule } from '@modules/spotify'

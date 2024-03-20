@@ -2,8 +2,9 @@ import { Test } from '@nestjs/testing'
 import { NotFoundException, UnauthorizedException } from '@nestjs/common'
 import { mock } from 'vitest-mock-extended'
 
+import { UsersRepository } from '../users.repository'
+
 import { UsersPlaybackController } from './users-playback.controller'
-import { UsersRepository } from './users.repository'
 
 import { SpotifyAuthService } from '@modules/spotify/auth'
 import { SpotifyPlayerService } from '@modules/spotify/player'

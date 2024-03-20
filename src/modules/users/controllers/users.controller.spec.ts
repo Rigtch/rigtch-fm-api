@@ -1,7 +1,8 @@
 import { Test } from '@nestjs/testing'
 
+import { UsersRepository } from '../users.repository'
+
 import { UsersController } from './users.controller'
-import { UsersRepository } from './users.repository'
 
 import { userMock, usersMock } from '@common/mocks'
 
@@ -20,8 +21,8 @@ describe('UsersController', () => {
           provide: UsersRepository,
           useValue: {
             findUsers: vi.fn(),
-            findOneBy: vi.fn(),
-            findOneByDisplayName: vi.fn(),
+            findUserById: vi.fn(),
+            findUserByDisplayName: vi.fn(),
           },
         },
       ],
@@ -48,7 +49,7 @@ describe('UsersController', () => {
 
     test('should get one user by username', async () => {
       const findOneByDisplayNameSpy = vi
-        .spyOn(usersRepository, 'findOneByDisplayName')
+        .spyOn(usersRepository, 'findUserByDisplayName')
         .mockResolvedValue(userMock)
 
       expect(await usersController.getAll(displayName)).toEqual(userMock)
@@ -59,7 +60,7 @@ describe('UsersController', () => {
     test('should throw an error if no user is found', async () => {
       const findOneByDisplayNameSpy = vi.spyOn(
         usersRepository,
-        'findOneByDisplayName'
+        'findUserByDisplayName'
       )
 
       await expect(usersController.getAll(displayName)).rejects.toThrowError()
@@ -70,20 +71,20 @@ describe('UsersController', () => {
   describe('getOneById', () => {
     test('should get one user by id', async () => {
       const findOneBySpy = vi
-        .spyOn(usersRepository, 'findOneBy')
+        .spyOn(usersRepository, 'findUserById')
         .mockResolvedValue(userMock)
 
       expect(await usersController.getOneById(id)).toEqual(userMock)
 
-      expect(findOneBySpy).toHaveBeenCalledWith({ id })
+      expect(findOneBySpy).toHaveBeenCalledWith(id)
     })
 
     test('should throw an error if no user is found', async () => {
-      const findOneBySpy = vi.spyOn(usersRepository, 'findOneBy')
+      const findOneBySpy = vi.spyOn(usersRepository, 'findUserById')
 
       await expect(usersController.getOneById(id)).rejects.toThrowError()
 
-      expect(findOneBySpy).toHaveBeenCalledWith({ id })
+      expect(findOneBySpy).toHaveBeenCalledWith(id)
     })
   })
 })
