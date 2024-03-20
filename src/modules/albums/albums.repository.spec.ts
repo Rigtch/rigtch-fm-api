@@ -47,7 +47,7 @@ describe('AlbumsRepository', () => {
         {
           provide: ArtistsRepository,
           useValue: {
-            findOrCreateArtistsByExternalIds: vi.fn(),
+            findOrCreateArtistsFromExternalIds: vi.fn(),
           },
         },
         {
@@ -139,7 +139,7 @@ describe('AlbumsRepository', () => {
       .spyOn(imagesRepository, 'findOrCreateImages')
       .mockResolvedValue(imagesMock)
     const findOrCreateArtistsSpy = vi
-      .spyOn(artistsRepository, 'findOrCreateArtistsByExternalIds')
+      .spyOn(artistsRepository, 'findOrCreateArtistsFromExternalIds')
       .mockResolvedValue(artistEntitiesMock)
     const createTracksFromExternalIdsSpy = vi
       .spyOn(tracksRepository, 'createTracksFromExternalIds')

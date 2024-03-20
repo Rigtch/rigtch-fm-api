@@ -177,7 +177,9 @@ describe('ArtistsRepository', () => {
       const createArtistSpy = vi.spyOn(artistsRepository, 'createArtist')
 
       expect(
-        await artistsRepository.findOrCreateArtistByExternalId(sdkArtistMock.id)
+        await artistsRepository.findOrCreateArtistFromExternalId(
+          sdkArtistMock.id
+        )
       ).toEqual(artistEntityMock)
       expect(findArtistByExternalId).toHaveBeenCalledWith(sdkArtistMock.id)
       expect(getArtistSpy).not.toHaveBeenCalled()
@@ -196,7 +198,9 @@ describe('ArtistsRepository', () => {
         .mockResolvedValue(artistEntityMock)
 
       expect(
-        await artistsRepository.findOrCreateArtistByExternalId(sdkArtistMock.id)
+        await artistsRepository.findOrCreateArtistFromExternalId(
+          sdkArtistMock.id
+        )
       ).toEqual(artistEntityMock)
       expect(findArtistByExternalId).toHaveBeenCalledWith(sdkArtistMock.id)
       expect(getArtistSpy).toHaveBeenCalledWith(sdkArtistMock.id, false)
@@ -215,7 +219,7 @@ describe('ArtistsRepository', () => {
       const createArtistSpy = vi.spyOn(artistsRepository, 'createArtist')
 
       expect(
-        await artistsRepository.findOrCreateArtistsByExternalIds(ids)
+        await artistsRepository.findOrCreateArtistsFromExternalIds(ids)
       ).toEqual(artistEntitiesMock)
       expect(findArtistsByExternalIds).toHaveBeenCalledWith(ids)
       expect(createArtistSpy).not.toHaveBeenCalled()
@@ -234,7 +238,7 @@ describe('ArtistsRepository', () => {
         .mockResolvedValue(artistEntityMock)
 
       expect(
-        await artistsRepository.findOrCreateArtistsByExternalIds(ids)
+        await artistsRepository.findOrCreateArtistsFromExternalIds(ids)
       ).toEqual(artistEntitiesMock)
       expect(findArtistsByExternalIds).toHaveBeenCalledWith(ids)
       expect(getArtistsSpy).toHaveBeenCalledWith(ids, false)
