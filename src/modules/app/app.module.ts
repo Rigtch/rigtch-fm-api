@@ -12,6 +12,7 @@ import { AdaptersModule } from '@common/adapters'
 import { ArtistsModule } from '@modules/artists'
 import { AlbumsModule } from '@modules/albums'
 import { TracksModule } from '@modules/tracks'
+import { HistoryModule } from '@modules/history'
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { TracksModule } from '@modules/tracks'
     ArtistsModule,
     AlbumsModule,
     TracksModule,
+    HistoryModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: './.env',
