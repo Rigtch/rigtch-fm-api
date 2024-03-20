@@ -32,7 +32,7 @@ export class ImagesRepository extends Repository<Image> {
     if (!images || images.length === 0) return []
 
     return Promise.all(
-      images.map(async image => {
+      images.map(image => {
         return this.findOrCreateImage(image)
       })
     )
