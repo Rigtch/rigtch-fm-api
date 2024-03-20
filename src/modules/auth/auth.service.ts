@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Inject, Injectable, forwardRef } from '@nestjs/common'
 import { AccessToken } from '@spotify/web-api-ts-sdk'
 
 import { AuthorizeParams } from './types'
@@ -10,6 +10,7 @@ import { SpotifyUsersService } from '@modules/spotify/users'
 @Injectable()
 export class AuthService {
   constructor(
+    @Inject(forwardRef(() => UsersRepository))
     private readonly usersRepository: UsersRepository,
     private readonly profilesRepository: ProfilesRepository,
     private readonly spotifyUsersService: SpotifyUsersService
