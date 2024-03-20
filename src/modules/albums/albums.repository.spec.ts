@@ -1,5 +1,6 @@
 import { DataSource } from 'typeorm'
 import { Test } from '@nestjs/testing'
+import { MockInstance } from 'vitest'
 
 import { AlbumsRepository, relations } from './albums.repository'
 
@@ -15,12 +16,17 @@ import {
   trackEntitiesMock,
 } from '@common/mocks'
 import { TracksRepository } from '@modules/tracks'
+import { SpotifyAlbumsService } from '@modules/spotify/albums'
+import { SdkAlbum } from '@common/types/spotify'
 
 describe('AlbumsRepository', () => {
+  const externalId = 'externalId'
+
   let albumsRepository: AlbumsRepository
   let imagesRepository: ImagesRepository
   let artistsRepository: ArtistsRepository
   let tracksRepository: TracksRepository
+  let spotifyAlbumsService: SpotifyAlbumsService
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -41,13 +47,20 @@ describe('AlbumsRepository', () => {
         {
           provide: ArtistsRepository,
           useValue: {
-            findOrCreateArtists: vi.fn(),
+            findOrCreateArtistsByExternalIds: vi.fn(),
           },
         },
         {
           provide: TracksRepository,
           useValue: {
             createTracksFromExternalIds: vi.fn(),
+          },
+        },
+        {
+          provide: SpotifyAlbumsService,
+          useValue: {
+            getAlbum: vi.fn(),
+            getAlbums: vi.fn(),
           },
         },
       ],
@@ -57,6 +70,7 @@ describe('AlbumsRepository', () => {
     imagesRepository = module.get(ImagesRepository)
     artistsRepository = module.get(ArtistsRepository)
     tracksRepository = module.get(TracksRepository)
+    spotifyAlbumsService = module.get(SpotifyAlbumsService)
   })
 
   test('should be defined', () => {
@@ -73,8 +87,6 @@ describe('AlbumsRepository', () => {
   })
 
   test('should find album by external id', async () => {
-    const externalId = 'externalId'
-
     const findOneSpy = vi
       .spyOn(albumsRepository, 'findOne')
       .mockResolvedValue(albumEntityMock)
@@ -118,12 +130,16 @@ describe('AlbumsRepository', () => {
     })
   })
 
+  /*
+   * TODO: Fix this test
+   * Cannot read properties of undefined (reading 'map'), while reading `tracks.items`
+   */
   test.skip('should create album', async () => {
     const findOrCreateImagesSpy = vi
       .spyOn(imagesRepository, 'findOrCreateImages')
       .mockResolvedValue(imagesMock)
     const findOrCreateArtistsSpy = vi
-      .spyOn(artistsRepository, 'findOrCreateArtists')
+      .spyOn(artistsRepository, 'findOrCreateArtistsByExternalIds')
       .mockResolvedValue(artistEntitiesMock)
     const createTracksFromExternalIdsSpy = vi
       .spyOn(tracksRepository, 'createTracksFromExternalIds')
@@ -148,5 +164,43 @@ describe('AlbumsRepository', () => {
     )
     expect(createSpy).toHaveBeenCalled()
     expect(saveSpy).toHaveBeenCalledWith(albumEntityMock)
+  })
+
+  test('should create album from external id', async () => {
+    const getAlbumSpy = (
+      vi.spyOn(spotifyAlbumsService, 'getAlbum') as unknown as MockInstance<
+        [id: string, adapt: false],
+        Promise<SdkAlbum>
+      >
+    ).mockResolvedValue(sdkAlbumMock)
+    const creatAlbumSpy = vi
+      .spyOn(albumsRepository, 'createAlbum')
+      .mockResolvedValue(albumEntityMock)
+
+    expect(
+      await albumsRepository.createAlbumFromExternalId(externalId)
+    ).toEqual(albumEntityMock)
+    expect(getAlbumSpy).toHaveBeenCalledWith(externalId, false)
+    expect(creatAlbumSpy).toHaveBeenCalledWith(sdkAlbumMock)
+  })
+
+  test('should create albums from external ids', async () => {
+    const externalIds = [externalId]
+
+    const getAlbumsSpy = (
+      vi.spyOn(spotifyAlbumsService, 'getAlbums') as unknown as MockInstance<
+        [ids: string[], adapt: false],
+        Promise<SdkAlbum[]>
+      >
+    ).mockResolvedValue([sdkAlbumMock])
+    const creatAlbumSpy = vi
+      .spyOn(albumsRepository, 'createAlbum')
+      .mockResolvedValue(albumEntityMock)
+
+    expect(
+      await albumsRepository.createAlbumsFromExternalIds(externalIds)
+    ).toEqual([albumEntityMock])
+    expect(getAlbumsSpy).toHaveBeenCalledWith(externalIds, false)
+    expect(creatAlbumSpy).toHaveBeenCalledWith(sdkAlbumMock)
   })
 })
