@@ -8,10 +8,10 @@ import { TimeRange } from '@modules/spotify/users/enums'
 export abstract class TopItemQuery extends ItemQuery {
   @IsOptional()
   @IsEnum(TimeRange)
-  timeRange?: TimeRange
+  readonly timeRange?: TimeRange
 
   @IsOptional()
   @IsNumber()
   @Transform(({ value }) => Number(value))
-  offset?: number
+  readonly offset?: number
 }

@@ -4,5 +4,5 @@ import { IsString } from 'class-validator'
 export abstract class RefreshToken {
   @ApiProperty()
   @IsString()
-  refreshToken: string
+  readonly refreshToken: string
 }

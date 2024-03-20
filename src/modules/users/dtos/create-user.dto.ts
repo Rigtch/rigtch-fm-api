@@ -6,8 +6,8 @@ import { Profile } from '@modules/profiles'
 
 export abstract class CreateUser implements Omit<User, 'id'> {
   @ApiProperty()
-  profile: Profile
+  readonly profile: Profile
 
   @ApiProperty()
-  refreshToken: string
+  readonly refreshToken: string
 }

@@ -2,11 +2,11 @@ import { ApiProperty } from '@nestjs/swagger'
 
 export class SecretData {
   @ApiProperty()
-  accessToken: string
+  readonly accessToken: string
 
   @ApiProperty({ required: false })
-  refreshToken?: string
+  readonly refreshToken?: string
 
   @ApiProperty({ type: Number })
-  expiresIn: number
+  readonly expiresIn: number
 }

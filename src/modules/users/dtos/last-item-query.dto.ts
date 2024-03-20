@@ -7,10 +7,10 @@ export abstract class LastItemQuery extends ItemQuery {
   @IsOptional()
   @IsNumber()
   @Transform(({ value }) => Number(value))
-  before?: number
+  readonly before?: number
 
   @IsOptional()
   @IsNumber()
   @Transform(({ value }) => Number(value))
-  after?: number
+  readonly after?: number
 }

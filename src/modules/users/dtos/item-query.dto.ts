@@ -7,5 +7,5 @@ export abstract class ItemQuery {
   @IsNumber()
   @Max(50)
   @Transform(({ value }) => Number(value))
-  limit?: MaxInt<50>
+  readonly limit?: MaxInt<50>
 }
