@@ -17,6 +17,10 @@ export class ArtistsRepository extends Repository<Artist> {
     super(Artist, dataSource.createEntityManager())
   }
 
+  findArtists() {
+    return this.find()
+  }
+
   findArtistByExternalId(externalId: string) {
     return this.findOne({ where: { externalId } })
   }

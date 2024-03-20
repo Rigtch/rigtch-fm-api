@@ -54,6 +54,15 @@ describe('ArtistsRepository', () => {
     expect(artistsRepository).toBeDefined()
   })
 
+  test('should find all artists', async () => {
+    const findSpy = vi
+      .spyOn(artistsRepository, 'find')
+      .mockResolvedValue(artistEntitiesMock)
+
+    expect(await artistsRepository.findArtists()).toEqual(artistEntitiesMock)
+    expect(findSpy).toHaveBeenCalled()
+  })
+
   test('should find artist by external id', async () => {
     const findOneSpy = vi
       .spyOn(artistsRepository, 'findOne')
