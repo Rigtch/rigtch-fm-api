@@ -87,7 +87,7 @@ export class UsersProfileController {
   })
   async getRecentlyPlayed(
     @Param('id', ParseUUIDPipe) id: string,
-    @Query() { limit, before, after }: LastItemQuery,
+    @Query() { limit = 10, before, after }: LastItemQuery,
     @Token() _token?: string
   ) {
     const foundUser = await this.usersRepository.findOneBy({ id })
@@ -98,12 +98,10 @@ export class UsersProfileController {
       refreshToken: foundUser.refreshToken,
     })
 
-    return this.spotifyPlayerService.getRecentlyPlayedTracks(
-      token,
-      limit,
+    return this.spotifyPlayerService.getRecentlyPlayedTracks(token, limit, {
       before,
-      after
-    )
+      after,
+    })
   }
 
   @Get('top/artists')
