@@ -29,12 +29,23 @@ describe('UsersRepository', () => {
   })
 
   test('should find all users', async () => {
-    const findOneSpy = vi
+    const findSpy = vi
       .spyOn(usersRepository, 'find')
       .mockResolvedValue(usersMock)
 
     expect(await usersRepository.findUsers()).toEqual(usersMock)
-    expect(findOneSpy).toHaveBeenCalledWith()
+    expect(findSpy).toHaveBeenCalledWith()
+  })
+
+  test('should find user by id', async () => {
+    const findOneSpy = vi
+      .spyOn(usersRepository, 'findOne')
+      .mockResolvedValue(userMock)
+
+    const id = 'test'
+
+    expect(await usersRepository.findUserById(id)).toEqual(userMock)
+    expect(findOneSpy).toHaveBeenCalledWith({ where: { id } })
   })
 
   test('should find user by display name', async () => {
@@ -44,7 +55,7 @@ describe('UsersRepository', () => {
 
     const displayName = 'test'
 
-    expect(await usersRepository.findOneByDisplayName(displayName)).toEqual(
+    expect(await usersRepository.findUserByDisplayName(displayName)).toEqual(
       userMock
     )
     expect(findOneSpy).toHaveBeenCalledWith({
@@ -59,7 +70,7 @@ describe('UsersRepository', () => {
 
     const profileId = 'test'
 
-    expect(await usersRepository.findOneByProfileId(profileId)).toEqual(
+    expect(await usersRepository.findUserByProfileId(profileId)).toEqual(
       userMock
     )
     expect(findOneSpy).toHaveBeenCalledWith({

@@ -19,7 +19,7 @@ export class AuthService {
   async saveUser(token: AccessToken): Promise<AuthorizeParams> {
     const spotifyProfile = await this.spotifyUsersService.profile(token)
 
-    const foundUser = await this.usersRepository.findOneByProfileId(
+    const foundUser = await this.usersRepository.findUserByProfileId(
       spotifyProfile.id
     )
 

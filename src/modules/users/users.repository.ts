@@ -14,13 +14,17 @@ export class UsersRepository extends Repository<User> {
     return this.find()
   }
 
-  findOneByDisplayName(displayName: string) {
+  findUserById(id: string) {
+    return this.findOne({ where: { id } })
+  }
+
+  findUserByDisplayName(displayName: string) {
     return this.findOne({
       where: { profile: { displayName } },
     })
   }
 
-  findOneByProfileId(profileId: string) {
+  findUserByProfileId(profileId: string) {
     return this.findOne({
       where: { profile: { id: profileId } },
     })
