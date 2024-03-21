@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common'
+import { Module, forwardRef } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { ScheduleModule } from '@nestjs/schedule'
 
@@ -16,7 +16,7 @@ import { AlbumsModule } from '@modules/albums'
   imports: [
     TypeOrmModule.forFeature([History]),
     ScheduleModule.forRoot(),
-    UsersModule,
+    forwardRef(() => UsersModule),
     SpotifyModule,
     TracksModule,
     AlbumsModule,

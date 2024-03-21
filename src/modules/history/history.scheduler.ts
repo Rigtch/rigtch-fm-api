@@ -1,4 +1,10 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common'
+import {
+  Inject,
+  Injectable,
+  Logger,
+  OnModuleInit,
+  forwardRef,
+} from '@nestjs/common'
 import { SchedulerRegistry } from '@nestjs/schedule'
 import { CronJob } from 'cron'
 
@@ -11,11 +17,12 @@ import { SpotifyPlayerService } from '@modules/spotify/player'
 @Injectable()
 export class HistoryScheduler implements OnModuleInit {
   private readonly DELAY_MINUTES = 5
-  private readonly INTERVAL_HOURS = 1
+  private readonly INTERVAL_HOURS = '*'
 
   private readonly logger = new Logger(HistoryScheduler.name)
 
   constructor(
+    @Inject(forwardRef(() => UsersRepository))
     private readonly usersRepository: UsersRepository,
     private readonly spotifyAuthService: SpotifyAuthService,
     private readonly spotifyPlayerService: SpotifyPlayerService,
@@ -39,11 +46,12 @@ export class HistoryScheduler implements OnModuleInit {
 
   triggerFetchingUserHistory(user: User, delayMinutes = 0) {
     const job = new CronJob(
-      `* ${delayMinutes * this.DELAY_MINUTES || '*'} ${this.INTERVAL_HOURS} * * *`,
+      `* ${delayMinutes * this.DELAY_MINUTES} ${this.INTERVAL_HOURS} * * *`,
       () => this.fetchUserHistory(user)
     )
 
     this.schedulerRegistry.addCronJob(`fetch-history-${user.id}`, job)
+    job.start()
   }
 
   async fetchUserHistory(user: User) {
