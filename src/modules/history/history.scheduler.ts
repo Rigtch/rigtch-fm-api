@@ -16,8 +16,8 @@ import { SpotifyPlayerService } from '@modules/spotify/player'
 
 @Injectable()
 export class HistoryScheduler implements OnModuleInit {
-  private readonly DELAY_MINUTES = 5
-  private readonly INTERVAL_HOURS = '*'
+  private readonly DELAY_MINUTES = 2
+  private readonly INTERVAL_HOURS = '*/1'
 
   private readonly logger = new Logger(HistoryScheduler.name)
 
