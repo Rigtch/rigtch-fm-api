@@ -7,12 +7,14 @@ import { profileMock, userMock, accessTokenMock } from '@common/mocks'
 import { UsersRepository } from '@modules/users'
 import { ProfilesRepository } from '@modules/profiles'
 import { SpotifyUsersService } from '@modules/spotify/users'
+import { HistoryScheduler } from '@modules/history'
 
 describe('AuthService', () => {
   let authService: AuthService
   let usersRepository: UsersRepository
   let profilesRepository: ProfilesRepository
   let spotifyUsersService: SpotifyUsersService
+  let historyScheduler: HistoryScheduler
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -37,6 +39,12 @@ describe('AuthService', () => {
             profile: vi.fn(),
           },
         },
+        {
+          provide: HistoryScheduler,
+          useValue: {
+            triggerFetchingUserHistory: vi.fn(),
+          },
+        },
       ],
     }).compile()
 
@@ -44,6 +52,7 @@ describe('AuthService', () => {
     usersRepository = module.get(UsersRepository)
     profilesRepository = module.get(ProfilesRepository)
     spotifyUsersService = module.get(SpotifyUsersService)
+    historyScheduler = module.get(HistoryScheduler)
   })
 
   test('should be defined', () => {
@@ -65,6 +74,10 @@ describe('AuthService', () => {
       const createUserSpy = vi
         .spyOn(usersRepository, 'createUser')
         .mockResolvedValue(userMock)
+      const triggerFetchingUserHistorySpy = vi.spyOn(
+        historyScheduler,
+        'triggerFetchingUserHistory'
+      )
 
       expect(await authService.saveUser(accessTokenMock)).toEqual({
         accessToken,
@@ -78,6 +91,7 @@ describe('AuthService', () => {
         profile: profileMock,
         refreshToken,
       })
+      expect(triggerFetchingUserHistorySpy).toHaveBeenCalledWith(userMock)
     })
 
     test('should return existing user', async () => {

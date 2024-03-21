@@ -10,6 +10,7 @@ import { Environment } from '@config/environment'
 import { UsersModule } from '@modules/users'
 import { ProfilesModule } from '@modules/profiles'
 import { SpotifyModule } from '@modules/spotify'
+import { HistoryModule } from '@modules/history'
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { SpotifyModule } from '@modules/spotify'
     }),
     SpotifyModule,
     ProfilesModule,
+    HistoryModule,
     forwardRef(() => UsersModule),
   ],
   providers: [AuthService],

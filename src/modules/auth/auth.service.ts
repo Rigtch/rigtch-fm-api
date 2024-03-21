@@ -6,6 +6,7 @@ import { AuthorizeParams } from './types'
 import { UsersRepository } from '@modules/users'
 import { ProfilesRepository } from '@modules/profiles'
 import { SpotifyUsersService } from '@modules/spotify/users'
+import { HistoryScheduler } from '@modules/history'
 
 @Injectable()
 export class AuthService {
@@ -13,7 +14,8 @@ export class AuthService {
     @Inject(forwardRef(() => UsersRepository))
     private readonly usersRepository: UsersRepository,
     private readonly profilesRepository: ProfilesRepository,
-    private readonly spotifyUsersService: SpotifyUsersService
+    private readonly spotifyUsersService: SpotifyUsersService,
+    private readonly historyScheduler: HistoryScheduler
   ) {}
 
   async saveUser(token: AccessToken): Promise<AuthorizeParams> {
@@ -37,6 +39,8 @@ export class AuthService {
         profile,
         refreshToken,
       })
+
+      this.historyScheduler.triggerFetchingUserHistory(createdUser)
 
       id = createdUser.id
     }
