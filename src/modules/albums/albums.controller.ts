@@ -1,15 +1,5 @@
+import { Controller, Get, NotFoundException, Query } from '@nestjs/common'
 import {
-  Body,
-  ConflictException,
-  Controller,
-  Get,
-  NotFoundException,
-  Post,
-  Query,
-} from '@nestjs/common'
-import {
-  ApiConflictResponse,
-  ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -19,7 +9,6 @@ import {
 
 import { AlbumsRepository } from './albums.repository'
 import { Album } from './album.entity'
-import { CreateAlbum } from './dtos'
 
 import { ApiAuth, Token } from '@modules/auth/decorators'
 import { NOT_BEEN_FOUND } from '@common/constants'
@@ -85,26 +74,5 @@ export class AlbumsController {
     if (!foundAlbum) throw new NotFoundException(NOT_BEEN_FOUND('album'))
 
     return foundAlbum
-  }
-
-  @Post()
-  @ApiOperation({
-    summary: 'Creating an album.',
-  })
-  @ApiCreatedResponse({
-    description: 'Album successfully created.',
-    type: Album,
-  })
-  @ApiConflictResponse({
-    description: 'Album already exists.',
-  })
-  async create(@Body() newAlbum: CreateAlbum, @Token() _token?: string) {
-    const foundAlbum = await this.albumsRepository.findAlbumByExternalId(
-      newAlbum.id
-    )
-
-    if (foundAlbum) throw new ConflictException('Album already exists.')
-
-    return this.albumsRepository.createAlbum(newAlbum)
   }
 }
