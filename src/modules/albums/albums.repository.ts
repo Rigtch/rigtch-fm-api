@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Inject, Injectable, forwardRef } from '@nestjs/common'
 import { DataSource, FindOptionsRelations, Repository } from 'typeorm'
 
 import { Album } from './album.entity'
@@ -19,7 +19,9 @@ export class AlbumsRepository extends Repository<Album> {
   constructor(
     private readonly dataSource: DataSource,
     private readonly imagesRepository: ImagesRepository,
+    @Inject(forwardRef(() => ArtistsRepository))
     private readonly artistsRepository: ArtistsRepository,
+    @Inject(forwardRef(() => TracksRepository))
     private readonly tracksRepository: TracksRepository,
     private readonly spotifyAlbumsService: SpotifyAlbumsService
   ) {
