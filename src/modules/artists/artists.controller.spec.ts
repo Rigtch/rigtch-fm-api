@@ -69,7 +69,7 @@ describe('ArtistsController', () => {
         expect(findArtistByNameSpy).toHaveBeenCalledWith(name)
       })
 
-      test('should not get artist because of not found', async () => {
+      test('should throw not found exception', async () => {
         const findArtistByNameSpy = vi
           .spyOn(artistsRepository, 'findArtistByName')
           .mockResolvedValue(null)
@@ -95,7 +95,7 @@ describe('ArtistsController', () => {
         expect(findArtistByExternalIdSpy).toHaveBeenCalledWith(externalId)
       })
 
-      test('should not get artist because of not found', async () => {
+      test('should throw not found exception', async () => {
         const findArtistByExternalIdSpy = vi
           .spyOn(artistsRepository, 'findArtistByExternalId')
           .mockResolvedValue(null)
@@ -122,7 +122,7 @@ describe('ArtistsController', () => {
       expect(findArtistByExternalIdSpy).toHaveBeenCalledWith(id)
     })
 
-    test('should not get artist because of not found', async () => {
+    test('should throw not found exception', async () => {
       const findArtistByExternalIdSpy = vi
         .spyOn(artistsRepository, 'findArtistByExternalId')
         .mockResolvedValue(null)

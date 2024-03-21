@@ -70,7 +70,7 @@ describe('TracksController', () => {
         expect(findTrackByExternalIdSpy).not.toHaveBeenCalled()
       })
 
-      test('should not get track because of not found', async () => {
+      test('should throw not found exception', async () => {
         const findTracksSpy = vi.spyOn(tracksRepository, 'findTracks')
         const findTrackByNameSpy = vi
           .spyOn(tracksRepository, 'findTrackByName')
@@ -107,7 +107,7 @@ describe('TracksController', () => {
         expect(findTrackByNameSpy).not.toHaveBeenCalled()
       })
 
-      test('should not get track because of not found', async () => {
+      test('should throw not found exception', async () => {
         const findTracksSpy = vi.spyOn(tracksRepository, 'findTracks')
         const findTrackByNameSpy = vi.spyOn(tracksRepository, 'findTrackByName')
         const findTrackByExternalIdSpy = vi
@@ -136,7 +136,7 @@ describe('TracksController', () => {
       expect(findTrackByIdSpy).toHaveBeenCalledWith(id)
     })
 
-    test('should not get track because of not found', async () => {
+    test('should throw not found exception', async () => {
       const findTrackByIdSpy = vi
         .spyOn(tracksRepository, 'findTrackById')
         .mockResolvedValue(null)
