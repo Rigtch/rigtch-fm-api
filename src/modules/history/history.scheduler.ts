@@ -46,7 +46,7 @@ export class HistoryScheduler implements OnModuleInit {
 
   triggerFetchingUserHistory(user: User, delayMinutes = 0) {
     const job = new CronJob(
-      `* ${delayMinutes * this.DELAY_MINUTES} ${this.INTERVAL_HOURS} * * *`,
+      `0 ${delayMinutes * this.DELAY_MINUTES} ${this.INTERVAL_HOURS} * * *`,
       () => this.fetchUserHistory(user)
     )
 
