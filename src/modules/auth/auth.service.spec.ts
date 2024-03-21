@@ -1,10 +1,12 @@
 import { Test } from '@nestjs/testing'
+import { MockInstance } from 'vitest'
+import { FindManyOptions } from 'typeorm'
 
 import { AuthService } from './auth.service'
 
 import { accessToken, refreshToken } from '@common/mocks'
 import { profileMock, userMock, accessTokenMock } from '@common/mocks'
-import { UsersRepository } from '@modules/users'
+import { User, UsersRepository } from '@modules/users'
 import { ProfilesRepository } from '@modules/profiles'
 import { SpotifyUsersService } from '@modules/spotify/users'
 import { HistoryScheduler } from '@modules/history'
@@ -25,6 +27,7 @@ describe('AuthService', () => {
           useValue: {
             findUserByProfileId: vi.fn(),
             createUser: vi.fn(),
+            count: vi.fn(),
           },
         },
         {
@@ -60,6 +63,16 @@ describe('AuthService', () => {
   })
 
   describe('saveUser', () => {
+    const count = 2
+    let countSpy: MockInstance<
+      [options?: FindManyOptions<User>],
+      Promise<number>
+    >
+
+    beforeEach(() => {
+      countSpy = vi.spyOn(usersRepository, 'count').mockResolvedValue(count)
+    })
+
     test('should create new user', async () => {
       const profileSpy = vi
         .spyOn(spotifyUsersService, 'profile')
@@ -91,7 +104,11 @@ describe('AuthService', () => {
         profile: profileMock,
         refreshToken,
       })
-      expect(triggerFetchingUserHistorySpy).toHaveBeenCalledWith(userMock)
+      expect(triggerFetchingUserHistorySpy).toHaveBeenCalledWith(
+        userMock,
+        count
+      )
+      expect(countSpy).toHaveBeenCalled()
     })
 
     test('should return existing user', async () => {
