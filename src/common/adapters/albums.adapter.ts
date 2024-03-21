@@ -52,7 +52,7 @@ export class AlbumsAdapter {
     releaseDate: release_date,
     totalTracks: total_tracks,
     ...('tracks' in rest && {
-      tracks: this.tracksAdapter.adapt(rest.tracks),
+      tracks: this.tracksAdapter.adapt(rest.tracks.items),
       artists: this.artistsAdapter.adapt(rest.artists),
     }),
   })

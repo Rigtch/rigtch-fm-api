@@ -33,21 +33,21 @@ describe('AlbumsAdapter', () => {
     expect(albumsAdapter).toBeDefined()
   })
 
-  test.skip('should adapt a single album', () => {
+  test('should adapt a single album', () => {
     expect(albumsAdapter.adapt(sdkAlbumMock)).toEqual(albumMock)
   })
 
-  test.skip('should adapt a single simplified album', () => {
+  test('should adapt a single simplified album', () => {
     expect(albumsAdapter.adapt(sdkSimplifiedAlbumMock)).toEqual(
       simplifiedAlbumMock
     )
   })
 
-  test.skip('should adapt an array of albums', () => {
+  test('should adapt an array of albums', () => {
     expect(albumsAdapter.adapt(sdkAlbumsMock)).toEqual(albumsMock)
   })
 
-  test.skip('should adapt an array of simplified albums', () => {
+  test('should adapt an array of simplified albums', () => {
     expect(albumsAdapter.adapt(sdkSimplifiedAlbumsMock)).toEqual(
       simplifiedAlbumsMock
     )

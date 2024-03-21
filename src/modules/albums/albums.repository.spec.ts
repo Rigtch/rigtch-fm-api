@@ -130,11 +130,7 @@ describe('AlbumsRepository', () => {
     })
   })
 
-  /*
-   * TODO: Fix this test
-   * Cannot read properties of undefined (reading 'map'), while reading `tracks.items`
-   */
-  test.skip('should create album', async () => {
+  test('should create album', async () => {
     const findOrCreateImagesSpy = vi
       .spyOn(imagesRepository, 'findOrCreateImages')
       .mockResolvedValue(imagesMock)
