@@ -15,7 +15,7 @@ module.exports = {
     'import/resolver': {
       node: {
         project: './tsconfig.json',
-        paths: ['@modules', '@common', '@config'],
+        paths: ['@modules', '@common', '@config', '@migrations'],
         extensions: ['.js', '.ts'],
       },
       typescript: {
@@ -27,6 +27,7 @@ module.exports = {
           ['@modules', './src/modules'],
           ['@common', './src/common'],
           ['@config', './src/config'],
+          ['@migrations', './src/migrations'],
         ],
         extensions: ['.ts', '.js'],
       },

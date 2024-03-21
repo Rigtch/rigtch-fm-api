@@ -5,6 +5,7 @@ import { ConfigService, registerAs } from '@nestjs/config'
 import { DataSource, DataSourceOptions } from 'typeorm'
 
 import { Environment } from '@config/environment'
+import { migrations } from '@migrations/all'
 import { User } from '@modules/users'
 import { Profile } from '@modules/profiles'
 import { Album } from '@modules/albums'
@@ -24,7 +25,7 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   password: configService.get(Environment.DATABASE_PASSWORD),
   database: configService.get(Environment.DATABASE_NAME),
   entities: [User, Profile, Album, Artist, Track, Image, History, HistoryTrack],
-  migrations: ['dist/migrations/*{.ts,.js}'],
+  migrations,
   migrationsRun: true,
   autoLoadEntities: true,
   synchronize: false,
