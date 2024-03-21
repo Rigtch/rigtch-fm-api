@@ -1,4 +1,4 @@
-import { Inject, Injectable, forwardRef } from '@nestjs/common'
+import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common'
 import { AccessToken } from '@spotify/web-api-ts-sdk'
 
 import { AuthorizeParams } from './types'
@@ -10,6 +10,8 @@ import { HistoryScheduler } from '@modules/history'
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name)
+
   constructor(
     @Inject(forwardRef(() => UsersRepository))
     private readonly usersRepository: UsersRepository,
@@ -39,6 +41,10 @@ export class AuthService {
         profile,
         refreshToken,
       })
+
+      this.logger.log(
+        `Scheduling history fetching for user ${createdUser.profile.displayName}`
+      )
 
       this.historyScheduler.triggerFetchingUserHistory(createdUser)
 
