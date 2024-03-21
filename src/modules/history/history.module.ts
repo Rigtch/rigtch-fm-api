@@ -23,6 +23,6 @@ import { AlbumsModule } from '@modules/albums'
     HistoryTracksModule,
   ],
   providers: [HistoryRepository, HistoryScheduler],
-  exports: [HistoryRepository],
+  exports: [HistoryRepository, HistoryScheduler],
 })
 export class HistoryModule {}
