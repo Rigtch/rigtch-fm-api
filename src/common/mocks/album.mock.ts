@@ -5,12 +5,12 @@ import {
   sdkSimplifiedArtistsMock,
 } from './artist.mock'
 import { imagesMock } from './image.mock'
+import { trackEntitiesMock } from './track.mock'
 import {
   sdkSimplifiedTracksMock,
   simplifiedTracksMock,
-  trackEntitiesMock,
-} from './track.mock'
-import { pageMockFactory } from './page.mock'
+} from './simplified-track.mock'
+import { pageMockFactory } from './page.factory.mock'
 import { topGenresArrayMock } from './genres.mock'
 
 import { Album as AlbumEntity } from '@modules/albums'
