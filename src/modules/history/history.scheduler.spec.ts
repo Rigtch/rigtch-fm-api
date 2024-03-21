@@ -89,10 +89,21 @@ describe('HistoryScheduler', () => {
     )
   })
 
-  test('should trigger fetching user history', async () => {
+  test('should trigger fetching user history', () => {
+    vi.spyOn(historyScheduler, 'fetchUserHistory')
+    const addCronJobSpy = vi.spyOn(schedulerRegistry, 'addCronJob')
+
+    historyScheduler.triggerFetchingUserHistory(userMock)
+
+    expect(addCronJobSpy).toHaveBeenCalledWith(
+      `fetch-history-${userMock.id}`,
+      expect.any(CronJob)
+    )
+  })
+
+  test('should fetch user history', async () => {
     const recentlyPlayedTracksPageMock = mock<SdkRecentlyPlayedTracksPage>()
 
-    const addCronJobSpy = vi.spyOn(schedulerRegistry, 'addCronJob')
     const tokenSpy = vi
       .spyOn(spotifyAuthService, 'token')
       .mockResolvedValue(accessTokenMock)
@@ -114,12 +125,8 @@ describe('HistoryScheduler', () => {
       .spyOn(historyRepository, 'updateOrCreateHistoryByUser')
       .mockResolvedValue(mock<History>())
 
-    await historyScheduler.triggerFetchingUserHistory(userMock)
+    await historyScheduler.fetchUserHistory(userMock)
 
-    expect(addCronJobSpy).toHaveBeenCalledWith(
-      `fetch-history-${userMock.id}`,
-      expect.any(CronJob)
-    )
     expect(tokenSpy).toHaveBeenCalledWith({
       refreshToken: userMock.refreshToken,
     })

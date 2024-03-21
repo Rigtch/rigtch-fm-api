@@ -37,14 +37,16 @@ export class HistoryScheduler implements OnModuleInit {
     }
   }
 
-  async triggerFetchingUserHistory(user: User, delayMinutes = 0) {
+  triggerFetchingUserHistory(user: User, delayMinutes = 0) {
     const job = new CronJob(
       `* ${delayMinutes * this.DELAY_MINUTES || '*'} ${this.INTERVAL_HOURS} * * *`,
-      () => this.triggerFetchingUserHistory(user)
+      () => this.fetchUserHistory(user)
     )
 
     this.schedulerRegistry.addCronJob(`fetch-history-${user.id}`, job)
+  }
 
+  async fetchUserHistory(user: User) {
     this.logger.log(`Fetching history for user ${user.profile.displayName}`)
 
     const accessToken = await this.spotifyAuthService.token({
