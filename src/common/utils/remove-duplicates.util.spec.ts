@@ -8,7 +8,7 @@ describe('removeDuplicates', () => {
     expect(removeDuplicates(arrayWithDuplicates)).toEqual(expectedArray)
   })
 
-  test('should not remove duplicates because there is no any', () => {
+  test('should not remove duplicates because there is not any', () => {
     const expectedArray = [1, 2, 3, 4, 5, 6]
 
     expect(removeDuplicates(expectedArray)).toEqual(expectedArray)
