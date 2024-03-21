@@ -11,3 +11,6 @@ export * from './user.mock'
 export * from './axios.factory.mock'
 export * from './access-token.mock'
 export * from './album.mock'
+
+export * from './create-query-builder.factory.mock'
+export * from './generate-paginated-response.factory.mock'
