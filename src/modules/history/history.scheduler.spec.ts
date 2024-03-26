@@ -3,6 +3,7 @@ import { Test } from '@nestjs/testing'
 import { mock } from 'vitest-mock-extended'
 import { MockInstance } from 'vitest'
 import { AccessToken, MaxInt } from '@spotify/web-api-ts-sdk'
+import { ConfigService } from '@nestjs/config'
 
 import { HistoryScheduler } from './history.scheduler'
 import { HistoryRepository } from './history.repository'
@@ -54,6 +55,12 @@ describe('HistoryScheduler', () => {
           provide: SchedulerRegistry,
           useValue: {
             addInterval: vi.fn(),
+          },
+        },
+        {
+          provide: ConfigService,
+          useValue: {
+            get: vi.fn().mockReturnValue('1m'),
           },
         },
         HistoryScheduler,

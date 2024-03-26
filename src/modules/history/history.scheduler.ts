@@ -6,18 +6,20 @@ import {
   forwardRef,
 } from '@nestjs/common'
 import { SchedulerRegistry } from '@nestjs/schedule'
+import { ConfigService } from '@nestjs/config'
+import ms from 'ms'
 
 import { HistoryRepository } from './history.repository'
 
 import { User, UsersRepository } from '@modules/users'
 import { SpotifyAuthService } from '@modules/spotify/auth'
 import { SpotifyPlayerService } from '@modules/spotify/player'
+import { Environment } from '@config/environment'
+
+const { HISTORY_FETCHING_INTERVAL, HISTORY_FETCHING_DELAY } = Environment
 
 @Injectable()
 export class HistoryScheduler implements OnModuleInit {
-  private readonly DELAY_MINUTES = 2
-  private readonly DELAY_HOURS = 1
-
   private readonly logger = new Logger(HistoryScheduler.name)
 
   constructor(
@@ -26,7 +28,8 @@ export class HistoryScheduler implements OnModuleInit {
     private readonly spotifyAuthService: SpotifyAuthService,
     private readonly spotifyPlayerService: SpotifyPlayerService,
     private readonly historyRepository: HistoryRepository,
-    private readonly schedulerRegistry: SchedulerRegistry
+    private readonly schedulerRegistry: SchedulerRegistry,
+    private readonly configService: ConfigService
   ) {}
 
   async onModuleInit() {
@@ -44,9 +47,12 @@ export class HistoryScheduler implements OnModuleInit {
   }
 
   triggerFetchingUserHistory(user: User, delayMinutes = 0) {
-    const DELAY_HOURS = 1000 * 60 * 60 * this.DELAY_HOURS
-    const DELAY_MINUTES = 1000 * 60 * delayMinutes * this.DELAY_MINUTES
-    const DELAY = DELAY_HOURS + DELAY_MINUTES
+    const INTERVAL_HOURS = ms(
+      this.configService.get<string>(HISTORY_FETCHING_INTERVAL)!
+    )
+    const DELAY_MINUTES =
+      delayMinutes * ms(this.configService.get<string>(HISTORY_FETCHING_DELAY)!)
+    const DELAY = INTERVAL_HOURS + DELAY_MINUTES
 
     const interval = setInterval(() => {
       this.fetchUserHistory(user)

@@ -9,6 +9,8 @@ export const environmentSchema = Joi.object({
   SPOTIFY_ACCOUNTS_URL: Joi.string().required(),
   CLIENT_CALLBACK_URL: Joi.string().required(),
   JWT_SECRET: Joi.string().required(),
+  HISTORY_FETCHING_INTERVAL: Joi.string().default('1h'),
+  HISTORY_FETCHING_DELAY: Joi.string().default('2m'),
   DATABASE_HOST: Joi.string().required(),
   DATABASE_PORT: Joi.number().required(),
   DATABASE_USERNAME: Joi.string().required(),
