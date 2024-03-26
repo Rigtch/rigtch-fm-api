@@ -113,7 +113,7 @@ describe('ArtistsController', () => {
 
     test('should get artist by id', async () => {
       const findArtistByExternalIdSpy = vi
-        .spyOn(artistsRepository, 'findArtistByExternalId')
+        .spyOn(artistsRepository, 'findArtistById')
         .mockResolvedValue(artistEntityMock)
 
       expect(await artistsController.getArtistById(id)).toEqual(
@@ -124,7 +124,7 @@ describe('ArtistsController', () => {
 
     test('should throw not found exception', async () => {
       const findArtistByExternalIdSpy = vi
-        .spyOn(artistsRepository, 'findArtistByExternalId')
+        .spyOn(artistsRepository, 'findArtistById')
         .mockResolvedValue(null)
 
       await expect(artistsController.getArtistById(id)).rejects.toThrowError(
