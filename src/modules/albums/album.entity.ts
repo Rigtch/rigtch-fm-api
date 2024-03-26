@@ -7,6 +7,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   Relation,
+  Unique,
 } from 'typeorm'
 
 import type { Image } from '@modules/images'
@@ -14,14 +15,13 @@ import type { Artist } from '@modules/artists'
 import type { Track } from '@modules/tracks'
 
 @Entity()
+@Unique('ALBUM_UNIQUE', ['externalId', 'href'])
 export class Album {
   @PrimaryGeneratedColumn('uuid')
   @ApiProperty()
   id: string
 
-  @Column('varchar', {
-    unique: true,
-  })
+  @Column('varchar')
   @ApiProperty()
   externalId: string
 
@@ -41,9 +41,7 @@ export class Album {
   @ApiProperty({ type: Number })
   totalTracks: number
 
-  @Column('varchar', {
-    unique: true,
-  })
+  @Column('varchar')
   @ApiProperty()
   href: string
 

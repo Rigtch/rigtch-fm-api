@@ -6,19 +6,19 @@ import {
   ManyToMany,
   PrimaryGeneratedColumn,
   Relation,
+  Unique,
 } from 'typeorm'
 
 import type { Image } from '@modules/images'
 
 @Entity()
+@Unique('ARTIST_UNIQUE', ['externalId', 'href'])
 export class Artist {
   @PrimaryGeneratedColumn('uuid')
   @ApiProperty()
   id: string
 
-  @Column('varchar', {
-    unique: true,
-  })
+  @Column('varchar')
   @ApiProperty()
   externalId: string
 
@@ -26,9 +26,7 @@ export class Artist {
   @ApiProperty()
   name: string
 
-  @Column('varchar', {
-    unique: true,
-  })
+  @Column('varchar')
   @ApiProperty()
   href: string
 
