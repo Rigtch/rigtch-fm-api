@@ -8,6 +8,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   Relation,
+  Unique,
 } from 'typeorm'
 
 import type { Album } from '@modules/albums'
@@ -15,14 +16,13 @@ import type { Artist } from '@modules/artists'
 import type { HistoryTrack } from '@modules/history/tracks'
 
 @Entity()
+@Unique('TRACK_UNIQUE', ['externalId', 'href'])
 export class Track {
   @PrimaryGeneratedColumn('uuid')
   @ApiProperty()
   id: string
 
-  @Column('varchar', {
-    unique: true,
-  })
+  @Column('varchar')
   @ApiProperty()
   externalId: string
 
@@ -30,9 +30,7 @@ export class Track {
   @ApiProperty()
   name: string
 
-  @Column('varchar', {
-    unique: true,
-  })
+  @Column('varchar')
   @ApiProperty()
   href: string
 
