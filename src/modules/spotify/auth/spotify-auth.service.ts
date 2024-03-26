@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { map, catchError, firstValueFrom } from 'rxjs'
 import { AccessToken } from '@spotify/web-api-ts-sdk'
+import { backOff } from 'exponential-backoff'
 
 import { TokenOptions } from './types'
 
@@ -48,29 +49,33 @@ export class SpotifyAuthService {
       callbackUrl && params.append('redirect_uri', callbackUrl)
     }
 
-    return firstValueFrom(
-      this.httpService
-        .post<AccessToken>(url, params, {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            Authorization: `Basic ${bufferedCredentials}`,
-          },
-        })
-        .pipe(
-          map(response => response.data),
-          catchError(catchSpotifyError)
-        )
+    return backOff(() =>
+      firstValueFrom(
+        this.httpService
+          .post<AccessToken>(url, params, {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+              Authorization: `Basic ${bufferedCredentials}`,
+            },
+          })
+          .pipe(
+            map(response => response.data),
+            catchError(catchSpotifyError)
+          )
+      )
     )
   }
 
   getMeProfile(accessToken: string): Promise<Profile> {
-    return firstValueFrom(
-      this.httpService
-        .get<SdkProfile>('/me', applyAuthorizationHeader(accessToken))
-        .pipe(
-          map(response => this.adaptersService.profile.adapt(response.data)),
-          catchError(catchSpotifyError)
-        )
+    return backOff(() =>
+      firstValueFrom(
+        this.httpService
+          .get<SdkProfile>('/me', applyAuthorizationHeader(accessToken))
+          .pipe(
+            map(response => this.adaptersService.profile.adapt(response.data)),
+            catchError(catchSpotifyError)
+          )
+      )
     )
   }
 }

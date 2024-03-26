@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { AccessToken, MaxInt, SpotifyApi } from '@spotify/web-api-ts-sdk'
+import { backOff } from 'exponential-backoff'
 
 import { QueryRange } from './types'
 
@@ -44,19 +45,21 @@ export class SpotifyPlayerService {
       token
     )
 
-    const data = await this.spotifySdk.player.getRecentlyPlayedTracks(
-      limit,
-      before
-        ? {
-            timestamp: +before,
-            type: 'before',
-          }
-        : after
+    const data = await backOff(() =>
+      this.spotifySdk!.player.getRecentlyPlayedTracks(
+        limit,
+        before
           ? {
-              timestamp: +after,
-              type: 'after',
+              timestamp: +before,
+              type: 'before',
             }
-          : undefined
+          : after
+            ? {
+                timestamp: +after,
+                type: 'after',
+              }
+            : undefined
+      )
     )
 
     return adapt ? this.adaptersService.tracks.adapt(data) : data
@@ -68,9 +71,11 @@ export class SpotifyPlayerService {
       token
     )
 
-    return this.spotifySdk.player
-      .getPlaybackState()
-      .then(data => this.adaptersService.playbackState.adapt(data))
+    return backOff(() =>
+      this.spotifySdk!.player.getPlaybackState().then(data =>
+        this.adaptersService.playbackState.adapt(data)
+      )
+    )
   }
 
   async pausePlayback(token: AccessToken) {
@@ -79,13 +84,15 @@ export class SpotifyPlayerService {
       token
     )
 
-    const { devices } = await this.spotifySdk.player.getAvailableDevices()
+    const { devices } = await backOff(() =>
+      this.spotifySdk!.player.getAvailableDevices()
+    )
 
     const deviceId = devices.find(({ is_active }) => is_active)?.id
 
     if (!deviceId) return false
 
-    await this.spotifySdk.player.pausePlayback(deviceId)
+    await backOff(() => this.spotifySdk!.player.pausePlayback(deviceId))
 
     return true
   }
@@ -96,13 +103,15 @@ export class SpotifyPlayerService {
       token
     )
 
-    const { devices } = await this.spotifySdk.player.getAvailableDevices()
+    const { devices } = await backOff(() =>
+      this.spotifySdk!.player.getAvailableDevices()
+    )
 
     const deviceId = devices.find(({ is_active }) => is_active)?.id
 
     if (!deviceId) return false
 
-    await this.spotifySdk.player.startResumePlayback(deviceId)
+    await backOff(() => this.spotifySdk!.player.startResumePlayback(deviceId))
 
     return true
   }
