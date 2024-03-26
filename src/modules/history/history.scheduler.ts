@@ -20,6 +20,9 @@ const { HISTORY_FETCHING_INTERVAL, HISTORY_FETCHING_DELAY } = Environment
 
 @Injectable()
 export class HistoryScheduler implements OnModuleInit {
+  private readonly DELAY_MINUTES = 2
+  private readonly DELAY_HOURS = 1
+
   private readonly logger = new Logger(HistoryScheduler.name)
 
   constructor(
