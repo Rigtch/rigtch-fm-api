@@ -3,7 +3,6 @@ import { Test } from '@nestjs/testing'
 import { mock } from 'vitest-mock-extended'
 import { MockInstance } from 'vitest'
 import { AccessToken, MaxInt } from '@spotify/web-api-ts-sdk'
-import { CronJob } from 'cron'
 
 import { HistoryScheduler } from './history.scheduler'
 import { HistoryRepository } from './history.repository'
@@ -54,7 +53,7 @@ describe('HistoryScheduler', () => {
         {
           provide: SchedulerRegistry,
           useValue: {
-            addCronJob: vi.fn(),
+            addInterval: vi.fn(),
           },
         },
         HistoryScheduler,
@@ -91,13 +90,13 @@ describe('HistoryScheduler', () => {
 
   test('should trigger fetching user history', () => {
     vi.spyOn(historyScheduler, 'fetchUserHistory')
-    const addCronJobSpy = vi.spyOn(schedulerRegistry, 'addCronJob')
+    const addIntervalSpy = vi.spyOn(schedulerRegistry, 'addInterval')
 
     historyScheduler.triggerFetchingUserHistory(userMock)
 
-    expect(addCronJobSpy).toHaveBeenCalledWith(
+    expect(addIntervalSpy).toHaveBeenCalledWith(
       `fetch-history-${userMock.id}`,
-      expect.any(CronJob)
+      expect.anything()
     )
   })
 
