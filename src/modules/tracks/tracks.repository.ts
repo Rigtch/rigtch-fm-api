@@ -5,7 +5,7 @@ import { Track } from './track.entity'
 import { CreateTrack } from './dtos'
 
 import { Album, AlbumsRepository } from '@modules/albums'
-import { ArtistsRepository } from '@modules/artists'
+import { Artist, ArtistsRepository } from '@modules/artists'
 import { SpotifyTracksService } from '@modules/spotify/tracks'
 import { SdkTrack } from '@common/types/spotify'
 import { removeDuplicates } from '@common/utils'
@@ -64,17 +64,17 @@ export class TracksRepository extends Repository<Track> {
 
   async createTrack(
     {
-      artists,
       id,
       duration_ms,
       external_urls: { spotify: href },
       ...newTrack
     }: CreateTrack,
-    album: Album
+    album: Album,
+    artists?: Artist[]
   ) {
-    const artistEntities =
-      await this.artistsRepository.findOrCreateArtistsFromExternalIds(
-        artists.map(artist => artist.id)
+    if (!artists)
+      artists = await this.artistsRepository.findOrCreateArtistsFromExternalIds(
+        newTrack.artists.map(artist => artist.id)
       )
 
     const trackEntity: Track = this.create({
@@ -83,7 +83,7 @@ export class TracksRepository extends Repository<Track> {
       href,
       duration: duration_ms,
       album,
-      artists: artistEntities,
+      artists,
     })
 
     return this.save(trackEntity)
@@ -114,7 +114,7 @@ export class TracksRepository extends Repository<Track> {
 
     if (track) return track
 
-    await this.albumsRepository.createAlbumFromExternalId(albumExternalId)
+    await this.albumsRepository.findOrCreateAlbumFromExternalId(albumExternalId)
 
     return this.findOrCreateTrackFromExternalId(externalId, albumExternalId)
   }
@@ -125,7 +125,7 @@ export class TracksRepository extends Repository<Track> {
     const foundTracks = await this.findTracksByExternalIds(externalIds)
 
     const filteredTracks = tracks.filter(
-      ({ id }) => !foundTracks.some(track => track.externalId === id)
+      ({ id }) => !foundTracks.some(track => track.externalId !== id)
     )
 
     if (filteredTracks.length === 0) return foundTracks
@@ -134,16 +134,18 @@ export class TracksRepository extends Repository<Track> {
       filteredTracks.flatMap(track => track.artists).map(artist => artist.id)
     )
 
-    await this.artistsRepository.findOrCreateArtistsFromExternalIds(
-      artistsExternalIdsToCreate
-    )
+    const artistEntities =
+      await this.artistsRepository.findOrCreateArtistsFromExternalIds(
+        artistsExternalIdsToCreate
+      )
 
     const albumsExternalIdsToCreate = removeDuplicates(
       filteredTracks.map(track => track.album.id)
     )
 
-    await this.albumsRepository.createAlbumsFromExternalIds(
-      albumsExternalIdsToCreate
+    await this.albumsRepository.findOrCreateAlbumsFromExternalIds(
+      albumsExternalIdsToCreate,
+      artistEntities
     )
 
     return this.findTracksByExternalIds(externalIds)
