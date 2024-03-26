@@ -5,7 +5,7 @@ import { Album } from './album.entity'
 import { CreateAlbum } from './dtos'
 
 import { ImagesRepository } from '@modules/images'
-import { ArtistsRepository } from '@modules/artists'
+import { Artist, ArtistsRepository } from '@modules/artists'
 import { TracksRepository } from '@modules/tracks'
 import { SpotifyAlbumsService } from '@modules/spotify/albums'
 
@@ -46,21 +46,24 @@ export class AlbumsRepository extends Repository<Album> {
     return this.findOne({ where: { name }, relations })
   }
 
-  async createAlbum({
-    images,
-    artists,
-    tracks,
-    id,
-    album_type,
-    release_date,
-    external_urls: { spotify: href },
-    total_tracks,
-    ...newAlbum
-  }: CreateAlbum) {
+  async createAlbum(
+    {
+      images,
+      tracks,
+      id,
+      album_type,
+      release_date,
+      external_urls: { spotify: href },
+      total_tracks,
+      ...newAlbum
+    }: CreateAlbum,
+    artists?: Artist[]
+  ) {
     const imageEntities = await this.imagesRepository.findOrCreateImages(images)
-    const artistEntities =
-      await this.artistsRepository.findOrCreateArtistsFromExternalIds(
-        artists.map(artist => artist.id)
+
+    if (!artists)
+      artists = await this.artistsRepository.findOrCreateArtists(
+        newAlbum.artists
       )
 
     const albumEntity: Album = this.create({
@@ -71,7 +74,7 @@ export class AlbumsRepository extends Repository<Album> {
       releaseDate: new Date(release_date),
       totalTracks: total_tracks,
       images: imageEntities,
-      artists: artistEntities,
+      artists,
     })
 
     const album = await this.save(albumEntity)
@@ -84,23 +87,63 @@ export class AlbumsRepository extends Repository<Album> {
     return album
   }
 
-  async createAlbumFromExternalId(externalId: string) {
+  async findOrCreateAlbumFromExternalId(externalId: string) {
+    const foundAlbum = await this.findAlbumByExternalId(externalId)
+
     const albumToCreate = await this.spotifyAlbumsService.getAlbum(
       externalId,
       false
     )
 
+    if (foundAlbum?.tracks && foundAlbum.tracks.length > 0) {
+      await this.tracksRepository.createTracksFromExternalIds(
+        albumToCreate.tracks.items.map(track => track.id),
+        foundAlbum
+      )
+      return foundAlbum
+    }
+
     return this.createAlbum(albumToCreate)
   }
 
-  async createAlbumsFromExternalIds(externalIds: string[]) {
+  async findOrCreateAlbumsFromExternalIds(
+    externalIds: string[],
+    artists?: Artist[]
+  ) {
     const albumsToCreate = await this.spotifyAlbumsService.getAlbums(
       externalIds,
       false
     )
 
+    const foundAlbums: Album[] = []
+
+    for (const externalId of externalIds) {
+      const foundAlbum = await this.findAlbumByExternalId(externalId)
+
+      const albumToCreate = albumsToCreate.find(({ id }) => id === externalId)
+
+      if (foundAlbum?.tracks && foundAlbum.tracks.length > 0 && albumToCreate) {
+        await this.tracksRepository.createTracksFromExternalIds(
+          albumToCreate.tracks.items.map(track => track.id),
+          foundAlbum
+        )
+        foundAlbums.push(foundAlbum)
+      }
+    }
+
+    if (foundAlbums.length === externalIds.length) return foundAlbums
+
     return Promise.all(
-      albumsToCreate.map(newAlbum => this.createAlbum(newAlbum))
+      albumsToCreate.map(newAlbum =>
+        this.createAlbum(
+          newAlbum,
+          artists?.filter(artist =>
+            newAlbum.artists
+              .map(artist => artist.id)
+              .includes(artist.externalId)
+          )
+        )
+      )
     )
   }
 }
