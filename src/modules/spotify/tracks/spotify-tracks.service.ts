@@ -2,6 +2,8 @@ import { ConfigService } from '@nestjs/config'
 import { SpotifyApi } from '@spotify/web-api-ts-sdk'
 import { Injectable } from '@nestjs/common'
 
+import { CHUNK_SIZE } from '../constants'
+
 import { AdaptersService } from '@common/adapters'
 import { Environment } from '@config/environment'
 import { SdkTrack, Track } from '@common/types/spotify'
@@ -38,8 +40,22 @@ export class SpotifyTracksService {
       this.configService.get<string>(Environment.SPOTIFY_CLIENT_SECRET)!
     )
 
-    const data = await this.spotifySdk.tracks.get(ids)
+    const chunks: string[][] = []
 
-    return adapt ? this.adaptersService.tracks.adapt(data) : data
+    if (ids.length > CHUNK_SIZE) {
+      for (let index = 0; index < ids.length; index += CHUNK_SIZE) {
+        chunks.push(ids.slice(index, index + CHUNK_SIZE))
+      }
+    }
+
+    const data = await Promise.all(
+      chunks.map(async chunk => {
+        const data = await this.spotifySdk!.tracks.get(chunk)
+
+        return adapt ? this.adaptersService.tracks.adapt(data) : data
+      })
+    )
+
+    return data.flat()
   }
 }
