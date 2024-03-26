@@ -79,7 +79,7 @@ export class ArtistsController {
     description: ONE_IS_INVALID('uuid'),
   })
   async getArtistById(@Param('id') id: string, @Token() _token?: string) {
-    const foundArtist = await this.artistsRepository.findArtistByExternalId(id)
+    const foundArtist = await this.artistsRepository.findArtistById(id)
 
     if (!foundArtist) throw new NotFoundException(NOT_BEEN_FOUND('artist'))
 
