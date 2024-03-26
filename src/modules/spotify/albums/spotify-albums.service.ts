@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { SpotifyApi } from '@spotify/web-api-ts-sdk'
+import { backOff } from 'exponential-backoff'
 
 import { CHUNK_SIZE } from '../constants'
 
@@ -26,7 +27,7 @@ export class SpotifyAlbumsService {
       this.configService.get<string>(Environment.SPOTIFY_CLIENT_SECRET)!
     )
 
-    const data = await this.spotifySdk.albums.get(id)
+    const data = await backOff(() => this.spotifySdk!.albums.get(id))
 
     return adapt ? this.adaptersService.albums.adapt(data) : data
   }
@@ -50,7 +51,7 @@ export class SpotifyAlbumsService {
 
     const data = await Promise.all(
       chunks.map(async chunk => {
-        const data = await this.spotifySdk!.albums.get(chunk)
+        const data = await backOff(() => this.spotifySdk!.albums.get(chunk))
 
         return adapt ? this.adaptersService.albums.adapt(data) : data
       })

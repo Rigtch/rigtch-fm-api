@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { AccessToken, MaxInt, SpotifyApi } from '@spotify/web-api-ts-sdk'
+import { backOff } from 'exponential-backoff'
 
 import { analysisFactory } from './utils'
 import { TimeRange } from './enums'
@@ -23,9 +24,11 @@ export class SpotifyUsersService {
       token
     )
 
-    return this.spotifySdk.currentUser
-      .profile()
-      .then(data => this.adaptersService.profile.adapt(data))
+    return backOff(() =>
+      this.spotifySdk!.currentUser.profile().then(data =>
+        this.adaptersService.profile.adapt(data)
+      )
+    )
   }
 
   async getTopArtists(
@@ -39,9 +42,14 @@ export class SpotifyUsersService {
       token
     )
 
-    return this.spotifySdk.currentUser
-      .topItems('artists', timeRange, limit, offset)
-      .then(data => this.adaptersService.artists.adapt(data))
+    return backOff(() =>
+      this.spotifySdk!.currentUser.topItems(
+        'artists',
+        timeRange,
+        limit,
+        offset
+      ).then(data => this.adaptersService.artists.adapt(data))
+    )
   }
 
   async getTopTracks(
@@ -55,9 +63,14 @@ export class SpotifyUsersService {
       token
     )
 
-    return this.spotifySdk.currentUser
-      .topItems('tracks', timeRange, limit, offset)
-      .then(data => this.adaptersService.tracks.adapt(data))
+    return backOff(() =>
+      this.spotifySdk!.currentUser.topItems(
+        'tracks',
+        timeRange,
+        limit,
+        offset
+      ).then(data => this.adaptersService.tracks.adapt(data))
+    )
   }
 
   async getTopGenres(
@@ -71,9 +84,14 @@ export class SpotifyUsersService {
       token
     )
 
-    return this.spotifySdk.currentUser
-      .topItems('artists', timeRange, 50, offset)
-      .then(({ items }) => this.adaptersService.genres.adapt(items, limit))
+    return backOff(() =>
+      this.spotifySdk!.currentUser.topItems(
+        'artists',
+        timeRange,
+        50,
+        offset
+      ).then(({ items }) => this.adaptersService.genres.adapt(items, limit))
+    )
   }
 
   async getAnalysis(token: AccessToken, timeRange = TimeRange.LONG_TERM) {
@@ -82,18 +100,15 @@ export class SpotifyUsersService {
       token
     )
 
-    const { items } = await this.spotifySdk.currentUser.topItems(
-      'tracks',
-      timeRange,
-      50,
-      0
+    const { items } = await backOff(() =>
+      this.spotifySdk!.currentUser.topItems('tracks', timeRange, 50, 0)
     )
-
     const tracksIds = items.map(({ id }) => id)
 
-    return this.spotifySdk.tracks
-      .audioFeatures(tracksIds)
-      .then(data => this.adaptersService.audioFeatures.adapt(data))
-      .then(analysisFactory)
+    return backOff(() =>
+      this.spotifySdk!.tracks.audioFeatures(tracksIds)
+        .then(data => this.adaptersService.audioFeatures.adapt(data))
+        .then(analysisFactory)
+    )
   }
 }
