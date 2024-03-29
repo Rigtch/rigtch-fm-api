@@ -1,4 +1,4 @@
-import { DataSource } from 'typeorm'
+import { DataSource, In } from 'typeorm'
 import { Test } from '@nestjs/testing'
 import { MockInstance } from 'vitest'
 
@@ -95,6 +95,22 @@ describe('AlbumsRepository', () => {
 
     expect(await albumsRepository.findAlbums()).toEqual(albumsEntitiesMock)
     expect(findSpy).toHaveBeenCalledWith({ relations })
+  })
+
+  test('should find albums by external ids', async () => {
+    const externalIds = ['externalId']
+
+    const findSpy = vi
+      .spyOn(albumsRepository, 'find')
+      .mockResolvedValue(albumsEntitiesMock)
+
+    expect(await albumsRepository.findAlbumsByExternalIds(externalIds)).toEqual(
+      albumsEntitiesMock
+    )
+    expect(findSpy).toHaveBeenCalledWith({
+      where: { externalId: In(externalIds) },
+      relations,
+    })
   })
 
   test('should find album by external id', async () => {
@@ -274,17 +290,19 @@ describe('AlbumsRepository', () => {
       const createAlbumSpy = vi
         .spyOn(albumsRepository, 'createAlbum')
         .mockResolvedValue(albumEntityMock)
-      const findAlbumByExternalIdSpy = vi
-        .spyOn(albumsRepository, 'findAlbumByExternalId')
-        .mockResolvedValue(null)
+      const findAlbumsByExternalIdsSpy = vi
+        .spyOn(albumsRepository, 'findAlbumsByExternalIds')
+        .mockResolvedValue([])
 
       expect(
         await albumsRepository.findOrCreateAlbumsFromExternalIds(externalIds)
       ).toEqual([albumEntityMock])
       expect(getAlbumsSpy).toHaveBeenCalledWith(externalIds, false)
       expect(createAlbumSpy).toHaveBeenCalledWith(sdkAlbumMock, undefined)
-      expect(findAlbumByExternalIdSpy).toHaveBeenCalledWith(externalId)
-      expect(findAlbumByExternalIdSpy).toHaveBeenCalledTimes(externalIds.length)
+      expect(findAlbumsByExternalIdsSpy).toHaveBeenCalledWith(externalIds)
+      expect(findAlbumsByExternalIdsSpy).toHaveBeenCalledTimes(
+        externalIds.length
+      )
     })
 
     test('should create tracks and return found album with tracks', async () => {
@@ -300,9 +318,9 @@ describe('AlbumsRepository', () => {
           'getAlbums'
         ) as unknown as GetAlbumsMockInstance
       ).mockResolvedValue([sdkAlbumMock])
-      const findAlbumByExternalIdSpy = vi
-        .spyOn(albumsRepository, 'findAlbumByExternalId')
-        .mockResolvedValue(foundAlbumMock)
+      const findAlbumsByExternalIdsSpy = vi
+        .spyOn(albumsRepository, 'findAlbumsByExternalIds')
+        .mockResolvedValue([foundAlbumMock])
       const createTracksFromExternalIdsSpy = vi
         .spyOn(tracksRepository, 'createTracksFromExternalIds')
         .mockResolvedValue(trackEntitiesMock)
@@ -312,7 +330,7 @@ describe('AlbumsRepository', () => {
         await albumsRepository.findOrCreateAlbumsFromExternalIds(externalIds)
       ).toEqual([foundAlbumMock])
       expect(getAlbumsSpy).toHaveBeenCalledWith(externalIds, false)
-      expect(findAlbumByExternalIdSpy).toHaveBeenCalledWith(sdkAlbumMock.id)
+      expect(findAlbumsByExternalIdsSpy).toHaveBeenCalledWith(externalIds)
       expect(createTracksFromExternalIdsSpy).toHaveBeenCalledWith(
         trackEntitiesMock.map(track => track.id),
         foundAlbumMock
@@ -333,9 +351,9 @@ describe('AlbumsRepository', () => {
       const createAlbumSpy = vi
         .spyOn(albumsRepository, 'createAlbum')
         .mockResolvedValue(albumEntityMock)
-      const findAlbumByExternalIdSpy = vi
-        .spyOn(albumsRepository, 'findAlbumByExternalId')
-        .mockResolvedValue(null)
+      const findAlbumsByExternalIdsSpy = vi
+        .spyOn(albumsRepository, 'findAlbumsByExternalIds')
+        .mockResolvedValue([])
 
       expect(
         await albumsRepository.findOrCreateAlbumsFromExternalIds(
@@ -345,8 +363,10 @@ describe('AlbumsRepository', () => {
       ).toEqual([albumEntityMock])
       expect(getAlbumsSpy).toHaveBeenCalledWith(externalIds, false)
       expect(createAlbumSpy).toHaveBeenCalledWith(sdkAlbumMock, artists)
-      expect(findAlbumByExternalIdSpy).toHaveBeenCalledWith(externalId)
-      expect(findAlbumByExternalIdSpy).toHaveBeenCalledTimes(externalIds.length)
+      expect(findAlbumsByExternalIdsSpy).toHaveBeenCalledWith(externalIds)
+      expect(findAlbumsByExternalIdsSpy).toHaveBeenCalledTimes(
+        externalIds.length
+      )
     })
   })
 })
