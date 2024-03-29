@@ -1,5 +1,5 @@
 import { Inject, Injectable, forwardRef } from '@nestjs/common'
-import { DataSource, FindOptionsRelations, Repository } from 'typeorm'
+import { DataSource, FindOptionsRelations, In, Repository } from 'typeorm'
 
 import { Album } from './album.entity'
 import { CreateAlbum } from './dtos'
@@ -32,6 +32,10 @@ export class AlbumsRepository extends Repository<Album> {
     return this.find({
       relations,
     })
+  }
+
+  findAlbumsByExternalIds(externalIds: string[]) {
+    return this.find({ where: { externalId: In(externalIds) }, relations })
   }
 
   findAlbumByExternalId(externalId: string) {
@@ -110,30 +114,33 @@ export class AlbumsRepository extends Repository<Album> {
     externalIds: string[],
     artists?: Artist[]
   ) {
-    const albumsToCreate = await this.spotifyAlbumsService.getAlbums(
+    const fetchedAlbums = await this.spotifyAlbumsService.getAlbums(
       externalIds,
       false
     )
 
-    const foundAlbums: Album[] = []
+    const foundAlbums = await this.findAlbumsByExternalIds(externalIds)
 
-    for (const externalId of externalIds) {
-      const foundAlbum = await this.findAlbumByExternalId(externalId)
+    for (const foundAlbum of foundAlbums) {
+      const albumToCreate = fetchedAlbums.find(
+        ({ id }) => id === foundAlbum.externalId
+      )
 
-      const albumToCreate = albumsToCreate.find(({ id }) => id === externalId)
-
-      if (foundAlbum?.tracks && foundAlbum.tracks.length > 0 && albumToCreate) {
+      if (foundAlbum.tracks && foundAlbum.tracks.length > 0 && albumToCreate) {
         await this.tracksRepository.createTracksFromExternalIds(
           albumToCreate.tracks.items.map(track => track.id),
           foundAlbum
         )
-        foundAlbums.push(foundAlbum)
       }
     }
 
     if (foundAlbums.length === externalIds.length) return foundAlbums
 
-    return Promise.all(
+    const albumsToCreate = fetchedAlbums.filter(
+      ({ id }) => !foundAlbums.some(album => album.externalId !== id)
+    )
+
+    const newAlbums = await Promise.all(
       albumsToCreate.map(newAlbum =>
         this.createAlbum(
           newAlbum,
@@ -145,5 +152,7 @@ export class AlbumsRepository extends Repository<Album> {
         )
       )
     )
+
+    return [...foundAlbums, ...newAlbums]
   }
 }
