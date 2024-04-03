@@ -25,6 +25,12 @@ describe('HistoryScheduler', () => {
   let schedulerRegistry: SchedulerRegistry
 
   beforeEach(async () => {
+    vi.spyOn(globalThis, 'setTimeout').mockImplementation(((
+      callback: () => void
+    ) => {
+      callback()
+    }) as unknown as typeof setTimeout)
+
     const module = await Test.createTestingModule({
       providers: [
         {

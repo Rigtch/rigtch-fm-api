@@ -35,28 +35,26 @@ export class HistoryScheduler implements OnModuleInit {
   async onModuleInit() {
     const users = await this.usersRepository.findUsers()
 
-    let index = 0
-
     this.logger.log(`Scheduling history fetching for ${users.length} users`)
 
     for (const user of users) {
-      this.triggerFetchingUserHistory(user, index)
-
-      index++
+      setTimeout(
+        () => {
+          this.triggerFetchingUserHistory(user)
+        },
+        ms(this.configService.get<string>(HISTORY_FETCHING_DELAY)!)
+      )
     }
   }
 
-  triggerFetchingUserHistory(user: User, delayMinutes = 0) {
+  triggerFetchingUserHistory(user: User) {
     const INTERVAL_HOURS = ms(
       this.configService.get<string>(HISTORY_FETCHING_INTERVAL)!
     )
-    const DELAY_MINUTES =
-      delayMinutes * ms(this.configService.get<string>(HISTORY_FETCHING_DELAY)!)
-    const DELAY = INTERVAL_HOURS + DELAY_MINUTES
 
     const interval = setInterval(() => {
       this.fetchUserHistory(user)
-    }, DELAY)
+    }, INTERVAL_HOURS)
 
     this.schedulerRegistry.addInterval(`fetch-history-${user.id}`, interval)
   }
