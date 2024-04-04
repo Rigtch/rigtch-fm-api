@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { Track } from './track.entity'
 import { TracksRepository } from './tracks.repository'
 import { TracksController } from './tracks.controller'
+import { TracksService } from './tracks.service'
 
 import { SpotifyModule } from '@modules/spotify'
 import { AlbumsModule } from '@modules/albums'
@@ -17,7 +18,7 @@ import { ArtistsModule } from '@modules/artists'
     forwardRef(() => ArtistsModule),
   ],
   controllers: [TracksController],
-  providers: [TracksRepository],
-  exports: [TracksRepository],
+  providers: [TracksRepository, TracksService],
+  exports: [TracksRepository, TracksService],
 })
 export class TracksModule {}
