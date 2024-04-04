@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { Album } from './album.entity'
 import { AlbumsRepository } from './albums.repository'
 import { AlbumsController } from './albums.controller'
+import { AlbumsService } from './albums.service'
 
 import { SpotifyModule } from '@modules/spotify'
 import { ImagesModule } from '@modules/images'
@@ -18,8 +19,8 @@ import { TracksModule } from '@modules/tracks'
     SpotifyModule,
     ImagesModule,
   ],
-  providers: [AlbumsRepository],
+  providers: [AlbumsRepository, AlbumsService],
   controllers: [AlbumsController],
-  exports: [AlbumsRepository],
+  exports: [AlbumsRepository, AlbumsService],
 })
 export class AlbumsModule {}
