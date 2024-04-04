@@ -1,30 +1,90 @@
 import { Injectable } from '@nestjs/common'
 
 import { ArtistsRepository } from './artists.repository'
-import { CreateArtist } from './dtos'
+import { SdkCreateArtist } from './dtos'
+import { Artist } from './artist.entity'
 
 import { SpotifyArtistsService } from '@modules/spotify/artists'
+import { ItemService } from '@common/abstractions/item.service.abstraction'
+import { ImagesService } from '@modules/images'
 
 @Injectable()
-export class ArtistsService {
+export class ArtistsService implements ItemService<SdkCreateArtist, Artist> {
   constructor(
     private readonly artistsRepository: ArtistsRepository,
-    private readonly spotifyArtistsService: SpotifyArtistsService
+    private readonly spotifyArtistsService: SpotifyArtistsService,
+    private readonly imagesService: ImagesService
   ) {}
 
-  async findOrCreateArtist(artistToCreate: CreateArtist) {
+  async create(data: SdkCreateArtist | string) {
+    if (typeof data === 'string') {
+      return this.createArtistFromExternalId(data)
+    }
+
+    return this.createArtistFromDto(data)
+  }
+
+  async createArtistFromDto({
+    images,
+    id,
+    followers,
+    external_urls: { spotify: href },
+    ...artistToCreate
+  }: SdkCreateArtist) {
+    const imageEntities = await this.imagesService.findOrCreate(images)
+
+    return this.artistsRepository.createArtist({
+      ...artistToCreate,
+      href,
+      followers: followers?.total ?? 0,
+      externalId: id,
+      images: imageEntities,
+    })
+  }
+
+  async createArtistFromExternalId(externalId: string) {
+    const artistToCreate = await this.spotifyArtistsService.getArtist(
+      externalId,
+      false
+    )
+
+    return this.createArtistFromDto(artistToCreate)
+  }
+
+  public findOrCreate(data: SdkCreateArtist | string): Promise<Artist>
+  public findOrCreate(data: SdkCreateArtist[] | string[]): Promise<Artist[]>
+
+  findOrCreate(data: SdkCreateArtist | string | SdkCreateArtist[] | string[]) {
+    if (typeof data === 'string') {
+      return this.findOrCreateArtistFromExternalId(data)
+    }
+
+    if ('id' in data) {
+      return this.findOrCreateArtistFromDto(data)
+    }
+
+    if (Array.isArray(data) && data.length > 0) {
+      return typeof data[0] === 'string'
+        ? this.findOrCreateArtistsFromExternalIds(data as string[])
+        : this.findOrCreateArtistsFromDtos(data as SdkCreateArtist[])
+    }
+  }
+
+  async findOrCreateArtistFromDto(artistToCreate: SdkCreateArtist) {
     const foundArtist = await this.artistsRepository.findArtistByExternalId(
       artistToCreate.id
     )
 
     if (foundArtist) return foundArtist
 
-    return this.artistsRepository.createArtist(artistToCreate)
+    return this.create(artistToCreate)
   }
 
-  findOrCreateArtists(artistsToCreate: CreateArtist[]) {
+  findOrCreateArtistsFromDtos(artistsToCreate: SdkCreateArtist[]) {
     return Promise.all(
-      artistsToCreate.map(newArtist => this.findOrCreateArtist(newArtist))
+      artistsToCreate.map(newArtist =>
+        this.findOrCreateArtistFromDto(newArtist)
+      )
     )
   }
 
@@ -39,7 +99,7 @@ export class ArtistsService {
       false
     )
 
-    return this.artistsRepository.createArtist(artistToCreate)
+    return this.create(artistToCreate)
   }
 
   async findOrCreateArtistsFromExternalIds(externalIds: string[]) {
@@ -59,7 +119,7 @@ export class ArtistsService {
     )
 
     const newArtists = await Promise.all(
-      artistsToCreate.map(artist => this.artistsRepository.createArtist(artist))
+      artistsToCreate.map(artist => this.create(artist))
     )
 
     return [...foundArtists, ...newArtists]
