@@ -7,6 +7,16 @@ import { CreateImage } from './dtos'
 export class ImagesService {
   constructor(private readonly imagesRepository: ImagesRepository) {}
 
+  create(data: CreateImage) {
+    return this.findOrCreateImage(data)
+  }
+
+  findOrCreate(data: CreateImage | CreateImage[]) {
+    if (Array.isArray(data)) return this.findOrCreateImages(data)
+
+    return this.findOrCreateImage(data)
+  }
+
   async findOrCreateImage(image: CreateImage) {
     const foundImage = await this.imagesRepository.findImageByUrl(image.url)
 

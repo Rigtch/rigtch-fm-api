@@ -36,6 +36,35 @@ describe('ImagesService', () => {
     expect(imagesService).toBeDefined()
   })
 
+  describe('findOrCreate', () => {
+    test('should find or create image', async () => {
+      const findOrCreateImageSpy = vi
+        .spyOn(imagesService, 'findOrCreateImage')
+        .mockResolvedValue(imageMock)
+      const findOrCreateImagesSpy = vi.spyOn(
+        imagesService,
+        'findOrCreateImages'
+      )
+
+      expect(await imagesService.findOrCreate(sdkImageMock)).toEqual(imageMock)
+      expect(findOrCreateImageSpy).toHaveBeenCalledWith(sdkImageMock)
+      expect(findOrCreateImagesSpy).not.toHaveBeenCalled()
+    })
+
+    test('should find or create images', async () => {
+      const findOrCreateImageSpy = vi.spyOn(imagesService, 'findOrCreateImage')
+      const findOrCreateImagesSpy = vi
+        .spyOn(imagesService, 'findOrCreateImages')
+        .mockResolvedValue(imagesMock)
+
+      expect(await imagesService.findOrCreate(sdkImagesMock)).toEqual(
+        imagesMock
+      )
+      expect(findOrCreateImageSpy).not.toHaveBeenCalled()
+      expect(findOrCreateImagesSpy).toHaveBeenCalledWith(sdkImagesMock)
+    })
+  })
+
   describe('findOrCreateImage', () => {
     test('should find image by url', async () => {
       const findImageByUrlSpy = vi
