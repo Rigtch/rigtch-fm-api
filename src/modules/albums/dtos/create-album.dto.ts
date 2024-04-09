@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
 import {
   IsArray,
+  IsDate,
   IsDateString,
   IsInt,
   IsObject,
@@ -8,6 +9,8 @@ import {
   IsString,
 } from 'class-validator'
 import { Page } from '@spotify/web-api-ts-sdk'
+
+import { Album } from '../album.entity'
 
 import {
   SdkAlbum,
@@ -19,11 +22,44 @@ import { Artist } from '@modules/artists'
 import { Image } from '@modules/images'
 import { Track } from '@modules/tracks'
 
-export abstract class CreateAlbum
+export abstract class CreateAlbum implements Omit<Album, 'id'> {
+  @IsString()
+  @ApiProperty()
+  readonly externalId: string
+
+  @IsString()
+  @ApiProperty()
+  readonly name: string
+
+  @IsString()
+  @ApiProperty()
+  readonly albumType: string
+
+  @IsInt()
+  @ApiProperty({ type: Number })
+  readonly totalTracks: number
+
+  @IsString()
+  @ApiProperty()
+  readonly href: string
+
+  @IsDate()
+  @ApiProperty({ type: Date })
+  readonly releaseDate: Date
+
+  @IsArray()
+  @ApiProperty({ type: Image, isArray: true })
+  readonly images: Image[]
+
+  @IsArray()
+  @ApiProperty({ type: Artist, isArray: true })
+  readonly artists: Artist[]
+}
+
+export abstract class SdkCreateAlbum
   implements
     Omit<
       SdkAlbum,
-      | 'images'
       | 'available_markets'
       | 'href'
       | 'copyrights'
@@ -65,7 +101,7 @@ export abstract class CreateAlbum
   @IsOptional()
   @IsArray()
   @ApiProperty({ type: Image, isArray: true })
-  readonly images?: SdkImage[]
+  readonly images: SdkImage[]
 
   @IsArray()
   @ApiProperty({ type: Artist, isArray: true })

@@ -55,19 +55,15 @@ export class ArtistsService implements ItemService<SdkCreateArtist, Artist> {
   public findOrCreate(data: SdkCreateArtist[] | string[]): Promise<Artist[]>
 
   findOrCreate(data: SdkCreateArtist | string | SdkCreateArtist[] | string[]) {
-    if (typeof data === 'string') {
+    if (typeof data === 'string')
       return this.findOrCreateArtistFromExternalId(data)
-    }
 
-    if ('id' in data) {
-      return this.findOrCreateArtistFromDto(data)
-    }
+    if ('id' in data) return this.findOrCreateArtistFromDto(data)
 
-    if (Array.isArray(data) && data.length > 0) {
+    if (Array.isArray(data) && data.length > 0)
       return typeof data[0] === 'string'
         ? this.findOrCreateArtistsFromExternalIds(data as string[])
         : this.findOrCreateArtistsFromDtos(data as SdkCreateArtist[])
-    }
   }
 
   async findOrCreateArtistFromDto(artistToCreate: SdkCreateArtist) {
