@@ -57,9 +57,9 @@ export class AlbumsService implements ItemService<SdkCreateAlbum, Album> {
       artists,
     })
 
-    await this.tracksService.createTracksFromExternalIds(
+    await this.tracksService.create(
       tracks.items.map(track => track.id),
-      album
+      [album]
     )
 
     return album
@@ -76,7 +76,7 @@ export class AlbumsService implements ItemService<SdkCreateAlbum, Album> {
 
   public findOrCreate(data: SdkCreateAlbum | string): Promise<Album>
   public findOrCreate(data: SdkCreateAlbum[]): Promise<Album[]>
-  public findOrCreate(data: string[], artists?: Artist[]): Promise<Album>
+  public findOrCreate(data: string[], artists?: Artist[]): Promise<Album[]>
 
   async findOrCreate(
     data: SdkCreateAlbum | string | SdkCreateAlbum[] | string[],
@@ -119,9 +119,9 @@ export class AlbumsService implements ItemService<SdkCreateAlbum, Album> {
     )
 
     if (foundAlbum?.tracks && foundAlbum.tracks.length > 0) {
-      await this.tracksService.createTracksFromExternalIds(
+      await this.tracksService.create(
         albumToCreate.tracks.items.map(track => track.id),
-        foundAlbum
+        [foundAlbum]
       )
       return foundAlbum
     }
@@ -147,9 +147,9 @@ export class AlbumsService implements ItemService<SdkCreateAlbum, Album> {
       )
 
       if (foundAlbum.tracks && foundAlbum.tracks.length > 0 && albumToCreate) {
-        await this.tracksService.createTracksFromExternalIds(
+        await this.tracksService.create(
           albumToCreate.tracks.items.map(track => track.id),
-          foundAlbum
+          [foundAlbum]
         )
       }
     }
