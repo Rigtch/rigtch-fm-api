@@ -1,10 +1,43 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsArray, IsInt, IsString } from 'class-validator'
+import { IsArray, IsInstance, IsInt, IsString } from 'class-validator'
 
-import { SdkSimplifiedArtist, SdkTrack } from '@common/types/spotify'
+import { Track } from '../track.entity'
+
+import {
+  SdkSimplifiedAlbum,
+  SdkSimplifiedArtist,
+  SdkTrack,
+} from '@common/types/spotify'
 import { Artist } from '@modules/artists'
+import { Album } from '@modules/albums'
 
-export abstract class CreateTrack
+export abstract class CreateTrack implements Omit<Track, 'id'> {
+  @IsString()
+  @ApiProperty()
+  readonly externalId: string
+
+  @IsString()
+  @ApiProperty()
+  readonly name: string
+
+  @IsString()
+  @ApiProperty()
+  readonly href: string
+
+  @IsInt()
+  @ApiProperty({ type: Number })
+  readonly duration: number
+
+  @IsArray()
+  @ApiProperty({ type: Artist, isArray: true })
+  readonly artists: Artist[]
+
+  @IsInstance(Album)
+  @ApiProperty({ type: Album })
+  readonly album: Album
+}
+
+export abstract class SdkCreateTrack
   implements
     Omit<
       SdkTrack,
@@ -22,7 +55,6 @@ export abstract class CreateTrack
       | 'uri'
       | 'track'
       | 'episode'
-      | 'album'
     >
 {
   @IsString()
@@ -46,4 +78,7 @@ export abstract class CreateTrack
   @IsArray()
   @ApiProperty({ type: Artist, isArray: true })
   readonly artists: SdkSimplifiedArtist[]
+
+  @ApiProperty()
+  readonly album: SdkSimplifiedAlbum
 }

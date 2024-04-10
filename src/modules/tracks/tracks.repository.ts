@@ -1,14 +1,8 @@
-import { Inject, Injectable, forwardRef } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { DataSource, FindOptionsRelations, In, Repository } from 'typeorm'
 
 import { Track } from './track.entity'
 import { CreateTrack } from './dtos'
-
-import { Album, AlbumsRepository } from '@modules/albums'
-import { Artist, ArtistsRepository } from '@modules/artists'
-import { SpotifyTracksService } from '@modules/spotify/tracks'
-import { SdkTrack } from '@common/types/spotify'
-import { removeDuplicates } from '@common/utils'
 
 export const relations: FindOptionsRelations<Track> = {
   album: true,
@@ -17,14 +11,7 @@ export const relations: FindOptionsRelations<Track> = {
 
 @Injectable()
 export class TracksRepository extends Repository<Track> {
-  constructor(
-    private readonly dataSource: DataSource,
-    @Inject(forwardRef(() => ArtistsRepository))
-    private readonly artistsRepository: ArtistsRepository,
-    @Inject(forwardRef(() => AlbumsRepository))
-    private readonly albumsRepository: AlbumsRepository,
-    private readonly spotifyTracksService: SpotifyTracksService
-  ) {
+  constructor(private readonly dataSource: DataSource) {
     super(Track, dataSource.createEntityManager())
   }
 
@@ -62,92 +49,9 @@ export class TracksRepository extends Repository<Track> {
     })
   }
 
-  async createTrack(
-    {
-      id,
-      duration_ms,
-      external_urls: { spotify: href },
-      ...newTrack
-    }: CreateTrack,
-    album: Album,
-    artists?: Artist[]
-  ) {
-    if (!artists)
-      artists = await this.artistsRepository.findOrCreateArtistsFromExternalIds(
-        newTrack.artists.map(artist => artist.id)
-      )
-
-    const trackEntity: Track = this.create({
-      ...newTrack,
-      externalId: id,
-      href,
-      duration: duration_ms,
-      album,
-      artists,
-    })
+  async createTrack(trackToCreate: CreateTrack) {
+    const trackEntity = this.create(trackToCreate)
 
     return this.save(trackEntity)
-  }
-
-  async createTrackFromExternalId(externalId: string, album: Album) {
-    const newTrack = await this.spotifyTracksService.getTrack(externalId, false)
-
-    return this.createTrack(newTrack, album)
-  }
-
-  async createTracksFromExternalIds(externalIds: string[], album: Album) {
-    const newTracks = await this.spotifyTracksService.getTracks(
-      externalIds,
-      false
-    )
-
-    return Promise.all(
-      newTracks.map(async newTrack => await this.createTrack(newTrack, album))
-    )
-  }
-
-  async findOrCreateTrackFromExternalId(
-    externalId: string,
-    albumExternalId: string
-  ): Promise<Track> {
-    const track = await this.findTrackByExternalId(externalId)
-
-    if (track) return track
-
-    await this.albumsRepository.findOrCreateAlbumFromExternalId(albumExternalId)
-
-    return this.findOrCreateTrackFromExternalId(externalId, albumExternalId)
-  }
-
-  async findOrCreateTracks(tracks: SdkTrack[]) {
-    const externalIds = tracks.map(track => track.id)
-
-    const foundTracks = await this.findTracksByExternalIds(externalIds)
-
-    const filteredTracks = tracks.filter(
-      ({ id }) => !foundTracks.some(track => track.externalId !== id)
-    )
-
-    if (filteredTracks.length === 0) return foundTracks
-
-    const artistsExternalIdsToCreate = removeDuplicates(
-      filteredTracks.flatMap(track => track.artists).map(artist => artist.id)
-    )
-
-    const artistEntities =
-      await this.artistsRepository.findOrCreateArtistsFromExternalIds(
-        artistsExternalIdsToCreate
-      )
-
-    const albumsExternalIdsToCreate = removeDuplicates(
-      filteredTracks.map(track => track.album.id)
-    )
-
-    await this.albumsRepository.findOrCreateAlbumsFromExternalIds(
-      albumsExternalIdsToCreate,
-      artistEntities
-    )
-
-    return this.findTracksByExternalIds(externalIds)
   }
 }
