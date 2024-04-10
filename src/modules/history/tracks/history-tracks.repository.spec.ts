@@ -1,7 +1,6 @@
 import { DataSource } from 'typeorm'
 import { Test } from '@nestjs/testing'
 import { MockProxy, mock } from 'vitest-mock-extended'
-import { Context, PlayHistory } from '@spotify/web-api-ts-sdk'
 
 import {
   HistoryTracksRepository,
@@ -11,14 +10,10 @@ import {
 import { HistoryTrack } from './history-track.entity'
 import { CreateHistoryTrack } from './dtos'
 
-import { TracksRepository } from '@modules/tracks'
-import { sdkTrackMock, trackEntitiesMock, userMock } from '@common/mocks'
-
 describe('HistoryTracksRepository', () => {
   const userId = 'userId'
 
   let historyTracksRepository: HistoryTracksRepository
-  let tracksRepository: TracksRepository
 
   let historyTrackMock: MockProxy<HistoryTrack>
   let historyTracksMock: MockProxy<HistoryTrack[]>
@@ -32,18 +27,12 @@ describe('HistoryTracksRepository', () => {
             createEntityManager: vi.fn(),
           },
         },
-        {
-          provide: TracksRepository,
-          useValue: {
-            findOrCreateTracks: vi.fn(),
-          },
-        },
+
         HistoryTracksRepository,
       ],
     }).compile()
 
     historyTracksRepository = module.get(HistoryTracksRepository)
-    tracksRepository = module.get(TracksRepository)
 
     historyTrackMock = mock<HistoryTrack>()
     historyTracksMock = Array.from({ length: 5 }, () => historyTrackMock)
@@ -108,35 +97,5 @@ describe('HistoryTracksRepository', () => {
     ).toEqual(historyTrackMock)
     expect(createSpy).toHaveBeenCalledWith(createHistoryTrackMock)
     expect(saveSpy).toHaveBeenCalledWith(historyTrackMock)
-  })
-
-  test('should create history tracks from play history', async () => {
-    const playHistoryMock: PlayHistory[] = [
-      {
-        played_at: new Date().toISOString(),
-        track: sdkTrackMock,
-        context: mock<Context>(),
-      },
-    ]
-
-    const findOrCreateTrackFromExternalIdSpy = vi
-      .spyOn(tracksRepository, 'findOrCreateTracks')
-      .mockResolvedValue(trackEntitiesMock)
-
-    const createHistoryTrackSpy = vi
-      .spyOn(historyTracksRepository, 'createHistoryTrack')
-      .mockResolvedValue(historyTrackMock)
-
-    expect(
-      await historyTracksRepository.createHistoryTracksFromPlayHistory(
-        playHistoryMock,
-        userMock
-      )
-    ).toEqual(historyTracksMock)
-
-    expect(findOrCreateTrackFromExternalIdSpy).toHaveBeenCalledWith(
-      playHistoryMock.map(({ track }) => track)
-    )
-    expect(createHistoryTrackSpy).toHaveBeenCalled()
   })
 })
