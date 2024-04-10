@@ -6,6 +6,7 @@ import { History } from './history.entity'
 import { HistoryRepository } from './history.repository'
 import { HistoryScheduler } from './history.scheduler'
 import { HistoryTracksModule } from './tracks'
+import { HistoryService } from './history.service'
 
 import { UsersModule } from '@modules/users'
 import { SpotifyModule } from '@modules/spotify'
@@ -22,7 +23,7 @@ import { AlbumsModule } from '@modules/albums'
     AlbumsModule,
     HistoryTracksModule,
   ],
-  providers: [HistoryRepository, HistoryScheduler],
-  exports: [HistoryRepository, HistoryScheduler],
+  providers: [HistoryRepository, HistoryScheduler, HistoryService],
+  exports: [HistoryRepository, HistoryScheduler, HistoryService],
 })
 export class HistoryModule {}

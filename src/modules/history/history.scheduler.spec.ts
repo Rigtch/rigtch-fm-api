@@ -6,8 +6,8 @@ import { AccessToken, MaxInt } from '@spotify/web-api-ts-sdk'
 import { ConfigService } from '@nestjs/config'
 
 import { HistoryScheduler } from './history.scheduler'
-import { HistoryRepository } from './history.repository'
 import { History } from './history.entity'
+import { HistoryService } from './history.service'
 
 import { UsersRepository } from '@modules/users'
 import { SpotifyAuthService } from '@modules/spotify/auth'
@@ -21,7 +21,7 @@ describe('HistoryScheduler', () => {
   let usersRepository: UsersRepository
   let spotifyAuthService: SpotifyAuthService
   let spotifyPlayerService: SpotifyPlayerService
-  let historyRepository: HistoryRepository
+  let historyService: HistoryService
   let schedulerRegistry: SchedulerRegistry
 
   beforeEach(async () => {
@@ -52,9 +52,9 @@ describe('HistoryScheduler', () => {
           },
         },
         {
-          provide: HistoryRepository,
+          provide: HistoryService,
           useValue: {
-            updateOrCreateHistoryByUser: vi.fn(),
+            updateOrCreate: vi.fn(),
           },
         },
         {
@@ -77,7 +77,7 @@ describe('HistoryScheduler', () => {
     usersRepository = module.get(UsersRepository)
     spotifyAuthService = module.get(SpotifyAuthService)
     spotifyPlayerService = module.get(SpotifyPlayerService)
-    historyRepository = module.get(HistoryRepository)
+    historyService = module.get(HistoryService)
     schedulerRegistry = module.get(SchedulerRegistry)
   })
 
@@ -134,7 +134,7 @@ describe('HistoryScheduler', () => {
       >
     ).mockResolvedValue(recentlyPlayedTracksPageMock)
     const updateOrCreateHistoryByUserSpy = vi
-      .spyOn(historyRepository, 'updateOrCreateHistoryByUser')
+      .spyOn(historyService, 'updateOrCreate')
       .mockResolvedValue(mock<History>())
 
     await historyScheduler.fetchUserHistory(userMock)
