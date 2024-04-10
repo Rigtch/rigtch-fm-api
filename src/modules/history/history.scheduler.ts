@@ -9,7 +9,7 @@ import { SchedulerRegistry } from '@nestjs/schedule'
 import { ConfigService } from '@nestjs/config'
 import ms from 'ms'
 
-import { HistoryRepository } from './history.repository'
+import { HistoryService } from './history.service'
 
 import { User, UsersRepository } from '@modules/users'
 import { SpotifyAuthService } from '@modules/spotify/auth'
@@ -27,7 +27,7 @@ export class HistoryScheduler implements OnModuleInit {
     private readonly usersRepository: UsersRepository,
     private readonly spotifyAuthService: SpotifyAuthService,
     private readonly spotifyPlayerService: SpotifyPlayerService,
-    private readonly historyRepository: HistoryRepository,
+    private readonly historyService: HistoryService,
     private readonly schedulerRegistry: SchedulerRegistry,
     private readonly configService: ConfigService
   ) {}
@@ -73,6 +73,6 @@ export class HistoryScheduler implements OnModuleInit {
       false
     )
 
-    await this.historyRepository.updateOrCreateHistoryByUser(user, items)
+    await this.historyService.updateOrCreate(user, items)
   }
 }
