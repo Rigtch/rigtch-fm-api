@@ -10,6 +10,7 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiParam,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger'
@@ -65,6 +66,7 @@ export class ArtistsController {
   @ApiOperation({
     summary: 'Getting an artist by id.',
   })
+  @ApiParam({ name: 'id', required: true })
   @ApiOkResponse({
     description: 'Artist successfully found.',
     type: Artist,

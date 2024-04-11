@@ -1,8 +1,15 @@
-import { Controller, Get, NotFoundException, Query } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  Query,
+} from '@nestjs/common'
 import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiParam,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger'
@@ -58,6 +65,7 @@ export class AlbumsController {
   @ApiOperation({
     summary: 'Getting an album by id.',
   })
+  @ApiParam({ name: 'id', required: true })
   @ApiOkResponse({
     description: 'Album successfully found.',
     type: Album,
@@ -65,7 +73,7 @@ export class AlbumsController {
   @ApiNotFoundResponse({
     description: NOT_BEEN_FOUND('album'),
   })
-  async getAlbumById(@Query('id') id: string) {
+  async getAlbumById(@Param('id') id: string) {
     const foundAlbum = await this.albumsRepository.findAlbumById(id)
 
     if (!foundAlbum) throw new NotFoundException(NOT_BEEN_FOUND('album'))
