@@ -17,12 +17,10 @@ import {
 import { ArtistsRepository } from './artists.repository'
 import { Artist } from './artist.entity'
 
-import { ApiAuth, Token } from '@modules/auth/decorators'
 import { NOT_BEEN_FOUND, ONE_IS_INVALID } from '@common/constants'
 
 @Controller('artists')
 @ApiTags('artists')
-@ApiAuth()
 export class ArtistsController {
   constructor(private readonly artistsRepository: ArtistsRepository) {}
 
@@ -41,8 +39,7 @@ export class ArtistsController {
   })
   async getArtists(
     @Query('name') name?: string,
-    @Query('external-id') externalId?: string,
-    @Token() _token?: string
+    @Query('external-id') externalId?: string
   ) {
     if (name) {
       const foundArtist = await this.artistsRepository.findArtistByName(name)
@@ -78,7 +75,7 @@ export class ArtistsController {
   @ApiBadRequestResponse({
     description: ONE_IS_INVALID('uuid'),
   })
-  async getArtistById(@Param('id') id: string, @Token() _token?: string) {
+  async getArtistById(@Param('id') id: string) {
     const foundArtist = await this.artistsRepository.findArtistById(id)
 
     if (!foundArtist) throw new NotFoundException(NOT_BEEN_FOUND('artist'))

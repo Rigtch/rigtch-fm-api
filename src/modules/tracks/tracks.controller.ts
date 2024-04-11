@@ -11,12 +11,10 @@ import {
 import { TracksRepository } from './tracks.repository'
 import { Track } from './track.entity'
 
-import { ApiAuth, Token } from '@modules/auth/decorators'
 import { NOT_BEEN_FOUND, ONE_IS_INVALID } from '@common/constants'
 
 @Controller('tracks')
 @ApiTags('tracks')
-@ApiAuth()
 export class TracksController {
   constructor(private readonly tracksRepository: TracksRepository) {}
 
@@ -35,8 +33,7 @@ export class TracksController {
   })
   async getTracks(
     @Query('name') name?: string,
-    @Query('external-id') externalId?: string,
-    @Token() _token?: string
+    @Query('external-id') externalId?: string
   ) {
     if (name) {
       const foundTrack = await this.tracksRepository.findTrackByName(name)
@@ -72,7 +69,7 @@ export class TracksController {
   @ApiBadRequestResponse({
     description: ONE_IS_INVALID('uuid'),
   })
-  async getTrackById(@Query('id') id: string, @Token() _token?: string) {
+  async getTrackById(@Query('id') id: string) {
     const foundTrack = await this.tracksRepository.findTrackById(id)
 
     if (!foundTrack) throw new NotFoundException(NOT_BEEN_FOUND('track'))

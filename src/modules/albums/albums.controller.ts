@@ -10,12 +10,10 @@ import {
 import { AlbumsRepository } from './albums.repository'
 import { Album } from './album.entity'
 
-import { ApiAuth, Token } from '@modules/auth/decorators'
 import { NOT_BEEN_FOUND } from '@common/constants'
 
 @Controller('albums')
 @ApiTags('albums')
-@ApiAuth()
 export class AlbumsController {
   constructor(private readonly albumsRepository: AlbumsRepository) {}
 
@@ -34,8 +32,7 @@ export class AlbumsController {
   })
   async getAlbums(
     @Query('name') name?: string,
-    @Query('external-id') externalId?: string,
-    @Token() _token?: string
+    @Query('external-id') externalId?: string
   ) {
     if (name) {
       const foundAlbum = await this.albumsRepository.findAlbumByName(name)
@@ -68,7 +65,7 @@ export class AlbumsController {
   @ApiNotFoundResponse({
     description: NOT_BEEN_FOUND('album'),
   })
-  async getAlbumById(@Query('id') id: string, @Token() _token?: string) {
+  async getAlbumById(@Query('id') id: string) {
     const foundAlbum = await this.albumsRepository.findAlbumById(id)
 
     if (!foundAlbum) throw new NotFoundException(NOT_BEEN_FOUND('album'))
