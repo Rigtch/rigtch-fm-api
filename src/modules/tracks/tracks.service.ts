@@ -132,13 +132,16 @@ export class TracksService implements ItemService<SdkCreateTrack, Track> {
 
     if ('id' in data) return this.findOrCreateTrackFromDto(data)
 
-    if (Array.isArray(data) && data.length > 0)
+    if (Array.isArray(data)) {
+      if (data.length === 0) return []
+
       return typeof data[0] === 'string'
         ? this.findOrCreateTracksFromExternalIds(
             data as string[],
             idOrIds as string[]
           )
         : this.findOrCreateTracksFromDtos(data as SdkCreateTrack[])
+    }
   }
 
   async findOrCreateTrackFromExternalId(
@@ -158,6 +161,8 @@ export class TracksService implements ItemService<SdkCreateTrack, Track> {
     externalIds: string[],
     albumsExternalIds: string[]
   ): Promise<Track[]> {
+    if (externalIds.length === 0 || albumsExternalIds.length === 0) return []
+
     const filteredExternalIds = removeDuplicates(externalIds)
 
     const foundTracks =
@@ -189,7 +194,9 @@ export class TracksService implements ItemService<SdkCreateTrack, Track> {
     return this.findOrCreateTrackFromDto(track)
   }
 
-  async findOrCreateTracksFromDtos(tracks: SdkCreateTrack[]) {
+  async findOrCreateTracksFromDtos(tracks: SdkCreateTrack[]): Promise<Track[]> {
+    if (tracks.length === 0) return []
+
     const externalIds = tracks.map(track => track.id)
 
     const foundTracks =
