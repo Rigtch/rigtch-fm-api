@@ -35,6 +35,8 @@ export class HistoryTracksService {
       playHistory.map(({ track }) => track)
     )
 
+    if (tracks.length === 0) return []
+
     const historyTracks: HistoryTrack[] = []
 
     for (const track of tracks) {

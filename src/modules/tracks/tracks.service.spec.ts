@@ -238,6 +238,14 @@ describe('TracksService', () => {
       expect(findOrCreateTracksFromDtosSpy).not.toHaveBeenCalled()
     })
 
+    test('should return empty array if no data', async () => {
+      expect(await tracksService.findOrCreate([])).toEqual([])
+      expect(findOrCreateTrackFromExternalIdSpy).not.toHaveBeenCalled()
+      expect(findOrCreateTrackFromDtoSpy).not.toHaveBeenCalled()
+      expect(findOrCreateTracksFromExternalIdsSpy).not.toHaveBeenCalled()
+      expect(findOrCreateTracksFromDtosSpy).not.toHaveBeenCalled()
+    })
+
     test('should find or create tracks from external ids', async () => {
       findOrCreateTracksFromExternalIdsSpy.mockResolvedValue(trackEntitiesMock)
 
@@ -326,6 +334,14 @@ describe('TracksService', () => {
       findOrCreateAlbum = vi.spyOn(albumsService, 'findOrCreate')
     })
 
+    test('should return empty array if no external ids', async () => {
+      expect(
+        await tracksService.findOrCreateTracksFromExternalIds([], [])
+      ).toEqual([])
+      expect(findTrackByExternalIdSpy).not.toHaveBeenCalled()
+      expect(findOrCreateAlbum).not.toHaveBeenCalled()
+    })
+
     test('should find tracks by external ids', async () => {
       findTrackByExternalIdSpy.mockResolvedValue(foundTracks)
 
@@ -402,6 +418,12 @@ describe('TracksService', () => {
         'findTracksByExternalIds'
       )
       findOrCreateAlbum = vi.spyOn(albumsService, 'findOrCreate')
+    })
+
+    test('should return empty array if no tracks', async () => {
+      expect(await tracksService.findOrCreateTracksFromDtos([])).toEqual([])
+      expect(findTrackByExternalIdSpy).not.toHaveBeenCalled()
+      expect(findOrCreateAlbum).not.toHaveBeenCalled()
     })
 
     test('should find tracks by external ids', async () => {

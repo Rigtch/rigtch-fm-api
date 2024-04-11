@@ -97,33 +97,53 @@ describe('HistoryTracksService', () => {
     })
   })
 
-  test('should create history tracks from play history', async () => {
-    const playHistoryMock: PlayHistory[] = [
-      {
-        played_at: new Date().toISOString(),
-        track: sdkTrackMock,
-        context: mock<Context>(),
-      },
-    ]
+  describe('createHistoryTracksFromPlayHistory', () => {
+    test('should return empty array if no tracks are found or created', async () => {
+      const playHistoryMock = []
 
-    const findOrCreateTracks = vi
-      .spyOn(tracksService, 'findOrCreate')
-      .mockResolvedValue(trackEntitiesMock)
+      const findOrCreateTracks = vi
+        .spyOn(tracksService, 'findOrCreate')
+        .mockResolvedValue([])
 
-    const createHistoryTrackSpy = vi
-      .spyOn(historyTracksRepository, 'createHistoryTrack')
-      .mockResolvedValue(historyTrackMock)
-
-    expect(
-      await historyTracksService.createHistoryTracksFromPlayHistory(
-        playHistoryMock,
-        userMock
+      expect(
+        await historyTracksService.createHistoryTracksFromPlayHistory(
+          playHistoryMock,
+          userMock
+        )
+      ).toEqual([])
+      expect(findOrCreateTracks).toHaveBeenCalledWith(
+        playHistoryMock.map(({ track }) => track)
       )
-    ).toEqual(historyTracksMock)
+    })
 
-    expect(findOrCreateTracks).toHaveBeenCalledWith(
-      playHistoryMock.map(({ track }) => track)
-    )
-    expect(createHistoryTrackSpy).toHaveBeenCalled()
+    test('should create history tracks from play history', async () => {
+      const playHistoryMock: PlayHistory[] = [
+        {
+          played_at: new Date().toISOString(),
+          track: sdkTrackMock,
+          context: mock<Context>(),
+        },
+      ]
+
+      const findOrCreateTracks = vi
+        .spyOn(tracksService, 'findOrCreate')
+        .mockResolvedValue(trackEntitiesMock)
+
+      const createHistoryTrackSpy = vi
+        .spyOn(historyTracksRepository, 'createHistoryTrack')
+        .mockResolvedValue(historyTrackMock)
+
+      expect(
+        await historyTracksService.createHistoryTracksFromPlayHistory(
+          playHistoryMock,
+          userMock
+        )
+      ).toEqual(historyTracksMock)
+
+      expect(findOrCreateTracks).toHaveBeenCalledWith(
+        playHistoryMock.map(({ track }) => track)
+      )
+      expect(createHistoryTrackSpy).toHaveBeenCalled()
+    })
   })
 })
