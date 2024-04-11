@@ -1,9 +1,16 @@
-import { Controller, Get, NotFoundException, Query } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  Query,
+} from '@nestjs/common'
 import {
   ApiBadRequestResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiParam,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger'
@@ -59,6 +66,7 @@ export class TracksController {
   @ApiOperation({
     summary: 'Getting a track by id.',
   })
+  @ApiParam({ name: 'id', required: true })
   @ApiOkResponse({
     description: 'Track successfully found.',
     type: Track,
@@ -69,7 +77,7 @@ export class TracksController {
   @ApiBadRequestResponse({
     description: ONE_IS_INVALID('uuid'),
   })
-  async getTrackById(@Query('id') id: string) {
+  async getTrackById(@Param('id') id: string) {
     const foundTrack = await this.tracksRepository.findTrackById(id)
 
     if (!foundTrack) throw new NotFoundException(NOT_BEEN_FOUND('track'))
