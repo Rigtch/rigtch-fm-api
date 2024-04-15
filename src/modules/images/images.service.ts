@@ -9,7 +9,7 @@ export class ImagesService {
   constructor(private readonly imagesRepository: ImagesRepository) {}
 
   create(data: CreateImage) {
-    return this.findOrCreateImage(data)
+    return this.imagesRepository.createImage(data)
   }
 
   public findOrCreate(data: CreateImage): Promise<Image>
