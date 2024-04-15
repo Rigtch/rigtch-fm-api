@@ -36,6 +36,15 @@ describe('ImagesService', () => {
     expect(imagesService).toBeDefined()
   })
 
+  test('create', async () => {
+    const createImageSpy = vi
+      .spyOn(imagesRepository, 'createImage')
+      .mockResolvedValue(imageMock)
+
+    expect(await imagesService.create(sdkImageMock)).toEqual(imageMock)
+    expect(createImageSpy).toHaveBeenCalledWith(sdkImageMock)
+  })
+
   describe('findOrCreate', () => {
     test('should find or create image', async () => {
       const findOrCreateImageSpy = vi
