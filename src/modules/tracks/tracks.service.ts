@@ -9,10 +9,9 @@ import { Album } from '@modules/albums'
 import { AlbumsService } from '@modules/albums'
 import { removeDuplicates } from '@common/utils'
 import { Artist, ArtistsService } from '@modules/artists'
-import { ItemService } from '@common/abstractions'
 
 @Injectable()
-export class TracksService implements ItemService<SdkCreateTrack, Track> {
+export class TracksService {
   constructor(
     @Inject(forwardRef(() => TracksRepository))
     private readonly tracksRepository: TracksRepository,

@@ -4,10 +4,8 @@ import { ImagesRepository } from './images.repository'
 import { CreateImage } from './dtos'
 import { Image } from './image.entity'
 
-import { ItemService } from '@common/abstractions'
-
 @Injectable()
-export class ImagesService implements ItemService<CreateImage, Image> {
+export class ImagesService {
   constructor(private readonly imagesRepository: ImagesRepository) {}
 
   create(data: CreateImage) {
