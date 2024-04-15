@@ -115,70 +115,16 @@ export class TracksService {
   }
 
   public findOrCreate(data: SdkCreateTrack): Promise<Track>
-  public findOrCreate(data: string, albumExternalId: string): Promise<Track>
   public findOrCreate(data: SdkCreateTrack[]): Promise<Track[]>
-  public findOrCreate(
-    data: string[],
-    albumsExternalIds: string[]
-  ): Promise<Track[]>
 
-  findOrCreate(
-    data: SdkCreateTrack | string | SdkCreateTrack[] | string[],
-    idOrIds?: string | string[]
-  ) {
-    if (typeof data === 'string')
-      return this.findOrCreateTrackFromExternalId(data, idOrIds as string)
-
-    if ('id' in data) return this.findOrCreateTrackFromDto(data)
-
+  findOrCreate(data: SdkCreateTrack | SdkCreateTrack[]) {
     if (Array.isArray(data)) {
       if (data.length === 0) return []
 
-      return typeof data[0] === 'string'
-        ? this.findOrCreateTracksFromExternalIds(
-            data as string[],
-            idOrIds as string[]
-          )
-        : this.findOrCreateTracksFromDtos(data as SdkCreateTrack[])
+      return this.findOrCreateTracksFromDtos(data)
     }
-  }
 
-  async findOrCreateTrackFromExternalId(
-    externalId: string,
-    albumExternalId: string
-  ): Promise<Track> {
-    const track = await this.tracksRepository.findTrackByExternalId(externalId)
-
-    if (track) return track
-
-    await this.albumsService.findOrCreate(albumExternalId)
-
-    return this.findOrCreateTrackFromExternalId(externalId, albumExternalId)
-  }
-
-  async findOrCreateTracksFromExternalIds(
-    externalIds: string[],
-    albumsExternalIds: string[]
-  ): Promise<Track[]> {
-    if (externalIds.length === 0 || albumsExternalIds.length === 0) return []
-
-    const filteredExternalIds = removeDuplicates(externalIds)
-
-    const foundTracks =
-      await this.tracksRepository.findTracksByExternalIds(filteredExternalIds)
-
-    const filteredTracks = externalIds.filter(
-      id => !foundTracks.map(track => track.externalId).includes(id)
-    )
-
-    if (filteredTracks.length === 0) return foundTracks
-
-    await this.albumsService.findOrCreate(albumsExternalIds)
-
-    return this.findOrCreateTracksFromExternalIds(
-      filteredTracks,
-      albumsExternalIds
-    )
+    return this.findOrCreateTrackFromDto(data)
   }
 
   async findOrCreateTrackFromDto(track: SdkCreateTrack): Promise<Track> {
