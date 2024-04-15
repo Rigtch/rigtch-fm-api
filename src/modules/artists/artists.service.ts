@@ -15,15 +15,7 @@ export class ArtistsService {
     private readonly imagesService: ImagesService
   ) {}
 
-  async create(data: SdkCreateArtist | string) {
-    if (typeof data === 'string') {
-      return this.createArtistFromExternalId(data)
-    }
-
-    return this.createArtistFromDto(data)
-  }
-
-  async createArtistFromDto({
+  async create({
     images,
     id,
     followers,
@@ -39,15 +31,6 @@ export class ArtistsService {
       externalId: id,
       images: imageEntities,
     })
-  }
-
-  async createArtistFromExternalId(externalId: string) {
-    const artistToCreate = await this.spotifyArtistsService.getArtist(
-      externalId,
-      false
-    )
-
-    return this.createArtistFromDto(artistToCreate)
   }
 
   public findOrCreate(data: SdkCreateArtist | string): Promise<Artist>
@@ -114,7 +97,7 @@ export class ArtistsService {
     )
 
     const newArtists = await Promise.all(
-      artistsToCreate.map(artist => this.create(artist))
+      artistsToCreate.map(artistToCreate => this.create(artistToCreate))
     )
 
     return [...foundArtists, ...newArtists]

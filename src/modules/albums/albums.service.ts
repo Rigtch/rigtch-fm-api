@@ -21,13 +21,7 @@ export class AlbumsService {
     private readonly spotifyAlbumsService: SpotifyAlbumsService
   ) {}
 
-  async create(data: SdkCreateAlbum | string, artists?: Artist[]) {
-    if (typeof data === 'string') return this.createAlbumFromExternalId(data)
-
-    return this.createAlbumFromDto(data, artists)
-  }
-
-  async createAlbumFromDto(
+  async create(
     {
       images,
       tracks,
@@ -62,15 +56,6 @@ export class AlbumsService {
     )
 
     return album
-  }
-
-  async createAlbumFromExternalId(externalId: string) {
-    const albumToCreate = await this.spotifyAlbumsService.getAlbum(
-      externalId,
-      false
-    )
-
-    return this.createAlbumFromDto(albumToCreate)
   }
 
   public findOrCreate(data: string, artists?: Artist[]): Promise<Album>

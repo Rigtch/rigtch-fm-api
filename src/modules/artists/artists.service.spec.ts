@@ -58,43 +58,6 @@ describe('ArtistsService', () => {
     expect(artistsService).toBeDefined()
   })
 
-  describe('create', () => {
-    let createArtistFromExternalIdSpy: MockInstance
-    let createArtistFromDtoSpy: MockInstance
-
-    beforeEach(() => {
-      createArtistFromExternalIdSpy = vi.spyOn(
-        artistsService,
-        'createArtistFromExternalId'
-      )
-      createArtistFromDtoSpy = vi.spyOn(artistsService, 'createArtistFromDto')
-    })
-
-    test('should create artist from dto', async () => {
-      createArtistFromDtoSpy.mockResolvedValue(artistEntityMock)
-
-      expect(await artistsService.create(sdkArtistMock)).toEqual(
-        artistEntityMock
-      )
-
-      expect(createArtistFromExternalIdSpy).not.toHaveBeenCalled()
-      expect(createArtistFromDtoSpy).toHaveBeenCalledWith(sdkArtistMock)
-    })
-
-    test('should create artist from external id', async () => {
-      createArtistFromExternalIdSpy.mockResolvedValue(artistEntityMock)
-
-      expect(await artistsService.create(sdkArtistMock.id)).toEqual(
-        artistEntityMock
-      )
-
-      expect(createArtistFromExternalIdSpy).toHaveBeenCalledWith(
-        sdkArtistMock.id
-      )
-      expect(createArtistFromDtoSpy).not.toHaveBeenCalled()
-    })
-  })
-
   test('should create artist from dto', async () => {
     const findOrCreateImagesSpy = vi
       .spyOn(imagesService, 'findOrCreate')
@@ -103,27 +66,9 @@ describe('ArtistsService', () => {
       .spyOn(artistsRepository, 'createArtist')
       .mockResolvedValue(artistEntityMock)
 
-    expect(await artistsService.createArtistFromDto(sdkArtistMock)).toEqual(
-      artistEntityMock
-    )
+    expect(await artistsService.create(sdkArtistMock)).toEqual(artistEntityMock)
 
     expect(findOrCreateImagesSpy).toHaveBeenCalledWith(sdkArtistMock.images)
-    expect(createArtistSpy).toHaveBeenCalled()
-  })
-
-  test('should create artist from external id', async () => {
-    const getArtistSpy = vi
-      .spyOn(spotifyArtistsService, 'getArtist')
-      .mockResolvedValue(sdkArtistMock)
-    const createArtistSpy = vi
-      .spyOn(artistsRepository, 'createArtist')
-      .mockResolvedValue(artistEntityMock)
-
-    expect(
-      await artistsService.createArtistFromExternalId(sdkArtistMock.id)
-    ).toEqual(artistEntityMock)
-
-    expect(getArtistSpy).toHaveBeenCalledWith(sdkArtistMock.id, false)
     expect(createArtistSpy).toHaveBeenCalled()
   })
 
