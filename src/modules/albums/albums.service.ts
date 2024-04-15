@@ -7,11 +7,10 @@ import { Album } from './album.entity'
 import { TracksService } from '@modules/tracks'
 import { SpotifyAlbumsService } from '@modules/spotify/albums'
 import { Artist, ArtistsService } from '@modules/artists'
-import { ItemService } from '@common/abstractions'
 import { ImagesService } from '@modules/images'
 
 @Injectable()
-export class AlbumsService implements ItemService<SdkCreateAlbum, Album> {
+export class AlbumsService {
   constructor(
     @Inject(forwardRef(() => AlbumsRepository))
     private readonly albumsRepository: AlbumsRepository,

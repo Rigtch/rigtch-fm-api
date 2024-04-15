@@ -5,11 +5,10 @@ import { SdkCreateArtist } from './dtos'
 import { Artist } from './artist.entity'
 
 import { SpotifyArtistsService } from '@modules/spotify/artists'
-import { ItemService } from '@common/abstractions/item.service.abstraction'
 import { ImagesService } from '@modules/images'
 
 @Injectable()
-export class ArtistsService implements ItemService<SdkCreateArtist, Artist> {
+export class ArtistsService {
   constructor(
     private readonly artistsRepository: ArtistsRepository,
     private readonly spotifyArtistsService: SpotifyArtistsService,
