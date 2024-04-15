@@ -191,8 +191,6 @@ describe('AlbumsService', () => {
   describe('findOrCreate', () => {
     let findOrCreateAlbumFromExternalIdSpy: MockInstance
     let findOrCreateAlbumsFromExternalIdsSpy: MockInstance
-    let findOrCreateAlbumFromDtoSpy: MockInstance
-    let findOrCreateAlbumsFromDtosSpy: MockInstance
 
     beforeEach(() => {
       findOrCreateAlbumFromExternalIdSpy = vi.spyOn(
@@ -203,25 +201,6 @@ describe('AlbumsService', () => {
         albumsService,
         'findOrCreateAlbumsFromExternalIds'
       )
-      findOrCreateAlbumFromDtoSpy = vi.spyOn(
-        albumsService,
-        'findOrCreateAlbumFromDto'
-      )
-      findOrCreateAlbumsFromDtosSpy = vi.spyOn(
-        albumsService,
-        'findOrCreateAlbumsFromDtos'
-      )
-    })
-
-    test('should find or create album from dto', async () => {
-      findOrCreateAlbumFromDtoSpy.mockResolvedValue(albumEntityMock)
-
-      await albumsService.findOrCreate(sdkAlbumMock)
-
-      expect(findOrCreateAlbumFromDtoSpy).toHaveBeenCalledWith(sdkAlbumMock)
-      expect(findOrCreateAlbumFromExternalIdSpy).not.toHaveBeenCalled()
-      expect(findOrCreateAlbumsFromExternalIdsSpy).not.toHaveBeenCalled()
-      expect(findOrCreateAlbumsFromDtosSpy).not.toHaveBeenCalled()
     })
 
     test('should find or create album from external id', async () => {
@@ -232,9 +211,8 @@ describe('AlbumsService', () => {
       expect(findOrCreateAlbumFromExternalIdSpy).toHaveBeenCalledWith(
         externalId
       )
-      expect(findOrCreateAlbumFromDtoSpy).not.toHaveBeenCalled()
+
       expect(findOrCreateAlbumsFromExternalIdsSpy).not.toHaveBeenCalled()
-      expect(findOrCreateAlbumsFromDtosSpy).not.toHaveBeenCalled()
     })
 
     test('should find or create albums from external ids', async () => {
@@ -248,63 +226,9 @@ describe('AlbumsService', () => {
         externalIds,
         undefined
       )
+
       expect(findOrCreateAlbumFromExternalIdSpy).not.toHaveBeenCalled()
-      expect(findOrCreateAlbumFromDtoSpy).not.toHaveBeenCalled()
-      expect(findOrCreateAlbumsFromDtosSpy).not.toHaveBeenCalled()
     })
-  })
-
-  describe('findOrCreateAlbumFromDto', () => {
-    let findAlbumByExternalIdSpy: MockInstance
-    let createSpy: MockInstance
-
-    beforeEach(() => {
-      findAlbumByExternalIdSpy = vi.spyOn(
-        albumsRepository,
-        'findAlbumByExternalId'
-      )
-      createSpy = vi.spyOn(albumsService, 'create')
-    })
-
-    test('should create album from dto', async () => {
-      findAlbumByExternalIdSpy.mockResolvedValue(null)
-      createSpy.mockResolvedValue(albumEntityMock)
-
-      expect(
-        await albumsService.findOrCreateAlbumFromDto(sdkAlbumMock)
-      ).toEqual(albumEntityMock)
-      expect(findAlbumByExternalIdSpy).toHaveBeenCalledWith(sdkAlbumMock.id)
-      expect(createSpy).toHaveBeenCalledWith(sdkAlbumMock)
-    })
-
-    test('should return found album', async () => {
-      findAlbumByExternalIdSpy.mockResolvedValue(albumEntityMock)
-
-      expect(
-        await albumsService.findOrCreateAlbumFromDto(sdkAlbumMock)
-      ).toEqual(albumEntityMock)
-      expect(findAlbumByExternalIdSpy).toHaveBeenCalledWith(sdkAlbumMock.id)
-      expect(createSpy).not.toHaveBeenCalled()
-    })
-  })
-
-  test('should find or create albums from dtos', async () => {
-    const albumsToCreate = [sdkAlbumMock]
-
-    const findAlbumByExternalIdSpy = vi.spyOn(
-      albumsRepository,
-      'findAlbumByExternalId'
-    )
-    const createSpy = vi.spyOn(albumsService, 'create')
-
-    findAlbumByExternalIdSpy.mockResolvedValue(null)
-    createSpy.mockResolvedValue(albumEntityMock)
-
-    expect(
-      await albumsService.findOrCreateAlbumsFromDtos(albumsToCreate)
-    ).toEqual([albumEntityMock])
-    expect(findAlbumByExternalIdSpy).toHaveBeenCalledWith(sdkAlbumMock.id)
-    expect(createSpy).toHaveBeenCalledWith(sdkAlbumMock)
   })
 
   describe('findOrCreateAlbumFromExternalId', () => {
@@ -359,7 +283,7 @@ describe('AlbumsService', () => {
       ).toEqual(albumEntityMock)
       expect(findAlbumByExternalIdSpy).toHaveBeenCalledWith(externalId)
       expect(getAlbumSpy).toHaveBeenCalledWith(externalId, false)
-      expect(createSpy).toHaveBeenCalledWith(sdkAlbumMock)
+      expect(createSpy).toHaveBeenCalledWith(sdkAlbumMock, undefined)
     })
   })
 

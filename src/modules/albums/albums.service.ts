@@ -73,42 +73,21 @@ export class AlbumsService {
     return this.createAlbumFromDto(albumToCreate)
   }
 
-  public findOrCreate(data: SdkCreateAlbum | string): Promise<Album>
-  public findOrCreate(data: SdkCreateAlbum[]): Promise<Album[]>
+  public findOrCreate(data: string, artists?: Artist[]): Promise<Album>
   public findOrCreate(data: string[], artists?: Artist[]): Promise<Album[]>
 
-  async findOrCreate(
-    data: SdkCreateAlbum | string | SdkCreateAlbum[] | string[],
-    artists?: Artist[]
-  ) {
+  async findOrCreate(data: string | string[], artists?: Artist[]) {
     if (typeof data === 'string')
       return this.findOrCreateAlbumFromExternalId(data)
 
-    if ('id' in data) return this.findOrCreateAlbumFromDto(data)
-
     if (Array.isArray(data) && data.length > 0)
-      return typeof data[0] === 'string'
-        ? this.findOrCreateAlbumsFromExternalIds(data as string[], artists)
-        : this.findOrCreateAlbumsFromDtos(data as SdkCreateAlbum[])
+      return this.findOrCreateAlbumsFromExternalIds(data, artists)
   }
 
-  async findOrCreateAlbumFromDto(albumToCreate: SdkCreateAlbum) {
-    const foundAlbum = await this.albumsRepository.findAlbumByExternalId(
-      albumToCreate.id
-    )
-
-    if (foundAlbum) return foundAlbum
-
-    return this.create(albumToCreate)
-  }
-
-  async findOrCreateAlbumsFromDtos(albumsToCreate: SdkCreateAlbum[]) {
-    return Promise.all(
-      albumsToCreate.map(newAlbum => this.findOrCreateAlbumFromDto(newAlbum))
-    )
-  }
-
-  async findOrCreateAlbumFromExternalId(externalId: string) {
+  async findOrCreateAlbumFromExternalId(
+    externalId: string,
+    artists?: Artist[]
+  ) {
     const foundAlbum =
       await this.albumsRepository.findAlbumByExternalId(externalId)
 
@@ -125,7 +104,7 @@ export class AlbumsService {
       return foundAlbum
     }
 
-    return this.create(albumToCreate)
+    return this.create(albumToCreate, artists)
   }
 
   async findOrCreateAlbumsFromExternalIds(
