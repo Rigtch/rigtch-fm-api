@@ -21,27 +21,18 @@ export class TracksService {
     private readonly artistsService: ArtistsService
   ) {}
 
-  public create(data: SdkCreateTrack | string, album: Album): Promise<Track>
-  public create(
-    data: SdkCreateTrack[] | string[],
-    albums: Album[]
-  ): Promise<Track[]>
+  public create(data: SdkCreateTrack, album: Album): Promise<Track>
+  public create(data: string[], albums: Album[]): Promise<Track[]>
 
   async create(
-    data: SdkCreateTrack | string | SdkCreateTrack[] | string[],
+    data: SdkCreateTrack | string[],
     albumOrAlbums: Album | Album[]
   ) {
-    if (!Array.isArray(albumOrAlbums)) {
-      if (typeof data === 'string')
-        return this.createTrackFromExternalId(data, albumOrAlbums)
-
-      if ('id' in data) return this.createTrackFromDto(data, albumOrAlbums)
-    }
+    if (!Array.isArray(albumOrAlbums) && 'id' in data)
+      return this.createTrackFromDto(data, albumOrAlbums)
 
     if (Array.isArray(data) && data.length > 0 && Array.isArray(albumOrAlbums))
-      return typeof data[0] === 'string'
-        ? this.createTracksFromExternalIds(data as string[], albumOrAlbums)
-        : this.createTracksFromDtos(data as SdkCreateTrack[], albumOrAlbums)
+      return this.createTracksFromExternalIds(data, albumOrAlbums)
   }
 
   async createTrackFromDto(
@@ -69,34 +60,6 @@ export class TracksService {
     })
   }
 
-  async createTracksFromDtos(
-    tracks: SdkCreateTrack[],
-    albums: Album[],
-    artists?: Artist[]
-  ) {
-    const filteredArtists = removeDuplicates(artists ?? [])
-
-    return Promise.all(
-      tracks.map(async track => {
-        const trackArists = filteredArtists.filter(({ externalId }) =>
-          track.artists.map(({ id }) => id).includes(externalId)
-        )
-
-        const trackAlbum = albums.find(
-          ({ externalId }) => externalId === track.album.id
-        )!
-
-        return this.createTrackFromDto(track, trackAlbum, trackArists)
-      })
-    )
-  }
-
-  async createTrackFromExternalId(externalId: string, album: Album) {
-    const newTrack = await this.spotifyTracksService.getTrack(externalId, false)
-
-    return this.createTrackFromDto(newTrack, album)
-  }
-
   async createTracksFromExternalIds(externalIds: string[], albums: Album[]) {
     const newTracks = await this.spotifyTracksService.getTracks(
       externalIds,
@@ -114,40 +77,15 @@ export class TracksService {
     )
   }
 
-  public findOrCreate(data: SdkCreateTrack): Promise<Track>
-  public findOrCreate(data: SdkCreateTrack[]): Promise<Track[]>
+  async findOrCreate(tracksToCreate: SdkCreateTrack[]) {
+    if (tracksToCreate.length === 0) return []
 
-  findOrCreate(data: SdkCreateTrack | SdkCreateTrack[]) {
-    if (Array.isArray(data)) {
-      if (data.length === 0) return []
-
-      return this.findOrCreateTracksFromDtos(data)
-    }
-
-    return this.findOrCreateTrackFromDto(data)
-  }
-
-  async findOrCreateTrackFromDto(track: SdkCreateTrack): Promise<Track> {
-    const foundTrack = await this.tracksRepository.findTrackByExternalId(
-      track.id
-    )
-
-    if (foundTrack) return foundTrack
-
-    await this.albumsService.findOrCreate(track.album.id)
-
-    return this.findOrCreateTrackFromDto(track)
-  }
-
-  async findOrCreateTracksFromDtos(tracks: SdkCreateTrack[]): Promise<Track[]> {
-    if (tracks.length === 0) return []
-
-    const externalIds = tracks.map(track => track.id)
+    const externalIds = tracksToCreate.map(track => track.id)
 
     const foundTracks =
       await this.tracksRepository.findTracksByExternalIds(externalIds)
 
-    const filteredTracks = tracks.filter(
+    const filteredTracks = tracksToCreate.filter(
       ({ id }) => !foundTracks.map(track => track.externalId).includes(id)
     )
 
