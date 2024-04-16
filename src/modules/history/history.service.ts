@@ -37,15 +37,14 @@ export class HistoryService {
       )
 
     if (lastHistoryTrack) {
-      const latestPlayHistory = playHistory.filter(
-        (_, index) =>
-          index <
-          playHistory.findIndex(
-            ({ track, played_at }) =>
-              track.id === lastHistoryTrack.track.externalId &&
-              new Date(played_at).getTime() ===
-                lastHistoryTrack.playedAt.getTime()
-          )
+      const latestTrackIndex = playHistory.findIndex(
+        ({ track, played_at }) =>
+          track.id === lastHistoryTrack.track.externalId &&
+          new Date(played_at).getTime() === lastHistoryTrack.playedAt.getTime()
+      )
+
+      const latestPlayHistory = playHistory.filter((_, index) =>
+        latestTrackIndex === -1 ? true : index < latestTrackIndex
       )
 
       const newHistoryTracks = await this.historyTracksService.create(
