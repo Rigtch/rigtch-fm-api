@@ -28,8 +28,8 @@ jobs:
           node-version-file: '.nvmrc'
           cache: 'yarn'
 
-      - name: Install dependencies 👨🏻‍💻
-        run: yarn install
+      - name: Load & Cache Dependencies 👨🏻‍💻
+        uses: ./.github/actions/cached-deps
 
       - name: Build Application 🧱
         run: yarn build
@@ -52,8 +52,8 @@ jobs:
           node-version-file: '.nvmrc'
           cache: 'yarn'
 
-      - name: Install dependencies 👨🏻‍💻
-        run: yarn install
+      - name: Load & Cache Dependencies 👨🏻‍💻
+        uses: ./.github/actions/cached-deps
 
       - name: Lint 🐱
         run: yarn lint
@@ -76,8 +76,8 @@ jobs:
           node-version-file: '.nvmrc'
           cache: 'yarn'
 
-      - name: Install dependencies 👨🏻‍💻
-        run: yarn install
+      - name: Load & Cache Dependencies 👨🏻‍💻
+        uses: ./.github/actions/cached-deps
 
       - name: Run unit tests 🧪
         run: yarn test:coverage
