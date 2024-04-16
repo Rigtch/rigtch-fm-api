@@ -1,0 +1,16 @@
+name: 'Get & Cache Dependencies'
+description: 'Get & Cache Dependencies(via npm) for faster builds'
+runs:
+  using: 'composite'
+  steps:
+    - name: 'Cache Dependencies 🕓'
+      uses: 'actions/cache@v3'
+      id: cache-node-modules
+      with:
+        path: 'node_modules'
+        key: deps-node-modules-${{ hashFiles('**/yarn.lock') }}
+
+    - name: Install Dependencies 👨🏻‍💻
+      if: steps.cache-node-modules.outputs.cache-hit != 'true'
+      run: yarn install
+      shell: bash
