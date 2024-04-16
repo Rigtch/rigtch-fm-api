@@ -18,12 +18,12 @@ export class HistoryTracksService {
   public create(newHistoryTrack: CreateHistoryTrack): Promise<HistoryTrack>
   public create(playHistory: PlayHistory[], user: User): Promise<HistoryTrack[]>
 
-  create(newHistoryTrack: CreateHistoryTrack | PlayHistory[], user?: User) {
-    if (Array.isArray(newHistoryTrack) && user)
-      return this.createHistoryTracksFromPlayHistory(newHistoryTrack, user)
+  create(data: CreateHistoryTrack | PlayHistory[], user?: User) {
+    if (Array.isArray(data) && user)
+      return this.createHistoryTracksFromPlayHistory(data, user)
 
     return this.historyTracksRepository.createHistoryTrack(
-      newHistoryTrack as CreateHistoryTrack
+      data as CreateHistoryTrack
     )
   }
 
