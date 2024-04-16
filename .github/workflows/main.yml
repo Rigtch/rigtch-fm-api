@@ -19,17 +19,8 @@ jobs:
       - name: Checkout 🛎
         uses: actions/checkout@v2
 
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Setup node env 🏗
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'yarn'
-
-      - name: Load & Cache Dependencies 👨🏻‍💻
-        uses: ./.github/actions/cached-deps
+      - name: Setup 👨🏻‍💻
+        uses: ./.github/actions/setup
 
       - name: Build Application 🧱
         run: yarn build
@@ -43,17 +34,8 @@ jobs:
       - name: Checkout 🛎
         uses: actions/checkout@v2
 
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Setup node env 🏗
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'yarn'
-
-      - name: Load & Cache Dependencies 👨🏻‍💻
-        uses: ./.github/actions/cached-deps
+      - name: Setup 👨🏻‍💻 👨🏻‍💻
+        uses: ./.github/actions/setup
 
       - name: Lint 🐱
         run: yarn lint
@@ -67,17 +49,8 @@ jobs:
       - name: Checkout 🛎
         uses: actions/checkout@v2
 
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Setup node env 🏗
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'yarn'
-
-      - name: Load & Cache Dependencies 👨🏻‍💻
-        uses: ./.github/actions/cached-deps
+      - name: Setup 👨🏻‍💻
+        uses: ./.github/actions/setup
 
       - name: Run unit tests 🧪
         run: yarn test:coverage
