@@ -11,10 +11,9 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiParam,
-  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger'
-import { paginate } from 'nestjs-typeorm-paginate'
+import { Pagination, paginate } from 'nestjs-typeorm-paginate'
 
 import { ArtistsRepository } from './artists.repository'
 import { Artist } from './artist.entity'
@@ -32,38 +31,15 @@ export class ArtistsController {
   @ApiOperation({
     summary: 'Getting all artists.',
   })
-  @ApiQuery({ name: 'name', required: false })
-  @ApiQuery({ name: 'external-id', required: false })
   @ApiPaginatedQuery()
   @ApiOkResponse({
     description: 'Artists successfully found.',
-    type: [Artist],
+    type: [Pagination<Artist>],
   })
   @ApiNotFoundResponse({
     description: NOT_BEEN_FOUND('artist'),
   })
-  async getArtists(
-    @Query() { limit = 10, page = 1 }: PaginatedQuery,
-    @Query('name') name?: string,
-    @Query('external-id') externalId?: string
-  ) {
-    if (name) {
-      const foundArtist = await this.artistsRepository.findArtistByName(name)
-
-      if (!foundArtist) throw new NotFoundException(NOT_BEEN_FOUND('artist'))
-
-      return foundArtist
-    }
-
-    if (externalId) {
-      const foundArtist =
-        await this.artistsRepository.findArtistByExternalId(externalId)
-
-      if (!foundArtist) throw new NotFoundException(NOT_BEEN_FOUND('artist'))
-
-      return foundArtist
-    }
-
+  async getArtists(@Query() { limit = 10, page = 1 }: PaginatedQuery) {
     const queryBuilder = this.artistsRepository.createQueryBuilder('a')
 
     queryBuilder
