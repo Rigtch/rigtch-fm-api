@@ -9,8 +9,6 @@ import {
 } from '@nestjs/swagger'
 import { paginate } from 'nestjs-typeorm-paginate'
 
-import { PaginatedQuery } from '../dtos'
-
 import { ApiPaginatedQuery } from '@common/decorators'
 import {
   NOT_BEEN_FOUND,
@@ -19,6 +17,7 @@ import {
 } from '@common/constants'
 import { ApiAuth, Token } from '@modules/auth/decorators'
 import { HistoryTracksRepository } from '@modules/history/tracks'
+import { PaginatedQuery } from '@common/dtos'
 
 @Controller('users/:id/history')
 @ApiTags('users/{id}/history')
