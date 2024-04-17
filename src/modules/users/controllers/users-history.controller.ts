@@ -10,8 +10,8 @@ import {
 import { paginate } from 'nestjs-typeorm-paginate'
 
 import { PaginatedQuery } from '../dtos'
-import { ApiPaginatedQuery } from '../decorators'
 
+import { ApiPaginatedQuery } from '@common/decorators'
 import {
   NOT_BEEN_FOUND,
   ONE_IS_INVALID,
