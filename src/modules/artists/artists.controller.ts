@@ -36,9 +36,6 @@ export class ArtistsController {
     description: 'Artists successfully found.',
     type: [Pagination<Artist>],
   })
-  @ApiNotFoundResponse({
-    description: NOT_BEEN_FOUND('artist'),
-  })
   async getArtists(@Query() { limit = 10, page = 1 }: PaginatedQuery) {
     const queryBuilder = this.artistsRepository.createQueryBuilder('a')
 
