@@ -14,11 +14,14 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger'
+import { paginate } from 'nestjs-typeorm-paginate'
 
 import { ArtistsRepository } from './artists.repository'
 import { Artist } from './artist.entity'
 
 import { NOT_BEEN_FOUND, ONE_IS_INVALID } from '@common/constants'
+import { ApiPaginatedQuery } from '@common/decorators'
+import { PaginatedQuery } from '@common/dtos'
 
 @Controller('artists')
 @ApiTags('artists')
@@ -31,6 +34,7 @@ export class ArtistsController {
   })
   @ApiQuery({ name: 'name', required: false })
   @ApiQuery({ name: 'external-id', required: false })
+  @ApiPaginatedQuery()
   @ApiOkResponse({
     description: 'Artists successfully found.',
     type: [Artist],
@@ -39,6 +43,7 @@ export class ArtistsController {
     description: NOT_BEEN_FOUND('artist'),
   })
   async getArtists(
+    @Query() { limit = 10, page = 1 }: PaginatedQuery,
     @Query('name') name?: string,
     @Query('external-id') externalId?: string
   ) {
@@ -59,7 +64,13 @@ export class ArtistsController {
       return foundArtist
     }
 
-    return this.artistsRepository.findArtists()
+    const queryBuilder = this.artistsRepository.createQueryBuilder('a')
+
+    queryBuilder
+      .leftJoinAndSelect('a.images', 'images')
+      .orderBy('a.name', 'DESC')
+
+    return paginate(queryBuilder, { limit, page })
   }
 
   @Get(':id')
