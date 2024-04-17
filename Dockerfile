@@ -4,6 +4,9 @@ WORKDIR /usr/src/app
 
 COPY package.json ./
 COPY yarn.lock ./
+COPY .yarnrc.yml ./
+
+RUN corepack enable
 
 RUN yarn install
 
@@ -21,8 +24,11 @@ WORKDIR /usr/src/app
 
 COPY package.json ./
 COPY yarn.lock ./
+COPY .yarnrc.yml ./
 
-RUN yarn install --ignore-scripts --production=true
+RUN corepack enable
+
+RUN yarn install --mode=skip-build --immutable
 
 COPY . .
 

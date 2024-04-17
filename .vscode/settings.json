@@ -8,9 +8,10 @@
     "tsconfig.json": "tsconfig.*.json",
     "Dockerfile": "docker-compose.yml, .dockerignore",
     ".env": "*.env",
-    "package.json": ".npmrc, yarn.lock, .yarnrc, .nvmrc",
+    "package.json": ".npmrc, yarn.lock, .yarnrc, .nvmrc, .yarnrc.yml",
     ".eslintrc.*": ".eslintignore, .eslintcache",
-    ".prettierrc": ".prettierignore"
+    ".prettierrc": ".prettierignore",
+    ".gitignore": ".gitattributes"
   },
   "javascript.updateImportsOnFileMove.enabled": "always",
   "typescript.updateImportsOnFileMove.enabled": "always",
