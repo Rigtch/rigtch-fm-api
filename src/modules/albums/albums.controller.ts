@@ -1,4 +1,10 @@
-import { Controller, Get, NotFoundException, Param } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  Query,
+} from '@nestjs/common'
 import {
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -6,11 +12,14 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger'
+import { Pagination, paginate } from 'nestjs-typeorm-paginate'
 
 import { AlbumsRepository } from './albums.repository'
 import { Album } from './album.entity'
 
 import { NOT_BEEN_FOUND } from '@common/constants'
+import { ApiPaginatedQuery } from '@common/decorators'
+import { PaginatedQuery } from '@common/dtos'
 
 @Controller('albums')
 @ApiTags('albums')
@@ -21,12 +30,19 @@ export class AlbumsController {
   @ApiOperation({
     summary: 'Getting all albums.',
   })
+  @ApiPaginatedQuery()
   @ApiOkResponse({
     description: 'Albums successfully found.',
-    type: [Album],
+    type: [Pagination<Album>],
   })
-  async getAlbums() {
-    return this.albumsRepository.findAlbums()
+  async getAlbums(@Query() { limit = 10, page = 1 }: PaginatedQuery) {
+    const queryBuilder = this.albumsRepository.createQueryBuilder('a')
+
+    queryBuilder
+      .leftJoinAndSelect('a.images', 'images')
+      .orderBy('a.name', 'ASC')
+
+    return paginate(queryBuilder, { limit, page })
   }
 
   @Get(':id')

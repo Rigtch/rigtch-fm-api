@@ -87,7 +87,7 @@ describe('ArtistsController', () => {
 
       const paginatedResponseMock = generatePaginatedResponseFactoryMock(
         artistEntityMock,
-        10,
+        undefined,
         2
       )
 

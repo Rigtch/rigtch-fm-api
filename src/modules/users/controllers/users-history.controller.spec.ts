@@ -86,7 +86,7 @@ describe('UsersHistoryController', () => {
 
       const paginatedResponseMock = generatePaginatedResponseFactoryMock(
         item,
-        10,
+        undefined,
         2
       )
 
