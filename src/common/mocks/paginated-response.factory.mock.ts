@@ -1,3 +1,5 @@
+import { IPaginationOptions } from 'nestjs-typeorm-paginate'
+
 export function generatePaginatedResponseFactoryMock<T>(
   item: T,
   limit = 10,
@@ -14,5 +16,13 @@ export function generatePaginatedResponseFactoryMock<T>(
       totalPages: 0,
       currentPage: page,
     },
+  }
+}
+
+export function paginatedResponseMockImplementation<T>(item: T) {
+  return (_: unknown, { limit, page }: IPaginationOptions) => {
+    return Promise.resolve(
+      generatePaginatedResponseFactoryMock(item, +limit, +page)
+    )
   }
 }

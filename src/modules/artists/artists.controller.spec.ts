@@ -1,6 +1,6 @@
 import { Test } from '@nestjs/testing'
 import { NotFoundException } from '@nestjs/common'
-import { IPaginationOptions, paginate } from 'nestjs-typeorm-paginate'
+import { paginate } from 'nestjs-typeorm-paginate'
 
 import { ArtistsController } from './artists.controller'
 import { ArtistsRepository } from './artists.repository'
@@ -10,7 +10,7 @@ import {
   artistEntityMock,
   createQueryBuilderFactoryMock,
   generatePaginatedResponseFactoryMock,
-  trackEntityMock,
+  paginatedResponseMockImplementation,
 } from '@common/mocks'
 
 vi.mock('nestjs-typeorm-paginate')
@@ -46,15 +46,11 @@ describe('ArtistsController', () => {
   describe('getArtists', () => {
     const paginateSpy = vi
       .mocked(paginate)
-      .mockImplementation((_, { limit, page }: IPaginationOptions) => {
-        return Promise.resolve(
-          generatePaginatedResponseFactoryMock(trackEntityMock, +limit, +page)
-        )
-      })
+      .mockImplementation(paginatedResponseMockImplementation(artistEntityMock))
 
     test('should get paginated artists', async () => {
       const paginatedResponseMock =
-        generatePaginatedResponseFactoryMock(trackEntityMock)
+        generatePaginatedResponseFactoryMock(artistEntityMock)
 
       const response = await artistsController.getArtists({})
 
@@ -70,7 +66,7 @@ describe('ArtistsController', () => {
       const limit = 50
 
       const paginatedResponseMock = generatePaginatedResponseFactoryMock(
-        trackEntityMock,
+        artistEntityMock,
         50
       )
 
@@ -90,7 +86,7 @@ describe('ArtistsController', () => {
       const page = 2
 
       const paginatedResponseMock = generatePaginatedResponseFactoryMock(
-        trackEntityMock,
+        artistEntityMock,
         10,
         2
       )
