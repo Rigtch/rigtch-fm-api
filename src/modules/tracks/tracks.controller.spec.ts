@@ -18,9 +18,7 @@ describe('TracksController', () => {
           provide: TracksRepository,
           useValue: {
             findTracks: vi.fn(),
-            findTrackByName: vi.fn(),
             findTrackById: vi.fn(),
-            findTrackByExternalId: vi.fn(),
           },
         },
       ],
@@ -39,88 +37,9 @@ describe('TracksController', () => {
       const findTracksSpy = vi
         .spyOn(tracksRepository, 'findTracks')
         .mockResolvedValue(trackEntitiesMock)
-      const findTrackByNameSpy = vi.spyOn(tracksRepository, 'findTrackByName')
-      const findTrackByExternalIdSpy = vi.spyOn(
-        tracksRepository,
-        'findTrackByExternalId'
-      )
 
       expect(await tracksController.getTracks()).toEqual(trackEntitiesMock)
       expect(findTracksSpy).toHaveBeenCalledWith()
-      expect(findTrackByNameSpy).not.toHaveBeenCalled()
-      expect(findTrackByExternalIdSpy).not.toHaveBeenCalled()
-    })
-
-    describe('By Name', () => {
-      const name = 'name'
-
-      test('should get track', async () => {
-        const findTracksSpy = vi.spyOn(tracksRepository, 'findTracks')
-        const findTrackByNameSpy = vi
-          .spyOn(tracksRepository, 'findTrackByName')
-          .mockResolvedValue(trackEntityMock)
-        const findTrackByExternalIdSpy = vi.spyOn(
-          tracksRepository,
-          'findTrackByExternalId'
-        )
-
-        expect(await tracksController.getTracks(name)).toEqual(trackEntityMock)
-        expect(findTrackByNameSpy).toHaveBeenCalledWith(name)
-        expect(findTracksSpy).not.toHaveBeenCalled()
-        expect(findTrackByExternalIdSpy).not.toHaveBeenCalled()
-      })
-
-      test('should throw not found exception', async () => {
-        const findTracksSpy = vi.spyOn(tracksRepository, 'findTracks')
-        const findTrackByNameSpy = vi
-          .spyOn(tracksRepository, 'findTrackByName')
-          .mockResolvedValue(null)
-        const findTrackByExternalIdSpy = vi.spyOn(
-          tracksRepository,
-          'findTrackByExternalId'
-        )
-
-        await expect(tracksController.getTracks(name)).rejects.toThrowError(
-          NotFoundException
-        )
-        expect(findTrackByNameSpy).toHaveBeenCalledWith(name)
-        expect(findTracksSpy).not.toHaveBeenCalled()
-        expect(findTrackByExternalIdSpy).not.toHaveBeenCalled()
-      })
-    })
-
-    describe('By ExternalId', () => {
-      const externalId = 'externalId'
-
-      test('should get track', async () => {
-        const findTracksSpy = vi.spyOn(tracksRepository, 'findTracks')
-        const findTrackByNameSpy = vi.spyOn(tracksRepository, 'findTrackByName')
-        const findTrackByExternalIdSpy = vi
-          .spyOn(tracksRepository, 'findTrackByExternalId')
-          .mockResolvedValue(trackEntityMock)
-
-        expect(await tracksController.getTracks(undefined, externalId)).toEqual(
-          trackEntityMock
-        )
-        expect(findTrackByExternalIdSpy).toHaveBeenCalledWith(externalId)
-        expect(findTracksSpy).not.toHaveBeenCalled()
-        expect(findTrackByNameSpy).not.toHaveBeenCalled()
-      })
-
-      test('should throw not found exception', async () => {
-        const findTracksSpy = vi.spyOn(tracksRepository, 'findTracks')
-        const findTrackByNameSpy = vi.spyOn(tracksRepository, 'findTrackByName')
-        const findTrackByExternalIdSpy = vi
-          .spyOn(tracksRepository, 'findTrackByExternalId')
-          .mockResolvedValue(null)
-
-        await expect(
-          tracksController.getTracks(undefined, externalId)
-        ).rejects.toThrowError(NotFoundException)
-        expect(findTrackByExternalIdSpy).toHaveBeenCalledWith(externalId)
-        expect(findTracksSpy).not.toHaveBeenCalled()
-        expect(findTrackByNameSpy).not.toHaveBeenCalled()
-      })
     })
   })
 

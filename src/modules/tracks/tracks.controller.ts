@@ -1,17 +1,10 @@
-import {
-  Controller,
-  Get,
-  NotFoundException,
-  Param,
-  Query,
-} from '@nestjs/common'
+import { Controller, Get, NotFoundException, Param } from '@nestjs/common'
 import {
   ApiBadRequestResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiParam,
-  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger'
 
@@ -29,8 +22,6 @@ export class TracksController {
   @ApiOperation({
     summary: 'Getting all tracks.',
   })
-  @ApiQuery({ name: 'name', required: false })
-  @ApiQuery({ name: 'external-id', required: false })
   @ApiOkResponse({
     description: 'Tracks successfully found.',
     type: [Track],
@@ -38,27 +29,7 @@ export class TracksController {
   @ApiNotFoundResponse({
     description: NOT_BEEN_FOUND('track'),
   })
-  async getTracks(
-    @Query('name') name?: string,
-    @Query('external-id') externalId?: string
-  ) {
-    if (name) {
-      const foundTrack = await this.tracksRepository.findTrackByName(name)
-
-      if (!foundTrack) throw new NotFoundException(NOT_BEEN_FOUND('track'))
-
-      return foundTrack
-    }
-
-    if (externalId) {
-      const foundTrack =
-        await this.tracksRepository.findTrackByExternalId(externalId)
-
-      if (!foundTrack) throw new NotFoundException(NOT_BEEN_FOUND('track'))
-
-      return foundTrack
-    }
-
+  async getTracks() {
     return this.tracksRepository.findTracks()
   }
 
