@@ -1,12 +1,23 @@
 import { Test } from '@nestjs/testing'
 import { NotFoundException } from '@nestjs/common'
+import { paginate } from 'nestjs-typeorm-paginate'
 
 import { TracksController } from './tracks.controller'
 import { TracksRepository } from './tracks.repository'
+import { Track } from './track.entity'
 
-import { trackEntitiesMock, trackEntityMock } from '@common/mocks'
+import {
+  createQueryBuilderFactoryMock,
+  trackEntityMock,
+  generatePaginatedResponseFactoryMock,
+  paginatedResponseMockImplementation,
+} from '@common/mocks'
+
+vi.mock('nestjs-typeorm-paginate')
 
 describe('TracksController', () => {
+  const queryBuilderMock = createQueryBuilderFactoryMock(Track)
+
   let tracksController: TracksController
   let tracksRepository: TracksRepository
 
@@ -17,7 +28,7 @@ describe('TracksController', () => {
         {
           provide: TracksRepository,
           useValue: {
-            findTracks: vi.fn(),
+            createQueryBuilder: queryBuilderMock,
             findTrackById: vi.fn(),
           },
         },
@@ -33,13 +44,59 @@ describe('TracksController', () => {
   })
 
   describe('getTracks', () => {
-    test('should get all tracks', async () => {
-      const findTracksSpy = vi
-        .spyOn(tracksRepository, 'findTracks')
-        .mockResolvedValue(trackEntitiesMock)
+    const paginateSpy = vi
+      .mocked(paginate)
+      .mockImplementation(paginatedResponseMockImplementation(trackEntityMock))
 
-      expect(await tracksController.getTracks()).toEqual(trackEntitiesMock)
-      expect(findTracksSpy).toHaveBeenCalledWith()
+    test('should get paginated tracks', async () => {
+      const paginatedResponseMock =
+        generatePaginatedResponseFactoryMock(trackEntityMock)
+
+      const response = await tracksController.getTracks({})
+
+      expect(response).toEqual(paginatedResponseMock)
+      expect(response.items.length).toEqual(10)
+      expect(paginateSpy).toHaveBeenCalledWith(queryBuilderMock(), {
+        limit: 10,
+        page: 1,
+      })
+    })
+
+    test('should get paginated tracks with limit', async () => {
+      const limit = 50
+
+      const paginatedResponseMock = generatePaginatedResponseFactoryMock(
+        trackEntityMock,
+        limit
+      )
+
+      const response = await tracksController.getTracks({ limit })
+
+      expect(response).toEqual(paginatedResponseMock)
+      expect(response.items.length).toEqual(limit)
+      expect(paginateSpy).toHaveBeenCalledWith(queryBuilderMock(), {
+        limit,
+        page: 1,
+      })
+    })
+
+    test('should get paginated tracks with page', async () => {
+      const page = 2
+
+      const paginatedResponseMock = generatePaginatedResponseFactoryMock(
+        trackEntityMock,
+        undefined,
+        page
+      )
+
+      const response = await tracksController.getTracks({ page })
+
+      expect(response).toEqual(paginatedResponseMock)
+      expect(response.items.length).toEqual(10)
+      expect(paginateSpy).toHaveBeenCalledWith(queryBuilderMock(), {
+        limit: 10,
+        page,
+      })
     })
   })
 
