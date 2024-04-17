@@ -7,7 +7,7 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger'
-import { paginate } from 'nestjs-typeorm-paginate'
+import { Pagination, paginate } from 'nestjs-typeorm-paginate'
 
 import { ApiPaginatedQuery } from '@common/decorators'
 import {
@@ -16,7 +16,7 @@ import {
   ONE_SUCCESFULLY_FOUND,
 } from '@common/constants'
 import { ApiAuth, Token } from '@modules/auth/decorators'
-import { HistoryTracksRepository } from '@modules/history/tracks'
+import { HistoryTrack, HistoryTracksRepository } from '@modules/history/tracks'
 import { PaginatedQuery } from '@common/dtos'
 
 @Controller('users/:id/history')
@@ -33,9 +33,10 @@ export class UsersHistoryController {
   })
   @ApiOkResponse({
     description: ONE_SUCCESFULLY_FOUND('history'),
+    type: [Pagination<HistoryTrack>],
   })
   @ApiNotFoundResponse({
-    description: NOT_BEEN_FOUND('history'),
+    description: NOT_BEEN_FOUND('user'),
   })
   @ApiBadRequestResponse({
     description: ONE_IS_INVALID('uuid'),
