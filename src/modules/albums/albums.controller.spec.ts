@@ -18,8 +18,6 @@ describe('AlbumsController', () => {
           provide: AlbumsRepository,
           useValue: {
             findAlbums: vi.fn(),
-            findAlbumByName: vi.fn(),
-            findAlbumByExternalId: vi.fn(),
             findAlbumById: vi.fn(),
           },
         },
@@ -39,87 +37,9 @@ describe('AlbumsController', () => {
       const findAlbumsSpy = vi
         .spyOn(albumsRepository, 'findAlbums')
         .mockResolvedValue(albumsEntitiesMock)
-      const findAlbumByNameSpy = vi.spyOn(albumsRepository, 'findAlbumByName')
-      const findAlbumByExternalIdSpy = vi.spyOn(
-        albumsRepository,
-        'findAlbumByExternalId'
-      )
 
       expect(await albumsController.getAlbums()).toEqual(albumsEntitiesMock)
       expect(findAlbumsSpy).toHaveBeenCalledWith()
-      expect(findAlbumByNameSpy).not.toHaveBeenCalled()
-      expect(findAlbumByExternalIdSpy).not.toHaveBeenCalled()
-    })
-
-    describe('By Name', () => {
-      const name = 'name'
-
-      test('should get album', async () => {
-        const findAlbumsSpy = vi.spyOn(albumsRepository, 'findAlbums')
-        const findAlbumByNameSpy = vi
-          .spyOn(albumsRepository, 'findAlbumByName')
-          .mockResolvedValue(albumEntityMock)
-        const findAlbumByExternalIdSpy = vi.spyOn(
-          albumsRepository,
-          'findAlbumByExternalId'
-        )
-
-        expect(await albumsController.getAlbums(name)).toEqual(albumEntityMock)
-        expect(findAlbumByNameSpy).toHaveBeenCalledWith(name)
-        expect(findAlbumsSpy).not.toHaveBeenCalled()
-        expect(findAlbumByExternalIdSpy).not.toHaveBeenCalled()
-      })
-      test('should throw not found exception', async () => {
-        const findAlbumsSpy = vi.spyOn(albumsRepository, 'findAlbums')
-        const findAlbumByNameSpy = vi
-          .spyOn(albumsRepository, 'findAlbumByName')
-          .mockResolvedValue(null)
-        const findAlbumByExternalIdSpy = vi.spyOn(
-          albumsRepository,
-          'findAlbumByExternalId'
-        )
-
-        await expect(albumsController.getAlbums(name)).rejects.toThrowError(
-          NotFoundException
-        )
-        expect(findAlbumByNameSpy).toHaveBeenCalledWith(name)
-        expect(findAlbumsSpy).not.toHaveBeenCalled()
-        expect(findAlbumByExternalIdSpy).not.toHaveBeenCalled()
-      })
-    })
-
-    describe('By ExternalId', () => {
-      const externalId = 'externalId'
-
-      test('should get album', async () => {
-        const findAlbumsSpy = vi.spyOn(albumsRepository, 'findAlbums')
-        const findAlbumByNameSpy = vi.spyOn(albumsRepository, 'findAlbumByName')
-        const findAlbumByExternalIdSpy = vi
-          .spyOn(albumsRepository, 'findAlbumByExternalId')
-          .mockResolvedValue(albumEntityMock)
-
-        expect(await albumsController.getAlbums(undefined, externalId)).toEqual(
-          albumEntityMock
-        )
-        expect(findAlbumByExternalIdSpy).toHaveBeenCalledWith(externalId)
-        expect(findAlbumsSpy).not.toHaveBeenCalled()
-        expect(findAlbumByNameSpy).not.toHaveBeenCalled()
-      })
-
-      test('should throw not found exception', async () => {
-        const findAlbumsSpy = vi.spyOn(albumsRepository, 'findAlbums')
-        const findAlbumByNameSpy = vi.spyOn(albumsRepository, 'findAlbumByName')
-        const findAlbumByExternalIdSpy = vi
-          .spyOn(albumsRepository, 'findAlbumByExternalId')
-          .mockResolvedValue(null)
-
-        await expect(
-          albumsController.getAlbums(undefined, externalId)
-        ).rejects.toThrowError(NotFoundException)
-        expect(findAlbumByExternalIdSpy).toHaveBeenCalledWith(externalId)
-        expect(findAlbumsSpy).not.toHaveBeenCalled()
-        expect(findAlbumByNameSpy).not.toHaveBeenCalled()
-      })
     })
   })
 
