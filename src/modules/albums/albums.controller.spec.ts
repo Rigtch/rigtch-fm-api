@@ -1,12 +1,23 @@
 import { Test } from '@nestjs/testing'
 import { NotFoundException } from '@nestjs/common'
+import { paginate } from 'nestjs-typeorm-paginate'
 
 import { AlbumsController } from './albums.controller'
 import { AlbumsRepository } from './albums.repository'
+import { Album } from './album.entity'
 
-import { albumEntityMock, albumsEntitiesMock } from '@common/mocks'
+import {
+  albumEntityMock,
+  createQueryBuilderFactoryMock,
+  generatePaginatedResponseFactoryMock,
+  paginatedResponseMockImplementation,
+} from '@common/mocks'
+
+vi.mock('nestjs-typeorm-paginate')
 
 describe('AlbumsController', () => {
+  const queryBuilderMock = createQueryBuilderFactoryMock(Album)
+
   let albumsController: AlbumsController
   let albumsRepository: AlbumsRepository
 
@@ -17,7 +28,7 @@ describe('AlbumsController', () => {
         {
           provide: AlbumsRepository,
           useValue: {
-            findAlbums: vi.fn(),
+            createQueryBuilder: queryBuilderMock,
             findAlbumById: vi.fn(),
           },
         },
@@ -33,13 +44,59 @@ describe('AlbumsController', () => {
   })
 
   describe('getAlbums', () => {
-    test('should get all albums', async () => {
-      const findAlbumsSpy = vi
-        .spyOn(albumsRepository, 'findAlbums')
-        .mockResolvedValue(albumsEntitiesMock)
+    const paginateSpy = vi
+      .mocked(paginate)
+      .mockImplementation(paginatedResponseMockImplementation(albumEntityMock))
 
-      expect(await albumsController.getAlbums()).toEqual(albumsEntitiesMock)
-      expect(findAlbumsSpy).toHaveBeenCalledWith()
+    test('should get all albums', async () => {
+      const paginatedResponseMock =
+        generatePaginatedResponseFactoryMock(albumEntityMock)
+
+      const response = await albumsController.getAlbums({})
+
+      expect(response).toEqual(paginatedResponseMock)
+      expect(response.items.length).toEqual(10)
+      expect(paginateSpy).toHaveBeenCalledWith(queryBuilderMock(), {
+        limit: 10,
+        page: 1,
+      })
+    })
+
+    test('should get all albums with limit', async () => {
+      const limit = 50
+
+      const paginatedResponseMock = generatePaginatedResponseFactoryMock(
+        albumEntityMock,
+        limit
+      )
+
+      const response = await albumsController.getAlbums({ limit })
+
+      expect(response).toEqual(paginatedResponseMock)
+      expect(response.items.length).toEqual(limit)
+      expect(paginateSpy).toHaveBeenCalledWith(queryBuilderMock(), {
+        limit,
+        page: 1,
+      })
+    })
+
+    test('should get all albums with page', async () => {
+      const page = 2
+
+      const paginatedResponseMock = generatePaginatedResponseFactoryMock(
+        albumEntityMock,
+        undefined,
+        page
+      )
+
+      const response = await albumsController.getAlbums({ page })
+
+      expect(response).toEqual(paginatedResponseMock)
+      expect(response.items.length).toEqual(10)
+      expect(paginateSpy).toHaveBeenCalledWith(queryBuilderMock(), {
+        limit: 10,
+        page,
+      })
     })
   })
 
