@@ -1,5 +1,5 @@
 import { Test } from '@nestjs/testing'
-import { IPaginationOptions, paginate } from 'nestjs-typeorm-paginate'
+import { paginate } from 'nestjs-typeorm-paginate'
 
 import { UsersHistoryController } from './users-history.controller'
 
@@ -7,6 +7,7 @@ import { HistoryTrack, HistoryTracksRepository } from '@modules/history/tracks'
 import {
   createQueryBuilderFactoryMock,
   generatePaginatedResponseFactoryMock,
+  paginatedResponseMockImplementation,
   trackEntityMock,
 } from '@common/mocks'
 
@@ -45,11 +46,7 @@ describe('UsersHistoryController', () => {
     }
     const paginateSpy = vi
       .mocked(paginate)
-      .mockImplementation((_, { limit, page }: IPaginationOptions) => {
-        return Promise.resolve(
-          generatePaginatedResponseFactoryMock(item, +limit, +page)
-        )
-      })
+      .mockImplementation(paginatedResponseMockImplementation(item))
 
     test('should get paginated history', async () => {
       const paginatedResponseMock = generatePaginatedResponseFactoryMock(item)

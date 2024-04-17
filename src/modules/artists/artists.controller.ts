@@ -44,7 +44,7 @@ export class ArtistsController {
 
     queryBuilder
       .leftJoinAndSelect('a.images', 'images')
-      .orderBy('a.name', 'DESC')
+      .orderBy('a.name', 'ASC')
 
     return paginate(queryBuilder, { limit, page })
   }
