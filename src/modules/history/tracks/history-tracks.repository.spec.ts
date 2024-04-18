@@ -4,7 +4,7 @@ import { MockProxy, mock } from 'vitest-mock-extended'
 
 import {
   HistoryTracksRepository,
-  order,
+  historyTracksOrder,
   relations,
 } from './history-tracks.repository'
 import { HistoryTrack } from './history-track.entity'
@@ -58,7 +58,7 @@ describe('HistoryTracksRepository', () => {
         },
       },
       relations,
-      order,
+      order: historyTracksOrder,
     })
   })
 
@@ -78,7 +78,7 @@ describe('HistoryTracksRepository', () => {
         },
       },
       relations,
-      order,
+      order: historyTracksOrder,
     })
   })
 

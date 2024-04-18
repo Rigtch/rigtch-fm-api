@@ -4,11 +4,9 @@ import { paginate } from 'nestjs-typeorm-paginate'
 
 import { ArtistsController } from './artists.controller'
 import { ArtistsRepository } from './artists.repository'
-import { Artist } from './artist.entity'
 
 import {
   artistEntityMock,
-  createQueryBuilderFactoryMock,
   generatePaginatedResponseFactoryMock,
   paginatedResponseMockImplementation,
 } from '@common/mocks'
@@ -16,8 +14,6 @@ import {
 vi.mock('nestjs-typeorm-paginate')
 
 describe('ArtistsController', () => {
-  const queryBuilderMock = createQueryBuilderFactoryMock(Artist)
-
   let artistsController: ArtistsController
   let artistsRepository: ArtistsRepository
 
@@ -28,7 +24,6 @@ describe('ArtistsController', () => {
         {
           provide: ArtistsRepository,
           useValue: {
-            createQueryBuilder: queryBuilderMock,
             findArtistById: vi.fn(),
           },
         },
@@ -56,7 +51,7 @@ describe('ArtistsController', () => {
 
       expect(response).toEqual(paginatedResponseMock)
       expect(response.items.length).toEqual(10)
-      expect(paginateSpy).toHaveBeenCalledWith(queryBuilderMock(), {
+      expect(paginateSpy).toHaveBeenCalledWith(artistsRepository, {
         limit: 10,
         page: 1,
       })
@@ -76,7 +71,7 @@ describe('ArtistsController', () => {
 
       expect(response).toEqual(paginatedResponseMock)
       expect(response.items.length).toEqual(50)
-      expect(paginateSpy).toHaveBeenCalledWith(queryBuilderMock(), {
+      expect(paginateSpy).toHaveBeenCalledWith(artistsRepository, {
         limit: 50,
         page: 1,
       })
@@ -97,7 +92,7 @@ describe('ArtistsController', () => {
 
       expect(response).toEqual(paginatedResponseMock)
       expect(response.items.length).toEqual(10)
-      expect(paginateSpy).toHaveBeenCalledWith(queryBuilderMock(), {
+      expect(paginateSpy).toHaveBeenCalledWith(artistsRepository, {
         limit: 10,
         page: 2,
       })

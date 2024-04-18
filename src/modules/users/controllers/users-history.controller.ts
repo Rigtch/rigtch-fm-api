@@ -16,8 +16,13 @@ import {
   ONE_SUCCESFULLY_FOUND,
 } from '@common/constants'
 import { ApiAuth, Token } from '@modules/auth/decorators'
-import { HistoryTrack, HistoryTracksRepository } from '@modules/history/tracks'
+import {
+  HistoryTrack,
+  HistoryTracksRepository,
+  historyTracksOrder,
+} from '@modules/history/tracks'
 import { PaginatedQuery } from '@common/dtos'
+import { tracksRelations } from '@modules/tracks'
 
 @Controller('users/:id/history')
 @ApiTags('users/{id}/history')
@@ -48,16 +53,15 @@ export class UsersHistoryController {
     @Token() _token: string,
     @Query() { limit = 10, page = 1 }: PaginatedQuery
   ) {
-    const queryBuilder = this.historyTracksRepository.createQueryBuilder('ht')
-
-    queryBuilder
-      .where('ht.user.id = :id', { id })
-      .leftJoinAndSelect('ht.track', 'track')
-      .leftJoinAndSelect('track.artists', 'artists')
-      .leftJoinAndSelect('track.album', 'album')
-      .leftJoinAndSelect('album.images', 'images')
-      .orderBy('ht.playedAt', 'DESC')
-
-    return paginate(queryBuilder, { limit, page })
+    return paginate(
+      this.historyTracksRepository,
+      { limit, page },
+      {
+        relations: {
+          track: tracksRelations,
+        },
+        order: historyTracksOrder,
+      }
+    )
   }
 }

@@ -36,14 +36,8 @@ export class ArtistsController {
     description: 'Artists successfully found.',
     type: [Pagination<Artist>],
   })
-  async getArtists(@Query() { limit = 10, page = 1 }: PaginatedQuery) {
-    const queryBuilder = this.artistsRepository.createQueryBuilder('a')
-
-    queryBuilder
-      .leftJoinAndSelect('a.images', 'images')
-      .orderBy('a.name', 'ASC')
-
-    return paginate(queryBuilder, { limit, page })
+  getArtists(@Query() { limit = 10, page = 1 }: PaginatedQuery) {
+    return paginate(this.artistsRepository, { limit, page })
   }
 
   @Get(':id')
