@@ -4,7 +4,7 @@ import { DataSource, FindOptionsRelations, In, Repository } from 'typeorm'
 import { Track } from './track.entity'
 import { CreateTrack } from './dtos'
 
-export const relations: FindOptionsRelations<Track> = {
+export const tracksRelations: FindOptionsRelations<Track> = {
   album: true,
   artists: true,
 }
@@ -17,35 +17,35 @@ export class TracksRepository extends Repository<Track> {
 
   findTracks() {
     return this.find({
-      relations,
+      relations: tracksRelations,
     })
   }
 
   findTrackByExternalId(externalId: string) {
     return this.findOne({
       where: { externalId },
-      relations,
+      relations: tracksRelations,
     })
   }
 
   findTrackById(id: string) {
     return this.findOne({
       where: { id },
-      relations,
+      relations: tracksRelations,
     })
   }
 
   findTrackByName(name: string) {
     return this.findOne({
       where: { name },
-      relations,
+      relations: tracksRelations,
     })
   }
 
   findTracksByExternalIds(externalIds: string[]) {
     return this.find({
       where: { externalId: In(externalIds) },
-      relations,
+      relations: tracksRelations,
     })
   }
 
