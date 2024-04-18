@@ -1,7 +1,7 @@
 import { DataSource, In } from 'typeorm'
 import { Test } from '@nestjs/testing'
 
-import { AlbumsRepository, relations } from './albums.repository'
+import { AlbumsRepository, albumsRelations } from './albums.repository'
 
 import {
   albumEntityMock,
@@ -43,7 +43,7 @@ describe('AlbumsRepository', () => {
       .mockResolvedValue(albumsEntitiesMock)
 
     expect(await albumsRepository.findAlbums()).toEqual(albumsEntitiesMock)
-    expect(findSpy).toHaveBeenCalledWith({ relations })
+    expect(findSpy).toHaveBeenCalledWith({ relations: albumsRelations })
   })
 
   test('should find albums by external ids', async () => {
@@ -58,7 +58,7 @@ describe('AlbumsRepository', () => {
     )
     expect(findSpy).toHaveBeenCalledWith({
       where: { externalId: In(externalIds) },
-      relations,
+      relations: albumsRelations,
     })
   })
 
@@ -72,7 +72,7 @@ describe('AlbumsRepository', () => {
     )
     expect(findOneSpy).toHaveBeenCalledWith({
       where: { externalId },
-      relations,
+      relations: albumsRelations,
     })
   })
 
@@ -86,7 +86,7 @@ describe('AlbumsRepository', () => {
     expect(await albumsRepository.findAlbumById(id)).toEqual(albumEntityMock)
     expect(findOneSpy).toHaveBeenCalledWith({
       where: { id },
-      relations,
+      relations: albumsRelations,
     })
   })
 
@@ -102,7 +102,7 @@ describe('AlbumsRepository', () => {
     )
     expect(findOneSpy).toHaveBeenCalledWith({
       where: { name },
-      relations,
+      relations: albumsRelations,
     })
   })
 

@@ -1,7 +1,7 @@
 import { DataSource, In } from 'typeorm'
 import { Test } from '@nestjs/testing'
 
-import { TracksRepository, relations } from './tracks.repository'
+import { TracksRepository, tracksRelations } from './tracks.repository'
 
 import {
   albumEntityMock,
@@ -41,7 +41,7 @@ describe('TracksRepository', () => {
 
     expect(await tracksRepository.findTracks()).toEqual(trackEntitiesMock)
     expect(findSpy).toHaveBeenCalledWith({
-      relations,
+      relations: tracksRelations,
     })
   })
 
@@ -57,7 +57,7 @@ describe('TracksRepository', () => {
     )
     expect(findOneSpy).toHaveBeenCalledWith({
       where: { externalId },
-      relations,
+      relations: tracksRelations,
     })
   })
 
@@ -71,7 +71,7 @@ describe('TracksRepository', () => {
     expect(await tracksRepository.findTrackById(id)).toEqual(trackEntityMock)
     expect(findOneSpy).toHaveBeenCalledWith({
       where: { id },
-      relations,
+      relations: tracksRelations,
     })
   })
 
@@ -87,7 +87,7 @@ describe('TracksRepository', () => {
     )
     expect(findOneSpy).toHaveBeenCalledWith({
       where: { name },
-      relations,
+      relations: tracksRelations,
     })
   })
 
@@ -103,7 +103,7 @@ describe('TracksRepository', () => {
     )
     expect(findSpy).toHaveBeenCalledWith({
       where: { externalId: In(externalIds) },
-      relations,
+      relations: tracksRelations,
     })
   })
 
