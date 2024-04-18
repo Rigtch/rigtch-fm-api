@@ -15,7 +15,7 @@ import {
 } from '@nestjs/swagger'
 import { Pagination, paginate } from 'nestjs-typeorm-paginate'
 
-import { TracksRepository } from './tracks.repository'
+import { TracksRepository, tracksRelations } from './tracks.repository'
 import { Track } from './track.entity'
 
 import { NOT_BEEN_FOUND, ONE_IS_INVALID } from '@common/constants'
@@ -37,15 +37,13 @@ export class TracksController {
     type: [Pagination<Track>],
   })
   getTracks(@Query() { limit = 10, page = 1 }: PaginatedQuery) {
-    const queryBuilder = this.tracksRepository.createQueryBuilder('t')
-
-    queryBuilder
-      .leftJoinAndSelect('t.artists', 'artists')
-      .leftJoinAndSelect('t.album', 'album')
-      .leftJoinAndSelect('album.images', 'images')
-      .orderBy('t.name', 'ASC')
-
-    return paginate(queryBuilder, { limit, page })
+    return paginate(
+      this.tracksRepository,
+      { limit, page },
+      {
+        relations: tracksRelations,
+      }
+    )
   }
 
   @Get(':id')

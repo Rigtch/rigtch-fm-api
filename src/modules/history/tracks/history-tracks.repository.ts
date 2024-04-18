@@ -12,7 +12,7 @@ import { CreateHistoryTrack } from './dtos'
 export const relations: FindOptionsRelations<HistoryTrack> = {
   user: true,
 }
-export const order: FindOptionsOrder<HistoryTrack> = {
+export const historyTracksOrder: FindOptionsOrder<HistoryTrack> = {
   playedAt: 'DESC',
 }
 
@@ -30,7 +30,7 @@ export class HistoryTracksRepository extends Repository<HistoryTrack> {
         },
       },
       relations,
-      order,
+      order: historyTracksOrder,
     })
   }
 
@@ -42,7 +42,7 @@ export class HistoryTracksRepository extends Repository<HistoryTrack> {
         },
       },
       relations,
-      order,
+      order: historyTracksOrder,
     })
   }
 

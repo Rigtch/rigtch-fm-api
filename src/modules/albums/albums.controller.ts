@@ -14,7 +14,10 @@ import {
 } from '@nestjs/swagger'
 import { Pagination, paginate } from 'nestjs-typeorm-paginate'
 
-import { AlbumsRepository } from './albums.repository'
+import {
+  AlbumsRepository,
+  albumsSimplifiedRelations,
+} from './albums.repository'
 import { Album } from './album.entity'
 
 import { NOT_BEEN_FOUND } from '@common/constants'
@@ -36,13 +39,13 @@ export class AlbumsController {
     type: [Pagination<Album>],
   })
   async getAlbums(@Query() { limit = 10, page = 1 }: PaginatedQuery) {
-    const queryBuilder = this.albumsRepository.createQueryBuilder('a')
-
-    queryBuilder
-      .leftJoinAndSelect('a.images', 'images')
-      .orderBy('a.name', 'ASC')
-
-    return paginate(queryBuilder, { limit, page })
+    return paginate(
+      this.albumsRepository,
+      { limit, page },
+      {
+        relations: albumsSimplifiedRelations,
+      }
+    )
   }
 
   @Get(':id')

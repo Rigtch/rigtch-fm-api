@@ -3,35 +3,36 @@ import { paginate } from 'nestjs-typeorm-paginate'
 
 import { UsersHistoryController } from './users-history.controller'
 
-import { HistoryTrack, HistoryTracksRepository } from '@modules/history/tracks'
 import {
-  createQueryBuilderFactoryMock,
+  HistoryTracksRepository,
+  historyTracksOrder,
+} from '@modules/history/tracks'
+import {
   generatePaginatedResponseFactoryMock,
   paginatedResponseMockImplementation,
   trackEntityMock,
 } from '@common/mocks'
+import { tracksRelations } from '@modules/tracks'
 
 vi.mock('nestjs-typeorm-paginate')
 
 describe('UsersHistoryController', () => {
-  const queryBuilderMock = createQueryBuilderFactoryMock(HistoryTrack)
-
   let usersHistoryController: UsersHistoryController
+  let historyTracksRepository: HistoryTracksRepository
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
         {
           provide: HistoryTracksRepository,
-          useValue: {
-            createQueryBuilder: queryBuilderMock,
-          },
+          useValue: {},
         },
         UsersHistoryController,
       ],
     }).compile()
 
     usersHistoryController = module.get(UsersHistoryController)
+    historyTracksRepository = module.get(HistoryTracksRepository)
   })
 
   test('should be defined', () => {
@@ -55,10 +56,19 @@ describe('UsersHistoryController', () => {
 
       expect(response).toEqual(paginatedResponseMock)
       expect(response.items.length).toEqual(10)
-      expect(paginateSpy).toHaveBeenCalledWith(queryBuilderMock(), {
-        limit: 10,
-        page: 1,
-      })
+      expect(paginateSpy).toHaveBeenCalledWith(
+        historyTracksRepository,
+        {
+          limit: 10,
+          page: 1,
+        },
+        {
+          relations: {
+            track: tracksRelations,
+          },
+          order: historyTracksOrder,
+        }
+      )
     })
 
     test('should get paginated history with limit', async () => {
@@ -75,10 +85,19 @@ describe('UsersHistoryController', () => {
 
       expect(response).toEqual(paginatedResponseMock)
       expect(response.items.length).toEqual(limit)
-      expect(paginateSpy).toHaveBeenCalledWith(queryBuilderMock(), {
-        limit,
-        page: 1,
-      })
+      expect(paginateSpy).toHaveBeenCalledWith(
+        historyTracksRepository,
+        {
+          limit,
+          page: 1,
+        },
+        {
+          relations: {
+            track: tracksRelations,
+          },
+          order: historyTracksOrder,
+        }
+      )
     })
 
     test('should get paginated history with page', async () => {
@@ -96,10 +115,19 @@ describe('UsersHistoryController', () => {
 
       expect(response).toEqual(paginatedResponseMock)
       expect(response.items.length).toEqual(10)
-      expect(paginateSpy).toHaveBeenCalledWith(queryBuilderMock(), {
-        limit: 10,
-        page,
-      })
+      expect(paginateSpy).toHaveBeenCalledWith(
+        historyTracksRepository,
+        {
+          limit: 10,
+          page,
+        },
+        {
+          relations: {
+            track: tracksRelations,
+          },
+          order: historyTracksOrder,
+        }
+      )
     })
   })
 })

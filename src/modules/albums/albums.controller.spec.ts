@@ -3,12 +3,13 @@ import { NotFoundException } from '@nestjs/common'
 import { paginate } from 'nestjs-typeorm-paginate'
 
 import { AlbumsController } from './albums.controller'
-import { AlbumsRepository } from './albums.repository'
-import { Album } from './album.entity'
+import {
+  AlbumsRepository,
+  albumsSimplifiedRelations,
+} from './albums.repository'
 
 import {
   albumEntityMock,
-  createQueryBuilderFactoryMock,
   generatePaginatedResponseFactoryMock,
   paginatedResponseMockImplementation,
 } from '@common/mocks'
@@ -16,8 +17,6 @@ import {
 vi.mock('nestjs-typeorm-paginate')
 
 describe('AlbumsController', () => {
-  const queryBuilderMock = createQueryBuilderFactoryMock(Album)
-
   let albumsController: AlbumsController
   let albumsRepository: AlbumsRepository
 
@@ -28,7 +27,6 @@ describe('AlbumsController', () => {
         {
           provide: AlbumsRepository,
           useValue: {
-            createQueryBuilder: queryBuilderMock,
             findAlbumById: vi.fn(),
           },
         },
@@ -56,10 +54,16 @@ describe('AlbumsController', () => {
 
       expect(response).toEqual(paginatedResponseMock)
       expect(response.items.length).toEqual(10)
-      expect(paginateSpy).toHaveBeenCalledWith(queryBuilderMock(), {
-        limit: 10,
-        page: 1,
-      })
+      expect(paginateSpy).toHaveBeenCalledWith(
+        albumsRepository,
+        {
+          limit: 10,
+          page: 1,
+        },
+        {
+          relations: albumsSimplifiedRelations,
+        }
+      )
     })
 
     test('should get all albums with limit', async () => {
@@ -74,10 +78,16 @@ describe('AlbumsController', () => {
 
       expect(response).toEqual(paginatedResponseMock)
       expect(response.items.length).toEqual(limit)
-      expect(paginateSpy).toHaveBeenCalledWith(queryBuilderMock(), {
-        limit,
-        page: 1,
-      })
+      expect(paginateSpy).toHaveBeenCalledWith(
+        albumsRepository,
+        {
+          limit,
+          page: 1,
+        },
+        {
+          relations: albumsSimplifiedRelations,
+        }
+      )
     })
 
     test('should get all albums with page', async () => {
@@ -93,10 +103,16 @@ describe('AlbumsController', () => {
 
       expect(response).toEqual(paginatedResponseMock)
       expect(response.items.length).toEqual(10)
-      expect(paginateSpy).toHaveBeenCalledWith(queryBuilderMock(), {
-        limit: 10,
-        page,
-      })
+      expect(paginateSpy).toHaveBeenCalledWith(
+        albumsRepository,
+        {
+          limit: 10,
+          page,
+        },
+        {
+          relations: albumsSimplifiedRelations,
+        }
+      )
     })
   })
 
