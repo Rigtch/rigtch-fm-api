@@ -1,4 +1,4 @@
-import { Test } from '@nestjs/testing'
+import { Test, TestingModule } from '@nestjs/testing'
 import { mock } from 'vitest-mock-extended'
 
 import { UsersRepository } from '../users.repository'
@@ -30,6 +30,7 @@ describe('UsersProfileController', () => {
   const offset = 0
   const timeRange = TimeRange.MEDIUM_TERM
 
+  let moduleRef: TestingModule
   let usersProfileController: UsersProfileController
   let usersRepository: UsersRepository
   let spotifyAuthService: SpotifyAuthService
@@ -37,7 +38,7 @@ describe('UsersProfileController', () => {
   let spotifyPlayerService: SpotifyPlayerService
 
   beforeEach(async () => {
-    const module = await Test.createTestingModule({
+    moduleRef = await Test.createTestingModule({
       providers: [
         UsersProfileController,
         {
@@ -73,11 +74,15 @@ describe('UsersProfileController', () => {
       ],
     }).compile()
 
-    usersProfileController = module.get(UsersProfileController)
-    usersRepository = module.get(UsersRepository)
-    spotifyAuthService = module.get(SpotifyAuthService)
-    spotifyUsersService = module.get(SpotifyUsersService)
-    spotifyPlayerService = module.get(SpotifyPlayerService)
+    usersProfileController = moduleRef.get(UsersProfileController)
+    usersRepository = moduleRef.get(UsersRepository)
+    spotifyAuthService = moduleRef.get(SpotifyAuthService)
+    spotifyUsersService = moduleRef.get(SpotifyUsersService)
+    spotifyPlayerService = moduleRef.get(SpotifyPlayerService)
+  })
+
+  afterEach(() => {
+    moduleRef.close()
   })
 
   test('should be defined', () => {

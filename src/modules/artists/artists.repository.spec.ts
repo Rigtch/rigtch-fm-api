@@ -1,5 +1,5 @@
 import { DataSource, In } from 'typeorm'
-import { Test } from '@nestjs/testing'
+import { Test, TestingModule } from '@nestjs/testing'
 
 import { ArtistsRepository } from './artists.repository'
 
@@ -12,10 +12,11 @@ import {
 } from '@common/mocks'
 
 describe('ArtistsRepository', () => {
+  let moduleRef: TestingModule
   let artistsRepository: ArtistsRepository
 
   beforeEach(async () => {
-    const module = await Test.createTestingModule({
+    moduleRef = await Test.createTestingModule({
       providers: [
         ArtistsRepository,
         {
@@ -27,7 +28,11 @@ describe('ArtistsRepository', () => {
       ],
     }).compile()
 
-    artistsRepository = module.get(ArtistsRepository)
+    artistsRepository = moduleRef.get(ArtistsRepository)
+  })
+
+  afterEach(() => {
+    moduleRef.close()
   })
 
   test('should be defined', () => {

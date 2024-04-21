@@ -1,4 +1,4 @@
-import { Test } from '@nestjs/testing'
+import { Test, TestingModule } from '@nestjs/testing'
 import { MockInstance } from 'vitest'
 
 import { AlbumsRepository } from './albums.repository'
@@ -32,6 +32,7 @@ type GetAlbumsMockInstance = MockInstance<
 describe('AlbumsService', () => {
   const externalId = 'externalId'
 
+  let moduleRef: TestingModule
   let albumsService: AlbumsService
   let albumsRepository: AlbumsRepository
   let tracksService: TracksService
@@ -40,7 +41,7 @@ describe('AlbumsService', () => {
   let spotifyAlbumsService: SpotifyAlbumsService
 
   beforeEach(async () => {
-    const module = await Test.createTestingModule({
+    moduleRef = await Test.createTestingModule({
       providers: [
         AlbumsService,
         {
@@ -79,12 +80,16 @@ describe('AlbumsService', () => {
       ],
     }).compile()
 
-    albumsService = module.get(AlbumsService)
-    albumsRepository = module.get(AlbumsRepository)
-    tracksService = module.get(TracksService)
-    artistsService = module.get(ArtistsService)
-    imagesService = module.get(ImagesService)
-    spotifyAlbumsService = module.get(SpotifyAlbumsService)
+    albumsService = moduleRef.get(AlbumsService)
+    albumsRepository = moduleRef.get(AlbumsRepository)
+    tracksService = moduleRef.get(TracksService)
+    artistsService = moduleRef.get(ArtistsService)
+    imagesService = moduleRef.get(ImagesService)
+    spotifyAlbumsService = moduleRef.get(SpotifyAlbumsService)
+  })
+
+  afterEach(() => {
+    moduleRef.close()
   })
 
   describe('create', () => {

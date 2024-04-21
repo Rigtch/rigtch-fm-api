@@ -1,4 +1,4 @@
-import { Test } from '@nestjs/testing'
+import { Test, TestingModule } from '@nestjs/testing'
 
 import { PageAdapter } from './page.adapter'
 import { ArtistsAdapter } from './artists.adapter'
@@ -6,16 +6,21 @@ import { ArtistsAdapter } from './artists.adapter'
 import { artistMock, sdkArtistMock, pageMockFactory } from '@common/mocks'
 
 describe('PaginatedAdapter', () => {
+  let moduleRef: TestingModule
   let paginatedAdapter: PageAdapter
   let artistsAdapter: ArtistsAdapter
 
   beforeEach(async () => {
-    const module = await Test.createTestingModule({
+    moduleRef = await Test.createTestingModule({
       providers: [PageAdapter, ArtistsAdapter],
     }).compile()
 
-    paginatedAdapter = module.get(PageAdapter)
-    artistsAdapter = module.get(ArtistsAdapter)
+    paginatedAdapter = moduleRef.get(PageAdapter)
+    artistsAdapter = moduleRef.get(ArtistsAdapter)
+  })
+
+  afterEach(() => {
+    moduleRef.close()
   })
 
   test('should be defined', () => {

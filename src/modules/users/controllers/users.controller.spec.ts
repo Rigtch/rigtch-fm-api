@@ -1,4 +1,4 @@
-import { Test } from '@nestjs/testing'
+import { Test, TestingModule } from '@nestjs/testing'
 
 import { UsersRepository } from '../users.repository'
 
@@ -10,11 +10,12 @@ describe('UsersController', () => {
   const id = '1'
   const displayName = 'displayName'
 
+  let moduleRef: TestingModule
   let usersController: UsersController
   let usersRepository: UsersRepository
 
   beforeEach(async () => {
-    const module = await Test.createTestingModule({
+    moduleRef = await Test.createTestingModule({
       providers: [
         UsersController,
         {
@@ -28,8 +29,12 @@ describe('UsersController', () => {
       ],
     }).compile()
 
-    usersController = module.get(UsersController)
-    usersRepository = module.get(UsersRepository)
+    usersController = moduleRef.get(UsersController)
+    usersRepository = moduleRef.get(UsersRepository)
+  })
+
+  afterEach(() => {
+    moduleRef.close()
   })
 
   test('should be defined', () => {

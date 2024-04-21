@@ -1,4 +1,4 @@
-import { Test } from '@nestjs/testing'
+import { Test, TestingModule } from '@nestjs/testing'
 import { DataSource } from 'typeorm'
 import { MockProxy, mock } from 'vitest-mock-extended'
 
@@ -8,12 +8,13 @@ import { History } from './history.entity'
 describe('HistoryRepository', () => {
   const userId = 'userId'
 
+  let moduleRef: TestingModule
   let historyRepository: HistoryRepository
 
   let historyEntityMock: MockProxy<History>
 
   beforeEach(async () => {
-    const module = await Test.createTestingModule({
+    moduleRef = await Test.createTestingModule({
       providers: [
         {
           provide: DataSource,
@@ -26,9 +27,13 @@ describe('HistoryRepository', () => {
       ],
     }).compile()
 
-    historyRepository = module.get(HistoryRepository)
+    historyRepository = moduleRef.get(HistoryRepository)
 
     historyEntityMock = mock<History>()
+  })
+
+  afterEach(() => {
+    moduleRef.close()
   })
 
   test('should be defined', () => {

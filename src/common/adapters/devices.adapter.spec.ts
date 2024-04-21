@@ -1,18 +1,23 @@
-import { Test } from '@nestjs/testing'
+import { Test, TestingModule } from '@nestjs/testing'
 
 import { DevicesAdapter } from './devices.adapter'
 
 import { deviceMock, sdkDeviceMock } from '@common/mocks'
 
 describe('DevicesAdapter', () => {
+  let moduleRef: TestingModule
   let devicesAdapter: DevicesAdapter
 
   beforeEach(async () => {
-    const module = await Test.createTestingModule({
+    moduleRef = await Test.createTestingModule({
       providers: [DevicesAdapter],
     }).compile()
 
-    devicesAdapter = module.get(DevicesAdapter)
+    devicesAdapter = moduleRef.get(DevicesAdapter)
+  })
+
+  afterEach(() => {
+    moduleRef.close()
   })
 
   test('should be defined', () => {

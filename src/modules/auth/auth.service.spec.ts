@@ -1,4 +1,4 @@
-import { Test } from '@nestjs/testing'
+import { Test, TestingModule } from '@nestjs/testing'
 
 import { AuthService } from './auth.service'
 
@@ -10,6 +10,7 @@ import { SpotifyUsersService } from '@modules/spotify/users'
 import { HistoryScheduler } from '@modules/history'
 
 describe('AuthService', () => {
+  let moduleRef: TestingModule
   let authService: AuthService
   let usersRepository: UsersRepository
   let profilesRepository: ProfilesRepository
@@ -17,7 +18,7 @@ describe('AuthService', () => {
   let historyScheduler: HistoryScheduler
 
   beforeEach(async () => {
-    const module = await Test.createTestingModule({
+    moduleRef = await Test.createTestingModule({
       providers: [
         AuthService,
         {
@@ -48,11 +49,15 @@ describe('AuthService', () => {
       ],
     }).compile()
 
-    authService = module.get(AuthService)
-    usersRepository = module.get(UsersRepository)
-    profilesRepository = module.get(ProfilesRepository)
-    spotifyUsersService = module.get(SpotifyUsersService)
-    historyScheduler = module.get(HistoryScheduler)
+    authService = moduleRef.get(AuthService)
+    usersRepository = moduleRef.get(UsersRepository)
+    profilesRepository = moduleRef.get(ProfilesRepository)
+    spotifyUsersService = moduleRef.get(SpotifyUsersService)
+    historyScheduler = moduleRef.get(HistoryScheduler)
+  })
+
+  afterEach(() => {
+    moduleRef.close()
   })
 
   test('should be defined', () => {

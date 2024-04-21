@@ -1,4 +1,4 @@
-import { Test } from '@nestjs/testing'
+import { Test, TestingModule } from '@nestjs/testing'
 import { paginate } from 'nestjs-typeorm-paginate'
 
 import { UsersHistoryController } from './users-history.controller'
@@ -17,11 +17,12 @@ import { tracksRelations } from '@modules/tracks'
 vi.mock('nestjs-typeorm-paginate')
 
 describe('UsersHistoryController', () => {
+  let moduleRef: TestingModule
   let usersHistoryController: UsersHistoryController
   let historyTracksRepository: HistoryTracksRepository
 
   beforeEach(async () => {
-    const module = await Test.createTestingModule({
+    moduleRef = await Test.createTestingModule({
       providers: [
         {
           provide: HistoryTracksRepository,
@@ -31,8 +32,12 @@ describe('UsersHistoryController', () => {
       ],
     }).compile()
 
-    usersHistoryController = module.get(UsersHistoryController)
-    historyTracksRepository = module.get(HistoryTracksRepository)
+    usersHistoryController = moduleRef.get(UsersHistoryController)
+    historyTracksRepository = moduleRef.get(HistoryTracksRepository)
+  })
+
+  afterEach(() => {
+    moduleRef.close()
   })
 
   test('should be defined', () => {

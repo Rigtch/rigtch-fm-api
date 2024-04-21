@@ -1,4 +1,4 @@
-import { Test } from '@nestjs/testing'
+import { Test, TestingModule } from '@nestjs/testing'
 
 import { ImagesService } from './images.service'
 import { ImagesRepository } from './images.repository'
@@ -11,11 +11,12 @@ import {
 } from '@common/mocks'
 
 describe('ImagesService', () => {
+  let moduleRef: TestingModule
   let imagesService: ImagesService
   let imagesRepository: ImagesRepository
 
   beforeEach(async () => {
-    const module = await Test.createTestingModule({
+    moduleRef = await Test.createTestingModule({
       providers: [
         ImagesService,
         {
@@ -28,8 +29,12 @@ describe('ImagesService', () => {
       ],
     }).compile()
 
-    imagesService = module.get(ImagesService)
-    imagesRepository = module.get(ImagesRepository)
+    imagesService = moduleRef.get(ImagesService)
+    imagesRepository = moduleRef.get(ImagesRepository)
+  })
+
+  afterEach(() => {
+    moduleRef.close()
   })
 
   test('should be defined', () => {
