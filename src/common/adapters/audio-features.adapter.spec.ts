@@ -1,18 +1,23 @@
-import { Test } from '@nestjs/testing'
+import { Test, TestingModule } from '@nestjs/testing'
 
 import { AudioFeaturesAdapter } from './audio-features.adapter'
 
 import { audioFeaturesMock, sdkAudioFeaturesMock } from '@common/mocks'
 
 describe('AudioFeaturesAdapter', () => {
+  let moduleRef: TestingModule
   let audioFeaturesAdapter: AudioFeaturesAdapter
 
   beforeEach(async () => {
-    const module = await Test.createTestingModule({
+    moduleRef = await Test.createTestingModule({
       providers: [AudioFeaturesAdapter],
     }).compile()
 
-    audioFeaturesAdapter = module.get(AudioFeaturesAdapter)
+    audioFeaturesAdapter = moduleRef.get(AudioFeaturesAdapter)
+  })
+
+  afterEach(() => {
+    moduleRef.close()
   })
 
   test('should be defined', () => {

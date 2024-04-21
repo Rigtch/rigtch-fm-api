@@ -1,4 +1,4 @@
-import { Test } from '@nestjs/testing'
+import { Test, TestingModule } from '@nestjs/testing'
 import { NotFoundException } from '@nestjs/common'
 import { paginate } from 'nestjs-typeorm-paginate'
 
@@ -14,11 +14,12 @@ import {
 vi.mock('nestjs-typeorm-paginate')
 
 describe('ArtistsController', () => {
+  let moduleRef: TestingModule
   let artistsController: ArtistsController
   let artistsRepository: ArtistsRepository
 
   beforeEach(async () => {
-    const module = await Test.createTestingModule({
+    moduleRef = await Test.createTestingModule({
       controllers: [ArtistsController],
       providers: [
         {
@@ -30,8 +31,12 @@ describe('ArtistsController', () => {
       ],
     }).compile()
 
-    artistsController = module.get(ArtistsController)
-    artistsRepository = module.get(ArtistsRepository)
+    artistsController = moduleRef.get(ArtistsController)
+    artistsRepository = moduleRef.get(ArtistsRepository)
+  })
+
+  afterEach(() => {
+    moduleRef.close()
   })
 
   test('should be defined', () => {

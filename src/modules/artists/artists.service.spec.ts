@@ -1,4 +1,4 @@
-import { Test } from '@nestjs/testing'
+import { Test, TestingModule } from '@nestjs/testing'
 import { MockInstance } from 'vitest'
 
 import { ArtistsRepository } from './artists.repository'
@@ -15,13 +15,14 @@ import {
 import { ImagesService } from '@modules/images'
 
 describe('ArtistsService', () => {
+  let moduleRef: TestingModule
   let artistsService: ArtistsService
   let artistsRepository: ArtistsRepository
   let spotifyArtistsService: SpotifyArtistsService
   let imagesService: ImagesService
 
   beforeEach(async () => {
-    const module = await Test.createTestingModule({
+    moduleRef = await Test.createTestingModule({
       providers: [
         ArtistsService,
         {
@@ -48,10 +49,14 @@ describe('ArtistsService', () => {
       ],
     }).compile()
 
-    artistsService = module.get(ArtistsService)
-    artistsRepository = module.get(ArtistsRepository)
-    spotifyArtistsService = module.get(SpotifyArtistsService)
-    imagesService = module.get(ImagesService)
+    artistsService = moduleRef.get(ArtistsService)
+    artistsRepository = moduleRef.get(ArtistsRepository)
+    spotifyArtistsService = moduleRef.get(SpotifyArtistsService)
+    imagesService = moduleRef.get(ImagesService)
+  })
+
+  afterEach(() => {
+    moduleRef.close()
   })
 
   test('should be defined', () => {

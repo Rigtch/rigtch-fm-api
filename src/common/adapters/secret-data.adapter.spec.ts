@@ -1,18 +1,23 @@
-import { Test } from '@nestjs/testing'
+import { Test, TestingModule } from '@nestjs/testing'
 
 import { SecretDataAdapter } from './secret-data.adapter'
 
 import { accessTokenMock } from '@common/mocks'
 
 describe('SecretDataAdapter', () => {
+  let moduleRef: TestingModule
   let secretDataAdapter: SecretDataAdapter
 
   beforeEach(async () => {
-    const module = await Test.createTestingModule({
+    moduleRef = await Test.createTestingModule({
       providers: [SecretDataAdapter],
     }).compile()
 
-    secretDataAdapter = module.get(SecretDataAdapter)
+    secretDataAdapter = moduleRef.get(SecretDataAdapter)
+  })
+
+  afterEach(() => {
+    moduleRef.close()
   })
 
   test('should be defined', () => {

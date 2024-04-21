@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm'
-import { Test } from '@nestjs/testing'
+import { Test, TestingModule } from '@nestjs/testing'
 import { MockProxy, mock } from 'vitest-mock-extended'
 
 import {
@@ -13,13 +13,14 @@ import { CreateHistoryTrack } from './dtos'
 describe('HistoryTracksRepository', () => {
   const userId = 'userId'
 
+  let moduleRef: TestingModule
   let historyTracksRepository: HistoryTracksRepository
 
   let historyTrackMock: MockProxy<HistoryTrack>
   let historyTracksMock: MockProxy<HistoryTrack[]>
 
   beforeEach(async () => {
-    const module = await Test.createTestingModule({
+    moduleRef = await Test.createTestingModule({
       providers: [
         {
           provide: DataSource,
@@ -32,10 +33,14 @@ describe('HistoryTracksRepository', () => {
       ],
     }).compile()
 
-    historyTracksRepository = module.get(HistoryTracksRepository)
+    historyTracksRepository = moduleRef.get(HistoryTracksRepository)
 
     historyTrackMock = mock<HistoryTrack>()
     historyTracksMock = Array.from({ length: 5 }, () => historyTrackMock)
+  })
+
+  afterEach(() => {
+    moduleRef.close()
   })
 
   test('should be defined', () => {

@@ -20,12 +20,13 @@ import { SecretDataAdapter } from '@common/adapters'
 describe('AuthController', () => {
   const redirectUrl = 'http://test.com'
 
+  let moduleRef: TestingModule
   let authController: AuthController
   let spotifyAuthService: SpotifyAuthService
   let authService: AuthService
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    moduleRef = await Test.createTestingModule({
       providers: [
         AuthController,
         {
@@ -56,9 +57,13 @@ describe('AuthController', () => {
       ],
     }).compile()
 
-    authController = module.get(AuthController)
-    spotifyAuthService = module.get(SpotifyAuthService)
-    authService = module.get(AuthService)
+    authController = moduleRef.get(AuthController)
+    spotifyAuthService = moduleRef.get(SpotifyAuthService)
+    authService = moduleRef.get(AuthService)
+  })
+
+  afterEach(() => {
+    moduleRef.close()
   })
 
   test('should be defined', () => {

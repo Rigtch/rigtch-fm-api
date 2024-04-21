@@ -1,6 +1,6 @@
 import { HttpService, HttpModule } from '@nestjs/axios'
 import { ConfigService } from '@nestjs/config'
-import { Test } from '@nestjs/testing'
+import { Test, TestingModule } from '@nestjs/testing'
 import { of } from 'rxjs'
 
 import { spotifyTokenMock } from './mocks'
@@ -16,12 +16,13 @@ import { SdkProfile } from '@common/types/spotify'
 import { AdaptersService, ProfileAdapter } from '@common/adapters'
 
 describe('SpotifyAuthService', () => {
+  let moduleRef: TestingModule
   let spotifyAuthService: SpotifyAuthService
   let httpService: HttpService
   let configService: ConfigService
 
   beforeEach(async () => {
-    const module = await Test.createTestingModule({
+    moduleRef = await Test.createTestingModule({
       imports: [HttpModule],
       providers: [
         SpotifyAuthService,
@@ -40,9 +41,13 @@ describe('SpotifyAuthService', () => {
       ],
     }).compile()
 
-    spotifyAuthService = module.get(SpotifyAuthService)
-    httpService = module.get(HttpService)
-    configService = module.get(ConfigService)
+    spotifyAuthService = moduleRef.get(SpotifyAuthService)
+    httpService = moduleRef.get(HttpService)
+    configService = moduleRef.get(ConfigService)
+  })
+
+  afterEach(() => {
+    moduleRef.close()
   })
 
   test('should be defined', () => {

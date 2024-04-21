@@ -7,11 +7,12 @@ import { imagesMock, profileMock } from '@common/mocks'
 import { ImagesRepository } from '@modules/images'
 
 describe('ProfilesRepository', () => {
+  let moduleRef: TestingModule
   let profilesRepository: ProfilesRepository
   let imagesRepository: ImagesRepository
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    moduleRef = await Test.createTestingModule({
       providers: [
         ProfilesRepository,
         {
@@ -29,8 +30,12 @@ describe('ProfilesRepository', () => {
       ],
     }).compile()
 
-    profilesRepository = module.get(ProfilesRepository)
-    imagesRepository = module.get(ImagesRepository)
+    profilesRepository = moduleRef.get(ProfilesRepository)
+    imagesRepository = moduleRef.get(ImagesRepository)
+  })
+
+  afterEach(() => {
+    moduleRef.close()
   })
 
   test('should be defined', () => {

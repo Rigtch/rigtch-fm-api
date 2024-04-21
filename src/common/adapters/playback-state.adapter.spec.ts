@@ -1,4 +1,4 @@
-import { Test } from '@nestjs/testing'
+import { Test, TestingModule } from '@nestjs/testing'
 
 import { PlaybackStateAdapter } from './playback-state.adapter'
 import { DevicesAdapter } from './devices.adapter'
@@ -9,10 +9,11 @@ import { ArtistsAdapter } from './artists.adapter'
 import { playbackStateMock, sdkPlaybackStateMock } from '@common/mocks'
 
 describe('PlaybackStateAdapter', () => {
+  let moduleRef: TestingModule
   let playbackStateAdapter: PlaybackStateAdapter
 
   beforeEach(async () => {
-    const module = await Test.createTestingModule({
+    moduleRef = await Test.createTestingModule({
       providers: [
         PlaybackStateAdapter,
         DevicesAdapter,
@@ -22,7 +23,11 @@ describe('PlaybackStateAdapter', () => {
       ],
     }).compile()
 
-    playbackStateAdapter = module.get(PlaybackStateAdapter)
+    playbackStateAdapter = moduleRef.get(PlaybackStateAdapter)
+  })
+
+  afterEach(() => {
+    moduleRef.close()
   })
 
   test('should be defined', () => {

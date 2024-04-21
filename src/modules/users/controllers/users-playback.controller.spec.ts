@@ -1,4 +1,4 @@
-import { Test } from '@nestjs/testing'
+import { Test, TestingModule } from '@nestjs/testing'
 import { NotFoundException, UnauthorizedException } from '@nestjs/common'
 import { mock } from 'vitest-mock-extended'
 
@@ -22,13 +22,14 @@ describe('UsersPlaybackController', () => {
     id: '2',
   })
 
+  let moduleRef: TestingModule
   let usersPlaybackController: UsersPlaybackController
   let usersRepository: UsersRepository
   let spotifyAuthService: SpotifyAuthService
   let spotifyPlayerService: SpotifyPlayerService
 
   beforeEach(async () => {
-    const module = await Test.createTestingModule({
+    moduleRef = await Test.createTestingModule({
       controllers: [UsersPlaybackController],
       providers: [
         {
@@ -55,10 +56,14 @@ describe('UsersPlaybackController', () => {
       ],
     }).compile()
 
-    usersPlaybackController = module.get(UsersPlaybackController)
-    usersRepository = module.get(UsersRepository)
-    spotifyAuthService = module.get(SpotifyAuthService)
-    spotifyPlayerService = module.get(SpotifyPlayerService)
+    usersPlaybackController = moduleRef.get(UsersPlaybackController)
+    usersRepository = moduleRef.get(UsersRepository)
+    spotifyAuthService = moduleRef.get(SpotifyAuthService)
+    spotifyPlayerService = moduleRef.get(SpotifyPlayerService)
+  })
+
+  afterEach(() => {
+    moduleRef.close()
   })
 
   describe('getPlaybackState', () => {

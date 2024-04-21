@@ -1,4 +1,4 @@
-import { Test } from '@nestjs/testing'
+import { Test, TestingModule } from '@nestjs/testing'
 import { DataSource } from 'typeorm'
 
 import { UsersRepository } from './users.repository'
@@ -6,10 +6,11 @@ import { UsersRepository } from './users.repository'
 import { userMock, usersMock } from '@common/mocks'
 
 describe('UsersRepository', () => {
+  let moduleRef: TestingModule
   let usersRepository: UsersRepository
 
   beforeEach(async () => {
-    const module = await Test.createTestingModule({
+    moduleRef = await Test.createTestingModule({
       providers: [
         UsersRepository,
         {
@@ -21,7 +22,11 @@ describe('UsersRepository', () => {
       ],
     }).compile()
 
-    usersRepository = module.get(UsersRepository)
+    usersRepository = moduleRef.get(UsersRepository)
+  })
+
+  afterEach(() => {
+    moduleRef.close()
   })
 
   test('should be defined', () => {

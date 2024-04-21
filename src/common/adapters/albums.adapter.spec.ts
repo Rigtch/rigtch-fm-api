@@ -1,4 +1,4 @@
-import { Test } from '@nestjs/testing'
+import { Test, TestingModule } from '@nestjs/testing'
 
 import { AlbumsAdapter } from './albums.adapter'
 import { TracksAdapter } from './tracks.adapter'
@@ -19,14 +19,19 @@ import {
 } from '@common/mocks'
 
 describe('AlbumsAdapter', () => {
+  let moduleRef: TestingModule
   let albumsAdapter: AlbumsAdapter
 
   beforeEach(async () => {
-    const module = await Test.createTestingModule({
+    moduleRef = await Test.createTestingModule({
       providers: [TracksAdapter, ArtistsAdapter, AlbumsAdapter, PageAdapter],
     }).compile()
 
-    albumsAdapter = module.get(AlbumsAdapter)
+    albumsAdapter = moduleRef.get(AlbumsAdapter)
+  })
+
+  afterEach(() => {
+    moduleRef.close()
   })
 
   test('should be defined', () => {

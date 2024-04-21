@@ -1,4 +1,4 @@
-import { Test } from '@nestjs/testing'
+import { Test, TestingModule } from '@nestjs/testing'
 import { MockProxy, mock } from 'vitest-mock-extended'
 import { PlayHistory } from '@spotify/web-api-ts-sdk'
 
@@ -12,13 +12,14 @@ import {
 } from './tracks'
 
 describe('HistoryService', () => {
+  let moduleRef: TestingModule
   let historyService: HistoryService
   let historyRepository: HistoryRepository
   let historyTracksRepository: HistoryTracksRepository
   let historyTracksService: HistoryTracksService
 
   beforeEach(async () => {
-    const module = await Test.createTestingModule({
+    moduleRef = await Test.createTestingModule({
       providers: [
         HistoryService,
         {
@@ -44,10 +45,14 @@ describe('HistoryService', () => {
       ],
     }).compile()
 
-    historyService = module.get(HistoryService)
-    historyRepository = module.get(HistoryRepository)
-    historyTracksRepository = module.get(HistoryTracksRepository)
-    historyTracksService = module.get(HistoryTracksService)
+    historyService = moduleRef.get(HistoryService)
+    historyRepository = moduleRef.get(HistoryRepository)
+    historyTracksRepository = moduleRef.get(HistoryTracksRepository)
+    historyTracksService = moduleRef.get(HistoryTracksService)
+  })
+
+  afterEach(() => {
+    moduleRef.close()
   })
 
   test('should be defined', () => {

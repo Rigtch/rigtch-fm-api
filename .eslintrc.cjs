@@ -84,6 +84,7 @@ module.exports = {
     '@typescript-eslint/no-unsafe-argument': 'off',
     '@typescript-eslint/no-unsafe-assignment': 'off',
     '@typescript-eslint/no-unsafe-member-access': 'off',
+    '@trilon/detect-circular-reference': 'off',
     'nestjs/use-validation-pipe': 'off',
     'import/order': [
       'warn',
@@ -105,6 +106,8 @@ module.exports = {
         allowList: {
           param: true,
           params: true,
+          ref: true,
+          Ref: true,
           Param: true,
           Params: true,
           args: true,

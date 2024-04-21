@@ -1,4 +1,4 @@
-import { Test } from '@nestjs/testing'
+import { Test, TestingModule } from '@nestjs/testing'
 import { MockInstance } from 'vitest'
 
 import { TracksRepository } from './tracks.repository'
@@ -24,6 +24,7 @@ type GetTracksMockInstance = MockInstance<
 >
 
 describe('TracksService', () => {
+  let moduleRef: TestingModule
   let tracksService: TracksService
   let tracksRepository: TracksRepository
   let spotifyTracksService: SpotifyTracksService
@@ -31,7 +32,7 @@ describe('TracksService', () => {
   let artistsService: ArtistsService
 
   beforeEach(async () => {
-    const module = await Test.createTestingModule({
+    moduleRef = await Test.createTestingModule({
       providers: [
         TracksService,
         {
@@ -64,11 +65,15 @@ describe('TracksService', () => {
       ],
     }).compile()
 
-    tracksService = module.get(TracksService)
-    tracksRepository = module.get(TracksRepository)
-    spotifyTracksService = module.get(SpotifyTracksService)
-    albumsService = module.get(AlbumsService)
-    artistsService = module.get(ArtistsService)
+    tracksService = moduleRef.get(TracksService)
+    tracksRepository = moduleRef.get(TracksRepository)
+    spotifyTracksService = moduleRef.get(SpotifyTracksService)
+    albumsService = moduleRef.get(AlbumsService)
+    artistsService = moduleRef.get(ArtistsService)
+  })
+
+  afterEach(() => {
+    moduleRef.close()
   })
 
   test('should be defined', () => {

@@ -1,4 +1,4 @@
-import { Test } from '@nestjs/testing'
+import { Test, TestingModule } from '@nestjs/testing'
 import { DataSource } from 'typeorm'
 
 import { ImagesRepository } from './images.repository'
@@ -11,10 +11,11 @@ import {
 } from '@common/mocks'
 
 describe('ImagesRepository', () => {
+  let moduleRef: TestingModule
   let imagesRepository: ImagesRepository
 
   beforeEach(async () => {
-    const module = await Test.createTestingModule({
+    moduleRef = await Test.createTestingModule({
       providers: [
         ImagesRepository,
         {
@@ -26,7 +27,11 @@ describe('ImagesRepository', () => {
       ],
     }).compile()
 
-    imagesRepository = module.get(ImagesRepository)
+    imagesRepository = moduleRef.get(ImagesRepository)
+  })
+
+  afterEach(() => {
+    moduleRef.close()
   })
 
   test('should be defined', () => {

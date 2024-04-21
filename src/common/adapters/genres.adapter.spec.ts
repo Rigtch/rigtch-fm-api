@@ -1,18 +1,23 @@
-import { Test } from '@nestjs/testing'
+import { Test, TestingModule } from '@nestjs/testing'
 
 import { GenresAdapter } from './genres.adapter'
 
 import { sdkArtistMock, topGenresMock } from '@common/mocks'
 
 describe('GenresAdapter', () => {
+  let moduleRef: TestingModule
   let genresAdapter: GenresAdapter
 
   beforeEach(async () => {
-    const module = await Test.createTestingModule({
+    moduleRef = await Test.createTestingModule({
       providers: [GenresAdapter],
     }).compile()
 
-    genresAdapter = module.get(GenresAdapter)
+    genresAdapter = moduleRef.get(GenresAdapter)
+  })
+
+  afterEach(() => {
+    moduleRef.close()
   })
 
   test('should be defined', () => {

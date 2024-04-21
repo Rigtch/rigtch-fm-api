@@ -1,5 +1,5 @@
 import { SchedulerRegistry } from '@nestjs/schedule'
-import { Test } from '@nestjs/testing'
+import { Test, TestingModule } from '@nestjs/testing'
 import { mock } from 'vitest-mock-extended'
 import { MockInstance } from 'vitest'
 import { AccessToken, MaxInt } from '@spotify/web-api-ts-sdk'
@@ -17,6 +17,7 @@ import { SdkRecentlyPlayedTracksPage } from '@common/types/spotify'
 import { QueryRange } from '@modules/spotify/player/types'
 
 describe('HistoryScheduler', () => {
+  let moduleRef: TestingModule
   let historyScheduler: HistoryScheduler
   let usersRepository: UsersRepository
   let spotifyAuthService: SpotifyAuthService
@@ -31,7 +32,7 @@ describe('HistoryScheduler', () => {
       callback()
     }) as unknown as typeof setTimeout)
 
-    const module = await Test.createTestingModule({
+    moduleRef = await Test.createTestingModule({
       providers: [
         {
           provide: UsersRepository,
@@ -73,12 +74,16 @@ describe('HistoryScheduler', () => {
       ],
     }).compile()
 
-    historyScheduler = module.get(HistoryScheduler)
-    usersRepository = module.get(UsersRepository)
-    spotifyAuthService = module.get(SpotifyAuthService)
-    spotifyPlayerService = module.get(SpotifyPlayerService)
-    historyService = module.get(HistoryService)
-    schedulerRegistry = module.get(SchedulerRegistry)
+    historyScheduler = moduleRef.get(HistoryScheduler)
+    usersRepository = moduleRef.get(UsersRepository)
+    spotifyAuthService = moduleRef.get(SpotifyAuthService)
+    spotifyPlayerService = moduleRef.get(SpotifyPlayerService)
+    historyService = moduleRef.get(HistoryService)
+    schedulerRegistry = moduleRef.get(SchedulerRegistry)
+  })
+
+  afterEach(() => {
+    moduleRef.close()
   })
 
   test('should be defined', () => {
