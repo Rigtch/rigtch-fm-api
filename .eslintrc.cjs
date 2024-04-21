@@ -36,6 +36,7 @@ module.exports = {
   },
   plugins: [
     '@typescript-eslint',
+    '@trilon/eslint-plugin',
     'import',
     'nestjs',
     'eslint-plugin-import-helpers',
@@ -44,6 +45,7 @@ module.exports = {
   extends: [
     'plugin:@typescript-eslint/strict-type-checked',
     'plugin:@typescript-eslint/stylistic-type-checked',
+    'plugin:@trilon/recommended',
     'plugin:sonarjs/recommended',
     'plugin:unicorn/recommended',
     'plugin:nestjs/recommended',
