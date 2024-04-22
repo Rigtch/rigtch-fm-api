@@ -84,9 +84,8 @@ export class AlbumsService {
     )
 
     if (foundAlbum?.tracks && foundAlbum.tracks.length > 0) {
-      const tracks = await this.tracksService.create(
-        albumToCreate.tracks.items.map(track => track.id),
-        [foundAlbum]
+      const tracks = await this.tracksService.findOrCreate(
+        albumToCreate.tracks.items.map(track => track.id)
       )
 
       foundAlbum.tracks = tracks
@@ -115,9 +114,8 @@ export class AlbumsService {
       )
 
       if (foundAlbum.tracks && foundAlbum.tracks.length > 0 && albumToCreate) {
-        const tracks = await this.tracksService.create(
-          albumToCreate.tracks.items.map(track => track.id),
-          [foundAlbum]
+        const tracks = await this.tracksService.findOrCreate(
+          albumToCreate.tracks.items.map(track => track.id)
         )
 
         const updateAlbumIndex = foundAlbums.findIndex(
