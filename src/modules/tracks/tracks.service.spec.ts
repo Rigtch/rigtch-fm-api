@@ -190,6 +190,99 @@ describe('TracksService', () => {
   })
 
   describe('findOrCreate', () => {
+    let findOrCreateTracksFromDtosSpy: MockInstance
+    let findOrCreateTracksFromExternalIdsSpy: MockInstance
+
+    beforeEach(() => {
+      findOrCreateTracksFromDtosSpy = vi.spyOn(
+        tracksService,
+        'findOrCreateTracksFromDtos'
+      )
+      findOrCreateTracksFromExternalIdsSpy = vi.spyOn(
+        tracksService,
+        'findOrCreateTracksFromExternalIds'
+      )
+    })
+
+    test('should return empty array if no tracks', async () => {
+      expect(await tracksService.findOrCreate([])).toEqual([])
+
+      expect(findOrCreateTracksFromDtosSpy).not.toHaveBeenCalled()
+      expect(findOrCreateTracksFromExternalIdsSpy).not.toHaveBeenCalled()
+    })
+
+    test('should find or create tracks from externalIds', async () => {
+      const externalIds = sdkTracksMock.map(({ id }) => id)
+
+      findOrCreateTracksFromExternalIdsSpy.mockResolvedValue(trackEntitiesMock)
+
+      expect(await tracksService.findOrCreate(externalIds)).toEqual(
+        trackEntitiesMock
+      )
+
+      expect(findOrCreateTracksFromExternalIdsSpy).toHaveBeenCalledWith(
+        externalIds
+      )
+      expect(findOrCreateTracksFromDtosSpy).not.toHaveBeenCalled()
+    })
+
+    test('should find or create tracks from dtos', async () => {
+      findOrCreateTracksFromDtosSpy.mockResolvedValue(trackEntitiesMock)
+
+      expect(await tracksService.findOrCreate(sdkTracksMock)).toEqual(
+        trackEntitiesMock
+      )
+
+      expect(findOrCreateTracksFromDtosSpy).toHaveBeenCalledWith(sdkTracksMock)
+      expect(findOrCreateTracksFromExternalIdsSpy).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('findOrCreateTracksFromExternalIds', () => {
+    const sdkTracks = [sdkTrackMock, sdkTrackMock]
+    const foundTracks = [trackEntityMock, trackEntityMock]
+
+    let findTrackByExternalIdSpy: MockInstance
+    let findOrCreateAlbum: MockInstance
+
+    beforeEach(() => {
+      findTrackByExternalIdSpy = vi.spyOn(
+        tracksRepository,
+        'findTracksByExternalIds'
+      )
+      findOrCreateAlbum = vi.spyOn(albumsService, 'findOrCreate')
+    })
+
+    test('should return empty array if no tracks', async () => {
+      expect(await tracksService.findOrCreate([])).toEqual([])
+      expect(findTrackByExternalIdSpy).not.toHaveBeenCalled()
+      expect(findOrCreateAlbum).not.toHaveBeenCalled()
+    })
+
+    test('should find tracks by external ids', async () => {
+      findTrackByExternalIdSpy.mockResolvedValue(foundTracks)
+
+      expect(await tracksService.findOrCreate(sdkTracks)).toEqual(foundTracks)
+      expect(findTrackByExternalIdSpy).toHaveBeenCalledWith(
+        sdkTracks.map(track => track.id)
+      )
+      expect(findOrCreateAlbum).not.toHaveBeenCalled()
+    })
+
+    test('should create tracks from external ids', async () => {
+      findTrackByExternalIdSpy
+        .mockResolvedValueOnce([])
+        .mockResolvedValue(foundTracks)
+
+      expect(await tracksService.findOrCreate(sdkTracks)).toEqual(foundTracks)
+      expect(findTrackByExternalIdSpy).toHaveBeenCalledWith(
+        sdkTracks.map(track => track.id)
+      )
+      expect(findTrackByExternalIdSpy).toHaveBeenCalledTimes(2)
+    })
+  })
+
+  describe('findOrCreateTracksFromDtos', () => {
     const sdkTracks = [sdkTrackMock, sdkTrackMock]
     const foundTracks = [trackEntityMock, trackEntityMock]
 
