@@ -1765,14 +1765,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/passport-jwt@npm:3.0.13":
-  version: 3.0.13
-  resolution: "@types/passport-jwt@npm:3.0.13"
+"@types/passport-jwt@npm:4.0.1":
+  version: 4.0.1
+  resolution: "@types/passport-jwt@npm:4.0.1"
   dependencies:
-    "@types/express": "npm:*"
     "@types/jsonwebtoken": "npm:*"
     "@types/passport-strategy": "npm:*"
-  checksum: 10c0/39aeafa92d869f38f17994dd02f8124d88dc6977b0fee56d8ef4c6d4ff86378456a4904644a83dabc8d3fd69c23d0503c8af14ee51a7ced5d54c3c0115c1422c
+  checksum: 10c0/0ced0eaa7bb379d674821108d9bc6758223f1a5f2b9790ec78d3eaaccce6a58a424cf8ed22b53d813740ec53d929e21d92cf794ef0fb30c732866750763c0d7a
   languageName: node
   linkType: hard
 
@@ -8668,7 +8667,7 @@ __metadata:
     "@types/express": "npm:^4.17.21"
     "@types/ms": "npm:^0.7.34"
     "@types/node": "npm:20.10.0"
-    "@types/passport-jwt": "npm:3.0.13"
+    "@types/passport-jwt": "npm:4.0.1"
     "@types/passport-spotify": "npm:2.0.4"
     "@typescript-eslint/eslint-plugin": "npm:^6.14.0"
     "@typescript-eslint/parser": "npm:^6.14.0"
