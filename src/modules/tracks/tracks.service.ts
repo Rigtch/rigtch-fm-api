@@ -77,9 +77,50 @@ export class TracksService {
     )
   }
 
-  async findOrCreate(tracksToCreate: SdkCreateTrack[]) {
-    if (tracksToCreate.length === 0) return []
+  async findOrCreate(data: SdkCreateTrack[] | string[]) {
+    if (data.length === 0) return []
 
+    return typeof data[0] === 'string'
+      ? this.findOrCreateTracksFromExternalIds(data as string[])
+      : this.findOrCreateTracksFromDtos(data as SdkCreateTrack[])
+  }
+
+  async findOrCreateTracksFromExternalIds(externalIds: string[]) {
+    const foundTracks =
+      await this.tracksRepository.findTracksByExternalIds(externalIds)
+
+    const filteredTracks = externalIds.filter(
+      id => !foundTracks.map(track => track.externalId).includes(id)
+    )
+
+    if (filteredTracks.length === 0) return foundTracks
+
+    const newTracks = await this.spotifyTracksService.getTracks(
+      filteredTracks,
+      false
+    )
+
+    const artistsExternalIdsToCreate = removeDuplicates(
+      newTracks.flatMap(track => track.artists).map(artist => artist.id)
+    )
+
+    const artistEntities = await this.artistsService.findOrCreate(
+      artistsExternalIdsToCreate
+    )
+
+    const albumsExternalIdsToCreate = removeDuplicates(
+      newTracks.map(track => track.album.id)
+    )
+
+    await this.albumsService.findOrCreate(
+      albumsExternalIdsToCreate,
+      artistEntities
+    )
+
+    return this.tracksRepository.findTracksByExternalIds(externalIds)
+  }
+
+  async findOrCreateTracksFromDtos(tracksToCreate: SdkCreateTrack[]) {
     const externalIds = tracksToCreate.map(track => track.id)
 
     const foundTracks =
