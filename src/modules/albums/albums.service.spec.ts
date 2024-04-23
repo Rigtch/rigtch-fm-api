@@ -50,12 +50,14 @@ describe('AlbumsService', () => {
             findAlbumByExternalId: vi.fn(),
             createAlbum: vi.fn(),
             findAlbumsByExternalIds: vi.fn(),
+            save: vi.fn(),
           },
         },
         {
           provide: TracksService,
           useValue: {
             create: vi.fn(),
+            findOrCreate: vi.fn(),
           },
         },
         {
@@ -96,12 +98,14 @@ describe('AlbumsService', () => {
     let findOrCreateImagesSpy: MockInstance
     let findOrCreateArtistsSpy: MockInstance
     let createAlbumSpy: MockInstance
+    let saveSpy: MockInstance
     let createTracksSpy: MockInstance
 
     beforeEach(() => {
       findOrCreateImagesSpy = vi.spyOn(imagesService, 'findOrCreate')
       findOrCreateArtistsSpy = vi.spyOn(artistsService, 'findOrCreate')
       createAlbumSpy = vi.spyOn(albumsRepository, 'createAlbum')
+      saveSpy = vi.spyOn(albumsRepository, 'save')
       createTracksSpy = vi.spyOn(tracksService, 'create')
     })
 
@@ -109,6 +113,7 @@ describe('AlbumsService', () => {
       findOrCreateImagesSpy.mockResolvedValue(imagesMock)
       findOrCreateArtistsSpy.mockResolvedValue(artistEntitiesMock)
       createTracksSpy.mockResolvedValue(trackEntitiesMock)
+      saveSpy.mockReturnValue(albumEntityMock)
       createAlbumSpy.mockReturnValue(albumEntityMock)
 
       expect(await albumsService.create(sdkAlbumMock)).toEqual(albumEntityMock)
@@ -118,6 +123,7 @@ describe('AlbumsService', () => {
         trackEntitiesMock.map(track => track.id),
         [albumEntityMock]
       )
+      expect(saveSpy).toHaveBeenCalledWith(albumEntityMock)
       expect(createAlbumSpy).toHaveBeenCalled()
     })
 
@@ -125,6 +131,7 @@ describe('AlbumsService', () => {
       findOrCreateImagesSpy.mockResolvedValue(imagesMock)
       findOrCreateArtistsSpy.mockResolvedValue(artistEntitiesMock)
       createTracksSpy.mockResolvedValue(trackEntitiesMock)
+      saveSpy.mockReturnValue(albumEntityMock)
       createAlbumSpy.mockReturnValue(albumEntityMock)
 
       expect(
@@ -136,6 +143,7 @@ describe('AlbumsService', () => {
         trackEntitiesMock.map(track => track.id),
         [albumEntityMock]
       )
+      expect(saveSpy).toHaveBeenCalledWith(albumEntityMock)
       expect(createAlbumSpy).toHaveBeenCalled()
     })
   })
@@ -186,8 +194,9 @@ describe('AlbumsService', () => {
   describe('findOrCreateAlbumFromExternalId', () => {
     let findAlbumByExternalIdSpy: MockInstance
     let getAlbumSpy: GetAlbumMockInstance
-    let createTracksSpy: MockInstance
+    let findOrCreateSpy: MockInstance
     let createSpy: MockInstance
+    let saveSpy: MockInstance
 
     beforeEach(() => {
       findAlbumByExternalIdSpy = vi.spyOn(
@@ -198,8 +207,9 @@ describe('AlbumsService', () => {
         spotifyAlbumsService,
         'getAlbum'
       ) as unknown as GetAlbumMockInstance
-      createTracksSpy = vi.spyOn(tracksService, 'create')
+      findOrCreateSpy = vi.spyOn(tracksService, 'findOrCreate')
       createSpy = vi.spyOn(albumsService, 'create')
+      saveSpy = vi.spyOn(albumsRepository, 'save')
     })
 
     test('should create tracks and return found album with tracks', async () => {
@@ -210,18 +220,19 @@ describe('AlbumsService', () => {
 
       findAlbumByExternalIdSpy.mockResolvedValue(foundAlbumMock)
       getAlbumSpy.mockResolvedValue(sdkAlbumMock)
-      createTracksSpy.mockResolvedValue(trackEntitiesMock)
+      findOrCreateSpy.mockResolvedValue(trackEntitiesMock)
       createSpy.mockResolvedValue(albumEntityMock)
+      saveSpy.mockResolvedValue(foundAlbumMock)
 
       expect(
         await albumsService.findOrCreateAlbumFromExternalId(externalId)
       ).toEqual(foundAlbumMock)
       expect(findAlbumByExternalIdSpy).toHaveBeenCalledWith(externalId)
       expect(getAlbumSpy).toHaveBeenCalledWith(externalId, false)
-      expect(createTracksSpy).toHaveBeenCalledWith(
-        trackEntitiesMock.map(track => track.id),
-        [foundAlbumMock]
+      expect(findOrCreateSpy).toHaveBeenCalledWith(
+        trackEntitiesMock.map(track => track.id)
       )
+      expect(saveSpy).toHaveBeenCalledWith(foundAlbumMock)
       expect(createSpy).not.toHaveBeenCalled()
     })
 
@@ -242,6 +253,7 @@ describe('AlbumsService', () => {
   describe('findOrCreateAlbumsFromExternalIds', () => {
     let getAlbumsSpy: GetAlbumsMockInstance
     let createSpy: MockInstance
+    let saveSpy: MockInstance
     let findAlbumsByExternalIdsSpy: MockInstance
 
     beforeEach(() => {
@@ -250,6 +262,7 @@ describe('AlbumsService', () => {
         'getAlbums'
       ) as unknown as GetAlbumsMockInstance
       createSpy = vi.spyOn(albumsService, 'create')
+      saveSpy = vi.spyOn(albumsRepository, 'save')
       findAlbumsByExternalIdsSpy = vi.spyOn(
         albumsRepository,
         'findAlbumsByExternalIds'
@@ -283,8 +296,9 @@ describe('AlbumsService', () => {
 
       getAlbumsSpy.mockResolvedValue([sdkAlbumMock])
       findAlbumsByExternalIdsSpy.mockResolvedValue([foundAlbumMock])
-      const createTracksSpy = vi
-        .spyOn(tracksService, 'create')
+      saveSpy.mockResolvedValue(foundAlbumMock)
+      const findOrCreateSpy = vi
+        .spyOn(tracksService, 'findOrCreate')
         .mockResolvedValue(trackEntitiesMock)
 
       expect(
@@ -292,10 +306,10 @@ describe('AlbumsService', () => {
       ).toEqual([foundAlbumMock])
       expect(getAlbumsSpy).toHaveBeenCalledWith(externalIds, false)
       expect(findAlbumsByExternalIdsSpy).toHaveBeenCalledWith(externalIds)
-      expect(createTracksSpy).toHaveBeenCalledWith(
-        trackEntitiesMock.map(track => track.id),
-        [foundAlbumMock]
+      expect(findOrCreateSpy).toHaveBeenCalledWith(
+        trackEntitiesMock.map(track => track.id)
       )
+      expect(saveSpy).toHaveBeenCalledWith(foundAlbumMock)
       expect(createSpy).not.toHaveBeenCalled()
     })
 

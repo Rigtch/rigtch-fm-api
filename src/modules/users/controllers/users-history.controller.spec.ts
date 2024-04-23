@@ -68,6 +68,11 @@ describe('UsersHistoryController', () => {
           page: 1,
         },
         {
+          where: {
+            user: {
+              id,
+            },
+          },
           relations: {
             track: tracksRelations,
           },
@@ -97,6 +102,11 @@ describe('UsersHistoryController', () => {
           page: 1,
         },
         {
+          where: {
+            user: {
+              id,
+            },
+          },
           relations: {
             track: tracksRelations,
           },
@@ -127,6 +137,11 @@ describe('UsersHistoryController', () => {
           page,
         },
         {
+          where: {
+            user: {
+              id,
+            },
+          },
           relations: {
             track: tracksRelations,
           },

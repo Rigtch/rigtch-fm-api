@@ -50,12 +50,14 @@ export class AlbumsService {
       artists,
     })
 
-    await this.tracksService.create(
+    const trackEntities = await this.tracksService.create(
       tracks.items.map(track => track.id),
       [album]
     )
 
-    return album
+    album.tracks = trackEntities
+
+    return this.albumsRepository.save(album)
   }
 
   public findOrCreate(data: string, artists?: Artist[]): Promise<Album>
@@ -82,11 +84,13 @@ export class AlbumsService {
     )
 
     if (foundAlbum?.tracks && foundAlbum.tracks.length > 0) {
-      await this.tracksService.create(
-        albumToCreate.tracks.items.map(track => track.id),
-        [foundAlbum]
+      const tracks = await this.tracksService.findOrCreate(
+        albumToCreate.tracks.items.map(track => track.id)
       )
-      return foundAlbum
+
+      foundAlbum.tracks = tracks
+
+      return this.albumsRepository.save(foundAlbum)
     }
 
     return this.create(albumToCreate, artists)
@@ -110,10 +114,17 @@ export class AlbumsService {
       )
 
       if (foundAlbum.tracks && foundAlbum.tracks.length > 0 && albumToCreate) {
-        await this.tracksService.create(
-          albumToCreate.tracks.items.map(track => track.id),
-          [foundAlbum]
+        const tracks = await this.tracksService.findOrCreate(
+          albumToCreate.tracks.items.map(track => track.id)
         )
+
+        const updateAlbumIndex = foundAlbums.findIndex(
+          album => album.externalId === foundAlbum.externalId
+        )
+
+        foundAlbums[updateAlbumIndex].tracks = tracks
+
+        await this.albumsRepository.save(foundAlbums[updateAlbumIndex])
       }
     }
 
