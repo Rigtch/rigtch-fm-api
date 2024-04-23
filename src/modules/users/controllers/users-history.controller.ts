@@ -57,6 +57,11 @@ export class UsersHistoryController {
       this.historyTracksRepository,
       { limit, page },
       {
+        where: {
+          user: {
+            id,
+          },
+        },
         relations: {
           track: tracksRelations,
         },
