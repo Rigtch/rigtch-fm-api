@@ -9,11 +9,13 @@ import {
   Unique,
 } from 'typeorm'
 
+import { Item } from '../types'
+
 import type { Image } from '@modules/images'
 
 @Entity()
 @Unique('ARTIST_UNIQUE', ['externalId', 'href'])
-export class Artist {
+export class Artist implements Item {
   @PrimaryGeneratedColumn('uuid')
   @ApiProperty()
   id: string
