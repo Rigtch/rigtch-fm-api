@@ -31,8 +31,8 @@ export class ArtistsRepository extends Repository<Artist> {
   }
 
   async createArtist(artistToCreate: CreateArtist) {
-    const artistEntity = this.create(artistToCreate)
+    const newArtist = this.create(artistToCreate)
 
-    return this.save(artistEntity)
+    return this.save(newArtist)
   }
 }

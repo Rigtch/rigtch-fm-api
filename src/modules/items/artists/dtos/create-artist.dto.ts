@@ -10,7 +10,7 @@ import { SdkArtist } from '@common/types/spotify'
 export abstract class Followers {
   @IsInt()
   @ApiProperty({ type: Number, nullable: true })
-  total?: number
+  total: number
 }
 
 export abstract class CreateArtist implements Omit<Artist, 'id'> {
@@ -68,7 +68,7 @@ export abstract class SdkCreateArtist
   readonly popularity: number
 
   @ApiProperty({ type: Followers })
-  readonly followers?: Followers
+  readonly followers: Followers
 
   @IsOptional()
   @ApiProperty({ type: Image, isArray: true })
