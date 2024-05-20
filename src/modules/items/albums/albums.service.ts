@@ -67,7 +67,7 @@ export class AlbumsService {
         externalId: In(fetchedAlbumArtists.map(({ id }) => id)),
       })
 
-      const albumEntity = manager.create<Album>(Album, {
+      const albumEntity = manager.create(Album, {
         ...albumToCreate,
         images,
         artists,

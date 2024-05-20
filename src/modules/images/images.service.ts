@@ -35,7 +35,7 @@ export class ImagesService {
 
       if (foundImage) return foundImage
 
-      const imageEntity = manager.create<Image>(Image, image)
+      const imageEntity = manager.create(Image, image)
 
       return manager.save(imageEntity)
     })
