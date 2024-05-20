@@ -3,13 +3,10 @@ import { IsArray, IsInstance, IsInt, IsString } from 'class-validator'
 
 import { Track } from '../track.entity'
 
-import {
-  SdkSimplifiedAlbum,
-  SdkSimplifiedArtist,
-  SdkTrack,
-} from '@common/types/spotify'
-import { Artist } from '@modules/artists'
-import { Album } from '@modules/albums'
+import { SdkSimplifiedArtist, SdkTrack } from '@common/types/spotify'
+import { Artist } from '@modules/items/artists'
+import { Album } from '@modules/items/albums'
+import { SdkCreateAlbum } from '@modules/items/albums/dtos'
 
 export abstract class CreateTrack implements Omit<Track, 'id'> {
   @IsString()
@@ -55,6 +52,7 @@ export abstract class SdkCreateTrack
       | 'uri'
       | 'track'
       | 'episode'
+      | 'album'
     >
 {
   @IsString()
@@ -80,5 +78,5 @@ export abstract class SdkCreateTrack
   readonly artists: SdkSimplifiedArtist[]
 
   @ApiProperty()
-  readonly album: SdkSimplifiedAlbum
+  readonly album: SdkCreateAlbum
 }
