@@ -1,21 +1,30 @@
 import { Test, TestingModule } from '@nestjs/testing'
+import { DataSource, EntityManager } from 'typeorm'
+import { MockInstance } from 'vitest'
 
 import { ImagesService } from './images.service'
 import { ImagesRepository } from './images.repository'
+import { Image } from './image.entity'
 
 import {
+  entityManagerFactoryMock,
   imageMock,
   imagesMock,
   sdkImageMock,
   sdkImagesMock,
+  transactionFactoryMock,
 } from '@common/mocks'
+import { EntityManagerCreateMockInstance } from '@common/types/mocks'
 
 describe('ImagesService', () => {
   let moduleRef: TestingModule
+  let entityManagerMock: EntityManager
   let imagesService: ImagesService
   let imagesRepository: ImagesRepository
 
   beforeEach(async () => {
+    entityManagerMock = entityManagerFactoryMock()
+
     moduleRef = await Test.createTestingModule({
       providers: [
         ImagesService,
@@ -24,6 +33,12 @@ describe('ImagesService', () => {
           useValue: {
             findImageByUrl: vi.fn(),
             createImage: vi.fn(),
+          },
+        },
+        {
+          provide: DataSource,
+          useValue: {
+            transaction: transactionFactoryMock(entityManagerMock),
           },
         },
       ],
@@ -51,72 +66,63 @@ describe('ImagesService', () => {
   })
 
   describe('findOrCreate', () => {
-    test('should find or create image', async () => {
-      const findOrCreateImageSpy = vi
-        .spyOn(imagesService, 'findOrCreateImage')
-        .mockResolvedValue(imageMock)
-      const findOrCreateImagesSpy = vi.spyOn(
-        imagesService,
-        'findOrCreateImages'
-      )
+    describe('findOrCreateOne', () => {
+      let findOneBySpy: MockInstance
 
-      expect(await imagesService.findOrCreate(sdkImageMock)).toEqual(imageMock)
-      expect(findOrCreateImageSpy).toHaveBeenCalledWith(sdkImageMock)
-      expect(findOrCreateImagesSpy).not.toHaveBeenCalled()
+      beforeEach(() => {
+        findOneBySpy = vi.spyOn(entityManagerMock, 'findOneBy')
+      })
+
+      test('should find image if exists', async () => {
+        findOneBySpy.mockResolvedValue(imageMock)
+
+        expect(await imagesService.findOrCreate(sdkImageMock)).toEqual(
+          imageMock
+        )
+        expect(findOneBySpy).toHaveBeenCalledWith(Image, {
+          url: sdkImageMock.url,
+        })
+      })
+
+      test('should create image if not found', async () => {
+        findOneBySpy.mockResolvedValue(null)
+        const createSpy = (
+          vi.spyOn(
+            entityManagerMock,
+            'create'
+          ) as EntityManagerCreateMockInstance
+        ).mockReturnValue(imageMock)
+        const saveSpy = vi
+          .spyOn(entityManagerMock, 'save')
+          .mockResolvedValue(imageMock)
+
+        expect(await imagesService.findOrCreate(sdkImageMock)).toEqual(
+          imageMock
+        )
+        expect(findOneBySpy).toHaveBeenCalledWith(Image, {
+          url: sdkImageMock.url,
+        })
+        expect(createSpy).toHaveBeenCalledWith(Image, sdkImageMock)
+        expect(saveSpy).toHaveBeenCalledWith(imageMock)
+      })
     })
 
-    test('should find or create images', async () => {
-      const findOrCreateImageSpy = vi.spyOn(imagesService, 'findOrCreateImage')
-      const findOrCreateImagesSpy = vi
-        .spyOn(imagesService, 'findOrCreateImages')
-        .mockResolvedValue(imagesMock)
+    describe('findOrCreateMany', () => {
+      test('should return empty array if no images', async () => {
+        expect(await imagesService.findOrCreate([])).toEqual([])
+      })
 
-      expect(await imagesService.findOrCreate(sdkImagesMock)).toEqual(
-        imagesMock
-      )
-      expect(findOrCreateImageSpy).not.toHaveBeenCalled()
-      expect(findOrCreateImagesSpy).toHaveBeenCalledWith(sdkImagesMock)
+      test('should find or create images', async () => {
+        const findOrCreateOneSpy = vi
+          .spyOn(imagesService as never, 'findOrCreateOne')
+          .mockResolvedValue(imageMock)
+
+        expect(await imagesService.findOrCreate(sdkImagesMock)).toEqual(
+          imagesMock
+        )
+        expect(findOrCreateOneSpy).toHaveBeenCalledWith(sdkImageMock)
+        expect(findOrCreateOneSpy).toHaveBeenCalledTimes(sdkImagesMock.length)
+      })
     })
-  })
-
-  describe('findOrCreateImage', () => {
-    test('should find image by url', async () => {
-      const findImageByUrlSpy = vi
-        .spyOn(imagesRepository, 'findImageByUrl')
-        .mockResolvedValue(imageMock)
-      const createImageSpy = vi.spyOn(imagesRepository, 'createImage')
-
-      expect(await imagesService.findOrCreateImage(sdkImageMock)).toEqual(
-        imageMock
-      )
-      expect(findImageByUrlSpy).toHaveBeenCalledWith(sdkImageMock.url)
-      expect(createImageSpy).not.toHaveBeenCalled()
-    })
-
-    test('should create image', async () => {
-      const createImageSpy = vi
-        .spyOn(imagesRepository, 'createImage')
-        .mockResolvedValue(imageMock)
-      const findImageByUrlSpy = vi
-        .spyOn(imagesRepository, 'findImageByUrl')
-        .mockResolvedValue(null)
-
-      expect(await imagesService.findOrCreateImage(sdkImageMock)).toEqual(
-        imageMock
-      )
-      expect(createImageSpy).toHaveBeenCalledWith(sdkImageMock)
-      expect(findImageByUrlSpy).toHaveBeenCalledWith(sdkImageMock.url)
-    })
-  })
-
-  test('should find or create images', async () => {
-    const findOrCreateImageSpy = vi
-      .spyOn(imagesService, 'findOrCreateImage')
-      .mockResolvedValue(imageMock)
-
-    expect(await imagesService.findOrCreateImages(sdkImagesMock)).toEqual(
-      imagesMock
-    )
-    expect(findOrCreateImageSpy).toHaveBeenCalledTimes(sdkImagesMock.length)
   })
 })
