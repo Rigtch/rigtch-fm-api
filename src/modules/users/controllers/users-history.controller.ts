@@ -22,7 +22,7 @@ import {
   historyTracksOrder,
 } from '@modules/history/tracks'
 import { PaginatedQuery } from '@common/dtos'
-import { tracksRelations } from '@modules/tracks'
+import { tracksRelations } from '@modules/items/tracks'
 
 @Controller('users/:id/history')
 @ApiTags('users/{id}/history')

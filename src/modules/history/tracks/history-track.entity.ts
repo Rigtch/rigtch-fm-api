@@ -9,7 +9,7 @@ import {
 
 import type { History } from '../history.entity'
 
-import type { Track } from '@modules/tracks'
+import type { Track } from '@modules/items/tracks'
 import type { User } from '@modules/users'
 
 @Entity()

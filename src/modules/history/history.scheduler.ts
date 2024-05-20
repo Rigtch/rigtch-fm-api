@@ -38,11 +38,13 @@ export class HistoryScheduler implements OnModuleInit {
     this.logger.log(`Scheduling history fetching for ${users.length} users`)
 
     for (const user of users) {
+      const index = users.findIndex(({ id }) => id === user.id)
+
       setTimeout(
         () => {
           this.triggerFetchingUserHistory(user)
         },
-        ms(this.configService.get<string>(HISTORY_FETCHING_DELAY)!)
+        ms(this.configService.get<string>(HISTORY_FETCHING_DELAY)!) * index
       )
     }
   }

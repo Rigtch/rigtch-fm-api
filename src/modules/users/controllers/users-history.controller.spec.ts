@@ -12,7 +12,7 @@ import {
   paginatedResponseMockImplementation,
   trackEntityMock,
 } from '@common/mocks'
-import { tracksRelations } from '@modules/tracks'
+import { tracksRelations } from '@modules/items/tracks'
 
 vi.mock('nestjs-typeorm-paginate')
 

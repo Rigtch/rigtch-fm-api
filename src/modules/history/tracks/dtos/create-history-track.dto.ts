@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger'
 import { Transform } from 'class-transformer'
 import { IsDate, IsInstance } from 'class-validator'
 
-import { Track } from '@modules/tracks'
+import { Track } from '@modules/items/tracks'
 import { User } from '@modules/users'
 
 export abstract class CreateHistoryTrack {
