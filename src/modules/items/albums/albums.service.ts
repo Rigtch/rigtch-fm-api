@@ -6,7 +6,7 @@ import { Album } from './album.entity'
 
 import { TracksService } from '@modules/items/tracks'
 import { Artist } from '@modules/items/artists'
-import { Image } from '@modules/images'
+import { Image } from '@modules/items/images'
 
 @Injectable()
 export class AlbumsService {

@@ -20,7 +20,7 @@ import {
 } from '@common/mocks'
 import { Artist } from '@modules/items/artists'
 import { EntityManagerCreateMockInstance } from '@common/types/mocks'
-import { Image } from '@modules/images'
+import { Image } from '@modules/items/images'
 
 describe('AlbumsService', () => {
   let moduleRef: TestingModule

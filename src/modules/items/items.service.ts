@@ -6,7 +6,7 @@ import { TracksRepository } from './tracks'
 import { sdkItemFilterPredicate } from './utils'
 
 import { removeDuplicates } from '@common/utils'
-import { ImagesService } from '@modules/images'
+import { ImagesService } from '@modules/items/images'
 import { SpotifyArtistsService } from '@modules/spotify/artists'
 import { SpotifyAlbumsService } from '@modules/spotify/albums'
 import { SdkTrack } from '@common/types/spotify'

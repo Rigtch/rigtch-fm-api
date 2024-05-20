@@ -8,7 +8,7 @@ import {
 } from 'typeorm'
 import { ApiProperty } from '@nestjs/swagger'
 
-import { Image } from '@modules/images'
+import { Image } from '@modules/items/images'
 
 @Entity()
 export class Profile {

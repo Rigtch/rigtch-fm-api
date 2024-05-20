@@ -7,7 +7,7 @@ import { AlbumsController } from './albums.controller'
 import { AlbumsService } from './albums.service'
 
 import { SpotifyModule } from '@modules/spotify'
-import { ImagesModule } from '@modules/images'
+import { ImagesModule } from '@modules/items/images'
 import { ArtistsModule } from '@modules/items/artists'
 import { TracksModule } from '@modules/items/tracks'
 
