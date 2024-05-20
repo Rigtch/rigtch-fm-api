@@ -5,10 +5,10 @@ import { HistoryTrack } from './history-track.entity'
 import { HistoryTracksRepository } from './history-tracks.repository'
 import { HistoryTracksService } from './history-tracks.service'
 
-import { TracksModule } from '@modules/tracks'
+import { ItemsModule } from '@modules/items'
 
 @Module({
-  imports: [TypeOrmModule.forFeature([HistoryTrack]), TracksModule],
+  imports: [TypeOrmModule.forFeature([HistoryTrack]), ItemsModule],
   providers: [HistoryTracksRepository, HistoryTracksService],
   exports: [HistoryTracksRepository, HistoryTracksService],
 })
