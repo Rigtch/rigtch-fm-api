@@ -1,13 +1,15 @@
 import {
   albumEntityMock,
+  sdkAlbumMock,
   sdkSimplifiedAlbumMock,
   simplifiedAlbumMock,
 } from './album.mock'
 import { artistEntitiesMock, simplifiedArtistsMock } from './artist.mock'
 import { sdkSimplifiedTrackMock } from './simplified-track.mock'
 
+import { SdkCreateTrack } from '@modules/items/tracks/dtos'
 import { SdkTrack, Track } from '@common/types/spotify'
-import { Track as TrackEntity } from '@modules/tracks'
+import { Track as TrackEntity } from '@modules/items/tracks'
 
 export const sdkTrackMock: SdkTrack = {
   album: sdkSimplifiedAlbumMock,
@@ -21,6 +23,15 @@ export const sdkTrackMock: SdkTrack = {
 }
 
 export const sdkTracksMock = Array.from({ length: 5 }).map(() => sdkTrackMock)
+
+export const sdkCreateTrackMock: SdkCreateTrack = {
+  ...sdkTrackMock,
+  album: sdkAlbumMock,
+}
+
+export const sdkCreateTracksMock = Array.from({ length: 5 }).map(
+  () => sdkCreateTrackMock
+)
 
 export const trackMock: Track = {
   id: sdkTrackMock.id,

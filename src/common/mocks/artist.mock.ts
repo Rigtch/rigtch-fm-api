@@ -7,7 +7,7 @@ import {
 
 import { imagesMock } from './image.mock'
 
-import { Artist as ArtistEntity } from '@modules/artists'
+import { Artist as ArtistEntity } from '@modules/items/artists'
 
 export const sdkArtistMock: SdkArtist = {
   external_urls: {

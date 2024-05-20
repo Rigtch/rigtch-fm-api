@@ -13,7 +13,7 @@ import {
 import { pageMockFactory } from './page.factory.mock'
 import { topGenresArrayMock } from './genres.mock'
 
-import { Album as AlbumEntity } from '@modules/albums'
+import { Album as AlbumEntity } from '@modules/items/albums'
 import {
   Album,
   SdkAlbum,
