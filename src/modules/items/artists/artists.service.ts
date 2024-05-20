@@ -56,7 +56,7 @@ export class ArtistsService {
         url: In(fetchedArtistImages.map(image => image.url)),
       })
 
-      const artistEntity = manager.create<Artist>(Artist, {
+      const artistEntity = manager.create(Artist, {
         ...artistToCreate,
         images,
       })

@@ -40,7 +40,7 @@ export class TracksService {
         externalId: In(fetchedTrackArtists.map(({ id }) => id)),
       })
 
-      const trackEntity = manager.create<Track>(Track, {
+      const trackEntity = manager.create(Track, {
         name,
         externalId: id,
         href,
