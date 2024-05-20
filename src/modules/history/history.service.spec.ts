@@ -1,20 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { MockProxy, mock } from 'vitest-mock-extended'
 import { PlayHistory } from '@spotify/web-api-ts-sdk'
+import { MockInstance } from 'vitest'
 
-import { HistoryRepository } from './history.repository'
 import { HistoryService } from './history.service'
-import { History } from './history.entity'
 import {
   HistoryTrack,
   HistoryTracksRepository,
   HistoryTracksService,
 } from './tracks'
 
+import { trackEntityMock, userMock } from '@common/mocks'
+
 describe('HistoryService', () => {
   let moduleRef: TestingModule
   let historyService: HistoryService
-  let historyRepository: HistoryRepository
   let historyTracksRepository: HistoryTracksRepository
   let historyTracksService: HistoryTracksService
 
@@ -22,14 +22,6 @@ describe('HistoryService', () => {
     moduleRef = await Test.createTestingModule({
       providers: [
         HistoryService,
-        {
-          provide: HistoryRepository,
-          useValue: {
-            findHistoryByUser: vi.fn(),
-            create: vi.fn(),
-            save: vi.fn(),
-          },
-        },
         {
           provide: HistoryTracksRepository,
           useValue: {
@@ -46,7 +38,6 @@ describe('HistoryService', () => {
     }).compile()
 
     historyService = moduleRef.get(HistoryService)
-    historyRepository = moduleRef.get(HistoryRepository)
     historyTracksRepository = moduleRef.get(HistoryTracksRepository)
     historyTracksService = moduleRef.get(HistoryTracksService)
   })
@@ -59,116 +50,52 @@ describe('HistoryService', () => {
     expect(historyService).toBeDefined()
   })
 
-  describe('updateOrCreate', () => {
-    let historyTrack: MockProxy<HistoryTrack>
-    let historyTracks: MockProxy<HistoryTrack[]>
+  describe('synchronize', () => {
+    let findLastHistoryTrackByUserSpy: MockInstance
+    let createSpy: MockInstance
+
     let playHistoryMock: MockProxy<PlayHistory[]>
-    let historyEntityMock: MockProxy<History>
 
     beforeEach(() => {
-      historyEntityMock = mock<History>()
-      historyTrack = mock<HistoryTrack>()
-      historyTracks = [historyTrack]
       playHistoryMock = mock<PlayHistory[]>()
 
-      historyEntityMock.historyTracks = historyTracks
+      findLastHistoryTrackByUserSpy = vi.spyOn(
+        historyTracksRepository,
+        'findLastHistoryTrackByUser'
+      )
+      createSpy = vi.spyOn(historyTracksService, 'create')
     })
 
-    test('should create new history', async () => {
-      const findHistoryByUserSpy = vi
-        .spyOn(historyRepository, 'findHistoryByUser')
-        .mockResolvedValue(null)
-      const createHistoryTracksFromPlayHistorySpy = vi
-        .spyOn(historyTracksService, 'create')
-        .mockResolvedValue(historyTracks)
-      const createSpy = vi
-        .spyOn(historyRepository, 'create')
-        .mockReturnValue(historyEntityMock)
-      const saveSpy = vi
-        .spyOn(historyRepository, 'save')
-        .mockResolvedValue(historyEntityMock)
+    test('should create new history tracks', async () => {
+      findLastHistoryTrackByUserSpy.mockResolvedValue(null)
 
-      expect(
-        await historyService.updateOrCreate(
-          historyEntityMock.user,
-          playHistoryMock
-        )
-      ).toEqual(historyEntityMock)
+      await historyService.synchronize(userMock, playHistoryMock)
 
-      expect(findHistoryByUserSpy).toHaveBeenCalledWith(
-        historyEntityMock.user.id
-      )
-      expect(createHistoryTracksFromPlayHistorySpy).toHaveBeenCalledWith(
-        playHistoryMock,
-        historyEntityMock.user
-      )
-      expect(createSpy).toHaveBeenCalledWith({
-        user: historyEntityMock.user,
-        historyTracks,
+      expect(createSpy).toHaveBeenCalledWith(playHistoryMock, userMock)
+    })
+
+    test('should create only new history tracks', async () => {
+      const externalId = 'externalId'
+      const playedAt = new Date()
+
+      const lastHistoryTrack = mock<HistoryTrack>({
+        track: { ...trackEntityMock, externalId },
+        playedAt,
       })
-      expect(saveSpy).toHaveBeenCalledWith(historyEntityMock)
-    })
 
-    test('should update existing history if historyTracks is not empty', async () => {
-      const findHistoryByUserSpy = vi
-        .spyOn(historyRepository, 'findHistoryByUser')
-        .mockResolvedValue(historyEntityMock)
-      const findLastHistoryTrackByUserSpy = vi
-        .spyOn(historyTracksRepository, 'findLastHistoryTrackByUser')
-        .mockResolvedValue(historyTrack)
-      const createHistoryTracksFromPlayHistorySpy = vi
-        .spyOn(historyTracksService, 'create')
-        .mockResolvedValue(historyTracks)
-      const saveSpy = vi
-        .spyOn(historyRepository, 'save')
-        .mockResolvedValue(historyEntityMock)
+      findLastHistoryTrackByUserSpy.mockResolvedValue(lastHistoryTrack)
 
-      expect(
-        await historyService.updateOrCreate(
-          historyEntityMock.user,
-          playHistoryMock
-        )
-      ).toEqual(historyEntityMock)
+      const playHistory = [
+        mock<PlayHistory>({
+          track: { id: externalId },
+          played_at: playedAt.toISOString(),
+        }),
+        mock<PlayHistory>(),
+      ]
 
-      expect(findHistoryByUserSpy).toHaveBeenCalledWith(
-        historyEntityMock.user.id
-      )
-      expect(findLastHistoryTrackByUserSpy).toHaveBeenCalledWith(
-        historyEntityMock.user.id
-      )
-      expect(createHistoryTracksFromPlayHistorySpy).toHaveBeenCalled()
-      expect(saveSpy).toHaveBeenCalledWith(historyEntityMock)
-    })
+      await historyService.synchronize(userMock, playHistory)
 
-    test('should update existing history if historyTracks is empty', async () => {
-      const findHistoryByUserSpy = vi
-        .spyOn(historyRepository, 'findHistoryByUser')
-        .mockResolvedValue(historyEntityMock)
-      const findLastHistoryTrackByUserSpy = vi
-        .spyOn(historyTracksRepository, 'findLastHistoryTrackByUser')
-        .mockResolvedValue(null)
-      const createHistoryTracksFromPlayHistorySpy = vi
-        .spyOn(historyTracksService, 'create')
-        .mockResolvedValue(historyTracks)
-      const saveSpy = vi
-        .spyOn(historyRepository, 'save')
-        .mockResolvedValue(historyEntityMock)
-
-      expect(
-        await historyService.updateOrCreate(
-          historyEntityMock.user,
-          playHistoryMock
-        )
-      ).toEqual(historyEntityMock)
-
-      expect(findHistoryByUserSpy).toHaveBeenCalledWith(
-        historyEntityMock.user.id
-      )
-      expect(findLastHistoryTrackByUserSpy).toHaveBeenCalledWith(
-        historyEntityMock.user.id
-      )
-      expect(createHistoryTracksFromPlayHistorySpy).toHaveBeenCalled()
-      expect(saveSpy).toHaveBeenCalledWith(historyEntityMock)
+      expect(createSpy).toHaveBeenCalledWith([playHistory[1]], userMock)
     })
   })
 })
