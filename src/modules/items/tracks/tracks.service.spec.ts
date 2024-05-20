@@ -18,13 +18,7 @@ import {
   sdkCreateTracksMock,
   trackEntitiesMock,
 } from '@common/mocks'
-import { SdkTrack } from '@common/types/spotify'
 import { EntityManagerCreateMockInstance } from '@common/types/mocks'
-
-type GetTracksMockInstance = MockInstance<
-  [ids: string, adapt: false],
-  Promise<SdkTrack[]>
->
 
 describe('TracksService', () => {
   let moduleRef: TestingModule
