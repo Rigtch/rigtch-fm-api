@@ -11,13 +11,15 @@ import {
   Unique,
 } from 'typeorm'
 
-import type { Album } from '@modules/albums'
-import type { Artist } from '@modules/artists'
+import { Item } from '../types'
+
+import type { Album } from '@modules/items/albums'
+import type { Artist } from '@modules/items/artists'
 import type { HistoryTrack } from '@modules/history/tracks'
 
 @Entity()
 @Unique('TRACK_UNIQUE', ['externalId', 'href'])
-export class Track {
+export class Track implements Item {
   @PrimaryGeneratedColumn('uuid')
   @ApiProperty()
   id: string

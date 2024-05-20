@@ -7,8 +7,8 @@ import { TracksController } from './tracks.controller'
 import { TracksService } from './tracks.service'
 
 import { SpotifyModule } from '@modules/spotify'
-import { AlbumsModule } from '@modules/albums'
-import { ArtistsModule } from '@modules/artists'
+import { AlbumsModule } from '@modules/items/albums'
+import { ArtistsModule } from '@modules/items/artists'
 
 @Module({
   imports: [
