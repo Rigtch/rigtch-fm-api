@@ -18,19 +18,9 @@ import {
   sdkAlbumsMock,
   albumsEntitiesMock,
 } from '@common/mocks'
-import { SdkAlbum } from '@common/types/spotify'
 import { Artist } from '@modules/items/artists'
 import { EntityManagerCreateMockInstance } from '@common/types/mocks'
 import { Image } from '@modules/images'
-
-type GetAlbumMockInstance = MockInstance<
-  [id: string, adapt: false],
-  Promise<SdkAlbum>
->
-type GetAlbumsMockInstance = MockInstance<
-  [ids: string[], adapt: false],
-  Promise<SdkAlbum[]>
->
 
 describe('AlbumsService', () => {
   let moduleRef: TestingModule
