@@ -46,7 +46,7 @@ export class AuthService {
         `Scheduling history fetching for user ${createdUser.profile.displayName}`
       )
 
-      this.historyScheduler.triggerFetchingUserHistory(createdUser)
+      this.historyScheduler.triggerUserHistorySynchronization(createdUser)
 
       id = createdUser.id
     }

@@ -12,8 +12,6 @@ import ms from 'ms'
 import { HistoryService } from './history.service'
 
 import { User, UsersRepository } from '@modules/users'
-import { SpotifyAuthService } from '@modules/spotify/auth'
-import { SpotifyPlayerService } from '@modules/spotify/player'
 import { Environment } from '@config/environment'
 
 const { HISTORY_FETCHING_INTERVAL, HISTORY_FETCHING_DELAY } = Environment
@@ -25,8 +23,6 @@ export class HistoryScheduler implements OnModuleInit {
   constructor(
     @Inject(forwardRef(() => UsersRepository))
     private readonly usersRepository: UsersRepository,
-    private readonly spotifyAuthService: SpotifyAuthService,
-    private readonly spotifyPlayerService: SpotifyPlayerService,
     private readonly historyService: HistoryService,
     private readonly schedulerRegistry: SchedulerRegistry,
     private readonly configService: ConfigService
@@ -42,39 +38,30 @@ export class HistoryScheduler implements OnModuleInit {
 
       setTimeout(
         () => {
-          this.triggerFetchingUserHistory(user)
+          this.triggerUserHistorySynchronization(user)
         },
         ms(this.configService.get<string>(HISTORY_FETCHING_DELAY)!) * index
       )
     }
   }
 
-  triggerFetchingUserHistory(user: User) {
+  triggerUserHistorySynchronization(user: User) {
     const INTERVAL_HOURS = ms(
       this.configService.get<string>(HISTORY_FETCHING_INTERVAL)!
     )
 
     const interval = setInterval(() => {
-      this.fetchUserHistory(user)
+      this.synchronizeUserHistory(user)
     }, INTERVAL_HOURS)
 
     this.schedulerRegistry.addInterval(`fetch-history-${user.id}`, interval)
   }
 
-  async fetchUserHistory(user: User) {
-    this.logger.log(`Fetching history for user ${user.profile.displayName}`)
-
-    const accessToken = await this.spotifyAuthService.token({
-      refreshToken: user.refreshToken,
-    })
-
-    const { items } = await this.spotifyPlayerService.getRecentlyPlayedTracks(
-      accessToken,
-      50,
-      {},
-      false
+  async synchronizeUserHistory(user: User) {
+    this.logger.log(
+      `history synchronization for user ${user.profile.displayName}`
     )
 
-    await this.historyService.synchronize(user, items)
+    await this.historyService.synchronize(user)
   }
 }
