@@ -11,7 +11,6 @@ import { Profile } from '@modules/profiles'
 import { Album } from '@modules/items/albums'
 import { Artist } from '@modules/items/artists'
 import { Track } from '@modules/items/tracks'
-import { History } from '@modules/history'
 import { Image } from '@modules/images'
 import { HistoryTrack } from '@modules/history/tracks'
 
@@ -24,7 +23,7 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   username: configService.get(Environment.DATABASE_USERNAME),
   password: configService.get(Environment.DATABASE_PASSWORD),
   database: configService.get(Environment.DATABASE_NAME),
-  entities: [User, Profile, Album, Artist, Track, Image, History, HistoryTrack],
+  entities: [User, Profile, Album, Artist, Track, Image, HistoryTrack],
   migrations,
   migrationsRun: true,
   autoLoadEntities: true,

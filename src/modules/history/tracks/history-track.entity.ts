@@ -7,8 +7,6 @@ import {
   Relation,
 } from 'typeorm'
 
-import type { History } from '../history.entity'
-
 import type { Track } from '@modules/items/tracks'
 import type { User } from '@modules/users'
 
@@ -30,7 +28,4 @@ export class HistoryTrack {
 
   @ManyToOne('User', 'historyTracks')
   user: Relation<User>
-
-  @ManyToOne('History', 'historyTracks')
-  history: Relation<History>
 }
