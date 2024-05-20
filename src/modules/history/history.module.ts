@@ -10,8 +10,6 @@ import { HistoryService } from './history.service'
 
 import { UsersModule } from '@modules/users'
 import { SpotifyModule } from '@modules/spotify'
-import { TracksModule } from '@modules/tracks'
-import { AlbumsModule } from '@modules/albums'
 
 @Module({
   imports: [
@@ -19,8 +17,6 @@ import { AlbumsModule } from '@modules/albums'
     ScheduleModule.forRoot(),
     forwardRef(() => UsersModule),
     SpotifyModule,
-    TracksModule,
-    AlbumsModule,
     HistoryTracksModule,
   ],
   providers: [HistoryRepository, HistoryScheduler, HistoryService],
