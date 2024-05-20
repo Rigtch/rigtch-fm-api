@@ -1,18 +1,33 @@
 import { Injectable } from '@nestjs/common'
-import { PlayHistory } from '@spotify/web-api-ts-sdk'
 
 import { HistoryTracksRepository, HistoryTracksService } from './tracks'
 
 import { User } from '@modules/users'
+import { SpotifyAuthService } from '@modules/spotify/auth'
+import { SpotifyPlayerService } from '@modules/spotify/player'
 
 @Injectable()
 export class HistoryService {
   constructor(
     private readonly historyTracksRepository: HistoryTracksRepository,
-    private readonly historyTracksService: HistoryTracksService
+    private readonly historyTracksService: HistoryTracksService,
+    private readonly spotifyAuthService: SpotifyAuthService,
+    private readonly spotifyPlayerService: SpotifyPlayerService
   ) {}
 
-  async synchronize(user: User, playHistory: PlayHistory[]) {
+  async synchronize(user: User) {
+    const accessToken = await this.spotifyAuthService.token({
+      refreshToken: user.refreshToken,
+    })
+
+    const { items: playHistory } =
+      await this.spotifyPlayerService.getRecentlyPlayedTracks(
+        accessToken,
+        50,
+        {},
+        false
+      )
+
     const lastHistoryTrack =
       await this.historyTracksRepository.findLastHistoryTrackByUser(user.id)
 

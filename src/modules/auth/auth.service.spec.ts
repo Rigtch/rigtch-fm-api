@@ -43,7 +43,7 @@ describe('AuthService', () => {
         {
           provide: HistoryScheduler,
           useValue: {
-            triggerFetchingUserHistory: vi.fn(),
+            triggerUserHistorySynchronization: vi.fn(),
           },
         },
       ],
@@ -81,7 +81,7 @@ describe('AuthService', () => {
         .mockResolvedValue(userMock)
       const triggerFetchingUserHistorySpy = vi.spyOn(
         historyScheduler,
-        'triggerFetchingUserHistory'
+        'triggerUserHistorySynchronization'
       )
 
       expect(await authService.saveUser(accessTokenMock)).toEqual({
