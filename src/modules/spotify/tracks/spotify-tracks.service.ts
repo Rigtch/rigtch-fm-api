@@ -43,11 +43,11 @@ export class SpotifyTracksService {
 
     const chunks: string[][] = []
 
-    if (ids.length > CHUNK_SIZE) {
+    if (ids.length > CHUNK_SIZE)
       for (let index = 0; index < ids.length; index += CHUNK_SIZE) {
         chunks.push(ids.slice(index, index + CHUNK_SIZE))
       }
-    }
+    else chunks.push(ids)
 
     const data = await Promise.all(
       chunks.map(async chunk => {
