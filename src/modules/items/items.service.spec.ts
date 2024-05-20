@@ -6,7 +6,7 @@ import { AlbumsRepository, AlbumsService } from './albums'
 import { ArtistsRepository, ArtistsService } from './artists'
 import { TracksRepository } from './tracks'
 
-import { ImagesService } from '@modules/images'
+import { ImagesService } from '@modules/items/images'
 import { SpotifyAlbumsService } from '@modules/spotify/albums'
 import { SpotifyArtistsService } from '@modules/spotify/artists'
 import {

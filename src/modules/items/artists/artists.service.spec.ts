@@ -12,7 +12,7 @@ import {
   sdkArtistMock,
   transactionFactoryMock,
 } from '@common/mocks'
-import { Image } from '@modules/images'
+import { Image } from '@modules/items/images'
 import { EntityManagerCreateMockInstance } from '@common/types/mocks'
 import { entityManagerFactoryMock } from '@common/mocks'
 

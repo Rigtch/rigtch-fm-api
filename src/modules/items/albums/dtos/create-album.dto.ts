@@ -20,7 +20,7 @@ import {
   SdkImage,
   SdkSimplifiedTrack,
 } from '@common/types/spotify'
-import { Image } from '@modules/images'
+import { Image } from '@modules/items/images'
 
 export abstract class CreateAlbum implements Omit<Album, 'id'> {
   @IsString()

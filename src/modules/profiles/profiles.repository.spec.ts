@@ -4,7 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { ProfilesRepository } from './profiles.repository'
 
 import { imagesMock, profileMock } from '@common/mocks'
-import { ImagesRepository } from '@modules/images'
+import { ImagesRepository } from '@modules/items/images'
 
 describe('ProfilesRepository', () => {
   let moduleRef: TestingModule

@@ -4,7 +4,7 @@ import { DataSource, In } from 'typeorm'
 import { CreateArtist, SdkCreateArtist } from './dtos'
 import { Artist } from './artist.entity'
 
-import { Image } from '@modules/images'
+import { Image } from '@modules/items/images'
 
 @Injectable()
 export class ArtistsService {
@@ -28,19 +28,19 @@ export class ArtistsService {
     followers: { total: followers },
     images: fetchedArtistImages,
   }: SdkCreateArtist) {
-    const artistToCreate: Omit<CreateArtist, 'images'> = {
-      externalId: id,
-      name,
-      href,
-      genres,
-      popularity,
-      followers,
-    }
-
     return this.dataSource.transaction(async manager => {
       const foundArtist = await manager.findOneBy(Artist, {
         externalId: id,
       })
+
+      const artistToCreate: Omit<CreateArtist, 'images'> = {
+        externalId: id,
+        name,
+        href,
+        genres,
+        popularity,
+        followers,
+      }
 
       if (foundArtist) {
         await manager.update(Artist, { externalId: id }, artistToCreate)

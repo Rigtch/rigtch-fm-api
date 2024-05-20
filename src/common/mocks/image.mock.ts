@@ -1,6 +1,6 @@
 import { SdkImage } from '../types/spotify'
 
-import { Image } from '@modules/images'
+import { Image } from '@modules/items/images'
 
 export const sdkImageMock: SdkImage = {
   height: 300,

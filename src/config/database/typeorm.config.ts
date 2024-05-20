@@ -11,7 +11,7 @@ import { Profile } from '@modules/profiles'
 import { Album } from '@modules/items/albums'
 import { Artist } from '@modules/items/artists'
 import { Track } from '@modules/items/tracks'
-import { Image } from '@modules/images'
+import { Image } from '@modules/items/images'
 import { HistoryTrack } from '@modules/history/tracks'
 
 const configService = new ConfigService()

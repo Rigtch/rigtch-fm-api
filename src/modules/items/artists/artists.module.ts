@@ -7,7 +7,7 @@ import { ArtistsController } from './artists.controller'
 import { ArtistsService } from './artists.service'
 
 import { SpotifyModule } from '@modules/spotify'
-import { ImagesModule } from '@modules/images'
+import { ImagesModule } from '@modules/items/images'
 
 @Module({
   imports: [TypeOrmModule.forFeature([Artist]), SpotifyModule, ImagesModule],

@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger'
 
 import { Profile } from '../profile.entity'
 
-import { CreateImage } from '@modules/images/dtos'
+import { CreateImage } from '@modules/items/images/dtos'
 
 export abstract class CreateProfile implements Omit<Profile, 'images'> {
   @ApiProperty()

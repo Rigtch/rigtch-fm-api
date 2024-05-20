@@ -12,7 +12,7 @@ import {
 
 import { Item } from '../types'
 
-import type { Image } from '@modules/images'
+import type { Image } from '@modules/items/images'
 import type { Artist } from '@modules/items/artists'
 import type { Track } from '@modules/items/tracks'
 
