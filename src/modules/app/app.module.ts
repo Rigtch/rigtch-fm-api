@@ -9,9 +9,9 @@ import { ImagesModule } from '@modules/images'
 import { ProfilesModule } from '@modules/profiles'
 import { UsersModule } from '@modules/users'
 import { AdaptersModule } from '@common/adapters'
-import { ArtistsModule } from '@modules/artists'
-import { AlbumsModule } from '@modules/albums'
-import { TracksModule } from '@modules/tracks'
+import { ArtistsModule } from '@modules/items/artists'
+import { AlbumsModule } from '@modules/items/albums'
+import { TracksModule } from '@modules/items/tracks'
 import { HistoryModule } from '@modules/history'
 
 @Module({
