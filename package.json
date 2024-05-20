@@ -28,11 +28,11 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli",
-    "schema:sync": "yarn typeorm -- schema:sync -d ./dist/src/config/database/typeorm.config.js",
-    "migration:run": "yarn typeorm -- migration:run -d ./dist/src/config/database/typeorm.config.js",
-    "migration:generate": "yarn typeorm -- migration:generate -d ./dist/src/config/database/typeorm.config.js ./src/migrations/$NAME",
-    "migration:create": "yarn typeorm -- migration:create ./src/migrations/$NAME",
-    "migration:revert": "yarn typeorm -- migration:revert -d ./src/config/database/typeorm.config.ts",
+    "schema:sync": "yarn typeorm schema:sync -d ./dist/src/config/database/typeorm.config.js",
+    "migration:run": "yarn typeorm migration:run -d ./dist/src/config/database/typeorm.config.js",
+    "migration:generate": "yarn typeorm migration:generate -d ./dist/src/config/database/typeorm.config.js ./src/migrations/$NAME",
+    "migration:create": "yarn typeorm migration:create ./src/migrations/$NAME",
+    "migration:revert": "yarn typeorm migration:revert -d ./src/config/database/typeorm.config.ts",
     "prepare": "husky install"
   },
   "sideEffects": false,
@@ -73,7 +73,7 @@
     "pg": "8.11.3",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
-    "typeorm": "0.3.19"
+    "typeorm": "0.3.20"
   },
   "devDependencies": {
     "@commitlint/cli": "^18.4.3",
