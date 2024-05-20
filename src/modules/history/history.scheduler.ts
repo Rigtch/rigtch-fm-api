@@ -75,6 +75,6 @@ export class HistoryScheduler implements OnModuleInit {
       false
     )
 
-    await this.historyService.updateOrCreate(user, items)
+    await this.historyService.synchronize(user, items)
   }
 }
