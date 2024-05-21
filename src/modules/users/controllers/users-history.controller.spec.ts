@@ -1,6 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { paginate } from 'nestjs-typeorm-paginate'
 
+import { UsersRepository } from '../users.repository'
+
 import { UsersHistoryController } from './users-history.controller'
 
 import {
@@ -11,8 +13,10 @@ import {
   generatePaginatedResponseFactoryMock,
   paginatedResponseMockImplementation,
   trackEntityMock,
+  userMock,
 } from '@common/mocks'
 import { tracksRelations } from '@modules/items/tracks'
+import { HistoryService } from '@modules/history'
 
 vi.mock('nestjs-typeorm-paginate')
 
@@ -20,20 +24,36 @@ describe('UsersHistoryController', () => {
   let moduleRef: TestingModule
   let usersHistoryController: UsersHistoryController
   let historyTracksRepository: HistoryTracksRepository
+  let usersRepository: UsersRepository
+  let historyService: HistoryService
 
   beforeEach(async () => {
     moduleRef = await Test.createTestingModule({
       providers: [
+        UsersHistoryController,
         {
           provide: HistoryTracksRepository,
           useValue: {},
         },
-        UsersHistoryController,
+        {
+          provide: UsersRepository,
+          useValue: {
+            findOneBy: vi.fn(),
+          },
+        },
+        {
+          provide: HistoryService,
+          useValue: {
+            synchronize: vi.fn(),
+          },
+        },
       ],
     }).compile()
 
     usersHistoryController = moduleRef.get(UsersHistoryController)
     historyTracksRepository = moduleRef.get(HistoryTracksRepository)
+    usersRepository = moduleRef.get(UsersRepository)
+    historyService = moduleRef.get(HistoryService)
   })
 
   afterEach(() => {
@@ -148,6 +168,18 @@ describe('UsersHistoryController', () => {
           order: historyTracksOrder,
         }
       )
+    })
+
+    test('should synchronize history before getting it', async () => {
+      const findOneBySpy = vi
+        .spyOn(usersRepository, 'findOneBy')
+        .mockResolvedValue(userMock)
+      const synchronizeSpy = vi.spyOn(historyService, 'synchronize')
+
+      await usersHistoryController.getHistory(id, '', {})
+
+      expect(findOneBySpy).toHaveBeenCalledWith({ id })
+      expect(synchronizeSpy).toHaveBeenCalledWith(userMock)
     })
   })
 })
