@@ -9,6 +9,8 @@ import {
 } from '@nestjs/swagger'
 import { Pagination, paginate } from 'nestjs-typeorm-paginate'
 
+import { UsersRepository } from '../users.repository'
+
 import { ApiPaginatedQuery } from '@common/decorators'
 import {
   NOT_BEEN_FOUND,
@@ -23,13 +25,16 @@ import {
 } from '@modules/history/tracks'
 import { PaginatedQuery } from '@common/dtos'
 import { tracksRelations } from '@modules/items/tracks'
+import { HistoryService } from '@modules/history'
 
 @Controller('users/:id/history')
 @ApiTags('users/{id}/history')
 @ApiAuth()
 export class UsersHistoryController {
   constructor(
-    private readonly historyTracksRepository: HistoryTracksRepository
+    private readonly historyTracksRepository: HistoryTracksRepository,
+    private readonly usersRepository: UsersRepository,
+    private readonly historyService: HistoryService
   ) {}
 
   @Get()
@@ -53,6 +58,10 @@ export class UsersHistoryController {
     @Token() _token: string,
     @Query() { limit = 10, page = 1 }: PaginatedQuery
   ) {
+    const user = await this.usersRepository.findOneBy({ id })
+
+    await this.historyService.synchronize(user!)
+
     return paginate(
       this.historyTracksRepository,
       { limit, page },

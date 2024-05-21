@@ -13,12 +13,14 @@ import {
 import { AuthModule } from '@modules/auth'
 import { SpotifyModule } from '@modules/spotify'
 import { HistoryTracksModule } from '@modules/history/tracks'
+import { HistoryModule } from '@modules/history'
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
     forwardRef(() => AuthModule),
     HistoryTracksModule,
+    HistoryModule,
     SpotifyModule,
   ],
   providers: [UsersRepository],
