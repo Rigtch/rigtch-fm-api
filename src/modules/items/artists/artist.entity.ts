@@ -11,7 +11,7 @@ import {
 
 import { Item } from '../types'
 
-import type { Image } from '@modules/images'
+import type { Image } from '@modules/items/images'
 
 @Entity()
 @Unique('ARTIST_UNIQUE', ['externalId', 'href'])

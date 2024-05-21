@@ -3,8 +3,8 @@ import { IsInt, IsOptional, IsString } from 'class-validator'
 
 import { Artist } from '../artist.entity'
 
-import { Image } from '@modules/images'
-import { CreateImage } from '@modules/images/dtos'
+import { Image } from '@modules/items/images'
+import { CreateImage } from '@modules/items/images/dtos'
 import { SdkArtist } from '@common/types/spotify'
 
 export abstract class Followers {

@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { PlayHistory } from '@spotify/web-api-ts-sdk'
 
-import { HistoryRepository } from './history.repository'
 import { HistoryTracksRepository, HistoryTracksService } from './tracks'
 
 import { User } from '@modules/users'
@@ -9,32 +8,13 @@ import { User } from '@modules/users'
 @Injectable()
 export class HistoryService {
   constructor(
-    private readonly historyRepository: HistoryRepository,
     private readonly historyTracksRepository: HistoryTracksRepository,
     private readonly historyTracksService: HistoryTracksService
   ) {}
 
-  async updateOrCreate(user: User, playHistory: PlayHistory[]) {
-    const foundHistory = await this.historyRepository.findHistoryByUser(user.id)
-
-    if (!foundHistory) {
-      const historyTracks = await this.historyTracksService.create(
-        playHistory,
-        user
-      )
-
-      const newHistory = this.historyRepository.create({
-        user,
-        historyTracks,
-      })
-
-      return this.historyRepository.save(newHistory)
-    }
-
+  async synchronize(user: User, playHistory: PlayHistory[]) {
     const lastHistoryTrack =
-      await this.historyTracksRepository.findLastHistoryTrackByUser(
-        foundHistory.user.id
-      )
+      await this.historyTracksRepository.findLastHistoryTrackByUser(user.id)
 
     if (lastHistoryTrack) {
       const latestTrackIndex = playHistory.findIndex(
@@ -44,26 +24,10 @@ export class HistoryService {
       )
 
       const latestPlayHistory = playHistory.filter((_, index) =>
-        latestTrackIndex === -1 ? true : index < latestTrackIndex
+        latestTrackIndex === -1 ? true : index > latestTrackIndex
       )
 
-      const newHistoryTracks = await this.historyTracksService.create(
-        latestPlayHistory,
-        user
-      )
-
-      foundHistory.historyTracks.push(...newHistoryTracks)
-
-      return this.historyRepository.save(foundHistory)
-    }
-
-    const newHistoryTracks = await this.historyTracksService.create(
-      playHistory,
-      user
-    )
-
-    foundHistory.historyTracks.push(...newHistoryTracks)
-
-    return this.historyRepository.save(foundHistory)
+      await this.historyTracksService.create(latestPlayHistory, user)
+    } else await this.historyTracksService.create(playHistory, user)
   }
 }

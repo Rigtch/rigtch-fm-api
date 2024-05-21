@@ -6,7 +6,6 @@ import { AccessToken, MaxInt } from '@spotify/web-api-ts-sdk'
 import { ConfigService } from '@nestjs/config'
 
 import { HistoryScheduler } from './history.scheduler'
-import { History } from './history.entity'
 import { HistoryService } from './history.service'
 
 import { UsersRepository } from '@modules/users'
@@ -55,7 +54,7 @@ describe('HistoryScheduler', () => {
         {
           provide: HistoryService,
           useValue: {
-            updateOrCreate: vi.fn(),
+            synchronize: vi.fn(),
           },
         },
         {
@@ -138,9 +137,7 @@ describe('HistoryScheduler', () => {
         Promise<SdkRecentlyPlayedTracksPage>
       >
     ).mockResolvedValue(recentlyPlayedTracksPageMock)
-    const updateOrCreateHistoryByUserSpy = vi
-      .spyOn(historyService, 'updateOrCreate')
-      .mockResolvedValue(mock<History>())
+    const synchronize = vi.spyOn(historyService, 'synchronize')
 
     await historyScheduler.fetchUserHistory(userMock)
 
@@ -148,7 +145,7 @@ describe('HistoryScheduler', () => {
       refreshToken: userMock.refreshToken,
     })
     expect(getRecentlyPlayedTracksSpy).toHaveBeenCalled()
-    expect(updateOrCreateHistoryByUserSpy).toHaveBeenCalledWith(
+    expect(synchronize).toHaveBeenCalledWith(
       userMock,
       recentlyPlayedTracksPageMock.items
     )

@@ -5,7 +5,7 @@ import { AlbumsModule } from './albums'
 import { ArtistsModule } from './artists'
 import { TracksModule } from './tracks'
 
-import { ImagesModule } from '@modules/images'
+import { ImagesModule } from '@modules/items/images'
 import { SpotifyModule } from '@modules/spotify'
 
 @Module({

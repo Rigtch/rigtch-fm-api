@@ -6,7 +6,7 @@ import { Album } from './album.entity'
 
 import { TracksService } from '@modules/items/tracks'
 import { Artist } from '@modules/items/artists'
-import { Image } from '@modules/images'
+import { Image } from '@modules/items/images'
 
 @Injectable()
 export class AlbumsService {
@@ -67,7 +67,7 @@ export class AlbumsService {
         externalId: In(fetchedAlbumArtists.map(({ id }) => id)),
       })
 
-      const albumEntity = manager.create<Album>(Album, {
+      const albumEntity = manager.create(Album, {
         ...albumToCreate,
         images,
         artists,

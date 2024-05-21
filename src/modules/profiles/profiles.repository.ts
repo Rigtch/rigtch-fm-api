@@ -4,7 +4,7 @@ import { DataSource, Repository } from 'typeorm'
 import { Profile } from './profile.entity'
 import { CreateProfile } from './dtos'
 
-import { ImagesRepository } from '@modules/images'
+import { ImagesRepository } from '@modules/items/images'
 
 @Injectable()
 export class ProfilesRepository extends Repository<Profile> {
