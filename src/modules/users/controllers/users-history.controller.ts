@@ -23,7 +23,7 @@ import { ApiPaginatedQuery } from '@common/decorators'
 import {
   NOT_BEEN_FOUND,
   ONE_IS_INVALID,
-  ONE_SUCCESFULLY_FOUND,
+  ONE_SUCCESSFULLY_FOUND,
 } from '@common/constants'
 import { ApiAuth, Token } from '@modules/auth/decorators'
 import {
@@ -50,7 +50,7 @@ export class UsersHistoryController {
     summary: "Getting user's history.",
   })
   @ApiOkResponse({
-    description: ONE_SUCCESFULLY_FOUND('history'),
+    description: ONE_SUCCESSFULLY_FOUND('history'),
     type: [Pagination<HistoryTrack>],
   })
   @ApiNotFoundResponse({

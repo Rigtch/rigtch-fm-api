@@ -21,7 +21,7 @@ import { ApiItemQuery } from '../decorators'
 import { LastItemQuery, TopItemQuery } from '../dtos'
 
 import {
-  ONE_SUCCESFULLY_FOUND,
+  ONE_SUCCESSFULLY_FOUND,
   NOT_BEEN_FOUND,
   ONE_IS_INVALID,
 } from '@common/constants'
@@ -47,7 +47,7 @@ export class UsersProfileController {
   })
   @ApiParam({ name: 'id' })
   @ApiOkResponse({
-    description: ONE_SUCCESFULLY_FOUND(USER),
+    description: ONE_SUCCESSFULLY_FOUND(USER),
   })
   @ApiNotFoundResponse({
     description: NOT_BEEN_FOUND(USER),
@@ -77,7 +77,7 @@ export class UsersProfileController {
   @ApiParam({ name: 'id' })
   @ApiItemQuery({ withCursors: true })
   @ApiOkResponse({
-    description: ONE_SUCCESFULLY_FOUND(USER),
+    description: ONE_SUCCESSFULLY_FOUND(USER),
   })
   @ApiNotFoundResponse({
     description: NOT_BEEN_FOUND(USER),
@@ -111,7 +111,7 @@ export class UsersProfileController {
   @ApiParam({ name: 'id' })
   @ApiItemQuery({ withOffset: true })
   @ApiOkResponse({
-    description: ONE_SUCCESFULLY_FOUND(USER),
+    description: ONE_SUCCESSFULLY_FOUND(USER),
   })
   @ApiNotFoundResponse({
     description: NOT_BEEN_FOUND(USER),
@@ -147,7 +147,7 @@ export class UsersProfileController {
   @ApiParam({ name: 'id' })
   @ApiItemQuery({ withOffset: true })
   @ApiOkResponse({
-    description: ONE_SUCCESFULLY_FOUND(USER),
+    description: ONE_SUCCESSFULLY_FOUND(USER),
   })
   @ApiNotFoundResponse({
     description: NOT_BEEN_FOUND(USER),
@@ -183,7 +183,7 @@ export class UsersProfileController {
   @ApiParam({ name: 'id' })
   @ApiItemQuery()
   @ApiOkResponse({
-    description: ONE_SUCCESFULLY_FOUND(USER),
+    description: ONE_SUCCESSFULLY_FOUND(USER),
   })
   @ApiNotFoundResponse({
     description: NOT_BEEN_FOUND(USER),
@@ -218,7 +218,7 @@ export class UsersProfileController {
   })
   @ApiParam({ name: 'id' })
   @ApiOkResponse({
-    description: ONE_SUCCESFULLY_FOUND(USER),
+    description: ONE_SUCCESSFULLY_FOUND(USER),
   })
   @ApiNotFoundResponse({
     description: NOT_BEEN_FOUND(USER),
