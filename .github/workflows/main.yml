@@ -23,7 +23,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Build Application 🧱
-        run: yarn build
+        run: bun run build
 
   lint:
     name: 'Lint 🐱'
@@ -38,7 +38,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Lint 🐱
-        run: yarn lint
+        run: bun run lint
 
   test:
     name: 'Test 🧪'
@@ -53,7 +53,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Run unit tests 🧪
-        run: yarn test:coverage
+        run: bun run test:coverage
 
       - name: Collect coverage
         uses: codecov/codecov-action@v3
