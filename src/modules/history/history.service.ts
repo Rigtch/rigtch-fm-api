@@ -39,7 +39,7 @@ export class HistoryService {
       )
 
       const latestPlayHistory = playHistory.filter((_, index) =>
-        latestTrackIndex === -1 ? true : index > latestTrackIndex
+        latestTrackIndex === -1 ? true : index < latestTrackIndex
       )
 
       await this.historyTracksService.create(latestPlayHistory, user)

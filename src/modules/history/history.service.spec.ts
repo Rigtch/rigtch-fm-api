@@ -138,11 +138,11 @@ describe('HistoryService', () => {
       })
 
       const playHistory = [
+        mock<PlayHistory>(),
         mock<PlayHistory>({
           track: { id: externalId },
           played_at: playedAt.toISOString(),
         }),
-        mock<PlayHistory>(),
       ]
 
       findLastHistoryTrackByUserSpy.mockResolvedValue(lastHistoryTrack)
@@ -155,7 +155,7 @@ describe('HistoryService', () => {
 
       await historyService.synchronize(userMock)
 
-      expect(createSpy).toHaveBeenCalledWith([playHistory[1]], userMock)
+      expect(createSpy).toHaveBeenCalledWith([playHistory[0]], userMock)
       expect(tokenSpy).toHaveBeenCalledWith({
         refreshToken: userMock.refreshToken,
       })
