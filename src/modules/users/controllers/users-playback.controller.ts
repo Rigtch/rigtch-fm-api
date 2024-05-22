@@ -22,7 +22,7 @@ import { USER } from '../constants'
 import {
   NOT_BEEN_FOUND,
   ONE_IS_INVALID,
-  ONE_SUCCESFULLY_FOUND,
+  ONE_SUCCESSFULLY_FOUND,
 } from '@common/constants'
 import { ApiAuth, Token } from '@modules/auth/decorators'
 import { SpotifyAuthService } from '@modules/spotify/auth'
@@ -45,7 +45,7 @@ export class UsersPlaybackController {
   })
   @ApiParam({ name: 'id' })
   @ApiOkResponse({
-    description: ONE_SUCCESFULLY_FOUND('playback state'),
+    description: ONE_SUCCESSFULLY_FOUND('playback state'),
   })
   @ApiNotFoundResponse({
     description: NOT_BEEN_FOUND(USER),

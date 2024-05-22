@@ -2,9 +2,9 @@ export const UNAUTHORIZED =
   'The user is not authorized to access this resource.'
 export const FORBIDDEN = 'The user access to this resource is forbidden'
 
-export const ONE_SUCCESFULLY_FOUND = (entityName: string) =>
+export const ONE_SUCCESSFULLY_FOUND = (entityName: string) =>
   `The ${entityName} has been successfully found.`
-export const MANY_SUCCESFULLY_FOUND = (entityName: string) =>
+export const MANY_SUCCESSFULLY_FOUND = (entityName: string) =>
   `The ${entityName}s have been successfully found.`
 export const NOT_BEEN_FOUND = (entityName: string) =>
   `The ${entityName} has not been found.`

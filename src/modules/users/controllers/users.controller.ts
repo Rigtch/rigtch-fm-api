@@ -24,10 +24,10 @@ import { User } from '../user.entity'
 import { USERS, USER } from '../constants'
 
 import {
-  MANY_SUCCESFULLY_FOUND,
+  MANY_SUCCESSFULLY_FOUND,
   NOT_BEEN_FOUND,
   ONE_IS_INVALID,
-  ONE_SUCCESFULLY_FOUND,
+  ONE_SUCCESSFULLY_FOUND,
 } from '@common/constants'
 import { ApiAuth, Token } from '@modules/auth/decorators'
 
@@ -43,7 +43,7 @@ export class UsersController {
   })
   @ApiQuery({ name: 'displayName', required: false })
   @ApiOkResponse({
-    description: MANY_SUCCESFULLY_FOUND(USER),
+    description: MANY_SUCCESSFULLY_FOUND(USER),
     type: [User],
   })
   @ApiNoContentResponse({
@@ -72,7 +72,7 @@ export class UsersController {
   })
   @ApiParam({ name: 'id' })
   @ApiOkResponse({
-    description: ONE_SUCCESFULLY_FOUND(USER),
+    description: ONE_SUCCESSFULLY_FOUND(USER),
     type: User,
   })
   @ApiNotFoundResponse({
