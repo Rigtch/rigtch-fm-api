@@ -1,5 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { paginate } from 'nestjs-typeorm-paginate'
+import { MockInstance } from 'vitest'
+import { NotFoundException } from '@nestjs/common'
 
 import { UsersRepository } from '../users.repository'
 
@@ -74,7 +76,23 @@ describe('UsersHistoryController', () => {
       .mocked(paginate)
       .mockImplementation(paginatedResponseMockImplementation(item))
 
+    let findOneBySpy: MockInstance
+
+    beforeEach(() => {
+      findOneBySpy = vi.spyOn(usersRepository, 'findOneBy')
+    })
+
+    test('should throw not found exception', async () => {
+      findOneBySpy.mockResolvedValue(null)
+
+      await expect(
+        usersHistoryController.getHistory(id, '', {})
+      ).rejects.toThrowError(NotFoundException)
+    })
+
     test('should get paginated history', async () => {
+      findOneBySpy.mockResolvedValue(userMock)
+
       const paginatedResponseMock = generatePaginatedResponseFactoryMock(item)
 
       const response = await usersHistoryController.getHistory(id, '', {})
@@ -102,6 +120,8 @@ describe('UsersHistoryController', () => {
     })
 
     test('should get paginated history with limit', async () => {
+      findOneBySpy.mockResolvedValue(userMock)
+
       const limit = 50
 
       const paginatedResponseMock = generatePaginatedResponseFactoryMock(
@@ -136,6 +156,8 @@ describe('UsersHistoryController', () => {
     })
 
     test('should get paginated history with page', async () => {
+      findOneBySpy.mockResolvedValue(userMock)
+
       const page = 2
 
       const paginatedResponseMock = generatePaginatedResponseFactoryMock(
@@ -171,9 +193,7 @@ describe('UsersHistoryController', () => {
     })
 
     test('should synchronize history before getting it', async () => {
-      const findOneBySpy = vi
-        .spyOn(usersRepository, 'findOneBy')
-        .mockResolvedValue(userMock)
+      findOneBySpy.mockResolvedValue(userMock)
       const synchronizeSpy = vi.spyOn(historyService, 'synchronize')
 
       await usersHistoryController.getHistory(id, '', {})

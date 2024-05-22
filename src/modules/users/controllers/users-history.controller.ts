@@ -1,4 +1,11 @@
-import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  ParseUUIDPipe,
+  Query,
+} from '@nestjs/common'
 import {
   ApiBadRequestResponse,
   ApiNotFoundResponse,
@@ -10,6 +17,7 @@ import {
 import { Pagination, paginate } from 'nestjs-typeorm-paginate'
 
 import { UsersRepository } from '../users.repository'
+import { USER } from '../constants'
 
 import { ApiPaginatedQuery } from '@common/decorators'
 import {
@@ -58,9 +66,11 @@ export class UsersHistoryController {
     @Token() _token: string,
     @Query() { limit = 10, page = 1 }: PaginatedQuery
   ) {
-    const user = await this.usersRepository.findOneBy({ id })
+    const foundUser = await this.usersRepository.findOneBy({ id })
 
-    await this.historyService.synchronize(user!)
+    if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
+
+    await this.historyService.synchronize(foundUser)
 
     return paginate(
       this.historyTracksRepository,
