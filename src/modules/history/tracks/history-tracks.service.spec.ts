@@ -65,12 +65,12 @@ describe('HistoryTracksService', () => {
 
   describe('create', () => {
     describe('findOrCreateOne', () => {
-      let findOneBySpy: MockInstance
+      let findBySpy: MockInstance
       let createSpy: MockInstance
       let saveSpy: MockInstance
 
       beforeEach(() => {
-        findOneBySpy = vi.spyOn(entityManagerMock, 'findOneBy')
+        findBySpy = vi.spyOn(entityManagerMock, 'findBy')
         createSpy = vi.spyOn(entityManagerMock, 'create')
         saveSpy = vi.spyOn(entityManagerMock, 'save')
       })
@@ -82,7 +82,7 @@ describe('HistoryTracksService', () => {
           user: userMock,
         }
 
-        findOneBySpy.mockResolvedValue(null)
+        findBySpy.mockResolvedValue([])
         createSpy.mockReturnValue(historyTrackMock)
         saveSpy.mockResolvedValue(historyTrackMock)
 
@@ -90,7 +90,7 @@ describe('HistoryTracksService', () => {
           await historyTracksService.create(createHistoryTrackMock)
         ).toEqual(historyTrackMock)
 
-        expect(findOneBySpy).toHaveBeenCalledWith(HistoryTrack, {
+        expect(findBySpy).toHaveBeenCalledWith(HistoryTrack, {
           track: {
             id: trackEntityMock.id,
           },
@@ -110,7 +110,7 @@ describe('HistoryTracksService', () => {
 
         historyTrackMock.playedAt = playedAt
 
-        findOneBySpy.mockResolvedValue(historyTrackMock)
+        findBySpy.mockResolvedValue([historyTrackMock])
 
         expect(
           await historyTracksService.create({
@@ -120,7 +120,7 @@ describe('HistoryTracksService', () => {
           })
         ).toEqual(historyTrackMock)
 
-        expect(findOneBySpy).toHaveBeenCalledWith(HistoryTrack, {
+        expect(findBySpy).toHaveBeenCalledWith(HistoryTrack, {
           track: {
             id: trackEntityMock.id,
           },
