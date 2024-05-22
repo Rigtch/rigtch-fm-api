@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
       target: development
-    command: yarn start:dev
+    command: bun run start:dev
     ports:
       - ${PORT}:${PORT}
     env_file:

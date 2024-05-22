@@ -1,20 +1,18 @@
-FROM node:20-alpine as development
+# FROM node:20-alpine as development
+FROM imbios/bun-node:latest-20.12.2-debian as development
 
 WORKDIR /usr/src/app
 
 COPY package.json ./
-COPY yarn.lock ./
-COPY .yarnrc.yml ./
+COPY bun.lockb ./
 
-RUN corepack enable
-
-RUN yarn install
+RUN bun install
 
 COPY . .
 
-RUN yarn build
+RUN bun run build
 
-FROM node:20-alpine as production
+FROM imbios/bun-node:latest-20.12.2-debian as production
 
 ARG NODE_ENV=production
 ARG EnvironmentVariable
@@ -23,15 +21,12 @@ ENV NODE_ENV=${NODE_ENV}
 WORKDIR /usr/src/app
 
 COPY package.json ./
-COPY yarn.lock ./
-COPY .yarnrc.yml ./
+COPY bun.lockb ./
 
-RUN corepack enable
-
-RUN yarn install --mode=skip-build --immutable
+RUN bun install --production --frozen-lockfile
 
 COPY . .
 
 COPY --from=development /usr/src/app/dist ./dist
 
-CMD ["node", "dist/src/main"]
+CMD ["bun", "run", "dist/src/main"]
