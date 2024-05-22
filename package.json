@@ -8,7 +8,7 @@
     "node": ">=20.0.0",
     "npm": "please-use-bun",
     "yarn": "please-use-bun",
-    "bun": ">=1.1.9"
+    "bun": ">=1.1.0"
   },
   "scripts": {
     "prebuild": "rimraf dist",
