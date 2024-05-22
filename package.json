@@ -33,7 +33,7 @@
     "migration:generate": "yarn typeorm migration:generate -d ./dist/src/config/database/typeorm.config.js ./src/migrations/$NAME",
     "migration:create": "yarn typeorm migration:create ./src/migrations/$NAME",
     "migration:revert": "yarn typeorm migration:revert -d ./src/config/database/typeorm.config.ts",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "sideEffects": false,
   "lint-staged": {
@@ -104,7 +104,7 @@
     "eslint-plugin-sonarjs": "^0.23.0",
     "eslint-plugin-unicorn": "^49.0.0",
     "eslint-plugin-vitest": "0.3.20",
-    "husky": "^8.0.3",
+    "husky": "^9.0.11",
     "lint-staged": "^15.2.0",
     "node-mocks-http": "1.13.0",
     "prettier": "^3.2.4",

@@ -1,4 +1,3 @@
-# FROM node:20-alpine as development
 FROM imbios/bun-node:latest-20.12.2-debian as development
 
 WORKDIR /usr/src/app
@@ -23,10 +22,11 @@ WORKDIR /usr/src/app
 COPY package.json ./
 COPY bun.lockb ./
 
-RUN bun install --production --frozen-lockfile
+RUN bun install --production --ignore-scripts
 
 COPY . .
 
 COPY --from=development /usr/src/app/dist ./dist
 
-CMD ["bun", "run", "dist/src/main"]
+CMD ["bun", "dist/main.js"]
+
