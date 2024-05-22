@@ -70,7 +70,7 @@ export class HistoryTracksService {
     playedAt,
   }: CreateHistoryTrack): Promise<HistoryTrack> {
     return this.dataSource.transaction(async manager => {
-      const foundHistoryTrack = await manager.findOneBy(HistoryTrack, {
+      const foundHistoryTracks = await manager.findBy(HistoryTrack, {
         user: {
           id: user.id,
         },
@@ -79,8 +79,9 @@ export class HistoryTracksService {
         },
       })
 
-      if (foundHistoryTrack?.playedAt.getTime() === playedAt.getTime())
-        return foundHistoryTrack
+      for (const foundHistoryTrack of foundHistoryTracks)
+        if (foundHistoryTrack.playedAt.getTime() === playedAt.getTime())
+          return foundHistoryTrack
 
       const newHistoryTrack = manager.create(HistoryTrack, {
         user,
