@@ -1,11 +1,9 @@
 import {
   Controller,
   Get,
-  NotFoundException,
-  Param,
-  ParseUUIDPipe,
   Put,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common'
 import {
   ApiBadRequestResponse,
@@ -16,8 +14,10 @@ import {
   ApiTags,
 } from '@nestjs/swagger'
 
-import { UsersRepository } from '../users.repository'
 import { USER } from '../constants'
+import { CheckUserIdGuard } from '../guards'
+import { RequestUser } from '../decorators'
+import { User } from '../user.entity'
 
 import {
   NOT_BEEN_FOUND,
@@ -31,10 +31,10 @@ import { Success } from '@common/dtos'
 
 @Controller('users/:id/playback')
 @ApiTags('users/{id}/playback')
+@UseGuards(CheckUserIdGuard)
 @ApiAuth()
 export class UsersPlaybackController {
   constructor(
-    private readonly usersRepository: UsersRepository,
     private readonly spotifyAuthService: SpotifyAuthService,
     private readonly spotifyPlayerService: SpotifyPlayerService
   ) {}
@@ -54,15 +54,11 @@ export class UsersPlaybackController {
     description: ONE_IS_INVALID('uuid'),
   })
   async getPlaybackState(
-    @Param('id', ParseUUIDPipe) id: string,
+    @RequestUser() { refreshToken }: User,
     @Token() _token?: string
   ) {
-    const foundUser = await this.usersRepository.findOneBy({ id })
-
-    if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
-
     const token = await this.spotifyAuthService.token({
-      refreshToken: foundUser.refreshToken,
+      refreshToken,
     })
 
     return this.spotifyPlayerService.getPlaybackState(token)
@@ -83,22 +79,18 @@ export class UsersPlaybackController {
     description: ONE_IS_INVALID('uuid'),
   })
   async pausePlayback(
-    @Param('id', ParseUUIDPipe) id: string,
+    @RequestUser() { refreshToken, profile }: User,
     @Token() accessToken: string
   ): Promise<Success> {
-    const foundUser = await this.usersRepository.findOneBy({ id })
-
-    if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
-
     const meProfile = await this.spotifyAuthService.getMeProfile(accessToken)
 
-    if (foundUser.profile.id !== meProfile.id)
+    if (profile.id !== meProfile.id)
       throw new UnauthorizedException(
         'You are not authorized to resume playback.'
       )
 
     const token = await this.spotifyAuthService.token({
-      refreshToken: foundUser.refreshToken,
+      refreshToken,
     })
 
     return {
@@ -121,20 +113,16 @@ export class UsersPlaybackController {
     description: ONE_IS_INVALID('uuid'),
   })
   async resumePlayback(
-    @Param('id', ParseUUIDPipe) id: string,
+    @RequestUser() { refreshToken, profile }: User,
     @Token() accessToken: string
   ): Promise<Success> {
-    const foundUser = await this.usersRepository.findOneBy({ id })
-
-    if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
-
     const meProfile = await this.spotifyAuthService.getMeProfile(accessToken)
 
-    if (foundUser.profile.id !== meProfile.id)
+    if (profile.id !== meProfile.id)
       throw new UnauthorizedException('You are not allowed to resume playback.')
 
     const token = await this.spotifyAuthService.token({
-      refreshToken: foundUser.refreshToken,
+      refreshToken,
     })
 
     return {

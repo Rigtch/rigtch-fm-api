@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Get,
-  NotFoundException,
-  Param,
-  ParseUUIDPipe,
-  Query,
-} from '@nestjs/common'
+import { Controller, Get, Query, UseGuards } from '@nestjs/common'
 import {
   ApiBadRequestResponse,
   ApiNotFoundResponse,
@@ -17,7 +10,9 @@ import {
 import { Pagination, paginate } from 'nestjs-typeorm-paginate'
 
 import { UsersRepository } from '../users.repository'
-import { USER } from '../constants'
+import { RequestUser } from '../decorators'
+import { User } from '../user.entity'
+import { CheckUserIdGuard } from '../guards'
 
 import { ApiPaginatedQuery } from '@common/decorators'
 import {
@@ -37,6 +32,7 @@ import { HistoryService } from '@modules/history'
 
 @Controller('users/:id/history')
 @ApiTags('users/{id}/history')
+@UseGuards(CheckUserIdGuard)
 @ApiAuth()
 export class UsersHistoryController {
   constructor(
@@ -62,15 +58,11 @@ export class UsersHistoryController {
   @ApiParam({ name: 'id' })
   @ApiPaginatedQuery()
   async getHistory(
-    @Param('id', ParseUUIDPipe) id: string,
+    @RequestUser() user: User,
     @Token() _token: string,
     @Query() { limit = 10, page = 1 }: PaginatedQuery
   ) {
-    const foundUser = await this.usersRepository.findOneBy({ id })
-
-    if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
-
-    await this.historyService.synchronize(foundUser)
+    await this.historyService.synchronize(user)
 
     return paginate(
       this.historyTracksRepository,
@@ -78,7 +70,7 @@ export class UsersHistoryController {
       {
         where: {
           user: {
-            id,
+            id: user.id,
           },
         },
         relations: {
