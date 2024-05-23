@@ -6,7 +6,7 @@ import {
 import { Request } from 'express'
 
 export function getToken(data: unknown, context: ExecutionContext) {
-  const { headers }: Request = context.switchToHttp().getRequest()
+  const { headers } = context.switchToHttp().getRequest<Request>()
 
   const token = headers.authorization?.slice(7)
 
