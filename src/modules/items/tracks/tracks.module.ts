@@ -5,6 +5,7 @@ import { Track } from './track.entity'
 import { TracksRepository } from './tracks.repository'
 import { TracksController } from './tracks.controller'
 import { TracksService } from './tracks.service'
+import { TrackSubscriber } from './track.subscriber'
 
 import { SpotifyModule } from '@modules/spotify'
 import { AlbumsModule } from '@modules/items/albums'
@@ -18,7 +19,7 @@ import { ArtistsModule } from '@modules/items/artists'
     forwardRef(() => ArtistsModule),
   ],
   controllers: [TracksController],
-  providers: [TracksRepository, TracksService],
+  providers: [TracksRepository, TracksService, TrackSubscriber],
   exports: [TracksRepository, TracksService],
 })
 export class TracksModule {}
