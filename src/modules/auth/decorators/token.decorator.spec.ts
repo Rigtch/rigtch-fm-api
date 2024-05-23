@@ -1,7 +1,8 @@
-import { ExecutionContext, UnauthorizedException } from '@nestjs/common'
-import { mock } from 'vitest-mock-extended'
+import { UnauthorizedException } from '@nestjs/common'
 
 import { Token, getToken } from './token.decorator'
+
+import { contextFactoryMock } from '@common/mocks'
 
 describe('TokenDecorator', () => {
   test('should be defined', () => {
@@ -13,33 +14,27 @@ describe('TokenDecorator', () => {
     test('should return the access token from header', () => {
       const accessToken = 'access-token'
 
-      const contextMock = mock<ExecutionContext>({
-        switchToHttp: vi.fn().mockReturnValue({
-          getRequest: vi.fn().mockReturnValue({
+      expect(
+        getToken(
+          {},
+          contextFactoryMock({
             headers: {
               authorization: `Bearer ${accessToken}`,
             },
-          }),
-        }),
-        getType: vi.fn().mockReturnValue('http'),
-      })
-
-      expect(getToken({}, contextMock)).toEqual(accessToken)
+          })
+        )
+      ).toEqual(accessToken)
     })
 
     test('should throw unauthorized exception if no access token is provided', () => {
-      const contextMock = mock<ExecutionContext>({
-        switchToHttp: vi.fn().mockReturnValue({
-          getRequest: vi.fn().mockReturnValue({
+      expect(() =>
+        getToken(
+          {},
+          contextFactoryMock({
             headers: {},
-          }),
-        }),
-        getType: vi.fn().mockReturnValue('http'),
-      })
-
-      expect(() => getToken({}, contextMock)).toThrowError(
-        UnauthorizedException
-      )
+          })
+        )
+      ).toThrowError(UnauthorizedException)
     })
   })
 })
