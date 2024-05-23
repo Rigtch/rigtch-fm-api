@@ -1,15 +1,63 @@
-import { Injectable } from '@nestjs/common'
+import {
+  Inject,
+  Injectable,
+  Logger,
+  OnModuleInit,
+  forwardRef,
+} from '@nestjs/common'
 import { DataSource, In } from 'typeorm'
+import { ConfigService } from '@nestjs/config'
 
 import { Track } from './track.entity'
 import { SdkCreateTrack } from './dtos'
+import { TracksRepository } from './tracks.repository'
 
-import { Album } from '@modules/items/albums'
+import { Album, AlbumsService } from '@modules/items/albums'
 import { Artist } from '@modules/items/artists'
+import { SpotifyAlbumsService } from '@modules/spotify/albums'
+import { SpotifyTracksService } from '@modules/spotify/tracks'
+import { Environment } from '@config/environment'
 
+const { CHECK_TRACKS_ALBUM_EXISTENCE } = Environment
 @Injectable()
-export class TracksService {
-  constructor(private readonly dataSource: DataSource) {}
+export class TracksService implements OnModuleInit {
+  private readonly logger = new Logger(TracksService.name)
+
+  constructor(
+    private readonly dataSource: DataSource,
+    private readonly configService: ConfigService,
+    private readonly spotifyAlbumsService: SpotifyAlbumsService,
+    private readonly spotifyTracksService: SpotifyTracksService,
+    private readonly tracksRepository: TracksRepository,
+    @Inject(forwardRef(() => AlbumsService))
+    private readonly albumsService: AlbumsService
+  ) {}
+
+  async onModuleInit() {
+    if (!this.configService.get<boolean>(CHECK_TRACKS_ALBUM_EXISTENCE)) return
+
+    const tracks = await this.tracksRepository.findTracks()
+
+    for (const track of tracks) {
+      if (!track.album) {
+        this.logger.log(`Updating track ${track.name} with album`)
+
+        const sdkTrack = await this.spotifyTracksService.getTrack(
+          track.externalId,
+          false
+        )
+        const sdkAlbum = await this.spotifyAlbumsService.getAlbum(
+          sdkTrack.album.id,
+          false
+        )
+        const album = await this.albumsService.updateOrCreate(sdkAlbum)
+
+        track.album = album
+
+        await this.tracksRepository.save(track)
+      }
+    }
+  }
 
   public updateOrCreate(data: SdkCreateTrack): Promise<Track>
   public updateOrCreate(data: SdkCreateTrack[]): Promise<Track[]>
