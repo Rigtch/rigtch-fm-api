@@ -14,9 +14,8 @@ import { TracksRepository } from './tracks.repository'
 
 import { Album, AlbumsService } from '@modules/items/albums'
 import { Artist } from '@modules/items/artists'
-import { SpotifyAlbumsService } from '@modules/spotify/albums'
-import { SpotifyTracksService } from '@modules/spotify/tracks'
 import { Environment } from '@config/environment'
+import { SpotifyService } from '@modules/spotify'
 
 const { CHECK_TRACKS_ALBUM_EXISTENCE } = Environment
 @Injectable()
@@ -26,8 +25,7 @@ export class TracksService implements OnModuleInit {
   constructor(
     private readonly dataSource: DataSource,
     private readonly configService: ConfigService,
-    private readonly spotifyAlbumsService: SpotifyAlbumsService,
-    private readonly spotifyTracksService: SpotifyTracksService,
+    private readonly spotifyService: SpotifyService,
     private readonly tracksRepository: TracksRepository,
     @Inject(forwardRef(() => AlbumsService))
     private readonly albumsService: AlbumsService
@@ -42,11 +40,11 @@ export class TracksService implements OnModuleInit {
       if (!track.album) {
         this.logger.log(`Updating track ${track.name} with album`)
 
-        const sdkTrack = await this.spotifyTracksService.getTrack(
+        const sdkTrack = await this.spotifyService.tracks.get(
           track.externalId,
           false
         )
-        const sdkAlbum = await this.spotifyAlbumsService.getAlbum(
+        const sdkAlbum = await this.spotifyService.albums.get(
           sdkTrack.album.id,
           false
         )
