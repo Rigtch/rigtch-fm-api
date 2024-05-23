@@ -3,10 +3,8 @@ import {
   Get,
   HttpException,
   HttpStatus,
-  NotFoundException,
-  Param,
-  ParseUUIDPipe,
   Query,
+  UseGuards,
 } from '@nestjs/common'
 import {
   ApiBadRequestResponse,
@@ -22,6 +20,8 @@ import {
 import { UsersRepository } from '../users.repository'
 import { User } from '../user.entity'
 import { USERS, USER } from '../constants'
+import { CheckUserIdGuard } from '../guards'
+import { RequestUser } from '../decorators'
 
 import {
   MANY_SUCCESSFULLY_FOUND,
@@ -67,6 +67,7 @@ export class UsersController {
   }
 
   @Get(':id')
+  @UseGuards(CheckUserIdGuard)
   @ApiOperation({
     summary: 'Getting one user by id.',
   })
@@ -81,14 +82,7 @@ export class UsersController {
   @ApiBadRequestResponse({
     description: ONE_IS_INVALID('uuid'),
   })
-  async getOneById(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Token() _token?: string
-  ) {
-    const foundUser = await this.usersRepository.findUserById(id)
-
-    if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
-
-    return foundUser
+  getOneById(@RequestUser() user: User, @Token() _token?: string) {
+    return user
   }
 }

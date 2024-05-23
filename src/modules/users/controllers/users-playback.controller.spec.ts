@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { NotFoundException, UnauthorizedException } from '@nestjs/common'
+import { UnauthorizedException } from '@nestjs/common'
 import { mock } from 'vitest-mock-extended'
 
 import { UsersRepository } from '../users.repository'
@@ -17,14 +17,12 @@ import {
 import { Profile } from '@common/types/spotify'
 
 describe('UsersPlaybackController', () => {
-  const id = '1'
   const fakeProfileMock = mock<Profile>({
     id: '2',
   })
 
   let moduleRef: TestingModule
   let usersPlaybackController: UsersPlaybackController
-  let usersRepository: UsersRepository
   let spotifyAuthService: SpotifyAuthService
   let spotifyPlayerService: SpotifyPlayerService
 
@@ -33,16 +31,16 @@ describe('UsersPlaybackController', () => {
       controllers: [UsersPlaybackController],
       providers: [
         {
-          provide: UsersRepository,
-          useValue: {
-            findOneBy: vi.fn(),
-          },
-        },
-        {
           provide: SpotifyAuthService,
           useValue: {
             token: vi.fn(),
             getMeProfile: vi.fn(),
+          },
+        },
+        {
+          provide: UsersRepository,
+          useValue: {
+            findOneBy: vi.fn(),
           },
         },
         {
@@ -57,7 +55,6 @@ describe('UsersPlaybackController', () => {
     }).compile()
 
     usersPlaybackController = moduleRef.get(UsersPlaybackController)
-    usersRepository = moduleRef.get(UsersRepository)
     spotifyAuthService = moduleRef.get(SpotifyAuthService)
     spotifyPlayerService = moduleRef.get(SpotifyPlayerService)
   })
@@ -68,9 +65,6 @@ describe('UsersPlaybackController', () => {
 
   describe('getPlaybackState', () => {
     test('should get user playback state', async () => {
-      const findOneBySpy = vi
-        .spyOn(usersRepository, 'findOneBy')
-        .mockResolvedValue(userMock)
       const tokenSpy = vi
         .spyOn(spotifyAuthService, 'token')
         .mockResolvedValue(accessTokenMock)
@@ -78,32 +72,19 @@ describe('UsersPlaybackController', () => {
         .spyOn(spotifyPlayerService, 'getPlaybackState')
         .mockResolvedValue(playbackStateMock)
 
-      expect(await usersPlaybackController.getPlaybackState(id)).toEqual(
+      expect(await usersPlaybackController.getPlaybackState(userMock)).toEqual(
         playbackStateMock
       )
+
       expect(currentPlaybackStateSpy).toHaveBeenCalledWith(accessTokenMock)
-      expect(findOneBySpy).toHaveBeenCalledWith({ id })
       expect(tokenSpy).toHaveBeenCalledWith({
         refreshToken: userMock.refreshToken,
       })
-    })
-
-    test('should throw an error if no user is found', async () => {
-      const findOneBySpy = vi.spyOn(usersRepository, 'findOneBy')
-
-      await expect(
-        usersPlaybackController.getPlaybackState(id)
-      ).rejects.toThrowError(NotFoundException)
-
-      expect(findOneBySpy).toHaveBeenCalledWith({ id })
     })
   })
 
   describe('pausePlayback', () => {
     test('should pause user playback', async () => {
-      const findOneBySpy = vi
-        .spyOn(usersRepository, 'findOneBy')
-        .mockResolvedValue(userMock)
       const tokenSpy = vi
         .spyOn(spotifyAuthService, 'token')
         .mockResolvedValue(accessTokenMock)
@@ -115,30 +96,17 @@ describe('UsersPlaybackController', () => {
         .mockResolvedValue(true)
 
       expect(
-        await usersPlaybackController.pausePlayback(id, accessToken)
+        await usersPlaybackController.pausePlayback(userMock, accessToken)
       ).toEqual({ success: true })
+
       expect(pausePlaybackSpy).toHaveBeenCalledWith(accessTokenMock)
-      expect(findOneBySpy).toHaveBeenCalledWith({ id })
       expect(tokenSpy).toHaveBeenCalledWith({
         refreshToken: userMock.refreshToken,
       })
       expect(getMeProfileSpy).toHaveBeenCalledWith(accessToken)
     })
 
-    test('should throw an error if no user is found', async () => {
-      const findOneBySpy = vi.spyOn(usersRepository, 'findOneBy')
-
-      await expect(
-        usersPlaybackController.pausePlayback(id, accessToken)
-      ).rejects.toThrowError(NotFoundException)
-
-      expect(findOneBySpy).toHaveBeenCalledWith({ id })
-    })
-
     test('should throw an error if user is not authorized', async () => {
-      const findOneBySpy = vi
-        .spyOn(usersRepository, 'findOneBy')
-        .mockResolvedValue(userMock)
       const tokenSpy = vi
         .spyOn(spotifyAuthService, 'token')
         .mockResolvedValue(accessTokenMock)
@@ -147,10 +115,9 @@ describe('UsersPlaybackController', () => {
         .mockResolvedValue(fakeProfileMock)
 
       await expect(
-        usersPlaybackController.pausePlayback(id, accessToken)
+        usersPlaybackController.pausePlayback(userMock, accessToken)
       ).rejects.toThrowError(UnauthorizedException)
 
-      expect(findOneBySpy).toHaveBeenCalledWith({ id })
       expect(tokenSpy).not.toHaveBeenCalled()
       expect(getMeProfileSpy).toHaveBeenCalledWith(accessToken)
     })
@@ -158,9 +125,6 @@ describe('UsersPlaybackController', () => {
 
   describe('resumePlayback', () => {
     test('should resume user playback', async () => {
-      const findOneBySpy = vi
-        .spyOn(usersRepository, 'findOneBy')
-        .mockResolvedValue(userMock)
       const tokenSpy = vi
         .spyOn(spotifyAuthService, 'token')
         .mockResolvedValue(accessTokenMock)
@@ -172,30 +136,17 @@ describe('UsersPlaybackController', () => {
         .mockResolvedValue(true)
 
       expect(
-        await usersPlaybackController.resumePlayback(id, accessToken)
+        await usersPlaybackController.resumePlayback(userMock, accessToken)
       ).toEqual({ success: true })
+
       expect(resumePlaybackSpy).toHaveBeenCalledWith(accessTokenMock)
-      expect(findOneBySpy).toHaveBeenCalledWith({ id })
       expect(tokenSpy).toHaveBeenCalledWith({
         refreshToken: userMock.refreshToken,
       })
       expect(getMeProfileSpy).toHaveBeenCalledWith(accessToken)
     })
 
-    test('should throw an error if no user is found', async () => {
-      const findOneBySpy = vi.spyOn(usersRepository, 'findOneBy')
-
-      await expect(
-        usersPlaybackController.resumePlayback(id, accessToken)
-      ).rejects.toThrowError(NotFoundException)
-
-      expect(findOneBySpy).toHaveBeenCalledWith({ id })
-    })
-
     test('should throw an error if user is not authorized', async () => {
-      const findOneBySpy = vi
-        .spyOn(usersRepository, 'findOneBy')
-        .mockResolvedValue(userMock)
       const tokenSpy = vi
         .spyOn(spotifyAuthService, 'token')
         .mockResolvedValue(accessTokenMock)
@@ -204,10 +155,9 @@ describe('UsersPlaybackController', () => {
         .mockResolvedValue(fakeProfileMock)
 
       await expect(
-        usersPlaybackController.resumePlayback(id, accessToken)
+        usersPlaybackController.resumePlayback(userMock, accessToken)
       ).rejects.toThrowError(UnauthorizedException)
 
-      expect(findOneBySpy).toHaveBeenCalledWith({ id })
       expect(tokenSpy).not.toHaveBeenCalled()
       expect(getMeProfileSpy).toHaveBeenCalledWith(accessToken)
     })

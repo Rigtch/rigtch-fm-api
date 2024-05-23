@@ -23,7 +23,6 @@ import { SpotifyPlayerService } from '@modules/spotify/player'
 import { Profile } from '@common/types/spotify'
 
 describe('UsersProfileController', () => {
-  const id = '1'
   const limit = 10
   const before = 12_873
   const after = 945_384
@@ -32,7 +31,6 @@ describe('UsersProfileController', () => {
 
   let moduleRef: TestingModule
   let usersProfileController: UsersProfileController
-  let usersRepository: UsersRepository
   let spotifyAuthService: SpotifyAuthService
   let spotifyUsersService: SpotifyUsersService
   let spotifyPlayerService: SpotifyPlayerService
@@ -75,7 +73,6 @@ describe('UsersProfileController', () => {
     }).compile()
 
     usersProfileController = moduleRef.get(UsersProfileController)
-    usersRepository = moduleRef.get(UsersRepository)
     spotifyAuthService = moduleRef.get(SpotifyAuthService)
     spotifyUsersService = moduleRef.get(SpotifyUsersService)
     spotifyPlayerService = moduleRef.get(SpotifyPlayerService)
@@ -93,9 +90,6 @@ describe('UsersProfileController', () => {
     const profileMock = mock<Profile>()
 
     test("should get user's profile", async () => {
-      const findOneBySpy = vi
-        .spyOn(usersRepository, 'findOneBy')
-        .mockResolvedValue(userMock)
       const tokenSpy = vi
         .spyOn(spotifyAuthService, 'token')
         .mockResolvedValue(accessTokenMock)
@@ -103,70 +97,17 @@ describe('UsersProfileController', () => {
         .spyOn(spotifyUsersService, 'profile')
         .mockResolvedValue(profileMock)
 
-      expect(await usersProfileController.getProfile(id, accessToken)).toEqual(
-        profileMock
-      )
-      expect(findOneBySpy).toHaveBeenCalledWith({ id })
+      expect(
+        await usersProfileController.getProfile(userMock, accessToken)
+      ).toEqual(profileMock)
+
       expect(tokenSpy).toHaveBeenCalled()
       expect(profileSpy).toHaveBeenCalledWith(accessTokenMock)
-    })
-
-    test('should throw an error if no user is found', async () => {
-      const findOneBySpy = vi.spyOn(usersRepository, 'findOneBy')
-
-      await expect(
-        usersProfileController.getProfile(id, accessToken)
-      ).rejects.toThrowError()
-
-      expect(findOneBySpy).toHaveBeenCalledWith({ id })
     })
   })
 
   describe('getRecentlyPlayedTracks', () => {
     test("should get user's recently played tracks", async () => {
-      const findOneBySpy = vi
-        .spyOn(usersRepository, 'findOneBy')
-        .mockResolvedValue(userMock)
-      const tokenSpy = vi
-        .spyOn(spotifyAuthService, 'token')
-        .mockResolvedValue(accessTokenMock)
-      const getRecentlyPlayedTracksSpy = vi
-        .spyOn(spotifyPlayerService, 'getRecentlyPlayedTracks')
-        .mockResolvedValue(recentlyPlayedTracksPageMockFactory(tracksMock))
-
-      expect(await usersProfileController.getRecentlyPlayed(id, {})).toEqual(
-        recentlyPlayedTracksPageMockFactory(tracksMock)
-      )
-      expect(findOneBySpy).toHaveBeenCalledWith({ id })
-      expect(tokenSpy).toHaveBeenCalled()
-      expect(getRecentlyPlayedTracksSpy).toHaveBeenCalledWith(
-        accessTokenMock,
-        10,
-        {}
-      )
-    })
-
-    test('should throw an error if no user is found', async () => {
-      const findOneBySpy = vi.spyOn(usersRepository, 'findOneBy')
-      const tokenSpy = vi.spyOn(spotifyAuthService, 'token')
-      const getRecentlyPlayedTracksSpy = vi.spyOn(
-        spotifyPlayerService,
-        'getRecentlyPlayedTracks'
-      )
-
-      await expect(
-        usersProfileController.getRecentlyPlayed(id, {})
-      ).rejects.toThrowError()
-
-      expect(findOneBySpy).toHaveBeenCalledWith({ id })
-      expect(tokenSpy).not.toHaveBeenCalled()
-      expect(getRecentlyPlayedTracksSpy).not.toHaveBeenCalled()
-    })
-
-    test("should get user's recently played tracks with query params", async () => {
-      const findOneBySpy = vi
-        .spyOn(usersRepository, 'findOneBy')
-        .mockResolvedValue(userMock)
       const tokenSpy = vi
         .spyOn(spotifyAuthService, 'token')
         .mockResolvedValue(accessTokenMock)
@@ -175,13 +116,33 @@ describe('UsersProfileController', () => {
         .mockResolvedValue(recentlyPlayedTracksPageMockFactory(tracksMock))
 
       expect(
-        await usersProfileController.getRecentlyPlayed(id, {
+        await usersProfileController.getRecentlyPlayed(userMock, {})
+      ).toEqual(recentlyPlayedTracksPageMockFactory(tracksMock))
+
+      expect(tokenSpy).toHaveBeenCalled()
+      expect(getRecentlyPlayedTracksSpy).toHaveBeenCalledWith(
+        accessTokenMock,
+        10,
+        {}
+      )
+    })
+
+    test("should get user's recently played tracks with query params", async () => {
+      const tokenSpy = vi
+        .spyOn(spotifyAuthService, 'token')
+        .mockResolvedValue(accessTokenMock)
+      const getRecentlyPlayedTracksSpy = vi
+        .spyOn(spotifyPlayerService, 'getRecentlyPlayedTracks')
+        .mockResolvedValue(recentlyPlayedTracksPageMockFactory(tracksMock))
+
+      expect(
+        await usersProfileController.getRecentlyPlayed(userMock, {
           limit,
           before,
           after,
         })
       ).toEqual(recentlyPlayedTracksPageMockFactory(tracksMock))
-      expect(findOneBySpy).toHaveBeenCalledWith({ id })
+
       expect(tokenSpy).toHaveBeenCalled()
       expect(getRecentlyPlayedTracksSpy).toHaveBeenCalledWith(
         accessTokenMock,
@@ -193,9 +154,6 @@ describe('UsersProfileController', () => {
 
   describe('getTopArtists', () => {
     test('should get user top artists', async () => {
-      const findOneBySpy = vi
-        .spyOn(usersRepository, 'findOneBy')
-        .mockResolvedValue(userMock)
       const tokenSpy = vi
         .spyOn(spotifyAuthService, 'token')
         .mockResolvedValue(accessTokenMock)
@@ -203,10 +161,10 @@ describe('UsersProfileController', () => {
         .spyOn(spotifyUsersService, 'getTopArtists')
         .mockResolvedValue(pageMockFactory(artistsMock))
 
-      expect(await usersProfileController.getTopArtists(id, {})).toEqual(
+      expect(await usersProfileController.getTopArtists(userMock, {})).toEqual(
         pageMockFactory(artistsMock)
       )
-      expect(findOneBySpy).toHaveBeenCalledWith({ id })
+
       expect(tokenSpy).toHaveBeenCalled()
       expect(getTopArtistsSpy).toHaveBeenCalledWith(
         accessTokenMock,
@@ -216,24 +174,7 @@ describe('UsersProfileController', () => {
       )
     })
 
-    test('should throw an error if no user is found', async () => {
-      const findOneBySpy = vi.spyOn(usersRepository, 'findOneBy')
-      const tokenSpy = vi.spyOn(spotifyAuthService, 'token')
-      const getTopArtistsSpy = vi.spyOn(spotifyUsersService, 'getTopArtists')
-
-      await expect(
-        usersProfileController.getTopArtists(id, {})
-      ).rejects.toThrowError()
-
-      expect(findOneBySpy).toHaveBeenCalledWith({ id })
-      expect(tokenSpy).not.toHaveBeenCalled()
-      expect(getTopArtistsSpy).not.toHaveBeenCalled()
-    })
-
     test('should get user top artists with query', async () => {
-      const findOneBySpy = vi
-        .spyOn(usersRepository, 'findOneBy')
-        .mockResolvedValue(userMock)
       const tokenSpy = vi
         .spyOn(spotifyAuthService, 'token')
         .mockResolvedValue(accessTokenMock)
@@ -242,13 +183,13 @@ describe('UsersProfileController', () => {
         .mockResolvedValue(pageMockFactory(artistsMock))
 
       expect(
-        await usersProfileController.getTopArtists(id, {
+        await usersProfileController.getTopArtists(userMock, {
           limit,
           timeRange,
           offset,
         })
       ).toEqual(pageMockFactory(artistsMock))
-      expect(findOneBySpy).toHaveBeenCalledWith({ id })
+
       expect(tokenSpy).toHaveBeenCalled()
       expect(getTopArtistsSpy).toHaveBeenCalledWith(
         accessTokenMock,
@@ -261,9 +202,6 @@ describe('UsersProfileController', () => {
 
   describe('getTopTracks', () => {
     test('should get user top tracks', async () => {
-      const findOneBySpy = vi
-        .spyOn(usersRepository, 'findOneBy')
-        .mockResolvedValue(userMock)
       const tokenSpy = vi
         .spyOn(spotifyAuthService, 'token')
         .mockResolvedValue(accessTokenMock)
@@ -271,10 +209,10 @@ describe('UsersProfileController', () => {
         .spyOn(spotifyUsersService, 'getTopTracks')
         .mockResolvedValue(pageMockFactory(tracksMock))
 
-      expect(await usersProfileController.getTopTracks(id, {})).toEqual(
+      expect(await usersProfileController.getTopTracks(userMock, {})).toEqual(
         pageMockFactory(tracksMock)
       )
-      expect(findOneBySpy).toHaveBeenCalledWith({ id })
+
       expect(tokenSpy).toHaveBeenCalled()
       expect(getTopTracksSpy).toHaveBeenCalledWith(
         accessTokenMock,
@@ -284,24 +222,7 @@ describe('UsersProfileController', () => {
       )
     })
 
-    test('should throw an error if no user is found', async () => {
-      const findOneBySpy = vi.spyOn(usersRepository, 'findOneBy')
-      const tokenSpy = vi.spyOn(spotifyAuthService, 'token')
-      const getTopTracksSpy = vi.spyOn(spotifyUsersService, 'getTopTracks')
-
-      await expect(
-        usersProfileController.getTopTracks(id, {})
-      ).rejects.toThrowError()
-
-      expect(findOneBySpy).toHaveBeenCalledWith({ id })
-      expect(tokenSpy).not.toHaveBeenCalled()
-      expect(getTopTracksSpy).not.toHaveBeenCalled()
-    })
-
     test('should get user top tracks with query', async () => {
-      const findOneBySpy = vi
-        .spyOn(usersRepository, 'findOneBy')
-        .mockResolvedValue(userMock)
       const tokenSpy = vi
         .spyOn(spotifyAuthService, 'token')
         .mockResolvedValue(accessTokenMock)
@@ -310,13 +231,13 @@ describe('UsersProfileController', () => {
         .mockResolvedValue(pageMockFactory(tracksMock))
 
       expect(
-        await usersProfileController.getTopTracks(id, {
+        await usersProfileController.getTopTracks(userMock, {
           limit,
           timeRange,
           offset,
         })
       ).toEqual(pageMockFactory(tracksMock))
-      expect(findOneBySpy).toHaveBeenCalledWith({ id })
+
       expect(tokenSpy).toHaveBeenCalled()
       expect(getTopTracksSpy).toHaveBeenCalledWith(
         accessTokenMock,
@@ -329,9 +250,6 @@ describe('UsersProfileController', () => {
 
   describe('getTopGenres', () => {
     test('should get user top genres', async () => {
-      const findOneBySpy = vi
-        .spyOn(usersRepository, 'findOneBy')
-        .mockResolvedValue(userMock)
       const tokenSpy = vi
         .spyOn(spotifyAuthService, 'token')
         .mockResolvedValue(accessTokenMock)
@@ -339,10 +257,10 @@ describe('UsersProfileController', () => {
         .spyOn(spotifyUsersService, 'getTopGenres')
         .mockResolvedValue(topGenresMock)
 
-      expect(await usersProfileController.getTopGenres(id, {})).toEqual(
+      expect(await usersProfileController.getTopGenres(userMock, {})).toEqual(
         topGenresMock
       )
-      expect(findOneBySpy).toHaveBeenCalledWith({ id })
+
       expect(tokenSpy).toHaveBeenCalled()
       expect(getTopGenresSpy).toHaveBeenCalledWith(
         accessTokenMock,
@@ -352,24 +270,7 @@ describe('UsersProfileController', () => {
       )
     })
 
-    test('should throw an error if no user is found', async () => {
-      const findOneBySpy = vi.spyOn(usersRepository, 'findOneBy')
-      const tokenSpy = vi.spyOn(spotifyAuthService, 'token')
-      const getTopGenresSpy = vi.spyOn(spotifyUsersService, 'getTopGenres')
-
-      await expect(
-        usersProfileController.getTopGenres(id, {})
-      ).rejects.toThrowError()
-
-      expect(findOneBySpy).toHaveBeenCalledWith({ id })
-      expect(tokenSpy).not.toHaveBeenCalled()
-      expect(getTopGenresSpy).not.toHaveBeenCalled()
-    })
-
     test('should get user top genres with query', async () => {
-      const findOneBySpy = vi
-        .spyOn(usersRepository, 'findOneBy')
-        .mockResolvedValue(userMock)
       const tokenSpy = vi
         .spyOn(spotifyAuthService, 'token')
         .mockResolvedValue(accessTokenMock)
@@ -378,13 +279,13 @@ describe('UsersProfileController', () => {
         .mockResolvedValue(topGenresMock)
 
       expect(
-        await usersProfileController.getTopGenres(id, {
+        await usersProfileController.getTopGenres(userMock, {
           limit,
           timeRange,
           offset,
         })
       ).toEqual(topGenresMock)
-      expect(findOneBySpy).toHaveBeenCalledWith({ id })
+
       expect(tokenSpy).toHaveBeenCalled()
       expect(getTopGenresSpy).toHaveBeenCalledWith(
         accessTokenMock,
@@ -397,9 +298,6 @@ describe('UsersProfileController', () => {
 
   describe('getAnalysis', () => {
     test('should get user analysis', async () => {
-      const findOneBySpy = vi
-        .spyOn(usersRepository, 'findOneBy')
-        .mockResolvedValue(userMock)
       const tokenSpy = vi
         .spyOn(spotifyAuthService, 'token')
         .mockResolvedValue(accessTokenMock)
@@ -407,22 +305,14 @@ describe('UsersProfileController', () => {
         .spyOn(spotifyUsersService, 'getAnalysis')
         .mockResolvedValue(analysisMock)
 
-      expect(await usersProfileController.getAnalysis(id)).toEqual(analysisMock)
+      expect(await usersProfileController.getAnalysis(userMock)).toEqual(
+        analysisMock
+      )
+
       expect(tokenSpy).toHaveBeenCalledWith({
         refreshToken: userMock.refreshToken,
       })
       expect(getAnalysisSpy).toHaveBeenCalledWith(accessTokenMock)
-      expect(findOneBySpy).toHaveBeenCalledWith({ id })
-    })
-
-    test('should throw an error if no user is found', async () => {
-      const findOneBySpy = vi.spyOn(usersRepository, 'findOneBy')
-
-      await expect(
-        usersProfileController.getAnalysis(id)
-      ).rejects.toThrowError()
-
-      expect(findOneBySpy).toHaveBeenCalledWith({ id })
     })
   })
 })

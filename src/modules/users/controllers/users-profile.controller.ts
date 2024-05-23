@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Get,
-  NotFoundException,
-  Param,
-  ParseUUIDPipe,
-  Query,
-} from '@nestjs/common'
+import { Controller, Get, Query, UseGuards } from '@nestjs/common'
 import {
   ApiOperation,
   ApiParam,
@@ -15,10 +8,11 @@ import {
   ApiTags,
 } from '@nestjs/swagger'
 
-import { UsersRepository } from '../users.repository'
 import { USER } from '../constants'
-import { ApiItemQuery } from '../decorators'
+import { ApiItemQuery, RequestUser } from '../decorators'
 import { LastItemQuery, TopItemQuery } from '../dtos'
+import { CheckUserIdGuard } from '../guards'
+import { User } from '../user.entity'
 
 import {
   ONE_SUCCESSFULLY_FOUND,
@@ -32,10 +26,10 @@ import { SpotifyPlayerService } from '@modules/spotify/player'
 
 @Controller('users/:id/profile')
 @ApiTags('users/{id}/profile')
+@UseGuards(CheckUserIdGuard)
 @ApiAuth()
 export class UsersProfileController {
   constructor(
-    private readonly usersRepository: UsersRepository,
     private readonly spotifyAuthService: SpotifyAuthService,
     private readonly spotifyUsersService: SpotifyUsersService,
     private readonly spotifyPlayerService: SpotifyPlayerService
@@ -56,15 +50,11 @@ export class UsersProfileController {
     description: ONE_IS_INVALID('uuid'),
   })
   async getProfile(
-    @Param('id', ParseUUIDPipe) id: string,
+    @RequestUser() { refreshToken }: User,
     @Token() _token?: string
   ) {
-    const foundUser = await this.usersRepository.findOneBy({ id })
-
-    if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
-
     const token = await this.spotifyAuthService.token({
-      refreshToken: foundUser.refreshToken,
+      refreshToken,
     })
 
     return this.spotifyUsersService.profile(token)
@@ -86,16 +76,12 @@ export class UsersProfileController {
     description: ONE_IS_INVALID('uuid'),
   })
   async getRecentlyPlayed(
-    @Param('id', ParseUUIDPipe) id: string,
+    @RequestUser() { refreshToken }: User,
     @Query() { limit = 10, before, after }: LastItemQuery,
     @Token() _token?: string
   ) {
-    const foundUser = await this.usersRepository.findOneBy({ id })
-
-    if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
-
     const token = await this.spotifyAuthService.token({
-      refreshToken: foundUser.refreshToken,
+      refreshToken,
     })
 
     return this.spotifyPlayerService.getRecentlyPlayedTracks(token, limit, {
@@ -120,16 +106,12 @@ export class UsersProfileController {
     description: ONE_IS_INVALID('uuid'),
   })
   async getTopArtists(
-    @Param('id', ParseUUIDPipe) id: string,
+    @RequestUser() { refreshToken }: User,
     @Query() { limit, timeRange, offset }: TopItemQuery,
     @Token() _token?: string
   ) {
-    const foundUser = await this.usersRepository.findOneBy({ id })
-
-    if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
-
     const token = await this.spotifyAuthService.token({
-      refreshToken: foundUser.refreshToken,
+      refreshToken,
     })
 
     return this.spotifyUsersService.getTopArtists(
@@ -156,16 +138,12 @@ export class UsersProfileController {
     description: ONE_IS_INVALID('uuid'),
   })
   async getTopTracks(
-    @Param('id', ParseUUIDPipe) id: string,
+    @RequestUser() { refreshToken }: User,
     @Query() { limit, timeRange, offset }: TopItemQuery,
     @Token() _token?: string
   ) {
-    const foundUser = await this.usersRepository.findOneBy({ id })
-
-    if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
-
     const token = await this.spotifyAuthService.token({
-      refreshToken: foundUser.refreshToken,
+      refreshToken,
     })
 
     return this.spotifyUsersService.getTopTracks(
@@ -192,16 +170,12 @@ export class UsersProfileController {
     description: ONE_IS_INVALID('uuid'),
   })
   async getTopGenres(
-    @Param('id', ParseUUIDPipe) id: string,
+    @RequestUser() { refreshToken }: User,
     @Query() { limit, timeRange, offset }: TopItemQuery,
     @Token() _token?: string
   ) {
-    const foundUser = await this.usersRepository.findOneBy({ id })
-
-    if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
-
     const token = await this.spotifyAuthService.token({
-      refreshToken: foundUser.refreshToken,
+      refreshToken,
     })
 
     return this.spotifyUsersService.getTopGenres(
@@ -227,15 +201,11 @@ export class UsersProfileController {
     description: ONE_IS_INVALID('uuid'),
   })
   async getAnalysis(
-    @Param('id', ParseUUIDPipe) id: string,
+    @RequestUser() { refreshToken }: User,
     @Token() _token?: string
   ) {
-    const foundUser = await this.usersRepository.findOneBy({ id })
-
-    if (!foundUser) throw new NotFoundException(NOT_BEEN_FOUND(USER))
-
     const token = await this.spotifyAuthService.token({
-      refreshToken: foundUser.refreshToken,
+      refreshToken,
     })
 
     return this.spotifyUsersService.getAnalysis(token)
