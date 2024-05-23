@@ -19,7 +19,6 @@ export class ItemsService {
     private readonly artistsRepository: ArtistsRepository,
     private readonly tracksRepository: TracksRepository,
     private readonly imagesService: ImagesService,
-
     private readonly spotifyService: SpotifyService
   ) {}
 
