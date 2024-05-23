@@ -9,14 +9,12 @@ import { TrackSubscriber } from './track.subscriber'
 
 import { SpotifyModule } from '@modules/spotify'
 import { AlbumsModule } from '@modules/items/albums'
-import { ArtistsModule } from '@modules/items/artists'
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Track]),
     SpotifyModule,
     forwardRef(() => AlbumsModule),
-    forwardRef(() => ArtistsModule),
   ],
   controllers: [TracksController],
   providers: [TracksRepository, TracksService, TrackSubscriber],

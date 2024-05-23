@@ -6,11 +6,8 @@ import { ArtistsRepository } from './artists.repository'
 import { ArtistsController } from './artists.controller'
 import { ArtistsService } from './artists.service'
 
-import { SpotifyModule } from '@modules/spotify'
-import { ImagesModule } from '@modules/items/images'
-
 @Module({
-  imports: [TypeOrmModule.forFeature([Artist]), SpotifyModule, ImagesModule],
+  imports: [TypeOrmModule.forFeature([Artist])],
   providers: [ArtistsRepository, ArtistsService],
   controllers: [ArtistsController],
   exports: [ArtistsRepository, ArtistsService],
