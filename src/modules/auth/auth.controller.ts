@@ -21,9 +21,9 @@ import { RedirectResponse } from './types'
 import { RefreshToken, SecretData } from './dtos'
 import { AuthService } from './auth.service'
 
-import { SpotifyAuthService } from '@modules/spotify/auth'
 import { Environment } from '@config/environment'
 import { AdaptersService } from '@common/adapters'
+import { SpotifyService } from '@modules/spotify'
 
 const {
   SPOTIFY_CALLBACK_URL,
@@ -38,7 +38,7 @@ export class AuthController {
   constructor(
     private readonly configService: ConfigService,
     private readonly authService: AuthService,
-    private readonly spotifyAuthService: SpotifyAuthService,
+    private readonly spotifyService: SpotifyService,
     private readonly adaptersService: AdaptersService
   ) {}
 
@@ -67,7 +67,7 @@ export class AuthController {
   async callback(
     @Query('code') code: string
   ): Promise<RedirectResponse | undefined> {
-    const token = await this.spotifyAuthService.token({
+    const token = await this.spotifyService.auth.token({
       code,
     })
 
@@ -86,14 +86,14 @@ export class AuthController {
     summary: 'Refreshing access token.',
   })
   @ApiOkResponse({
-    description: 'Access token has been succesfully refreshed',
+    description: 'Access token has been successfully refreshed',
     type: SecretData,
   })
   @ApiBody({
     type: RefreshToken,
   })
   refresh(@Body() { refreshToken }: RefreshToken) {
-    return this.spotifyAuthService
+    return this.spotifyService.auth
       .token({ refreshToken })
       .then(data => this.adaptersService.secretData.adapt(data))
   }

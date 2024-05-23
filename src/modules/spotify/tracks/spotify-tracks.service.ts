@@ -18,24 +18,33 @@ export class SpotifyTracksService {
     private readonly adaptersService: AdaptersService
   ) {}
 
-  public getTrack(id: string, adapt: false): Promise<SdkTrack>
-  public getTrack(id: string, adapt: true): Promise<Track>
+  public get(id: string, adapt: false): Promise<SdkTrack>
+  public get(id: string, adapt: true): Promise<Track>
+  public get(ids: string[], adapt: false): Promise<SdkTrack[]>
+  public get(ids: string[], adapt: true): Promise<Track[]>
 
-  async getTrack(id: string, adapt = true) {
+  async get(idOrIds: string | string[], adapt = false) {
+    if (!Array.isArray(idOrIds)) {
+      const track = await this.getOne(idOrIds)
+
+      return adapt ? this.adaptersService.tracks.adapt(track) : track
+    }
+
+    const tracks = await this.getMany(idOrIds)
+
+    return adapt ? this.adaptersService.tracks.adapt(tracks) : tracks
+  }
+
+  private async getOne(id: string) {
     this.spotifySdk = SpotifyApi.withClientCredentials(
       this.configService.get<string>(Environment.SPOTIFY_CLIENT_ID)!,
       this.configService.get<string>(Environment.SPOTIFY_CLIENT_SECRET)!
     )
 
-    const data = await backOff(() => this.spotifySdk!.tracks.get(id))
-
-    return adapt ? this.adaptersService.tracks.adapt(data) : data
+    return backOff(() => this.spotifySdk!.tracks.get(id))
   }
 
-  public getTracks(ids: string[], adapt: false): Promise<SdkTrack[]>
-  public getTracks(ids: string[], adapt: true): Promise<Track[]>
-
-  async getTracks(ids: string[], adapt = true) {
+  private async getMany(ids: string[]) {
     this.spotifySdk = SpotifyApi.withClientCredentials(
       this.configService.get<string>(Environment.SPOTIFY_CLIENT_ID)!,
       this.configService.get<string>(Environment.SPOTIFY_CLIENT_SECRET)!
@@ -49,14 +58,10 @@ export class SpotifyTracksService {
       }
     else chunks.push(ids)
 
-    const data = await Promise.all(
-      chunks.map(async chunk => {
-        const data = await backOff(() => this.spotifySdk!.tracks.get(chunk))
-
-        return adapt ? this.adaptersService.tracks.adapt(data) : data
-      })
+    const tracks = await Promise.all(
+      chunks.map(chunk => backOff(() => this.spotifySdk!.tracks.get(chunk)))
     )
 
-    return data.flat()
+    return tracks.flat()
   }
 }

@@ -13,16 +13,16 @@ import {
   refreshToken,
   userMock,
 } from '@common/mocks'
-import { SpotifyAuthService } from '@modules/spotify/auth'
 import { AdaptersService } from '@common/adapters'
 import { SecretDataAdapter } from '@common/adapters'
+import { SpotifyService } from '@modules/spotify'
 
 describe('AuthController', () => {
   const redirectUrl = 'http://test.com'
 
   let moduleRef: TestingModule
   let authController: AuthController
-  let spotifyAuthService: SpotifyAuthService
+  let spotifyService: SpotifyService
   let authService: AuthService
 
   beforeEach(async () => {
@@ -36,10 +36,12 @@ describe('AuthController', () => {
           },
         },
         {
-          provide: SpotifyAuthService,
+          provide: SpotifyService,
           useValue: {
-            token: vi.fn(),
-            profile: vi.fn(),
+            auth: {
+              token: vi.fn(),
+              profile: vi.fn(),
+            },
           },
         },
         {
@@ -58,7 +60,7 @@ describe('AuthController', () => {
     }).compile()
 
     authController = moduleRef.get(AuthController)
-    spotifyAuthService = moduleRef.get(SpotifyAuthService)
+    spotifyService = moduleRef.get(SpotifyService)
     authService = moduleRef.get(AuthService)
   })
 
@@ -87,7 +89,7 @@ describe('AuthController', () => {
 
     test('callback should return valid redirect path', async () => {
       const tokenSpy = vi
-        .spyOn(spotifyAuthService, 'token')
+        .spyOn(spotifyService.auth, 'token')
         .mockResolvedValue(accessTokenMock)
       const saveUserSpy = vi
         .spyOn(authService, 'saveUser')
@@ -111,7 +113,7 @@ describe('AuthController', () => {
       expiresIn: accessTokenMock.expires_in,
     }
 
-    vi.spyOn(spotifyAuthService, 'token').mockResolvedValue(accessTokenMock)
+    vi.spyOn(spotifyService.auth, 'token').mockResolvedValue(accessTokenMock)
 
     expect(await authController.refresh({ refreshToken })).toEqual(
       secretDataMock

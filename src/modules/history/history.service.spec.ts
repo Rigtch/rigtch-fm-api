@@ -11,18 +11,16 @@ import {
 } from './tracks'
 
 import { accessTokenMock, trackEntityMock, userMock } from '@common/mocks'
-import { SpotifyAuthService } from '@modules/spotify/auth'
-import { SpotifyPlayerService } from '@modules/spotify/player'
 import { QueryRange } from '@modules/spotify/player/types'
 import { SdkRecentlyPlayedTracksPage } from '@common/types/spotify'
+import { SpotifyService } from '@modules/spotify'
 
 describe('HistoryService', () => {
   let moduleRef: TestingModule
   let historyService: HistoryService
   let historyTracksRepository: HistoryTracksRepository
   let historyTracksService: HistoryTracksService
-  let spotifyAuthService: SpotifyAuthService
-  let spotifyPlayerService: SpotifyPlayerService
+  let spotifyService: SpotifyService
 
   beforeEach(async () => {
     moduleRef = await Test.createTestingModule({
@@ -41,15 +39,12 @@ describe('HistoryService', () => {
           },
         },
         {
-          provide: SpotifyAuthService,
+          provide: SpotifyService,
           useValue: {
-            token: vi.fn(),
-          },
-        },
-        {
-          provide: SpotifyPlayerService,
-          useValue: {
-            getRecentlyPlayedTracks: vi.fn(),
+            auth: { token: vi.fn() },
+            player: {
+              getRecentlyPlayedTracks: vi.fn(),
+            },
           },
         },
       ],
@@ -58,8 +53,7 @@ describe('HistoryService', () => {
     historyService = moduleRef.get(HistoryService)
     historyTracksRepository = moduleRef.get(HistoryTracksRepository)
     historyTracksService = moduleRef.get(HistoryTracksService)
-    spotifyAuthService = moduleRef.get(SpotifyAuthService)
-    spotifyPlayerService = moduleRef.get(SpotifyPlayerService)
+    spotifyService = moduleRef.get(SpotifyService)
   })
 
   afterEach(() => {
@@ -94,9 +88,9 @@ describe('HistoryService', () => {
         'findLastHistoryTrackByUser'
       )
       createSpy = vi.spyOn(historyTracksService, 'create')
-      tokenSpy = vi.spyOn(spotifyAuthService, 'token')
+      tokenSpy = vi.spyOn(spotifyService.auth, 'token')
       getRecentlyPlayedTracksSpy = vi.spyOn(
-        spotifyPlayerService,
+        spotifyService.player,
         'getRecentlyPlayedTracks'
       ) as unknown as MockInstance<
         [

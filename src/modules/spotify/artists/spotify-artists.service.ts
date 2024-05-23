@@ -18,24 +18,33 @@ export class SpotifyArtistsService {
     private readonly adaptersService: AdaptersService
   ) {}
 
-  public getArtist(id: string, adapt: true): Promise<Artist>
-  public getArtist(id: string, adapt: false): Promise<SdkArtist>
+  public get(id: string, adapt: false): Promise<SdkArtist>
+  public get(id: string, adapt: true): Promise<Artist>
+  public get(ids: string[], adapt: false): Promise<SdkArtist[]>
+  public get(ids: string[], adapt: true): Promise<Artist[]>
 
-  async getArtist(id: string, adapt = true) {
+  async get(idOrIds: string | string[], adapt = false) {
+    if (!Array.isArray(idOrIds)) {
+      const artist = await this.getOne(idOrIds)
+
+      return adapt ? this.adaptersService.artists.adapt(artist) : artist
+    }
+
+    const artists = await this.getMany(idOrIds)
+
+    return adapt ? this.adaptersService.artists.adapt(artists) : artists
+  }
+
+  private async getOne(id: string) {
     this.spotifySdk = SpotifyApi.withClientCredentials(
       this.configService.get<string>(Environment.SPOTIFY_CLIENT_ID)!,
       this.configService.get<string>(Environment.SPOTIFY_CLIENT_SECRET)!
     )
 
-    const data = await backOff(() => this.spotifySdk!.artists.get(id))
-
-    return adapt ? this.adaptersService.artists.adapt(data) : data
+    return backOff(() => this.spotifySdk!.artists.get(id))
   }
 
-  public getArtists(ids: string[], adapt: true): Promise<Artist[]>
-  public getArtists(ids: string[], adapt: false): Promise<SdkArtist[]>
-
-  async getArtists(ids: string[], adapt = true) {
+  private async getMany(ids: string[]) {
     this.spotifySdk = SpotifyApi.withClientCredentials(
       this.configService.get<string>(Environment.SPOTIFY_CLIENT_ID)!,
       this.configService.get<string>(Environment.SPOTIFY_CLIENT_SECRET)!
@@ -49,14 +58,10 @@ export class SpotifyArtistsService {
       }
     else chunks.push(ids)
 
-    const data = await Promise.all(
-      chunks.map(async chunk => {
-        const data = await backOff(() => this.spotifySdk!.artists.get(chunk))
-
-        return adapt ? this.adaptersService.artists.adapt(data) : data
-      })
+    const artists = await Promise.all(
+      chunks.map(chunk => backOff(() => this.spotifySdk!.artists.get(chunk)))
     )
 
-    return data.flat()
+    return artists.flat()
   }
 }
