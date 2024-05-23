@@ -24,7 +24,7 @@ export class SpotifyAuthService {
     const url = `${this.configService.get(
       Environment.SPOTIFY_ACCOUNTS_URL
     )}/api/token`
-    const cliendId = this.configService.get<string>(
+    const clientId = this.configService.get<string>(
       Environment.SPOTIFY_CLIENT_ID
     )
     const clientSecret = this.configService.get<string>(
@@ -35,7 +35,7 @@ export class SpotifyAuthService {
     )
 
     const bufferedCredentials = Buffer.from(
-      `${cliendId}:${clientSecret}`
+      `${clientId}:${clientSecret}`
     ).toString('base64')
     const params = new URLSearchParams()
 
