@@ -7,8 +7,6 @@ import { ArtistsRepository, ArtistsService } from './artists'
 import { TracksRepository } from './tracks'
 
 import { ImagesService } from '@modules/items/images'
-import { SpotifyAlbumsService } from '@modules/spotify/albums'
-import { SpotifyArtistsService } from '@modules/spotify/artists'
 import {
   albumsEntitiesMock,
   artistEntitiesMock,
@@ -22,6 +20,7 @@ import {
 } from '@common/mocks'
 import { SdkAlbum } from '@common/types/spotify'
 import { GetItemsMockInstance } from '@common/types/mocks'
+import { SpotifyService } from '@modules/spotify'
 
 describe('ItemsService', () => {
   let moduleRef: TestingModule
@@ -32,8 +31,7 @@ describe('ItemsService', () => {
   let artistsRepository: ArtistsRepository
   let tracksRepository: TracksRepository
   let imagesService: ImagesService
-  let spotifyAlbumsService: SpotifyAlbumsService
-  let spotifyArtistsService: SpotifyArtistsService
+  let spotifyService: SpotifyService
 
   beforeEach(async () => {
     moduleRef = await Test.createTestingModule({
@@ -76,15 +74,14 @@ describe('ItemsService', () => {
           },
         },
         {
-          provide: SpotifyAlbumsService,
+          provide: SpotifyService,
           useValue: {
-            getAlbums: vi.fn(),
-          },
-        },
-        {
-          provide: SpotifyArtistsService,
-          useValue: {
-            getArtists: vi.fn(),
+            albums: {
+              get: vi.fn(),
+            },
+            artists: {
+              get: vi.fn(),
+            },
           },
         },
       ],
@@ -97,8 +94,7 @@ describe('ItemsService', () => {
     artistsRepository = moduleRef.get(ArtistsRepository)
     tracksRepository = moduleRef.get(TracksRepository)
     imagesService = moduleRef.get(ImagesService)
-    spotifyAlbumsService = moduleRef.get(SpotifyAlbumsService)
-    spotifyArtistsService = moduleRef.get(SpotifyArtistsService)
+    spotifyService = moduleRef.get(SpotifyService)
   })
 
   afterEach(() => {
@@ -128,10 +124,10 @@ describe('ItemsService', () => {
         albumsRepository,
         'findAlbumsByExternalIds'
       )
-      getArtistsSpy = vi.spyOn(spotifyArtistsService, 'getArtists')
+      getArtistsSpy = vi.spyOn(spotifyService.artists, 'get')
       getAlbumsSpy = vi.spyOn(
-        spotifyAlbumsService,
-        'getAlbums'
+        spotifyService.albums,
+        'get'
       ) as unknown as GetItemsMockInstance<SdkAlbum>
       imagesFindOrCreate = vi.spyOn(imagesService, 'findOrCreate')
       artistsUpdateOrCreate = vi.spyOn(artistsService, 'updateOrCreate')

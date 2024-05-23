@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing'
+import { MockInstance } from 'vitest'
 
 import { AuthService } from './auth.service'
 
@@ -6,15 +7,15 @@ import { accessToken, refreshToken } from '@common/mocks'
 import { profileMock, userMock, accessTokenMock } from '@common/mocks'
 import { UsersRepository } from '@modules/users'
 import { ProfilesRepository } from '@modules/profiles'
-import { SpotifyUsersService } from '@modules/spotify/users'
 import { HistoryScheduler } from '@modules/history'
+import { SpotifyService } from '@modules/spotify'
 
 describe('AuthService', () => {
   let moduleRef: TestingModule
   let authService: AuthService
   let usersRepository: UsersRepository
   let profilesRepository: ProfilesRepository
-  let spotifyUsersService: SpotifyUsersService
+  let spotifyService: SpotifyService
   let historyScheduler: HistoryScheduler
 
   beforeEach(async () => {
@@ -35,9 +36,11 @@ describe('AuthService', () => {
           },
         },
         {
-          provide: SpotifyUsersService,
+          provide: SpotifyService,
           useValue: {
-            profile: vi.fn(),
+            users: {
+              profile: vi.fn(),
+            },
           },
         },
         {
@@ -52,7 +55,7 @@ describe('AuthService', () => {
     authService = moduleRef.get(AuthService)
     usersRepository = moduleRef.get(UsersRepository)
     profilesRepository = moduleRef.get(ProfilesRepository)
-    spotifyUsersService = moduleRef.get(SpotifyUsersService)
+    spotifyService = moduleRef.get(SpotifyService)
     historyScheduler = moduleRef.get(HistoryScheduler)
   })
 
@@ -65,20 +68,22 @@ describe('AuthService', () => {
   })
 
   describe('saveUser', () => {
+    let profileSpy: MockInstance
+    let findOneByProfileIdSpy: MockInstance
+    let createProfileSpy: MockInstance
+    let createUserSpy: MockInstance
+
+    beforeEach(() => {
+      profileSpy = vi.spyOn(spotifyService.users, 'profile')
+      findOneByProfileIdSpy = vi.spyOn(usersRepository, 'findUserByProfileId')
+      createProfileSpy = vi.spyOn(profilesRepository, 'createProfile')
+      createUserSpy = vi.spyOn(usersRepository, 'createUser')
+    })
+
     test('should create new user', async () => {
-      const profileSpy = vi
-        .spyOn(spotifyUsersService, 'profile')
-        .mockResolvedValue(profileMock)
-      const findOneByProfileIdSpy = vi.spyOn(
-        usersRepository,
-        'findUserByProfileId'
-      )
-      const createProfileSpy = vi
-        .spyOn(profilesRepository, 'createProfile')
-        .mockResolvedValue(profileMock)
-      const createUserSpy = vi
-        .spyOn(usersRepository, 'createUser')
-        .mockResolvedValue(userMock)
+      profileSpy.mockResolvedValue(profileMock)
+      createProfileSpy.mockResolvedValue(profileMock)
+      createUserSpy.mockResolvedValue(userMock)
       const triggerFetchingUserHistorySpy = vi.spyOn(
         historyScheduler,
         'triggerUserHistorySynchronization'
@@ -100,15 +105,8 @@ describe('AuthService', () => {
     })
 
     test('should return existing user', async () => {
-      const profileSpy = vi
-        .spyOn(spotifyUsersService, 'profile')
-        .mockResolvedValue(profileMock)
-      const findOneByProfileIdSpy = vi
-        .spyOn(usersRepository, 'findUserByProfileId')
-        .mockResolvedValue(userMock)
-      const createProfileSpy = vi.spyOn(profilesRepository, 'createProfile')
-
-      const createUserSpy = vi.spyOn(usersRepository, 'createUser')
+      profileSpy.mockResolvedValue(profileMock)
+      findOneByProfileIdSpy.mockResolvedValue(userMock)
 
       expect(await authService.saveUser(accessTokenMock)).toEqual({
         accessToken,

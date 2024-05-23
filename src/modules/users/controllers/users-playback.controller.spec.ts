@@ -1,13 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { UnauthorizedException } from '@nestjs/common'
 import { mock } from 'vitest-mock-extended'
+import { MockInstance } from 'vitest'
 
 import { UsersRepository } from '../users.repository'
 
 import { UsersPlaybackController } from './users-playback.controller'
 
-import { SpotifyAuthService } from '@modules/spotify/auth'
-import { SpotifyPlayerService } from '@modules/spotify/player'
 import {
   accessToken,
   accessTokenMock,
@@ -15,6 +14,7 @@ import {
   userMock,
 } from '@common/mocks'
 import { Profile } from '@common/types/spotify'
+import { SpotifyService } from '@modules/spotify'
 
 describe('UsersPlaybackController', () => {
   const fakeProfileMock = mock<Profile>({
@@ -23,20 +23,15 @@ describe('UsersPlaybackController', () => {
 
   let moduleRef: TestingModule
   let usersPlaybackController: UsersPlaybackController
-  let spotifyAuthService: SpotifyAuthService
-  let spotifyPlayerService: SpotifyPlayerService
+  let spotifyService: SpotifyService
+
+  let tokenSpy: MockInstance
+  let getMeProfileSpy: MockInstance
 
   beforeEach(async () => {
     moduleRef = await Test.createTestingModule({
       controllers: [UsersPlaybackController],
       providers: [
-        {
-          provide: SpotifyAuthService,
-          useValue: {
-            token: vi.fn(),
-            getMeProfile: vi.fn(),
-          },
-        },
         {
           provide: UsersRepository,
           useValue: {
@@ -44,19 +39,29 @@ describe('UsersPlaybackController', () => {
           },
         },
         {
-          provide: SpotifyPlayerService,
+          provide: SpotifyService,
           useValue: {
-            getPlaybackState: vi.fn(),
-            pausePlayback: vi.fn(),
-            resumePlayback: vi.fn(),
+            player: {
+              getPlaybackState: vi.fn(),
+              pausePlayback: vi.fn(),
+              resumePlayback: vi.fn(),
+            },
+            auth: {
+              token: vi.fn(),
+              getMeProfile: vi.fn(),
+            },
           },
         },
       ],
     }).compile()
 
     usersPlaybackController = moduleRef.get(UsersPlaybackController)
-    spotifyAuthService = moduleRef.get(SpotifyAuthService)
-    spotifyPlayerService = moduleRef.get(SpotifyPlayerService)
+    spotifyService = moduleRef.get(SpotifyService)
+
+    tokenSpy = vi
+      .spyOn(spotifyService.auth, 'token')
+      .mockResolvedValue(accessTokenMock)
+    getMeProfileSpy = vi.spyOn(spotifyService.auth, 'getMeProfile')
   })
 
   afterEach(() => {
@@ -65,11 +70,8 @@ describe('UsersPlaybackController', () => {
 
   describe('getPlaybackState', () => {
     test('should get user playback state', async () => {
-      const tokenSpy = vi
-        .spyOn(spotifyAuthService, 'token')
-        .mockResolvedValue(accessTokenMock)
       const currentPlaybackStateSpy = vi
-        .spyOn(spotifyPlayerService, 'getPlaybackState')
+        .spyOn(spotifyService.player, 'getPlaybackState')
         .mockResolvedValue(playbackStateMock)
 
       expect(await usersPlaybackController.getPlaybackState(userMock)).toEqual(
@@ -85,14 +87,9 @@ describe('UsersPlaybackController', () => {
 
   describe('pausePlayback', () => {
     test('should pause user playback', async () => {
-      const tokenSpy = vi
-        .spyOn(spotifyAuthService, 'token')
-        .mockResolvedValue(accessTokenMock)
-      const getMeProfileSpy = vi
-        .spyOn(spotifyAuthService, 'getMeProfile')
-        .mockResolvedValue(userMock.profile)
+      getMeProfileSpy.mockResolvedValue(userMock.profile)
       const pausePlaybackSpy = vi
-        .spyOn(spotifyPlayerService, 'pausePlayback')
+        .spyOn(spotifyService.player, 'pausePlayback')
         .mockResolvedValue(true)
 
       expect(
@@ -107,12 +104,7 @@ describe('UsersPlaybackController', () => {
     })
 
     test('should throw an error if user is not authorized', async () => {
-      const tokenSpy = vi
-        .spyOn(spotifyAuthService, 'token')
-        .mockResolvedValue(accessTokenMock)
-      const getMeProfileSpy = vi
-        .spyOn(spotifyAuthService, 'getMeProfile')
-        .mockResolvedValue(fakeProfileMock)
+      getMeProfileSpy.mockResolvedValue(fakeProfileMock)
 
       await expect(
         usersPlaybackController.pausePlayback(userMock, accessToken)
@@ -125,14 +117,9 @@ describe('UsersPlaybackController', () => {
 
   describe('resumePlayback', () => {
     test('should resume user playback', async () => {
-      const tokenSpy = vi
-        .spyOn(spotifyAuthService, 'token')
-        .mockResolvedValue(accessTokenMock)
-      const getMeProfileSpy = vi
-        .spyOn(spotifyAuthService, 'getMeProfile')
-        .mockResolvedValue(userMock.profile)
+      getMeProfileSpy.mockResolvedValue(userMock.profile)
       const resumePlaybackSpy = vi
-        .spyOn(spotifyPlayerService, 'resumePlayback')
+        .spyOn(spotifyService.player, 'resumePlayback')
         .mockResolvedValue(true)
 
       expect(
@@ -147,12 +134,7 @@ describe('UsersPlaybackController', () => {
     })
 
     test('should throw an error if user is not authorized', async () => {
-      const tokenSpy = vi
-        .spyOn(spotifyAuthService, 'token')
-        .mockResolvedValue(accessTokenMock)
-      const getMeProfileSpy = vi
-        .spyOn(spotifyAuthService, 'getMeProfile')
-        .mockResolvedValue(fakeProfileMock)
+      getMeProfileSpy.mockResolvedValue(fakeProfileMock)
 
       await expect(
         usersPlaybackController.resumePlayback(userMock, accessToken)

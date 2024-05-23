@@ -20,20 +20,14 @@ import {
   ONE_IS_INVALID,
 } from '@common/constants'
 import { ApiAuth, Token } from '@modules/auth/decorators'
-import { SpotifyAuthService } from '@modules/spotify/auth'
-import { SpotifyUsersService } from '@modules/spotify/users'
-import { SpotifyPlayerService } from '@modules/spotify/player'
+import { SpotifyService } from '@modules/spotify'
 
 @Controller('users/:id/profile')
 @ApiTags('users/{id}/profile')
 @UseGuards(CheckUserIdGuard)
 @ApiAuth()
 export class UsersProfileController {
-  constructor(
-    private readonly spotifyAuthService: SpotifyAuthService,
-    private readonly spotifyUsersService: SpotifyUsersService,
-    private readonly spotifyPlayerService: SpotifyPlayerService
-  ) {}
+  constructor(private readonly spotifyService: SpotifyService) {}
 
   @Get()
   @ApiOperation({
@@ -53,11 +47,11 @@ export class UsersProfileController {
     @RequestUser() { refreshToken }: User,
     @Token() _token?: string
   ) {
-    const token = await this.spotifyAuthService.token({
+    const token = await this.spotifyService.auth.token({
       refreshToken,
     })
 
-    return this.spotifyUsersService.profile(token)
+    return this.spotifyService.users.profile(token)
   }
 
   @Get('recently-played')
@@ -80,11 +74,11 @@ export class UsersProfileController {
     @Query() { limit = 10, before, after }: LastItemQuery,
     @Token() _token?: string
   ) {
-    const token = await this.spotifyAuthService.token({
+    const token = await this.spotifyService.auth.token({
       refreshToken,
     })
 
-    return this.spotifyPlayerService.getRecentlyPlayedTracks(token, limit, {
+    return this.spotifyService.player.getRecentlyPlayedTracks(token, limit, {
       before,
       after,
     })
@@ -110,11 +104,11 @@ export class UsersProfileController {
     @Query() { limit, timeRange, offset }: TopItemQuery,
     @Token() _token?: string
   ) {
-    const token = await this.spotifyAuthService.token({
+    const token = await this.spotifyService.auth.token({
       refreshToken,
     })
 
-    return this.spotifyUsersService.getTopArtists(
+    return this.spotifyService.users.getTopArtists(
       token,
       timeRange,
       limit,
@@ -142,11 +136,11 @@ export class UsersProfileController {
     @Query() { limit, timeRange, offset }: TopItemQuery,
     @Token() _token?: string
   ) {
-    const token = await this.spotifyAuthService.token({
+    const token = await this.spotifyService.auth.token({
       refreshToken,
     })
 
-    return this.spotifyUsersService.getTopTracks(
+    return this.spotifyService.users.getTopTracks(
       token,
       timeRange,
       limit,
@@ -174,11 +168,11 @@ export class UsersProfileController {
     @Query() { limit, timeRange, offset }: TopItemQuery,
     @Token() _token?: string
   ) {
-    const token = await this.spotifyAuthService.token({
+    const token = await this.spotifyService.auth.token({
       refreshToken,
     })
 
-    return this.spotifyUsersService.getTopGenres(
+    return this.spotifyService.users.getTopGenres(
       token,
       timeRange,
       limit,
@@ -204,10 +198,10 @@ export class UsersProfileController {
     @RequestUser() { refreshToken }: User,
     @Token() _token?: string
   ) {
-    const token = await this.spotifyAuthService.token({
+    const token = await this.spotifyService.auth.token({
       refreshToken,
     })
 
-    return this.spotifyUsersService.getAnalysis(token)
+    return this.spotifyService.users.getAnalysis(token)
   }
 }

@@ -18,24 +18,33 @@ export class SpotifyAlbumsService {
     private readonly adaptersService: AdaptersService
   ) {}
 
-  public getAlbum(id: string, adapt: false): Promise<SdkAlbum>
-  public getAlbum(id: string, adapt: true): Promise<Album>
+  public get(id: string, adapt: false): Promise<SdkAlbum>
+  public get(id: string, adapt: true): Promise<Album>
+  public get(ids: string[], adapt: false): Promise<SdkAlbum[]>
+  public get(ids: string[], adapt: true): Promise<Album[]>
 
-  async getAlbum(id: string, adapt = false) {
+  async get(idOrIds: string | string[], adapt = false) {
+    if (!Array.isArray(idOrIds)) {
+      const album = await this.getOne(idOrIds)
+
+      return adapt ? this.adaptersService.albums.adapt(album) : album
+    }
+
+    const albums = await this.getMany(idOrIds)
+
+    return adapt ? this.adaptersService.albums.adapt(albums) : albums
+  }
+
+  private async getOne(id: string) {
     this.spotifySdk = SpotifyApi.withClientCredentials(
       this.configService.get<string>(Environment.SPOTIFY_CLIENT_ID)!,
       this.configService.get<string>(Environment.SPOTIFY_CLIENT_SECRET)!
     )
 
-    const data = await backOff(() => this.spotifySdk!.albums.get(id))
-
-    return adapt ? this.adaptersService.albums.adapt(data) : data
+    return backOff(() => this.spotifySdk!.albums.get(id))
   }
 
-  public getAlbums(ids: string[], adapt: false): Promise<SdkAlbum[]>
-  public getAlbums(ids: string[], adapt: true): Promise<Album[]>
-
-  async getAlbums(ids: string[], adapt = false) {
+  private async getMany(ids: string[]) {
     this.spotifySdk = SpotifyApi.withClientCredentials(
       this.configService.get<string>(Environment.SPOTIFY_CLIENT_ID)!,
       this.configService.get<string>(Environment.SPOTIFY_CLIENT_SECRET)!
@@ -49,14 +58,10 @@ export class SpotifyAlbumsService {
       }
     else chunks.push(ids)
 
-    const data = await Promise.all(
-      chunks.map(async chunk => {
-        const data = await backOff(() => this.spotifySdk!.albums.get(chunk))
-
-        return adapt ? this.adaptersService.albums.adapt(data) : data
-      })
+    const albums = await Promise.all(
+      chunks.map(chunk => backOff(() => this.spotifySdk!.albums.get(chunk)))
     )
 
-    return data.flat()
+    return albums.flat()
   }
 }

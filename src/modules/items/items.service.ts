@@ -7,9 +7,8 @@ import { sdkItemFilterPredicate } from './utils'
 
 import { removeDuplicates } from '@common/utils'
 import { ImagesService } from '@modules/items/images'
-import { SpotifyArtistsService } from '@modules/spotify/artists'
-import { SpotifyAlbumsService } from '@modules/spotify/albums'
 import { SdkTrack } from '@common/types/spotify'
+import { SpotifyService } from '@modules/spotify'
 
 @Injectable()
 export class ItemsService {
@@ -20,8 +19,8 @@ export class ItemsService {
     private readonly artistsRepository: ArtistsRepository,
     private readonly tracksRepository: TracksRepository,
     private readonly imagesService: ImagesService,
-    private readonly spotifyAlbumsService: SpotifyAlbumsService,
-    private readonly spotifyArtistsService: SpotifyArtistsService
+
+    private readonly spotifyService: SpotifyService
   ) {}
 
   async findOrCreate(tracks: SdkTrack[]) {
@@ -55,7 +54,7 @@ export class ItemsService {
   private async getFilteredArtistExternalIds(artistsExternalIds: string[]) {
     const foundArtists =
       await this.artistsRepository.findArtistsByExternalIds(artistsExternalIds)
-    const fetchedArtists = await this.spotifyArtistsService.getArtists(
+    const fetchedArtists = await this.spotifyService.artists.get(
       artistsExternalIds,
       false
     )
@@ -67,7 +66,7 @@ export class ItemsService {
   private async getFilteredAlbumExternalIds(albumsExternalIds: string[]) {
     const foundAlbums =
       await this.albumsRepository.findAlbumsByExternalIds(albumsExternalIds)
-    const fetchedAlbums = await this.spotifyAlbumsService.getAlbums(
+    const fetchedAlbums = await this.spotifyService.albums.get(
       albumsExternalIds,
       false
     )

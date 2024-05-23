@@ -3,25 +3,23 @@ import { Injectable } from '@nestjs/common'
 import { HistoryTracksRepository, HistoryTracksService } from './tracks'
 
 import { User } from '@modules/users'
-import { SpotifyAuthService } from '@modules/spotify/auth'
-import { SpotifyPlayerService } from '@modules/spotify/player'
+import { SpotifyService } from '@modules/spotify'
 
 @Injectable()
 export class HistoryService {
   constructor(
     private readonly historyTracksRepository: HistoryTracksRepository,
     private readonly historyTracksService: HistoryTracksService,
-    private readonly spotifyAuthService: SpotifyAuthService,
-    private readonly spotifyPlayerService: SpotifyPlayerService
+    private readonly spotifyService: SpotifyService
   ) {}
 
   async synchronize(user: User) {
-    const accessToken = await this.spotifyAuthService.token({
+    const accessToken = await this.spotifyService.auth.token({
       refreshToken: user.refreshToken,
     })
 
     const { items: playHistory } =
-      await this.spotifyPlayerService.getRecentlyPlayedTracks(
+      await this.spotifyService.player.getRecentlyPlayedTracks(
         accessToken,
         50,
         {},
