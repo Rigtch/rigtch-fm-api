@@ -68,9 +68,7 @@ describe('AlbumsService', () => {
       })
 
       test('should update album if found', async () => {
-        findOneBySpy
-          .mockResolvedValueOnce(albumEntityMock)
-          .mockResolvedValue(albumEntityMock)
+        findOneBySpy.mockResolvedValue(albumEntityMock)
         const updateSpy = vi
           .spyOn(entityManagerMock, 'update')
           .mockResolvedValue(mock<UpdateResult>())
@@ -78,6 +76,7 @@ describe('AlbumsService', () => {
         expect(await albumsService.updateOrCreate(sdkAlbumMock)).toEqual(
           albumEntityMock
         )
+
         expect(findOneBySpy).toHaveBeenCalledWith(Album, {
           externalId: sdkAlbumMock.id,
         })
@@ -116,6 +115,7 @@ describe('AlbumsService', () => {
         expect(await albumsService.updateOrCreate(sdkAlbumMock)).toEqual(
           albumEntityMock
         )
+
         expect(findOneBySpy).toHaveBeenCalledWith(Album, {
           externalId: sdkAlbumMock.id,
         })
@@ -150,6 +150,7 @@ describe('AlbumsService', () => {
         expect(await albumsService.updateOrCreate(sdkAlbumsMock)).toEqual(
           albumsEntitiesMock
         )
+
         expect(updateOrCreateOneSpy).toHaveBeenCalledWith(sdkAlbumMock)
         expect(updateOrCreateOneSpy).toHaveBeenCalledTimes(5)
       })
