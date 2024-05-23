@@ -4,6 +4,7 @@ import {
   ExecutionContext,
   NotFoundException,
 } from '@nestjs/common'
+import { Request } from 'express'
 
 import { UsersRepository } from '../users.repository'
 import { USER } from '../constants'
@@ -15,7 +16,7 @@ export class CheckUserIdGuard implements CanActivate {
   constructor(private readonly usersRepository: UsersRepository) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest()
+    const request = context.switchToHttp().getRequest<Request>()
 
     const { id } = request.params
 
