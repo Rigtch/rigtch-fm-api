@@ -41,7 +41,9 @@ export class SpotifyAlbumsService {
       this.configService.get<string>(Environment.SPOTIFY_CLIENT_SECRET)!
     )
 
-    return backOff(() => this.spotifySdk!.albums.get(id))
+    return this.getAlbumMissingTracks(
+      await backOff(() => this.spotifySdk!.albums.get(id))
+    )
   }
 
   private async getMany(ids: string[]) {
@@ -59,9 +61,35 @@ export class SpotifyAlbumsService {
     else chunks.push(ids)
 
     const albums = await Promise.all(
-      chunks.map(chunk => backOff(() => this.spotifySdk!.albums.get(chunk)))
+      chunks.map(chunk =>
+        backOff(async () => {
+          const albums = await this.spotifySdk!.albums.get(chunk)
+
+          return Promise.all(
+            albums.map(async album => this.getAlbumMissingTracks(album))
+          )
+        })
+      )
     )
 
     return albums.flat()
+  }
+
+  private async getAlbumMissingTracks(album: SdkAlbum) {
+    if (album.tracks.next) {
+      let offset = album.tracks.offset + album.tracks.items.length
+
+      while (album.tracks.items.length < album.tracks.total) {
+        const tracks = await backOff(() =>
+          this.spotifySdk!.albums.tracks(album.id, undefined, undefined, offset)
+        )
+
+        album.tracks.items.push(...tracks.items)
+
+        offset += tracks.items.length
+      }
+    }
+
+    return album
   }
 }

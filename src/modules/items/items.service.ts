@@ -69,6 +69,7 @@ export class ItemsService {
       albumsExternalIds,
       false
     )
+
     return fetchedAlbums.filter(({ id }) =>
       sdkItemFilterPredicate(id, foundAlbums)
     )
