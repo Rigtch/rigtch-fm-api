@@ -1,13 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { MockInstance } from 'vitest'
-import { DeepMockProxy, mockDeep } from 'vitest-mock-extended'
+import { DeepMockProxy } from 'vitest-mock-extended'
 import { ExecutionContext, NotFoundException } from '@nestjs/common'
 
 import { UsersRepository } from '../users.repository'
 
 import { CheckUserIdGuard } from './check-user-id.guard'
 
-import { userMock } from '@common/mocks'
+import { contextFactoryMock, userMock } from '@common/mocks'
 
 describe('CheckUserIdGuard', () => {
   const id = 'id'
@@ -34,15 +34,11 @@ describe('CheckUserIdGuard', () => {
     checkUserIdGuard = moduleRef.get(CheckUserIdGuard)
     usersRepository = moduleRef.get(UsersRepository)
 
-    contextMock = mockDeep<ExecutionContext>({
-      switchToHttp: () => ({
-        getRequest: () => ({
-          params: {
-            id,
-          },
-        }),
-      }),
-    } as ExecutionContext)
+    contextMock = contextFactoryMock({
+      params: {
+        id,
+      },
+    })
   })
 
   afterEach(() => {
