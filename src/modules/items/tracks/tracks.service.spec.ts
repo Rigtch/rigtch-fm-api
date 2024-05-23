@@ -137,7 +137,7 @@ describe('TracksService', () => {
       expect(updateOrCreateSpy).not.toHaveBeenCalled()
     })
 
-    test('should update track album if is nullish', async () => {
+    test('should update the album of the track if is nullish', async () => {
       const externalId = 'externalId'
 
       const brokenTrack = {
