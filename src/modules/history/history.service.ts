@@ -40,7 +40,8 @@ export class HistoryService {
         latestTrackIndex === -1 ? true : index < latestTrackIndex
       )
 
-      await this.historyTracksService.create(latestPlayHistory, user)
+      if (latestPlayHistory.length > 0)
+        await this.historyTracksService.create(latestPlayHistory, user)
     } else await this.historyTracksService.create(playHistory, user)
   }
 }
