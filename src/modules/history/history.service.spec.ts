@@ -155,5 +155,34 @@ describe('HistoryService', () => {
       })
       expect(getRecentlyPlayedTracksSpy).toHaveBeenCalled()
     })
+
+    test('should not create history tracks if latest play history is empty', async () => {
+      const externalId = 'externalId'
+      const playedAt = new Date()
+
+      const lastHistoryTrack = {
+        track: { ...trackEntityMock, externalId },
+        playedAt,
+      }
+
+      const playHistory = Array.from({ length: 3 }).map(() => ({
+        track: { id: externalId },
+        played_at: playedAt.toISOString(),
+      }))
+
+      findLastHistoryTrackByUserSpy.mockResolvedValue(lastHistoryTrack)
+      tokenSpy.mockResolvedValue(accessTokenMock)
+      getRecentlyPlayedTracksSpy.mockResolvedValue({
+        items: playHistory,
+      } as SdkRecentlyPlayedTracksPage)
+
+      await historyService.synchronize(userMock)
+
+      expect(createSpy).not.toHaveBeenCalled()
+      expect(tokenSpy).toHaveBeenCalledWith({
+        refreshToken: userMock.refreshToken,
+      })
+      expect(getRecentlyPlayedTracksSpy).toHaveBeenCalled()
+    })
   })
 })
