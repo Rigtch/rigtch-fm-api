@@ -6,6 +6,7 @@ import { USER } from '../constants'
 import { ApiItemQuery, ApiUser } from '../decorators'
 import { LastItemQuery, TopItemQuery } from '../dtos'
 import { CheckUserIdGuard } from '../guards'
+import { SpotifyProfile } from '../dtos'
 
 import { ONE_SUCCESSFULLY_RETRIEVED } from '@common/constants'
 import { ApiAuth, Token } from '@modules/auth/decorators'
@@ -26,18 +27,20 @@ export class UsersProfileController {
   @ApiUser()
   @ApiOkResponse({
     description: ONE_SUCCESSFULLY_RETRIEVED(USER),
+    type: SpotifyProfile,
   })
-  async getProfile(@Token() token: AccessToken) {
+  async getProfile(@Token() token: AccessToken): Promise<SpotifyProfile> {
     return this.spotifyService.users.profile(token)
   }
 
   @Get('recently-played')
   @ApiOperation({
     summary: "Getting user's recently played tracks.",
+    deprecated: true,
   })
   @ApiItemQuery({ withCursors: true })
   @ApiOkResponse({
-    description: ONE_SUCCESSFULLY_RETRIEVED(USER),
+    description: ONE_SUCCESSFULLY_RETRIEVED("user's playback history"),
   })
   @ApiUser()
   async getRecentlyPlayed(
@@ -56,7 +59,7 @@ export class UsersProfileController {
   })
   @ApiItemQuery({ withOffset: true })
   @ApiOkResponse({
-    description: ONE_SUCCESSFULLY_RETRIEVED(USER),
+    description: ONE_SUCCESSFULLY_RETRIEVED("user's top artists"),
   })
   @ApiUser()
   async getTopArtists(
@@ -77,7 +80,7 @@ export class UsersProfileController {
   })
   @ApiItemQuery({ withOffset: true })
   @ApiOkResponse({
-    description: ONE_SUCCESSFULLY_RETRIEVED(USER),
+    description: ONE_SUCCESSFULLY_RETRIEVED("user's top tracks"),
   })
   @ApiUser()
   async getTopTracks(
@@ -98,7 +101,7 @@ export class UsersProfileController {
   })
   @ApiItemQuery()
   @ApiOkResponse({
-    description: ONE_SUCCESSFULLY_RETRIEVED(USER),
+    description: ONE_SUCCESSFULLY_RETRIEVED("user's top genres"),
   })
   @ApiUser()
   async getTopGenres(
@@ -118,7 +121,7 @@ export class UsersProfileController {
     summary: "Getting user's analysis.",
   })
   @ApiOkResponse({
-    description: ONE_SUCCESSFULLY_RETRIEVED(USER),
+    description: ONE_SUCCESSFULLY_RETRIEVED("user's analysis"),
   })
   @ApiUser()
   async getAnalysis(@Token() token: AccessToken) {
