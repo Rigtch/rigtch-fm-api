@@ -15,7 +15,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService)
 
   const documentConfig = new DocumentBuilder()
-    .setTitle('Rigtch Music API')
+    .setTitle('rigtch.fm API')
     .addBearerAuth(
       {
         type: 'http',
