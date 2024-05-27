@@ -7,8 +7,6 @@ import { UsersController } from './users.controller'
 import { userMock, usersMock } from '@common/mocks'
 
 describe('UsersController', () => {
-  const displayName = 'displayName'
-
   let moduleRef: TestingModule
   let usersController: UsersController
   let usersRepository: UsersRepository
@@ -22,7 +20,6 @@ describe('UsersController', () => {
           useValue: {
             findUsers: vi.fn(),
             findUserById: vi.fn(),
-            findUserByDisplayName: vi.fn(),
           },
         },
       ],
@@ -49,26 +46,6 @@ describe('UsersController', () => {
       expect(await usersController.getAll()).toEqual(usersMock)
 
       expect(findSpy).toHaveBeenCalled()
-    })
-
-    test('should get one user by username', async () => {
-      const findOneByDisplayNameSpy = vi
-        .spyOn(usersRepository, 'findUserByDisplayName')
-        .mockResolvedValue(userMock)
-
-      expect(await usersController.getAll(displayName)).toEqual(userMock)
-
-      expect(findOneByDisplayNameSpy).toHaveBeenCalledWith(displayName)
-    })
-
-    test('should throw an error if no user is found', async () => {
-      const findOneByDisplayNameSpy = vi.spyOn(
-        usersRepository,
-        'findUserByDisplayName'
-      )
-
-      await expect(usersController.getAll(displayName)).rejects.toThrowError()
-      expect(findOneByDisplayNameSpy).toHaveBeenCalledWith(displayName)
     })
   })
 

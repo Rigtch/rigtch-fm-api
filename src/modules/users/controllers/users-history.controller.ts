@@ -1,24 +1,13 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common'
-import {
-  ApiBadRequestResponse,
-  ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiParam,
-  ApiTags,
-} from '@nestjs/swagger'
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { Pagination, paginate } from 'nestjs-typeorm-paginate'
 
-import { RequestUser } from '../decorators'
+import { ApiUser, RequestUser } from '../decorators'
 import { User } from '../user.entity'
 import { CheckUserIdGuard } from '../guards'
 
 import { ApiPaginatedQuery } from '@common/decorators'
-import {
-  NOT_BEEN_FOUND,
-  ONE_IS_INVALID,
-  ONE_SUCCESSFULLY_FOUND,
-} from '@common/constants'
+import { ONE_SUCCESSFULLY_RETRIEVED } from '@common/constants'
 import { ApiAuth, Token } from '@modules/auth/decorators'
 import {
   HistoryTrack,
@@ -44,16 +33,10 @@ export class UsersHistoryController {
     summary: "Getting user's history.",
   })
   @ApiOkResponse({
-    description: ONE_SUCCESSFULLY_FOUND('history'),
+    description: ONE_SUCCESSFULLY_RETRIEVED('history'),
     type: [Pagination<HistoryTrack>],
   })
-  @ApiNotFoundResponse({
-    description: NOT_BEEN_FOUND('user'),
-  })
-  @ApiBadRequestResponse({
-    description: ONE_IS_INVALID('uuid'),
-  })
-  @ApiParam({ name: 'id' })
+  @ApiUser()
   @ApiPaginatedQuery()
   async getHistory(
     @RequestUser() user: User,
