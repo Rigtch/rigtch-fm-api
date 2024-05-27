@@ -22,7 +22,7 @@ import { Album } from './album.entity'
 
 import { NOT_BEEN_FOUND } from '@common/constants'
 import { ApiPaginatedQuery } from '@common/decorators'
-import { PaginatedQuery } from '@common/dtos'
+import { PaginationQuery } from '@common/dtos/pagination'
 
 @Controller('albums')
 @ApiTags('albums')
@@ -38,7 +38,7 @@ export class AlbumsController {
     description: 'Albums successfully found.',
     type: [Pagination<Album>],
   })
-  async getAlbums(@Query() { limit = 10, page = 1 }: PaginatedQuery) {
+  async getAlbums(@Query() { limit = 10, page = 1 }: PaginationQuery) {
     return paginate(
       this.albumsRepository,
       { limit, page },
