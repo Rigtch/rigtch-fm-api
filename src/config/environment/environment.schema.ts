@@ -16,5 +16,5 @@ export const environmentSchema = Joi.object({
   DATABASE_USERNAME: Joi.string().required(),
   DATABASE_PASSWORD: Joi.string().required(),
   DATABASE_NAME: Joi.string().required(),
-  CHECK_TRACKS_ALBUM_EXISTENCE: Joi.boolean().default(false),
+  ENABLE_TRACKS_VALIDATOR: Joi.boolean().default(false),
 })
