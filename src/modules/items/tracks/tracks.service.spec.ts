@@ -1,13 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { MockInstance } from 'vitest'
 import { DataSource, EntityManager, In } from 'typeorm'
-import { ConfigService } from '@nestjs/config'
 
 import { TracksService } from './tracks.service'
 import { Track } from './track.entity'
-import { TracksRepository } from './tracks.repository'
 
-import { Album, AlbumsService } from '@modules/items/albums'
+import { Album } from '@modules/items/albums'
 import { Artist } from '@modules/items/artists'
 import {
   sdkTrackMock,
@@ -19,19 +17,13 @@ import {
   sdkCreateTrackMock,
   sdkCreateTracksMock,
   trackEntitiesMock,
-  sdkAlbumMock,
 } from '@common/mocks'
 import { EntityManagerCreateMockInstance } from '@common/types/mocks'
-import { SpotifyService } from '@modules/spotify'
 
 describe('TracksService', () => {
   let moduleRef: TestingModule
   let entityManagerMock: EntityManager
   let tracksService: TracksService
-  let configService: ConfigService
-  let spotifyService: SpotifyService
-  let tracksRepository: TracksRepository
-  let albumsService: AlbumsService
 
   beforeEach(async () => {
     entityManagerMock = entityManagerFactoryMock()
@@ -45,44 +37,10 @@ describe('TracksService', () => {
             transaction: transactionFactoryMock(entityManagerMock),
           },
         },
-        {
-          provide: ConfigService,
-          useValue: {
-            get: vi.fn(),
-          },
-        },
-        {
-          provide: SpotifyService,
-          useValue: {
-            tracks: {
-              get: vi.fn(),
-            },
-            albums: {
-              get: vi.fn(),
-            },
-          },
-        },
-        {
-          provide: TracksRepository,
-          useValue: {
-            findTracks: vi.fn(),
-            save: vi.fn(),
-          },
-        },
-        {
-          provide: AlbumsService,
-          useValue: {
-            updateOrCreate: vi.fn(),
-          },
-        },
       ],
     }).compile()
 
     tracksService = moduleRef.get(TracksService)
-    configService = moduleRef.get(ConfigService)
-    spotifyService = moduleRef.get(SpotifyService)
-    tracksRepository = moduleRef.get(TracksRepository)
-    albumsService = moduleRef.get(AlbumsService)
   })
 
   afterEach(() => {
@@ -91,75 +49,6 @@ describe('TracksService', () => {
 
   test('should be defined', () => {
     expect(tracksService).toBeDefined()
-  })
-
-  describe('onModuleInit', () => {
-    let getConfigSpy: MockInstance
-    let getTrackSpy: MockInstance
-    let getAlbumSpy: MockInstance
-    let findTracksSpy: MockInstance
-    let saveSpy: MockInstance
-    let updateOrCreateSpy: MockInstance
-
-    beforeEach(() => {
-      getConfigSpy = vi.spyOn(configService, 'get')
-      getTrackSpy = vi.spyOn(spotifyService.tracks, 'get')
-      getAlbumSpy = vi.spyOn(spotifyService.albums, 'get')
-      findTracksSpy = vi.spyOn(tracksRepository, 'findTracks')
-      saveSpy = vi.spyOn(tracksRepository, 'save')
-      updateOrCreateSpy = vi.spyOn(albumsService, 'updateOrCreate')
-    })
-
-    test('should not check tracks if not enabled', async () => {
-      getConfigSpy.mockReturnValue(false)
-
-      await tracksService.onModuleInit()
-
-      expect(getConfigSpy).toHaveBeenCalled()
-      expect(getTrackSpy).not.toHaveBeenCalled()
-      expect(getAlbumSpy).not.toHaveBeenCalled()
-      expect(findTracksSpy).not.toHaveBeenCalled()
-      expect(saveSpy).not.toHaveBeenCalled()
-      expect(updateOrCreateSpy).not.toHaveBeenCalled()
-    })
-
-    test('should check tracks if enabled', async () => {
-      getConfigSpy.mockReturnValue(true)
-      findTracksSpy.mockResolvedValue(trackEntitiesMock)
-
-      await tracksService.onModuleInit()
-
-      expect(getConfigSpy).toHaveBeenCalled()
-      expect(getTrackSpy).not.toHaveBeenCalled()
-      expect(getAlbumSpy).not.toHaveBeenCalled()
-      expect(findTracksSpy).toHaveBeenCalled()
-      expect(saveSpy).not.toHaveBeenCalled()
-      expect(updateOrCreateSpy).not.toHaveBeenCalled()
-    })
-
-    test('should update the album of the track if is nullish', async () => {
-      const externalId = 'externalId'
-
-      const brokenTrack = {
-        ...trackEntityMock,
-        externalId,
-        album: undefined,
-      }
-
-      getConfigSpy.mockReturnValue(true)
-      findTracksSpy.mockResolvedValue([...trackEntitiesMock, brokenTrack])
-      getTrackSpy.mockResolvedValue(sdkTrackMock)
-      getAlbumSpy.mockResolvedValue(sdkAlbumMock)
-
-      await tracksService.onModuleInit()
-
-      expect(getConfigSpy).toHaveBeenCalled()
-      expect(getTrackSpy).toHaveBeenCalledWith(externalId, false)
-      expect(getAlbumSpy).toHaveBeenCalledWith(sdkTrackMock.album.id, false)
-      expect(findTracksSpy).toHaveBeenCalled()
-      expect(saveSpy).toHaveBeenCalledWith(brokenTrack)
-      expect(updateOrCreateSpy).toHaveBeenCalledWith(sdkAlbumMock)
-    })
   })
 
   describe('updateOrCreate', () => {
@@ -206,6 +95,8 @@ describe('TracksService', () => {
           externalId: sdkTrackMock.id,
           href: sdkTrackMock.external_urls.spotify,
           duration: sdkTrackMock.duration_ms,
+          trackNumber: sdkTrackMock.track_number,
+          discNumber: sdkTrackMock.disc_number,
           album: albumEntityMock,
           artists: artistEntitiesMock,
         })
