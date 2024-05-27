@@ -8,7 +8,7 @@ import { backOff } from 'exponential-backoff'
 import { TokenOptions } from './types'
 
 import { Environment } from '@config/environment'
-import { applyAuthorizationHeader, catchSpotifyError } from '@common/utils'
+import { catchSpotifyError } from '@common/utils'
 import { Profile, SdkProfile } from '@common/types/spotify'
 import { AdaptersService } from '@common/adapters'
 
@@ -70,7 +70,11 @@ export class SpotifyAuthService {
     return backOff(() =>
       firstValueFrom(
         this.httpService
-          .get<SdkProfile>('/me', applyAuthorizationHeader(accessToken))
+          .get<SdkProfile>('/me', {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          })
           .pipe(
             map(response => this.adaptersService.profile.adapt(response.data)),
             catchError(catchSpotifyError)
