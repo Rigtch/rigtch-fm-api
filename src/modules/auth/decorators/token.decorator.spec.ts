@@ -2,7 +2,7 @@ import { UnauthorizedException } from '@nestjs/common'
 
 import { Token, getToken } from './token.decorator'
 
-import { contextFactoryMock } from '@common/mocks'
+import { accessTokenMock, contextFactoryMock } from '@common/mocks'
 
 describe('TokenDecorator', () => {
   test('should be defined', () => {
@@ -21,9 +21,10 @@ describe('TokenDecorator', () => {
             headers: {
               authorization: `Bearer ${accessToken}`,
             },
+            token: accessTokenMock,
           })
         )
-      ).toEqual(accessToken)
+      ).toEqual(accessTokenMock)
     })
 
     test('should throw unauthorized exception if no access token is provided', () => {

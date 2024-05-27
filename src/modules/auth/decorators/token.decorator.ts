@@ -6,14 +6,14 @@ import {
 import { Request } from 'express'
 
 export function getToken(data: unknown, context: ExecutionContext) {
-  const { headers } = context.switchToHttp().getRequest<Request>()
+  const { headers, token } = context.switchToHttp().getRequest<Request>()
 
-  const token = headers.authorization?.slice(7)
+  const accessToken = headers.authorization?.slice(7)
 
-  if (!token)
+  if (!accessToken)
     throw new UnauthorizedException('No value was provided for Authentication')
 
-  return token
+  return token!
 }
 
 export const Token = createParamDecorator(getToken)
