@@ -25,6 +25,14 @@ export abstract class CreateTrack implements Omit<Track, 'id'> {
   @ApiProperty({ type: Number })
   readonly duration: number
 
+  @IsInt()
+  @ApiProperty({ type: Number })
+  readonly trackNumber: number
+
+  @IsInt()
+  @ApiProperty({ type: Number })
+  readonly discNumber: number
+
   @IsArray()
   @ApiProperty({ type: Artist, isArray: true })
   readonly artists: Artist[]
@@ -44,8 +52,6 @@ export abstract class SdkCreateTrack
       | 'popularity'
       | 'available_markets'
       | 'preview_url'
-      | 'disc_number'
-      | 'track_number'
       | 'explicit'
       | 'is_local'
       | 'type'
@@ -72,6 +78,14 @@ export abstract class SdkCreateTrack
   @IsInt()
   @ApiProperty({ type: Number })
   readonly duration_ms: number
+
+  @IsInt()
+  @ApiProperty({ type: Number })
+  readonly track_number: number
+
+  @IsInt()
+  @ApiProperty({ type: Number })
+  readonly disc_number: number
 
   @IsArray()
   @ApiProperty({ type: Artist, isArray: true })

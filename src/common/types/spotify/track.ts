@@ -8,6 +8,8 @@ export interface Track {
   artists: SimplifiedArtist[]
   href: string
   duration: number
+  trackNumber: number
+  discNumber: number
   progress?: number
   playedAt?: string
 }

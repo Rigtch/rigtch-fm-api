@@ -125,6 +125,8 @@ describe('TracksRepository', () => {
         ...sdkTrackMock,
         externalId: sdkTrackMock.id,
         duration: sdkTrackMock.duration_ms,
+        trackNumber: sdkTrackMock.track_number,
+        discNumber: sdkTrackMock.disc_number,
         album: albumEntityMock,
         artists: artistEntitiesMock,
       })

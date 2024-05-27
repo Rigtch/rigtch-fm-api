@@ -39,6 +39,8 @@ export const trackMock: Track = {
   album: simplifiedAlbumMock,
   name: sdkTrackMock.name,
   duration: sdkTrackMock.duration_ms,
+  trackNumber: sdkTrackMock.track_number,
+  discNumber: sdkTrackMock.disc_number,
   href: sdkTrackMock.external_urls.spotify,
 }
 
