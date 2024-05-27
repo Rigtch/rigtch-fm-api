@@ -18,9 +18,9 @@ import { Pagination, paginate } from 'nestjs-typeorm-paginate'
 import { ArtistsRepository } from './artists.repository'
 import { Artist } from './artist.entity'
 
+import { PaginationQuery } from '@common/dtos/pagination'
 import { NOT_BEEN_FOUND, ONE_IS_INVALID } from '@common/constants'
 import { ApiPaginatedQuery } from '@common/decorators'
-import { PaginatedQuery } from '@common/dtos'
 
 @Controller('artists')
 @ApiTags('artists')
@@ -36,7 +36,7 @@ export class ArtistsController {
     description: 'Artists successfully found.',
     type: [Pagination<Artist>],
   })
-  getArtists(@Query() { limit = 10, page = 1 }: PaginatedQuery) {
+  getArtists(@Query() { limit = 10, page = 1 }: PaginationQuery) {
     return paginate(this.artistsRepository, { limit, page })
   }
 

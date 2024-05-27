@@ -20,7 +20,7 @@ import { Track } from './track.entity'
 
 import { NOT_BEEN_FOUND, ONE_IS_INVALID } from '@common/constants'
 import { ApiPaginatedQuery } from '@common/decorators'
-import { PaginatedQuery } from '@common/dtos'
+import { PaginationQuery } from '@common/dtos/pagination'
 
 @Controller('tracks')
 @ApiTags('tracks')
@@ -36,7 +36,7 @@ export class TracksController {
     description: 'Tracks successfully found.',
     type: [Pagination<Track>],
   })
-  getTracks(@Query() { limit = 10, page = 1 }: PaginatedQuery) {
+  getTracks(@Query() { limit = 10, page = 1 }: PaginationQuery) {
     return paginate(
       this.tracksRepository,
       { limit, page },
