@@ -1,10 +1,4 @@
-import {
-  Controller,
-  Get,
-  Put,
-  UnauthorizedException,
-  UseGuards,
-} from '@nestjs/common'
+import { Controller, Get, Put, UseGuards } from '@nestjs/common'
 import {
   ApiBadRequestResponse,
   ApiNotFoundResponse,
@@ -16,9 +10,7 @@ import {
 import { AccessToken } from '@spotify/web-api-ts-sdk'
 
 import { USER } from '../constants'
-import { CheckUserIdGuard } from '../guards'
-import { RequestUser } from '../decorators'
-import { User } from '../user.entity'
+import { CheckIsCurrentUserGuard, CheckUserIdGuard } from '../guards'
 
 import {
   NOT_BEEN_FOUND,
@@ -56,6 +48,7 @@ export class UsersPlaybackController {
   }
 
   @Put('pause')
+  @UseGuards(CheckIsCurrentUserGuard)
   @ApiOperation({
     summary: "Pausing user's playback.",
   })
@@ -69,25 +62,14 @@ export class UsersPlaybackController {
   @ApiBadRequestResponse({
     description: ONE_IS_INVALID('uuid'),
   })
-  async pausePlayback(
-    @RequestUser() { profile }: User,
-    @Token() token: AccessToken
-  ): Promise<Success> {
-    const meProfile = await this.spotifyService.auth.getMeProfile(
-      token.access_token
-    )
-
-    if (profile.id !== meProfile.id)
-      throw new UnauthorizedException(
-        'You are not authorized to resume playback.'
-      )
-
+  async pausePlayback(@Token() token: AccessToken): Promise<Success> {
     return {
       success: await this.spotifyService.player.pausePlayback(token),
     }
   }
 
   @Put('resume')
+  @UseGuards(CheckIsCurrentUserGuard)
   @ApiOperation({
     summary: "Resuming user's playback.",
   })
@@ -101,17 +83,7 @@ export class UsersPlaybackController {
   @ApiBadRequestResponse({
     description: ONE_IS_INVALID('uuid'),
   })
-  async resumePlayback(
-    @RequestUser() { profile }: User,
-    @Token() token: AccessToken
-  ): Promise<Success> {
-    const meProfile = await this.spotifyService.auth.getMeProfile(
-      token.access_token
-    )
-
-    if (profile.id !== meProfile.id)
-      throw new UnauthorizedException('You are not allowed to resume playback.')
-
+  async resumePlayback(@Token() token: AccessToken): Promise<Success> {
     return {
       success: await this.spotifyService.player.resumePlayback(token),
     }
