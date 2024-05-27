@@ -84,6 +84,8 @@ export class AuthController {
   @Post('refresh')
   @ApiOperation({
     summary: 'Refreshing access token.',
+    description:
+      'Refresh the access token using the refresh token returned from spotify callback.',
   })
   @ApiOkResponse({
     description: 'Access token has been successfully refreshed',
@@ -92,7 +94,7 @@ export class AuthController {
   @ApiBody({
     type: RefreshToken,
   })
-  refresh(@Body() { refreshToken }: RefreshToken) {
+  async refresh(@Body() { refreshToken }: RefreshToken) {
     return this.spotifyService.auth
       .token({ refreshToken })
       .then(data => this.adaptersService.secretData.adapt(data))
