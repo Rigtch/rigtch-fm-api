@@ -1,24 +1,13 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common'
-import {
-  ApiOperation,
-  ApiParam,
-  ApiOkResponse,
-  ApiNotFoundResponse,
-  ApiBadRequestResponse,
-  ApiTags,
-} from '@nestjs/swagger'
+import { ApiOperation, ApiOkResponse, ApiTags } from '@nestjs/swagger'
 import { AccessToken } from '@spotify/web-api-ts-sdk'
 
 import { USER } from '../constants'
-import { ApiItemQuery } from '../decorators'
+import { ApiItemQuery, ApiUser } from '../decorators'
 import { LastItemQuery, TopItemQuery } from '../dtos'
 import { CheckUserIdGuard } from '../guards'
 
-import {
-  ONE_SUCCESSFULLY_FOUND,
-  NOT_BEEN_FOUND,
-  ONE_IS_INVALID,
-} from '@common/constants'
+import { ONE_SUCCESSFULLY_RETRIEVED } from '@common/constants'
 import { ApiAuth, Token } from '@modules/auth/decorators'
 import { SpotifyService } from '@modules/spotify'
 import { TokenGuard } from '@modules/auth/guards'
@@ -34,15 +23,9 @@ export class UsersProfileController {
   @ApiOperation({
     summary: "Getting user's profile.",
   })
-  @ApiParam({ name: 'id' })
+  @ApiUser()
   @ApiOkResponse({
-    description: ONE_SUCCESSFULLY_FOUND(USER),
-  })
-  @ApiNotFoundResponse({
-    description: NOT_BEEN_FOUND(USER),
-  })
-  @ApiBadRequestResponse({
-    description: ONE_IS_INVALID('uuid'),
+    description: ONE_SUCCESSFULLY_RETRIEVED(USER),
   })
   async getProfile(@Token() token: AccessToken) {
     return this.spotifyService.users.profile(token)
@@ -52,17 +35,11 @@ export class UsersProfileController {
   @ApiOperation({
     summary: "Getting user's recently played tracks.",
   })
-  @ApiParam({ name: 'id' })
   @ApiItemQuery({ withCursors: true })
   @ApiOkResponse({
-    description: ONE_SUCCESSFULLY_FOUND(USER),
+    description: ONE_SUCCESSFULLY_RETRIEVED(USER),
   })
-  @ApiNotFoundResponse({
-    description: NOT_BEEN_FOUND(USER),
-  })
-  @ApiBadRequestResponse({
-    description: ONE_IS_INVALID('uuid'),
-  })
+  @ApiUser()
   async getRecentlyPlayed(
     @Token() token: AccessToken,
     @Query() { limit = 10, before, after }: LastItemQuery
@@ -77,17 +54,11 @@ export class UsersProfileController {
   @ApiOperation({
     summary: "Getting user's top artists.",
   })
-  @ApiParam({ name: 'id' })
   @ApiItemQuery({ withOffset: true })
   @ApiOkResponse({
-    description: ONE_SUCCESSFULLY_FOUND(USER),
+    description: ONE_SUCCESSFULLY_RETRIEVED(USER),
   })
-  @ApiNotFoundResponse({
-    description: NOT_BEEN_FOUND(USER),
-  })
-  @ApiBadRequestResponse({
-    description: ONE_IS_INVALID('uuid'),
-  })
+  @ApiUser()
   async getTopArtists(
     @Token() token: AccessToken,
     @Query() { limit, timeRange, offset }: TopItemQuery
@@ -104,17 +75,11 @@ export class UsersProfileController {
   @ApiOperation({
     summary: "Getting user's top tracks.",
   })
-  @ApiParam({ name: 'id' })
   @ApiItemQuery({ withOffset: true })
   @ApiOkResponse({
-    description: ONE_SUCCESSFULLY_FOUND(USER),
+    description: ONE_SUCCESSFULLY_RETRIEVED(USER),
   })
-  @ApiNotFoundResponse({
-    description: NOT_BEEN_FOUND(USER),
-  })
-  @ApiBadRequestResponse({
-    description: ONE_IS_INVALID('uuid'),
-  })
+  @ApiUser()
   async getTopTracks(
     @Token() token: AccessToken,
     @Query() { limit, timeRange, offset }: TopItemQuery
@@ -131,17 +96,11 @@ export class UsersProfileController {
   @ApiOperation({
     summary: "Getting user's top genres.",
   })
-  @ApiParam({ name: 'id' })
   @ApiItemQuery()
   @ApiOkResponse({
-    description: ONE_SUCCESSFULLY_FOUND(USER),
+    description: ONE_SUCCESSFULLY_RETRIEVED(USER),
   })
-  @ApiNotFoundResponse({
-    description: NOT_BEEN_FOUND(USER),
-  })
-  @ApiBadRequestResponse({
-    description: ONE_IS_INVALID('uuid'),
-  })
+  @ApiUser()
   async getTopGenres(
     @Token() token: AccessToken,
     @Query() { limit, timeRange, offset }: TopItemQuery
@@ -158,16 +117,10 @@ export class UsersProfileController {
   @ApiOperation({
     summary: "Getting user's analysis.",
   })
-  @ApiParam({ name: 'id' })
   @ApiOkResponse({
-    description: ONE_SUCCESSFULLY_FOUND(USER),
+    description: ONE_SUCCESSFULLY_RETRIEVED(USER),
   })
-  @ApiNotFoundResponse({
-    description: NOT_BEEN_FOUND(USER),
-  })
-  @ApiBadRequestResponse({
-    description: ONE_IS_INVALID('uuid'),
-  })
+  @ApiUser()
   async getAnalysis(@Token() token: AccessToken) {
     return this.spotifyService.users.getAnalysis(token)
   }

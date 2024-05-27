@@ -1,22 +1,11 @@
 import { Controller, Get, Put, UseGuards } from '@nestjs/common'
-import {
-  ApiBadRequestResponse,
-  ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiParam,
-  ApiTags,
-} from '@nestjs/swagger'
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { AccessToken } from '@spotify/web-api-ts-sdk'
 
-import { USER } from '../constants'
 import { CheckIsCurrentUserGuard, CheckUserIdGuard } from '../guards'
+import { ApiUser } from '../decorators'
 
-import {
-  NOT_BEEN_FOUND,
-  ONE_IS_INVALID,
-  ONE_SUCCESSFULLY_FOUND,
-} from '@common/constants'
+import { ONE_SUCCESSFULLY_RETRIEVED } from '@common/constants'
 import { ApiAuth, Token } from '@modules/auth/decorators'
 import { Success } from '@common/dtos'
 import { SpotifyService } from '@modules/spotify'
@@ -33,16 +22,10 @@ export class UsersPlaybackController {
   @ApiOperation({
     summary: "Getting user's playback state.",
   })
-  @ApiParam({ name: 'id' })
   @ApiOkResponse({
-    description: ONE_SUCCESSFULLY_FOUND('playback state'),
+    description: ONE_SUCCESSFULLY_RETRIEVED('playback state'),
   })
-  @ApiNotFoundResponse({
-    description: NOT_BEEN_FOUND(USER),
-  })
-  @ApiBadRequestResponse({
-    description: ONE_IS_INVALID('uuid'),
-  })
+  @ApiUser()
   async getPlaybackState(@Token() token: AccessToken) {
     return this.spotifyService.player.getPlaybackState(token)
   }
@@ -52,16 +35,10 @@ export class UsersPlaybackController {
   @ApiOperation({
     summary: "Pausing user's playback.",
   })
-  @ApiParam({ name: 'id' })
   @ApiOkResponse({
     description: 'Playback paused.',
   })
-  @ApiNotFoundResponse({
-    description: NOT_BEEN_FOUND(USER),
-  })
-  @ApiBadRequestResponse({
-    description: ONE_IS_INVALID('uuid'),
-  })
+  @ApiUser()
   async pausePlayback(@Token() token: AccessToken): Promise<Success> {
     return {
       success: await this.spotifyService.player.pausePlayback(token),
@@ -73,16 +50,11 @@ export class UsersPlaybackController {
   @ApiOperation({
     summary: "Resuming user's playback.",
   })
-  @ApiParam({ name: 'id' })
+  @ApiUser()
   @ApiOkResponse({
     description: 'Playback resumed.',
   })
-  @ApiNotFoundResponse({
-    description: NOT_BEEN_FOUND(USER),
-  })
-  @ApiBadRequestResponse({
-    description: ONE_IS_INVALID('uuid'),
-  })
+  @ApiUser()
   async resumePlayback(@Token() token: AccessToken): Promise<Success> {
     return {
       success: await this.spotifyService.player.resumePlayback(token),
