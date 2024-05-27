@@ -9,7 +9,6 @@ import {
 } from '@nestjs/swagger'
 import { Pagination, paginate } from 'nestjs-typeorm-paginate'
 
-import { UsersRepository } from '../users.repository'
 import { RequestUser } from '../decorators'
 import { User } from '../user.entity'
 import { CheckUserIdGuard } from '../guards'
@@ -37,7 +36,6 @@ import { HistoryService } from '@modules/history'
 export class UsersHistoryController {
   constructor(
     private readonly historyTracksRepository: HistoryTracksRepository,
-    private readonly usersRepository: UsersRepository,
     private readonly historyService: HistoryService
   ) {}
 

@@ -14,8 +14,6 @@ import {
   pageMockFactory,
   artistsMock,
   analysisMock,
-  userMock,
-  accessToken,
   accessTokenMock,
 } from '@common/mocks'
 import { Profile } from '@common/types/spotify'
@@ -32,8 +30,6 @@ describe('UsersProfileController', () => {
   let usersProfileController: UsersProfileController
   let spotifyService: SpotifyService
 
-  let tokenSpy: MockInstance
-
   beforeEach(async () => {
     moduleRef = await Test.createTestingModule({
       providers: [
@@ -49,9 +45,6 @@ describe('UsersProfileController', () => {
         {
           provide: SpotifyService,
           useValue: {
-            auth: {
-              token: vi.fn(),
-            },
             users: {
               profile: vi.fn(),
               getTopArtists: vi.fn(),
@@ -69,10 +62,6 @@ describe('UsersProfileController', () => {
 
     usersProfileController = moduleRef.get(UsersProfileController)
     spotifyService = moduleRef.get(SpotifyService)
-
-    tokenSpy = vi
-      .spyOn(spotifyService.auth, 'token')
-      .mockResolvedValue(accessTokenMock)
   })
 
   afterEach(() => {
@@ -91,11 +80,10 @@ describe('UsersProfileController', () => {
         .spyOn(spotifyService.users, 'profile')
         .mockResolvedValue(profileMock)
 
-      expect(
-        await usersProfileController.getProfile(userMock, accessToken)
-      ).toEqual(profileMock)
+      expect(await usersProfileController.getProfile(accessTokenMock)).toEqual(
+        profileMock
+      )
 
-      expect(tokenSpy).toHaveBeenCalled()
       expect(profileSpy).toHaveBeenCalledWith(accessTokenMock)
     })
   })
@@ -111,10 +99,9 @@ describe('UsersProfileController', () => {
 
     test("should get user's recently played tracks", async () => {
       expect(
-        await usersProfileController.getRecentlyPlayed(userMock, {})
+        await usersProfileController.getRecentlyPlayed(accessTokenMock, {})
       ).toEqual(recentlyPlayedTracksPageMockFactory(tracksMock))
 
-      expect(tokenSpy).toHaveBeenCalled()
       expect(getRecentlyPlayedTracksSpy).toHaveBeenCalledWith(
         accessTokenMock,
         10,
@@ -124,14 +111,13 @@ describe('UsersProfileController', () => {
 
     test("should get user's recently played tracks with query params", async () => {
       expect(
-        await usersProfileController.getRecentlyPlayed(userMock, {
+        await usersProfileController.getRecentlyPlayed(accessTokenMock, {
           limit,
           before,
           after,
         })
       ).toEqual(recentlyPlayedTracksPageMockFactory(tracksMock))
 
-      expect(tokenSpy).toHaveBeenCalled()
       expect(getRecentlyPlayedTracksSpy).toHaveBeenCalledWith(
         accessTokenMock,
         limit,
@@ -150,11 +136,10 @@ describe('UsersProfileController', () => {
     })
 
     test('should get user top artists', async () => {
-      expect(await usersProfileController.getTopArtists(userMock, {})).toEqual(
-        pageMockFactory(artistsMock)
-      )
+      expect(
+        await usersProfileController.getTopArtists(accessTokenMock, {})
+      ).toEqual(pageMockFactory(artistsMock))
 
-      expect(tokenSpy).toHaveBeenCalled()
       expect(getTopArtistsSpy).toHaveBeenCalledWith(
         accessTokenMock,
         undefined,
@@ -165,14 +150,13 @@ describe('UsersProfileController', () => {
 
     test('should get user top artists with query', async () => {
       expect(
-        await usersProfileController.getTopArtists(userMock, {
+        await usersProfileController.getTopArtists(accessTokenMock, {
           limit,
           timeRange,
           offset,
         })
       ).toEqual(pageMockFactory(artistsMock))
 
-      expect(tokenSpy).toHaveBeenCalled()
       expect(getTopArtistsSpy).toHaveBeenCalledWith(
         accessTokenMock,
         timeRange,
@@ -192,11 +176,10 @@ describe('UsersProfileController', () => {
     })
 
     test('should get user top tracks', async () => {
-      expect(await usersProfileController.getTopTracks(userMock, {})).toEqual(
-        pageMockFactory(tracksMock)
-      )
+      expect(
+        await usersProfileController.getTopTracks(accessTokenMock, {})
+      ).toEqual(pageMockFactory(tracksMock))
 
-      expect(tokenSpy).toHaveBeenCalled()
       expect(getTopTracksSpy).toHaveBeenCalledWith(
         accessTokenMock,
         undefined,
@@ -207,14 +190,13 @@ describe('UsersProfileController', () => {
 
     test('should get user top tracks with query', async () => {
       expect(
-        await usersProfileController.getTopTracks(userMock, {
+        await usersProfileController.getTopTracks(accessTokenMock, {
           limit,
           timeRange,
           offset,
         })
       ).toEqual(pageMockFactory(tracksMock))
 
-      expect(tokenSpy).toHaveBeenCalled()
       expect(getTopTracksSpy).toHaveBeenCalledWith(
         accessTokenMock,
         timeRange,
@@ -234,11 +216,10 @@ describe('UsersProfileController', () => {
     })
 
     test('should get user top genres', async () => {
-      expect(await usersProfileController.getTopGenres(userMock, {})).toEqual(
-        topGenresMock
-      )
+      expect(
+        await usersProfileController.getTopGenres(accessTokenMock, {})
+      ).toEqual(topGenresMock)
 
-      expect(tokenSpy).toHaveBeenCalled()
       expect(getTopGenresSpy).toHaveBeenCalledWith(
         accessTokenMock,
         undefined,
@@ -249,14 +230,13 @@ describe('UsersProfileController', () => {
 
     test('should get user top genres with query', async () => {
       expect(
-        await usersProfileController.getTopGenres(userMock, {
+        await usersProfileController.getTopGenres(accessTokenMock, {
           limit,
           timeRange,
           offset,
         })
       ).toEqual(topGenresMock)
 
-      expect(tokenSpy).toHaveBeenCalled()
       expect(getTopGenresSpy).toHaveBeenCalledWith(
         accessTokenMock,
         timeRange,
@@ -276,13 +256,10 @@ describe('UsersProfileController', () => {
     })
 
     test('should get user analysis', async () => {
-      expect(await usersProfileController.getAnalysis(userMock)).toEqual(
+      expect(await usersProfileController.getAnalysis(accessTokenMock)).toEqual(
         analysisMock
       )
 
-      expect(tokenSpy).toHaveBeenCalledWith({
-        refreshToken: userMock.refreshToken,
-      })
       expect(getAnalysisSpy).toHaveBeenCalledWith(accessTokenMock)
     })
   })

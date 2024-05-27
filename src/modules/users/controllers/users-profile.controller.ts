@@ -7,12 +7,12 @@ import {
   ApiBadRequestResponse,
   ApiTags,
 } from '@nestjs/swagger'
+import { AccessToken } from '@spotify/web-api-ts-sdk'
 
 import { USER } from '../constants'
-import { ApiItemQuery, RequestUser } from '../decorators'
+import { ApiItemQuery } from '../decorators'
 import { LastItemQuery, TopItemQuery } from '../dtos'
 import { CheckUserIdGuard } from '../guards'
-import { User } from '../user.entity'
 
 import {
   ONE_SUCCESSFULLY_FOUND,
@@ -21,10 +21,11 @@ import {
 } from '@common/constants'
 import { ApiAuth, Token } from '@modules/auth/decorators'
 import { SpotifyService } from '@modules/spotify'
+import { TokenGuard } from '@modules/auth/guards'
 
 @Controller('users/:id/profile')
 @ApiTags('users/{id}/profile')
-@UseGuards(CheckUserIdGuard)
+@UseGuards(CheckUserIdGuard, TokenGuard)
 @ApiAuth()
 export class UsersProfileController {
   constructor(private readonly spotifyService: SpotifyService) {}
@@ -43,14 +44,7 @@ export class UsersProfileController {
   @ApiBadRequestResponse({
     description: ONE_IS_INVALID('uuid'),
   })
-  async getProfile(
-    @RequestUser() { refreshToken }: User,
-    @Token() _token?: string
-  ) {
-    const token = await this.spotifyService.auth.token({
-      refreshToken,
-    })
-
+  async getProfile(@Token() token: AccessToken) {
     return this.spotifyService.users.profile(token)
   }
 
@@ -70,14 +64,9 @@ export class UsersProfileController {
     description: ONE_IS_INVALID('uuid'),
   })
   async getRecentlyPlayed(
-    @RequestUser() { refreshToken }: User,
-    @Query() { limit = 10, before, after }: LastItemQuery,
-    @Token() _token?: string
+    @Token() token: AccessToken,
+    @Query() { limit = 10, before, after }: LastItemQuery
   ) {
-    const token = await this.spotifyService.auth.token({
-      refreshToken,
-    })
-
     return this.spotifyService.player.getRecentlyPlayedTracks(token, limit, {
       before,
       after,
@@ -100,14 +89,9 @@ export class UsersProfileController {
     description: ONE_IS_INVALID('uuid'),
   })
   async getTopArtists(
-    @RequestUser() { refreshToken }: User,
-    @Query() { limit, timeRange, offset }: TopItemQuery,
-    @Token() _token?: string
+    @Token() token: AccessToken,
+    @Query() { limit, timeRange, offset }: TopItemQuery
   ) {
-    const token = await this.spotifyService.auth.token({
-      refreshToken,
-    })
-
     return this.spotifyService.users.getTopArtists(
       token,
       timeRange,
@@ -132,14 +116,9 @@ export class UsersProfileController {
     description: ONE_IS_INVALID('uuid'),
   })
   async getTopTracks(
-    @RequestUser() { refreshToken }: User,
-    @Query() { limit, timeRange, offset }: TopItemQuery,
-    @Token() _token?: string
+    @Token() token: AccessToken,
+    @Query() { limit, timeRange, offset }: TopItemQuery
   ) {
-    const token = await this.spotifyService.auth.token({
-      refreshToken,
-    })
-
     return this.spotifyService.users.getTopTracks(
       token,
       timeRange,
@@ -164,14 +143,9 @@ export class UsersProfileController {
     description: ONE_IS_INVALID('uuid'),
   })
   async getTopGenres(
-    @RequestUser() { refreshToken }: User,
-    @Query() { limit, timeRange, offset }: TopItemQuery,
-    @Token() _token?: string
+    @Token() token: AccessToken,
+    @Query() { limit, timeRange, offset }: TopItemQuery
   ) {
-    const token = await this.spotifyService.auth.token({
-      refreshToken,
-    })
-
     return this.spotifyService.users.getTopGenres(
       token,
       timeRange,
@@ -194,14 +168,7 @@ export class UsersProfileController {
   @ApiBadRequestResponse({
     description: ONE_IS_INVALID('uuid'),
   })
-  async getAnalysis(
-    @RequestUser() { refreshToken }: User,
-    @Token() _token?: string
-  ) {
-    const token = await this.spotifyService.auth.token({
-      refreshToken,
-    })
-
+  async getAnalysis(@Token() token: AccessToken) {
     return this.spotifyService.users.getAnalysis(token)
   }
 }

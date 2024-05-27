@@ -25,7 +25,6 @@ describe('UsersPlaybackController', () => {
   let usersPlaybackController: UsersPlaybackController
   let spotifyService: SpotifyService
 
-  let tokenSpy: MockInstance
   let getMeProfileSpy: MockInstance
 
   beforeEach(async () => {
@@ -47,7 +46,6 @@ describe('UsersPlaybackController', () => {
               resumePlayback: vi.fn(),
             },
             auth: {
-              token: vi.fn(),
               getMeProfile: vi.fn(),
             },
           },
@@ -58,9 +56,6 @@ describe('UsersPlaybackController', () => {
     usersPlaybackController = moduleRef.get(UsersPlaybackController)
     spotifyService = moduleRef.get(SpotifyService)
 
-    tokenSpy = vi
-      .spyOn(spotifyService.auth, 'token')
-      .mockResolvedValue(accessTokenMock)
     getMeProfileSpy = vi.spyOn(spotifyService.auth, 'getMeProfile')
   })
 
@@ -74,14 +69,11 @@ describe('UsersPlaybackController', () => {
         .spyOn(spotifyService.player, 'getPlaybackState')
         .mockResolvedValue(playbackStateMock)
 
-      expect(await usersPlaybackController.getPlaybackState(userMock)).toEqual(
-        playbackStateMock
-      )
+      expect(
+        await usersPlaybackController.getPlaybackState(accessTokenMock)
+      ).toEqual(playbackStateMock)
 
       expect(currentPlaybackStateSpy).toHaveBeenCalledWith(accessTokenMock)
-      expect(tokenSpy).toHaveBeenCalledWith({
-        refreshToken: userMock.refreshToken,
-      })
     })
   })
 
@@ -93,13 +85,10 @@ describe('UsersPlaybackController', () => {
         .mockResolvedValue(true)
 
       expect(
-        await usersPlaybackController.pausePlayback(userMock, accessToken)
+        await usersPlaybackController.pausePlayback(userMock, accessTokenMock)
       ).toEqual({ success: true })
 
       expect(pausePlaybackSpy).toHaveBeenCalledWith(accessTokenMock)
-      expect(tokenSpy).toHaveBeenCalledWith({
-        refreshToken: userMock.refreshToken,
-      })
       expect(getMeProfileSpy).toHaveBeenCalledWith(accessToken)
     })
 
@@ -107,10 +96,9 @@ describe('UsersPlaybackController', () => {
       getMeProfileSpy.mockResolvedValue(fakeProfileMock)
 
       await expect(
-        usersPlaybackController.pausePlayback(userMock, accessToken)
+        usersPlaybackController.pausePlayback(userMock, accessTokenMock)
       ).rejects.toThrowError(UnauthorizedException)
 
-      expect(tokenSpy).not.toHaveBeenCalled()
       expect(getMeProfileSpy).toHaveBeenCalledWith(accessToken)
     })
   })
@@ -123,13 +111,10 @@ describe('UsersPlaybackController', () => {
         .mockResolvedValue(true)
 
       expect(
-        await usersPlaybackController.resumePlayback(userMock, accessToken)
+        await usersPlaybackController.resumePlayback(userMock, accessTokenMock)
       ).toEqual({ success: true })
 
       expect(resumePlaybackSpy).toHaveBeenCalledWith(accessTokenMock)
-      expect(tokenSpy).toHaveBeenCalledWith({
-        refreshToken: userMock.refreshToken,
-      })
       expect(getMeProfileSpy).toHaveBeenCalledWith(accessToken)
     })
 
@@ -137,10 +122,9 @@ describe('UsersPlaybackController', () => {
       getMeProfileSpy.mockResolvedValue(fakeProfileMock)
 
       await expect(
-        usersPlaybackController.resumePlayback(userMock, accessToken)
+        usersPlaybackController.resumePlayback(userMock, accessTokenMock)
       ).rejects.toThrowError(UnauthorizedException)
 
-      expect(tokenSpy).not.toHaveBeenCalled()
       expect(getMeProfileSpy).toHaveBeenCalledWith(accessToken)
     })
   })
