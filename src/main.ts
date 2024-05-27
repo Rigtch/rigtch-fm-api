@@ -7,6 +7,7 @@ import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common'
 import { Environment } from '@config/environment'
 import { AppModule } from '@modules/app'
 import { BEARER } from '@modules/auth/constants'
+import { QueryExceptionFilter } from '@common/filters'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
@@ -37,6 +38,7 @@ async function bootstrap() {
   app.use(cookieParser())
   app.useGlobalPipes(new ValidationPipe())
   app.useGlobalInterceptors(new ClassSerializerInterceptor(reflector))
+  app.useGlobalFilters(new QueryExceptionFilter())
 
   await app.listen(+configService.get(Environment.PORT) || 4000)
 }
