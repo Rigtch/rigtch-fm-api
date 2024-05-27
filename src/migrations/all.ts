@@ -4,6 +4,7 @@ import { HistoryMigration1711027664648 } from './1711027664648-history-migration
 import { ChangeUniqueConstraintsForEntities1711444943012 } from './1711444943012-change-unique-constraints-for-entities'
 import { RemoveHistoryEntity1716207087982 } from './1716207087982-remove-history-entity'
 import { AddTrackNumberAndDiscNumberPropertiesToUserEntity1716804618570 } from './1716804618570-add-track-number-and-disc-number-properties-to-user-entity'
+import { MakeDiscNumberAndTrackNumberPropertiesRequiredInUserEntity1716814787203 } from './1716814787203-make-disc-number-and-track-number-properties-required-in-user-entity'
 
 export const migrations = [
   Migration1697539455661,
@@ -12,4 +13,5 @@ export const migrations = [
   ChangeUniqueConstraintsForEntities1711444943012,
   RemoveHistoryEntity1716207087982,
   AddTrackNumberAndDiscNumberPropertiesToUserEntity1716804618570,
+  MakeDiscNumberAndTrackNumberPropertiesRequiredInUserEntity1716814787203,
 ]
