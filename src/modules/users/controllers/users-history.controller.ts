@@ -1,20 +1,20 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common'
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
-import { Pagination, paginate } from 'nestjs-typeorm-paginate'
+import { paginate } from 'nestjs-typeorm-paginate'
 
 import { ApiUser, RequestUser } from '../decorators'
 import { User } from '../user.entity'
 import { CheckUserIdGuard } from '../guards'
+import { PaginationHistoryTracks } from '../dtos'
 
 import { ApiPaginatedQuery } from '@common/decorators'
 import { ONE_SUCCESSFULLY_RETRIEVED } from '@common/constants'
 import { ApiAuth, Token } from '@modules/auth/decorators'
 import {
-  HistoryTrack,
   HistoryTracksRepository,
   historyTracksOrder,
 } from '@modules/history/tracks'
-import { PaginatedQuery } from '@common/dtos'
+import { PaginationQuery } from '@common/dtos/pagination'
 import { tracksRelations } from '@modules/items/tracks'
 import { HistoryService } from '@modules/history'
 
@@ -34,14 +34,14 @@ export class UsersHistoryController {
   })
   @ApiOkResponse({
     description: ONE_SUCCESSFULLY_RETRIEVED('history'),
-    type: [Pagination<HistoryTrack>],
+    type: [PaginationHistoryTracks],
   })
   @ApiUser()
   @ApiPaginatedQuery()
   async getHistory(
     @RequestUser() user: User,
     @Token() _token: string,
-    @Query() { limit = 10, page = 1 }: PaginatedQuery
+    @Query() { limit = 10, page = 1 }: PaginationQuery
   ) {
     await this.historyService.synchronize(user)
 
