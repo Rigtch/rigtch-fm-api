@@ -1,61 +1,14 @@
-import {
-  Inject,
-  Injectable,
-  Logger,
-  OnModuleInit,
-  forwardRef,
-} from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { DataSource, In } from 'typeorm'
-import { ConfigService } from '@nestjs/config'
 
 import { Track } from './track.entity'
 import { SdkCreateTrack } from './dtos'
-import { TracksRepository } from './tracks.repository'
 
-import { Album, AlbumsService } from '@modules/items/albums'
+import { Album } from '@modules/items/albums'
 import { Artist } from '@modules/items/artists'
-import { Environment } from '@config/environment'
-import { SpotifyService } from '@modules/spotify'
-
-const { CHECK_TRACKS_ALBUM_EXISTENCE } = Environment
 @Injectable()
-export class TracksService implements OnModuleInit {
-  private readonly logger = new Logger(TracksService.name)
-
-  constructor(
-    private readonly dataSource: DataSource,
-    private readonly configService: ConfigService,
-    private readonly spotifyService: SpotifyService,
-    private readonly tracksRepository: TracksRepository,
-    @Inject(forwardRef(() => AlbumsService))
-    private readonly albumsService: AlbumsService
-  ) {}
-
-  async onModuleInit() {
-    if (!this.configService.get<boolean>(CHECK_TRACKS_ALBUM_EXISTENCE)) return
-
-    const tracks = await this.tracksRepository.findTracks()
-
-    for (const track of tracks) {
-      if (!track.album) {
-        this.logger.log(`Updating track ${track.name} with album`)
-
-        const sdkTrack = await this.spotifyService.tracks.get(
-          track.externalId,
-          false
-        )
-        const sdkAlbum = await this.spotifyService.albums.get(
-          sdkTrack.album.id,
-          false
-        )
-        const album = await this.albumsService.updateOrCreate(sdkAlbum)
-
-        track.album = album
-
-        await this.tracksRepository.save(track)
-      }
-    }
-  }
+export class TracksService {
+  constructor(private readonly dataSource: DataSource) {}
 
   public updateOrCreate(data: SdkCreateTrack): Promise<Track>
   public updateOrCreate(data: SdkCreateTrack[]): Promise<Track[]>
@@ -70,6 +23,8 @@ export class TracksService implements OnModuleInit {
     id,
     name,
     duration_ms,
+    track_number,
+    disc_number,
     external_urls: { spotify: href },
     artists: fetchedTrackArtists,
     album: fetchedTrackAlbum,
@@ -91,6 +46,8 @@ export class TracksService implements OnModuleInit {
         externalId: id,
         href,
         duration: duration_ms,
+        trackNumber: track_number,
+        discNumber: disc_number,
         album: album!,
         artists,
       })
