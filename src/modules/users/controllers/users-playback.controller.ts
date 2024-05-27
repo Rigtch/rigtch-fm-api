@@ -13,6 +13,7 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger'
+import { AccessToken } from '@spotify/web-api-ts-sdk'
 
 import { USER } from '../constants'
 import { CheckUserIdGuard } from '../guards'
@@ -27,10 +28,11 @@ import {
 import { ApiAuth, Token } from '@modules/auth/decorators'
 import { Success } from '@common/dtos'
 import { SpotifyService } from '@modules/spotify'
+import { TokenGuard } from '@modules/auth/guards'
 
 @Controller('users/:id/playback')
 @ApiTags('users/{id}/playback')
-@UseGuards(CheckUserIdGuard)
+@UseGuards(CheckUserIdGuard, TokenGuard)
 @ApiAuth()
 export class UsersPlaybackController {
   constructor(private readonly spotifyService: SpotifyService) {}
@@ -49,14 +51,7 @@ export class UsersPlaybackController {
   @ApiBadRequestResponse({
     description: ONE_IS_INVALID('uuid'),
   })
-  async getPlaybackState(
-    @RequestUser() { refreshToken }: User,
-    @Token() _token?: string
-  ) {
-    const token = await this.spotifyService.auth.token({
-      refreshToken,
-    })
-
+  async getPlaybackState(@Token() token: AccessToken) {
     return this.spotifyService.player.getPlaybackState(token)
   }
 
@@ -75,19 +70,17 @@ export class UsersPlaybackController {
     description: ONE_IS_INVALID('uuid'),
   })
   async pausePlayback(
-    @RequestUser() { refreshToken, profile }: User,
-    @Token() accessToken: string
+    @RequestUser() { profile }: User,
+    @Token() token: AccessToken
   ): Promise<Success> {
-    const meProfile = await this.spotifyService.auth.getMeProfile(accessToken)
+    const meProfile = await this.spotifyService.auth.getMeProfile(
+      token.access_token
+    )
 
     if (profile.id !== meProfile.id)
       throw new UnauthorizedException(
         'You are not authorized to resume playback.'
       )
-
-    const token = await this.spotifyService.auth.token({
-      refreshToken,
-    })
 
     return {
       success: await this.spotifyService.player.pausePlayback(token),
@@ -109,17 +102,15 @@ export class UsersPlaybackController {
     description: ONE_IS_INVALID('uuid'),
   })
   async resumePlayback(
-    @RequestUser() { refreshToken, profile }: User,
-    @Token() accessToken: string
+    @RequestUser() { profile }: User,
+    @Token() token: AccessToken
   ): Promise<Success> {
-    const meProfile = await this.spotifyService.auth.getMeProfile(accessToken)
+    const meProfile = await this.spotifyService.auth.getMeProfile(
+      token.access_token
+    )
 
     if (profile.id !== meProfile.id)
       throw new UnauthorizedException('You are not allowed to resume playback.')
-
-    const token = await this.spotifyService.auth.token({
-      refreshToken,
-    })
 
     return {
       success: await this.spotifyService.player.resumePlayback(token),
