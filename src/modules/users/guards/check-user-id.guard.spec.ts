@@ -16,8 +16,6 @@ describe('CheckUserIdGuard', () => {
   let checkUserIdGuard: CheckUserIdGuard
   let usersRepository: UsersRepository
 
-  let contextMock: DeepMockProxy<ExecutionContext>
-
   beforeEach(async () => {
     moduleRef = await Test.createTestingModule({
       providers: [
@@ -33,12 +31,6 @@ describe('CheckUserIdGuard', () => {
 
     checkUserIdGuard = moduleRef.get(CheckUserIdGuard)
     usersRepository = moduleRef.get(UsersRepository)
-
-    contextMock = contextFactoryMock({
-      params: {
-        id,
-      },
-    })
   })
 
   afterEach(() => {
@@ -52,8 +44,15 @@ describe('CheckUserIdGuard', () => {
   describe('canActivate', () => {
     let findOneBySpy: MockInstance
 
+    let contextMock: DeepMockProxy<ExecutionContext>
+
     beforeEach(() => {
       findOneBySpy = vi.spyOn(usersRepository, 'findOneBy')
+      contextMock = contextFactoryMock({
+        params: {
+          id,
+        },
+      })
     })
 
     test('should return true if user is found', async () => {
