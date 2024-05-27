@@ -28,9 +28,9 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli",
-    "schema:sync": "yarn typeorm schema:sync -d ./dist/src/config/database/typeorm.config.js",
-    "migration:run": "yarn typeorm migration:run -d ./dist/src/config/database/typeorm.config.js",
-    "migration:generate": "yarn typeorm migration:generate -d ./dist/src/config/database/typeorm.config.js ./src/migrations/$NAME",
+    "schema:sync": "yarn typeorm schema:sync -d ./dist/config/database/typeorm.config.js",
+    "migration:run": "yarn typeorm migration:run -d ./dist/config/database/typeorm.config.js",
+    "migration:generate": "yarn typeorm migration:generate -d ./dist/config/database/typeorm.config.js ./src/migrations/$NAME",
     "migration:create": "yarn typeorm migration:create ./src/migrations/$NAME",
     "migration:revert": "yarn typeorm migration:revert -d ./src/config/database/typeorm.config.ts",
     "prepare": "husky"

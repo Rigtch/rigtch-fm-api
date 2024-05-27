@@ -40,6 +40,14 @@ export class Track implements Item {
   @ApiProperty({ type: Number })
   duration: number
 
+  @Column('int')
+  @ApiProperty({ type: Number, nullable: true })
+  trackNumber?: number
+
+  @Column('int')
+  @ApiProperty({ type: Number, nullable: true })
+  discNumber?: number
+
   @ManyToOne('Album', 'tracks', {
     nullable: true,
   })
