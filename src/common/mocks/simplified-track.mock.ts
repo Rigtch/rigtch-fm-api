@@ -53,6 +53,8 @@ export const simplifiedTrackMock: SimplifiedTrack = {
   artists: simplifiedArtistsMock,
   href: sdkSimplifiedTrackMock.external_urls.spotify,
   duration: sdkSimplifiedTrackMock.duration_ms,
+  trackNumber: sdkSimplifiedTrackMock.track_number,
+  discNumber: sdkSimplifiedTrackMock.disc_number,
 }
 
 export const simplifiedTracksMock = Array.from({ length: 5 }).map(

@@ -17,6 +17,8 @@ export interface Track {
 export interface SimplifiedTrack {
   artists: SimplifiedArtist[]
   duration: number
+  trackNumber: number
+  discNumber: number
   href: string
   id: string
   name: string

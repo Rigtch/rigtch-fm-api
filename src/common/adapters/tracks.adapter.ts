@@ -53,6 +53,8 @@ export class TracksAdapter {
     artists,
     external_urls: { spotify: href },
     duration_ms,
+    track_number,
+    disc_number,
     ...rest
   }: SdkTrack | SdkSimplifiedTrack): Track | SimplifiedTrack => ({
     id,
@@ -72,6 +74,8 @@ export class TracksAdapter {
     artists: this.artistsAdapter.adapt(artists),
     href,
     duration: duration_ms,
+    trackNumber: track_number,
+    discNumber: disc_number,
   })
 
   adaptTracks(
