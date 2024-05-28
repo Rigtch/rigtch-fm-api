@@ -2,16 +2,16 @@ import { Controller, Get, Query, UseGuards } from '@nestjs/common'
 import { ApiOperation, ApiOkResponse, ApiTags } from '@nestjs/swagger'
 import { AccessToken } from '@spotify/web-api-ts-sdk'
 
-import { USER } from '../constants'
-import { ApiItemQuery, ApiUser } from '../decorators'
+import { ApiItemQuery, ApiUser, RequestUser } from '../decorators'
 import { LastItemQuery, TopItemQuery } from '../dtos'
 import { CheckUserIdGuard } from '../guards'
-import { SpotifyProfile } from '../dtos'
+import { User } from '../user.entity'
 
 import { ONE_SUCCESSFULLY_RETRIEVED } from '@common/constants'
 import { ApiAuth, Token } from '@modules/auth/decorators'
 import { SpotifyService } from '@modules/spotify'
 import { TokenGuard } from '@modules/auth/guards'
+import { Profile } from '@modules/profiles'
 
 @Controller('users/:id/profile')
 @ApiTags('users/{id}/profile')
@@ -26,11 +26,11 @@ export class UsersProfileController {
   })
   @ApiUser()
   @ApiOkResponse({
-    description: ONE_SUCCESSFULLY_RETRIEVED(USER),
-    type: SpotifyProfile,
+    description: ONE_SUCCESSFULLY_RETRIEVED("user's profile"),
+    type: Profile,
   })
-  async getProfile(@Token() token: AccessToken): Promise<SpotifyProfile> {
-    return this.spotifyService.users.profile(token)
+  getProfile(@RequestUser() { profile }: User) {
+    return profile
   }
 
   @Get('recently-played')
