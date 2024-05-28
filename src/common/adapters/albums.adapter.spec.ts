@@ -10,8 +10,6 @@ import {
   sdkSimplifiedAlbumsMock,
   simplifiedAlbumMock,
   simplifiedAlbumsMock,
-} from '@common/mocks'
-import {
   sdkAlbumMock,
   albumMock,
   sdkSimplifiedAlbumMock,
