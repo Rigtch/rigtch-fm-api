@@ -8,7 +8,7 @@ import { CheckUserIdGuard } from '../guards'
 import { ApiUser, RequestUser } from '../decorators'
 
 import {
-  MANY_SUCCESSFULLY_FOUND,
+  MANY_SUCCESSFULLY_RETRIEVED,
   ONE_SUCCESSFULLY_RETRIEVED,
 } from '@common/constants'
 import { ApiAuth, Token } from '@modules/auth/decorators'
@@ -24,7 +24,7 @@ export class UsersController {
     summary: 'Getting all users.',
   })
   @ApiOkResponse({
-    description: MANY_SUCCESSFULLY_FOUND(USER),
+    description: MANY_SUCCESSFULLY_RETRIEVED(USER),
     type: [User],
   })
   async getAll(@Token() _token?: string) {

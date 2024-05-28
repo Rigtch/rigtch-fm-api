@@ -21,7 +21,6 @@ import {
 import { Album } from './album.entity'
 
 import { NOT_BEEN_FOUND } from '@common/constants'
-import { ApiPaginatedQuery } from '@common/decorators'
 import { PaginationQuery } from '@common/dtos/pagination'
 
 @Controller('albums')
@@ -33,7 +32,6 @@ export class AlbumsController {
   @ApiOperation({
     summary: 'Getting all albums.',
   })
-  @ApiPaginatedQuery()
   @ApiOkResponse({
     description: 'Albums successfully found.',
     type: [Pagination<Album>],

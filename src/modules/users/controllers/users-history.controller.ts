@@ -7,7 +7,6 @@ import { User } from '../user.entity'
 import { CheckUserIdGuard } from '../guards'
 import { PaginationHistoryTracks } from '../dtos'
 
-import { ApiPaginatedQuery } from '@common/decorators'
 import { ONE_SUCCESSFULLY_RETRIEVED } from '@common/constants'
 import { ApiAuth, Token } from '@modules/auth/decorators'
 import {
@@ -33,11 +32,10 @@ export class UsersHistoryController {
     summary: "Getting user's history.",
   })
   @ApiOkResponse({
-    description: ONE_SUCCESSFULLY_RETRIEVED('history'),
+    description: ONE_SUCCESSFULLY_RETRIEVED("user's history"),
     type: [PaginationHistoryTracks],
   })
   @ApiUser()
-  @ApiPaginatedQuery()
   async getHistory(
     @RequestUser() user: User,
     @Token() _token: string,
