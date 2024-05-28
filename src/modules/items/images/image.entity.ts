@@ -11,14 +11,25 @@ export class Image implements SdkImage {
   id: string
 
   @Column('int')
-  @ApiProperty({ type: Number })
+  @ApiProperty({
+    type: Number,
+    example: 300,
+    description: 'The image height in pixels.',
+  })
   height: number
 
   @Column('int')
-  @ApiProperty({ type: Number })
+  @ApiProperty({
+    type: Number,
+    example: 300,
+    description: 'The image width in pixels.',
+  })
   width: number
 
   @Column('varchar')
-  @ApiProperty()
+  @ApiProperty({
+    example: 'https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228',
+    description: 'The source URL of the image.',
+  })
   url: string
 }

@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { mock } from 'vitest-mock-extended'
 import { MockInstance } from 'vitest'
 
 import { UsersRepository } from '../users.repository'
@@ -15,8 +14,8 @@ import {
   artistsMock,
   analysisMock,
   accessTokenMock,
+  userMock,
 } from '@common/mocks'
-import { Profile } from '@common/types/spotify'
 import { SpotifyService } from '@modules/spotify'
 
 describe('UsersProfileController', () => {
@@ -46,7 +45,6 @@ describe('UsersProfileController', () => {
           provide: SpotifyService,
           useValue: {
             users: {
-              profile: vi.fn(),
               getTopArtists: vi.fn(),
               getTopTracks: vi.fn(),
               getTopGenres: vi.fn(),
@@ -73,18 +71,10 @@ describe('UsersProfileController', () => {
   })
 
   describe('getProfile', () => {
-    const profileMock = mock<Profile>()
-
-    test("should get user's profile", async () => {
-      const profileSpy = vi
-        .spyOn(spotifyService.users, 'profile')
-        .mockResolvedValue(profileMock)
-
-      expect(await usersProfileController.getProfile(accessTokenMock)).toEqual(
-        profileMock
+    test("should get user's profile", () => {
+      expect(usersProfileController.getProfile(userMock)).toEqual(
+        userMock.profile
       )
-
-      expect(profileSpy).toHaveBeenCalledWith(accessTokenMock)
     })
   })
 
