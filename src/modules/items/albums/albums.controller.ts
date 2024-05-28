@@ -6,6 +6,7 @@ import {
   Query,
 } from '@nestjs/common'
 import {
+  ApiBadRequestResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -20,7 +21,7 @@ import {
 } from './albums.repository'
 import { AlbumDocument, PaginationAlbumsDocument } from './docs'
 
-import { NOT_BEEN_FOUND } from '@common/constants'
+import { NOT_BEEN_FOUND, ONE_IS_INVALID } from '@common/constants'
 import { PaginationQuery } from '@common/dtos'
 
 @Controller('albums')
@@ -61,6 +62,9 @@ export class AlbumsController {
   })
   @ApiNotFoundResponse({
     description: NOT_BEEN_FOUND('album'),
+  })
+  @ApiBadRequestResponse({
+    description: ONE_IS_INVALID('uuid'),
   })
   async getAlbumById(@Param('id') id: string) {
     const foundAlbum = await this.albumsRepository.findAlbumById(id)
