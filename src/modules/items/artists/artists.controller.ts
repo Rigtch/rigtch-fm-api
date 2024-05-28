@@ -20,7 +20,6 @@ import { Artist } from './artist.entity'
 
 import { PaginationQuery } from '@common/dtos/pagination'
 import { NOT_BEEN_FOUND, ONE_IS_INVALID } from '@common/constants'
-import { ApiPaginatedQuery } from '@common/decorators'
 
 @Controller('artists')
 @ApiTags('artists')
@@ -31,7 +30,6 @@ export class ArtistsController {
   @ApiOperation({
     summary: 'Getting all artists.',
   })
-  @ApiPaginatedQuery()
   @ApiOkResponse({
     description: 'Artists successfully found.',
     type: [Pagination<Artist>],

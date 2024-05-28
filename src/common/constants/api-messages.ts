@@ -4,7 +4,7 @@ export const FORBIDDEN = 'The user access to this resource is forbidden'
 
 export const ONE_SUCCESSFULLY_RETRIEVED = (entityName: string) =>
   `The ${entityName} has been successfully retrieved.`
-export const MANY_SUCCESSFULLY_FOUND = (entityName: string) =>
+export const MANY_SUCCESSFULLY_RETRIEVED = (entityName: string) =>
   `The ${entityName}s have been successfully retrieved.`
 export const NOT_BEEN_FOUND = (entityName: string) =>
   `The ${entityName} has not been found.`
