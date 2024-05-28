@@ -3,8 +3,13 @@ import { MockInstance } from 'vitest'
 
 import { AuthService } from './auth.service'
 
-import { accessToken, refreshToken } from '@common/mocks'
-import { profileMock, userMock, accessTokenMock } from '@common/mocks'
+import {
+  accessToken,
+  refreshToken,
+  profileMock,
+  userMock,
+  accessTokenMock,
+} from '@common/mocks'
 import { UsersRepository } from '@modules/users'
 import { ProfilesRepository } from '@modules/profiles'
 import { HistoryScheduler } from '@modules/history'

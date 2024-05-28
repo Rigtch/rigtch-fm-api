@@ -13,8 +13,7 @@ import {
   refreshToken,
   userMock,
 } from '@common/mocks'
-import { AdaptersService } from '@common/adapters'
-import { SecretDataAdapter } from '@common/adapters'
+import { AdaptersService, SecretDataAdapter } from '@common/adapters'
 import { SpotifyService } from '@modules/spotify'
 
 describe('AuthController', () => {
