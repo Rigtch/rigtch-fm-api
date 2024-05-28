@@ -30,6 +30,8 @@ export class UsersHistoryController {
   @Get()
   @ApiOperation({
     summary: "Getting user's history.",
+    description:
+      "Getting user's listening history, synchronized with Spotify's recently played.",
   })
   @ApiOkResponse({
     description: ONE_SUCCESSFULLY_RETRIEVED("user's history"),

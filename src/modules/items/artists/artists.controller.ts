@@ -34,6 +34,7 @@ export class ArtistsController {
   @Get()
   @ApiOperation({
     summary: 'Getting all artists.',
+    description: 'Getting all artists that are synchronized.',
   })
   @ApiOkResponse({
     description: 'Artists successfully found.',
@@ -46,6 +47,7 @@ export class ArtistsController {
   @Get(':id')
   @ApiOperation({
     summary: 'Getting an artist by id.',
+    description: 'Getting one artist specified by the id.',
   })
   @ApiParam({
     name: 'id',

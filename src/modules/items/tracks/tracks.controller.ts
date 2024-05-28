@@ -35,6 +35,7 @@ export class TracksController {
   @Get()
   @ApiOperation({
     summary: 'Getting all tracks.',
+    description: 'Getting all tracks that are synchronized.',
   })
   @ApiOkResponse({
     description: MANY_SUCCESSFULLY_RETRIEVED('tracks'),
@@ -53,6 +54,7 @@ export class TracksController {
   @Get(':id')
   @ApiOperation({
     summary: 'Getting a track by id.',
+    description: 'Getting one track specified by the id.',
   })
   @ApiParam({
     name: 'id',
