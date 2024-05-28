@@ -13,13 +13,18 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger'
-import { Pagination, paginate } from 'nestjs-typeorm-paginate'
+import { paginate } from 'nestjs-typeorm-paginate'
 
 import { TracksRepository, tracksRelations } from './tracks.repository'
 import { Track } from './track.entity'
+import { PaginationTracks } from './dtos'
 
-import { NOT_BEEN_FOUND, ONE_IS_INVALID } from '@common/constants'
-import { ApiPaginatedQuery } from '@common/decorators'
+import {
+  MANY_SUCCESSFULLY_RETRIEVED,
+  NOT_BEEN_FOUND,
+  ONE_IS_INVALID,
+  ONE_SUCCESSFULLY_RETRIEVED,
+} from '@common/constants'
 import { PaginationQuery } from '@common/dtos/pagination'
 
 @Controller('tracks')
@@ -31,10 +36,9 @@ export class TracksController {
   @ApiOperation({
     summary: 'Getting all tracks.',
   })
-  @ApiPaginatedQuery()
   @ApiOkResponse({
-    description: 'Tracks successfully found.',
-    type: [Pagination<Track>],
+    description: MANY_SUCCESSFULLY_RETRIEVED('tracks'),
+    type: [PaginationTracks],
   })
   getTracks(@Query() { limit = 10, page = 1 }: PaginationQuery) {
     return paginate(
@@ -52,7 +56,7 @@ export class TracksController {
   })
   @ApiParam({ name: 'id', required: true })
   @ApiOkResponse({
-    description: 'Track successfully found.',
+    description: ONE_SUCCESSFULLY_RETRIEVED('track'),
     type: Track,
   })
   @ApiNotFoundResponse({
