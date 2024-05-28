@@ -11,37 +11,68 @@ import {
 
 import { Item } from '../types'
 
-import type { Image } from '@modules/items/images'
+import { Image } from '@modules/items/images'
 
 @Entity()
 @Unique('ARTIST_UNIQUE', ['externalId', 'href'])
 export class Artist implements Item {
   @PrimaryGeneratedColumn('uuid')
-  @ApiProperty()
+  @ApiProperty({
+    example: '293456e8-64f4-49f0-9811-6344bbf350a7',
+  })
   id: string
 
   @Column('varchar')
-  @ApiProperty()
+  @ApiProperty({
+    example: '0sFntmE9T1tiF6G6O6Lm3H',
+    description: 'The Spotify ID of the album.',
+  })
   externalId: string
 
   @Column('varchar')
-  @ApiProperty()
+  @ApiProperty({
+    example: 'Carpathian Forest',
+    description: 'The name of the artist.',
+  })
   name: string
 
   @Column('varchar')
-  @ApiProperty()
+  @ApiProperty({
+    example: 'https://open.spotify.com/v1/artist/0sFntmE9T1tiF6G6O6Lm3H',
+    description: 'The Spotify URL for the object.',
+  })
   href: string
 
   @Column('simple-array')
-  @ApiProperty({ type: [String] })
+  @ApiProperty({
+    type: [String],
+    example: [
+      'black metal',
+      'norwegian black metal',
+      'norwegian metal',
+      'pagan black metal',
+      'symphonic black metal',
+    ],
+    description:
+      'A list of the genres the artist is associated with. If not yet classified, the array is empty.',
+  })
   genres: string[]
 
   @Column('int')
-  @ApiProperty({ type: Number })
+  @ApiProperty({
+    type: Number,
+    example: 34,
+    description:
+      "The popularity of the artist. The value will be between 0 and 100, with 100 being the most popular. The artist's popularity is calculated from the popularity of all the artist's tracks.",
+  })
   popularity: number
 
   @Column('int')
-  @ApiProperty({ type: Number })
+  @ApiProperty({
+    type: Number,
+    example: 164_948,
+    description: "The total number of artist's followers.",
+  })
   followers: number
 
   @ManyToMany('Image', 'artists', {
@@ -50,6 +81,9 @@ export class Artist implements Item {
     nullable: true,
   })
   @JoinTable()
-  @ApiProperty()
+  @ApiProperty({
+    type: [Image],
+    description: 'Images of the artist in various sizes, widest first.',
+  })
   images?: Relation<Image>[]
 }

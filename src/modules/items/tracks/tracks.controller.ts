@@ -17,7 +17,7 @@ import { paginate } from 'nestjs-typeorm-paginate'
 
 import { TracksRepository, tracksRelations } from './tracks.repository'
 import { Track } from './track.entity'
-import { PaginationTracks } from './dtos'
+import { PaginationTracksDocument } from './docs'
 
 import {
   MANY_SUCCESSFULLY_RETRIEVED,
@@ -25,7 +25,7 @@ import {
   ONE_IS_INVALID,
   ONE_SUCCESSFULLY_RETRIEVED,
 } from '@common/constants'
-import { PaginationQuery } from '@common/dtos/pagination'
+import { PaginationQuery } from '@common/dtos'
 
 @Controller('tracks')
 @ApiTags('tracks')
@@ -38,7 +38,7 @@ export class TracksController {
   })
   @ApiOkResponse({
     description: MANY_SUCCESSFULLY_RETRIEVED('tracks'),
-    type: [PaginationTracks],
+    type: [PaginationTracksDocument],
   })
   getTracks(@Query() { limit = 10, page = 1 }: PaginationQuery) {
     return paginate(
@@ -54,7 +54,11 @@ export class TracksController {
   @ApiOperation({
     summary: 'Getting a track by id.',
   })
-  @ApiParam({ name: 'id', required: true })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    example: '71c6c7fe-cb38-43ac-916b-81e85115f520',
+  })
   @ApiOkResponse({
     description: ONE_SUCCESSFULLY_RETRIEVED('track'),
     type: Track,

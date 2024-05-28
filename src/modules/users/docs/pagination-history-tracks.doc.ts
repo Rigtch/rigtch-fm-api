@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger'
 
-import { PaginationResponse } from '@common/dtos/pagination'
+import { PaginationDocument } from '@common/docs'
 import { HistoryTrack } from '@modules/history/tracks'
 
-export abstract class PaginationHistoryTracks extends PaginationResponse {
+export abstract class PaginationHistoryTracksDocument extends PaginationDocument {
   @ApiProperty({ type: [HistoryTrack] })
   items: HistoryTrack[]
 }

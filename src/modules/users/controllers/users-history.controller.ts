@@ -5,7 +5,7 @@ import { paginate } from 'nestjs-typeorm-paginate'
 import { ApiUser, RequestUser } from '../decorators'
 import { User } from '../user.entity'
 import { CheckUserIdGuard } from '../guards'
-import { PaginationHistoryTracks } from '../dtos'
+import { PaginationHistoryTracksDocument } from '../docs'
 
 import { ONE_SUCCESSFULLY_RETRIEVED } from '@common/constants'
 import { ApiAuth, Token } from '@modules/auth/decorators'
@@ -13,7 +13,7 @@ import {
   HistoryTracksRepository,
   historyTracksOrder,
 } from '@modules/history/tracks'
-import { PaginationQuery } from '@common/dtos/pagination'
+import { PaginationQuery } from '@common/dtos'
 import { tracksRelations } from '@modules/items/tracks'
 import { HistoryService } from '@modules/history'
 
@@ -33,7 +33,7 @@ export class UsersHistoryController {
   })
   @ApiOkResponse({
     description: ONE_SUCCESSFULLY_RETRIEVED("user's history"),
-    type: [PaginationHistoryTracks],
+    type: [PaginationHistoryTracksDocument],
   })
   @ApiUser()
   async getHistory(

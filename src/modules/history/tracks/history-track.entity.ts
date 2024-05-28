@@ -7,8 +7,9 @@ import {
   Relation,
 } from 'typeorm'
 
-import { Track } from '@modules/items/tracks'
+import type { Track } from '@modules/items/tracks'
 import type { User } from '@modules/users'
+import { TrackDocument } from '@modules/items/tracks/docs'
 
 @Entity()
 export class HistoryTrack {
@@ -28,7 +29,7 @@ export class HistoryTrack {
     eager: true,
   })
   @ApiProperty({
-    type: Track,
+    type: TrackDocument,
     description: 'The track that was played.',
   })
   track: Relation<Track>

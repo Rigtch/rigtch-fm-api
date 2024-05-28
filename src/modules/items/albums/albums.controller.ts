@@ -12,16 +12,16 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger'
-import { Pagination, paginate } from 'nestjs-typeorm-paginate'
+import { paginate } from 'nestjs-typeorm-paginate'
 
 import {
   AlbumsRepository,
   albumsSimplifiedRelations,
 } from './albums.repository'
-import { Album } from './album.entity'
+import { AlbumDocument, PaginationAlbumsDocument } from './docs'
 
 import { NOT_BEEN_FOUND } from '@common/constants'
-import { PaginationQuery } from '@common/dtos/pagination'
+import { PaginationQuery } from '@common/dtos'
 
 @Controller('albums')
 @ApiTags('albums')
@@ -34,7 +34,7 @@ export class AlbumsController {
   })
   @ApiOkResponse({
     description: 'Albums successfully found.',
-    type: [Pagination<Album>],
+    type: [PaginationAlbumsDocument],
   })
   async getAlbums(@Query() { limit = 10, page = 1 }: PaginationQuery) {
     return paginate(
@@ -50,10 +50,14 @@ export class AlbumsController {
   @ApiOperation({
     summary: 'Getting an album by id.',
   })
-  @ApiParam({ name: 'id', required: true })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    example: '4530c625-2385-45d6-8db1-8b867f125e30',
+  })
   @ApiOkResponse({
     description: 'Album successfully found.',
-    type: Album,
+    type: AlbumDocument,
   })
   @ApiNotFoundResponse({
     description: NOT_BEEN_FOUND('album'),
