@@ -11,7 +11,6 @@ module.exports = {
     sourceType: 'module',
   },
   settings: {
-    'import/parsers': '@typescript-eslint/parser',
     'import/resolver': {
       node: {
         project: './tsconfig.json',
@@ -47,6 +46,8 @@ module.exports = {
     'plugin:@typescript-eslint/stylistic-type-checked',
     'plugin:@trilon/recommended',
     'plugin:sonarjs/recommended',
+    'plugin:import/recommended',
+    'plugin:import/typescript',
     'plugin:unicorn/recommended',
     'plugin:nestjs/recommended',
     'plugin:eslint-comments/recommended',
@@ -92,6 +93,7 @@ module.exports = {
         'newlines-between': 'always',
       },
     ],
+    'import/no-cycle': 'warn',
     'unicorn/no-array-reduce': 'off',
     'unicorn/no-null': 'off',
     'unicorn/no-array-callback-reference': 'off',
@@ -112,6 +114,7 @@ module.exports = {
           Params: true,
           args: true,
           env: true,
+          doc: true,
         },
       },
     ],
