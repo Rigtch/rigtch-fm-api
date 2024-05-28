@@ -13,10 +13,11 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger'
-import { Pagination, paginate } from 'nestjs-typeorm-paginate'
+import { paginate } from 'nestjs-typeorm-paginate'
 
 import { ArtistsRepository } from './artists.repository'
 import { Artist } from './artist.entity'
+import { PaginationArtistsDocument } from './docs'
 
 import { PaginationQuery } from '@common/dtos'
 import {
@@ -36,7 +37,7 @@ export class ArtistsController {
   })
   @ApiOkResponse({
     description: 'Artists successfully found.',
-    type: [Pagination<Artist>],
+    type: [PaginationArtistsDocument],
   })
   getArtists(@Query() { limit = 10, page = 1 }: PaginationQuery) {
     return paginate(this.artistsRepository, { limit, page })
