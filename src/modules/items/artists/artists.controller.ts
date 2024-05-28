@@ -19,7 +19,11 @@ import { ArtistsRepository } from './artists.repository'
 import { Artist } from './artist.entity'
 
 import { PaginationQuery } from '@common/dtos'
-import { NOT_BEEN_FOUND, ONE_IS_INVALID } from '@common/constants'
+import {
+  NOT_BEEN_FOUND,
+  ONE_IS_INVALID,
+  ONE_SUCCESSFULLY_RETRIEVED,
+} from '@common/constants'
 
 @Controller('artists')
 @ApiTags('artists')
@@ -42,9 +46,13 @@ export class ArtistsController {
   @ApiOperation({
     summary: 'Getting an artist by id.',
   })
-  @ApiParam({ name: 'id', required: true })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    example: '293456e8-64f4-49f0-9811-6344bbf350a7',
+  })
   @ApiOkResponse({
-    description: 'Artist successfully found.',
+    description: ONE_SUCCESSFULLY_RETRIEVED('artist'),
     type: Artist,
   })
   @ApiNotFoundResponse({
