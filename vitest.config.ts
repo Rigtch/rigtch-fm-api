@@ -24,6 +24,7 @@ export default defineConfig({
         '**/*.entity.ts',
         '**/*.module.ts',
         '**/*.schema.ts',
+        '**/*.doc.ts',
         '**/*.mock.ts',
         '**/*.enum.ts',
         '**/*.dto.ts',
