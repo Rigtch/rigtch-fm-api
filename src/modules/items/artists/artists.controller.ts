@@ -18,7 +18,7 @@ import { Pagination, paginate } from 'nestjs-typeorm-paginate'
 import { ArtistsRepository } from './artists.repository'
 import { Artist } from './artist.entity'
 
-import { PaginationQuery } from '@common/dtos/pagination'
+import { PaginationQuery } from '@common/dtos'
 import { NOT_BEEN_FOUND, ONE_IS_INVALID } from '@common/constants'
 
 @Controller('artists')

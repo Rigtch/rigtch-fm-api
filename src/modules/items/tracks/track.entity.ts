@@ -13,34 +13,36 @@ import {
 
 import { Item } from '../types'
 
-import { Album } from '@modules/items/albums'
-import { Artist } from '@modules/items/artists'
+import type { Album } from '@modules/items/albums'
+import type { Artist } from '@modules/items/artists'
 import type { HistoryTrack } from '@modules/history/tracks'
 
 @Entity()
 @Unique('TRACK_UNIQUE', ['externalId', 'href'])
 export class Track implements Item {
   @PrimaryGeneratedColumn('uuid')
-  @ApiProperty()
+  @ApiProperty({
+    example: '71c6c7fe-cb38-43ac-916b-81e85115f520',
+  })
   id: string
 
   @Column('varchar')
   @ApiProperty({
     description: 'The Spotify ID for the track.',
-    example: '11dFghVXANMlKmJXsNCbNl',
+    example: '7gPherwdZt8Pdh8Srhw5HR',
   })
   externalId: string
 
   @Column('varchar')
   @ApiProperty({
-    example: 'The Well of all Human Tears',
+    example: 'Lunar Nights',
     description: 'The name of the track.',
   })
   name: string
 
   @Column('varchar')
   @ApiProperty({
-    example: 'https://open.spotify.com/v1/tracks/11dFghVXANMlKmJXsNCbNl',
+    example: 'https://open.spotify.com/track/7gPherwdZt8Pdh8Srhw5HR',
     description: 'The Spotify URL for the object.',
   })
   href: string
@@ -48,7 +50,7 @@ export class Track implements Item {
   @Column('int')
   @ApiProperty({
     type: Number,
-    example: 207_959,
+    example: 394_373,
     description: 'The track length in milliseconds.',
   })
   duration: number
@@ -56,7 +58,7 @@ export class Track implements Item {
   @Column('int')
   @ApiProperty({
     type: Number,
-    example: 7,
+    example: 8,
     description:
       'The number of the track. If an album has several discs, the track number is the number on the specified disc.',
   })
@@ -74,11 +76,6 @@ export class Track implements Item {
   @ManyToOne('Album', 'tracks', {
     nullable: true,
   })
-  @ApiProperty({
-    type: Album,
-    description:
-      'The album on which the track appears. The album object includes an externalId to get full information about the album.',
-  })
   album?: Relation<Album>
 
   @OneToMany('HistoryTrack', 'track', {
@@ -89,11 +86,5 @@ export class Track implements Item {
 
   @ManyToMany('Artist', 'albums')
   @JoinTable()
-  @ApiProperty({
-    type: Artist,
-    isArray: true,
-    description:
-      'The artists who performed the track. Each artist object includes an externalId to get more detailed information about the artist.',
-  })
   artists: Relation<Artist[]>
 }

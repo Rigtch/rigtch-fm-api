@@ -12,7 +12,7 @@ import {
 
 import { Item } from '../types'
 
-import type { Image } from '@modules/items/images'
+import { Image } from '@modules/items/images'
 import type { Artist } from '@modules/items/artists'
 import type { Track } from '@modules/items/tracks'
 
@@ -20,31 +20,56 @@ import type { Track } from '@modules/items/tracks'
 @Unique('ALBUM_UNIQUE', ['externalId', 'href'])
 export class Album implements Item {
   @PrimaryGeneratedColumn('uuid')
-  @ApiProperty()
+  @ApiProperty({
+    example: '4530c625-2385-45d6-8db1-8b867f125e30',
+  })
   id: string
 
   @Column('varchar')
-  @ApiProperty()
+  @ApiProperty({
+    description: 'The Spotify ID of the album.',
+    example: '50MDwzTscb7tQjSGLtDXFj',
+  })
   externalId: string
 
   @Column('varchar')
-  @ApiProperty()
+  @ApiProperty({
+    example: 'Black Shining Leather',
+    description:
+      'The name of the album. In case of an album takedown, the value may be an empty string.',
+  })
   name: string
 
   @Column('timestamptz')
-  @ApiProperty({ type: Date })
+  @ApiProperty({
+    type: Date,
+    example: '1998-01-01T00:00:00.000Z',
+    description:
+      'The date the album was first released. Value can be known in three precision levels: year, month, day.',
+  })
   releaseDate: Date
 
   @Column('varchar')
-  @ApiProperty()
+  @ApiProperty({
+    enum: ['album', 'single', 'compilation'],
+    example: 'album',
+    description: 'The type of the album.',
+  })
   albumType: string
 
   @Column('int')
-  @ApiProperty({ type: Number })
+  @ApiProperty({
+    type: Number,
+    example: 11,
+    description: 'The number of tracks in the album.',
+  })
   totalTracks: number
 
   @Column('varchar')
-  @ApiProperty()
+  @ApiProperty({
+    example: 'https://open.spotify.com/v1/album/50MDwzTscb7tQjSGLtDXFj',
+    description: 'The Spotify URL for the object.',
+  })
   href: string
 
   @ManyToMany('Image', 'albums', {
@@ -53,6 +78,11 @@ export class Album implements Item {
     nullable: true,
   })
   @JoinTable()
+  @ApiProperty({
+    type: Image,
+    isArray: true,
+    description: 'The cover art for the album in various sizes, widest first.',
+  })
   images?: Relation<Image[]>
 
   @OneToMany('Track', 'album', {
