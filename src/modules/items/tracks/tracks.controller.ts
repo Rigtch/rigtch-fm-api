@@ -16,8 +16,7 @@ import {
 import { paginate } from 'nestjs-typeorm-paginate'
 
 import { TracksRepository, tracksRelations } from './tracks.repository'
-import { Track } from './track.entity'
-import { PaginationTracksDocument } from './docs'
+import { PaginationTracksDocument, TrackDocument } from './docs'
 
 import {
   MANY_SUCCESSFULLY_RETRIEVED,
@@ -63,7 +62,7 @@ export class TracksController {
   })
   @ApiOkResponse({
     description: ONE_SUCCESSFULLY_RETRIEVED('track'),
-    type: Track,
+    type: TrackDocument,
   })
   @ApiNotFoundResponse({
     description: NOT_BEEN_FOUND('track'),
