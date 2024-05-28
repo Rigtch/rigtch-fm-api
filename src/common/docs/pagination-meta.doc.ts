@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { IPaginationMeta } from 'nestjs-typeorm-paginate'
 
-export abstract class PaginationMeta implements IPaginationMeta {
+export abstract class PaginationMetaDocument implements IPaginationMeta {
   @ApiProperty({
     example: 10,
     description: 'The amount of items on this specific page.',
