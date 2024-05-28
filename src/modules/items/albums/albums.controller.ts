@@ -21,7 +21,11 @@ import {
 } from './albums.repository'
 import { AlbumDocument, PaginationAlbumsDocument } from './docs'
 
-import { NOT_BEEN_FOUND, ONE_IS_INVALID } from '@common/constants'
+import {
+  NOT_BEEN_FOUND,
+  ONE_IS_INVALID,
+  ONE_SUCCESSFULLY_RETRIEVED,
+} from '@common/constants'
 import { PaginationQuery } from '@common/dtos'
 
 @Controller('albums')
@@ -57,7 +61,7 @@ export class AlbumsController {
     example: '4530c625-2385-45d6-8db1-8b867f125e30',
   })
   @ApiOkResponse({
-    description: 'Album successfully found.',
+    description: ONE_SUCCESSFULLY_RETRIEVED('album'),
     type: AlbumDocument,
   })
   @ApiNotFoundResponse({
