@@ -36,6 +36,7 @@ export class AlbumsController {
   @Get()
   @ApiOperation({
     summary: 'Getting all albums.',
+    description: 'Getting all albums that are synchronized',
   })
   @ApiOkResponse({
     description: 'Albums successfully found.',
@@ -54,6 +55,7 @@ export class AlbumsController {
   @Get(':id')
   @ApiOperation({
     summary: 'Getting an album by id.',
+    description: 'Getting one album specified by the id.',
   })
   @ApiParam({
     name: 'id',
