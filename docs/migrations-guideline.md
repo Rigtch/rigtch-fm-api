@@ -35,9 +35,6 @@ NAME=<migration-name> nr migration:create
 For reverting an existing migration you can just create new migration,
 copy migration file that you want to revert and replace `up` with `down` methods.
 
-Reverting a migration runs the `down` method in the migration file.
-This is useful in case we made a schema change we no longer want.
-
 ### Source
 
 - [typeorm-migrations-explained](https://betterprogramming.pub/typeorm-migrations-explained-fdb4f27cb1b3)
