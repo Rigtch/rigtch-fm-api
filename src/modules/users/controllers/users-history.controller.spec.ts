@@ -1,7 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { paginate } from 'nestjs-typeorm-paginate'
-import { Queue } from 'bull'
+import { Job, Queue } from 'bull'
 import { getQueueToken } from '@nestjs/bull'
+import { DeepMockProxy, mockDeep } from 'vitest-mock-extended'
 
 import { UsersRepository } from '../users.repository'
 import { User } from '../user.entity'
@@ -28,8 +29,13 @@ describe('UsersHistoryController', () => {
   let usersHistoryController: UsersHistoryController
   let historyTracksRepository: HistoryTracksRepository
   let historyQueue: Queue<User>
+  let synchronizeJobMock: DeepMockProxy<Job<User>>
 
   beforeEach(async () => {
+    synchronizeJobMock = mockDeep<Job<User>>({
+      finished: vi.fn(),
+    })
+
     moduleRef = await Test.createTestingModule({
       providers: [
         UsersHistoryController,
@@ -46,7 +52,7 @@ describe('UsersHistoryController', () => {
         {
           provide: getQueueToken(HISTORY_QUEUE),
           useValue: {
-            add: vi.fn(),
+            add: vi.fn().mockResolvedValue(synchronizeJobMock),
           },
         },
       ],
@@ -173,10 +179,12 @@ describe('UsersHistoryController', () => {
 
     test('should synchronize history before getting it', async () => {
       const synchronizeSpy = vi.spyOn(historyQueue, 'add')
+      const finishedSpy = vi.spyOn(synchronizeJobMock, 'finished')
 
       await usersHistoryController.getHistory(userMock, '', {})
 
       expect(synchronizeSpy).toHaveBeenCalledWith(SYNCHRONIZE_JOB, userMock)
+      expect(finishedSpy).toHaveBeenCalled()
     })
   })
 })
