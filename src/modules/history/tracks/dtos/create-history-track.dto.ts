@@ -1,21 +1,15 @@
-import { ApiProperty } from '@nestjs/swagger'
 import { Transform } from 'class-transformer'
-import { IsDate, IsInstance } from 'class-validator'
+import { IsDate } from 'class-validator'
 
-import { Track } from '@modules/items/tracks'
-import { User } from '@modules/users'
+import type { Track } from '@modules/items/tracks'
+import type { User } from '@modules/users'
 
 export abstract class CreateHistoryTrack {
-  @ApiProperty()
   @IsDate()
   @Transform(({ value }) => new Date(value as string))
-  playedAt: Date
+  readonly playedAt: Date
 
-  @ApiProperty({ type: Track })
-  @IsInstance(Track)
-  track: Track
+  readonly track: Track
 
-  @ApiProperty({ type: User })
-  @IsInstance(User)
-  user: User
+  readonly user: User
 }
