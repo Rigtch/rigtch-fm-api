@@ -47,8 +47,6 @@ export class HistoryScheduler implements OnModuleInit {
   async scheduleHistorySynchronization() {
     const users = await this.usersRepository.findUsers()
 
-    console.log(users.length)
-
     this.logger.log(`Adding synchronize jobs for ${users.length} users`)
 
     for (const user of users) {
