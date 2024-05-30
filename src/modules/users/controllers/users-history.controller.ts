@@ -47,7 +47,7 @@ export class UsersHistoryController {
   ) {
     const synchronizeJob = await this.historyQueue.add(SYNCHRONIZE_JOB, user)
 
-    console.log(synchronizeJob)
+    await synchronizeJob.finished()
 
     return paginate(
       this.historyTracksRepository,
