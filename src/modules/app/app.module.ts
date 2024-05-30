@@ -41,6 +41,9 @@ import { HistoryModule } from '@modules/history'
     BullModule.forRootAsync({
       useFactory: (configService: ConfigService) => ({
         redis: configService.get('redis'),
+        settings: {
+          maxStalledCount: 1,
+        },
       }),
       imports: [ConfigModule],
       inject: [ConfigService],
