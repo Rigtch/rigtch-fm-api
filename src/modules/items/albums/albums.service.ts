@@ -4,7 +4,7 @@ import { DataSource, In } from 'typeorm'
 import { CreateAlbum, SdkCreateAlbum } from './dtos'
 import { Album } from './album.entity'
 
-import { TracksService } from '@modules/items/tracks'
+import { TracksService } from '@modules/items/tracks/tracks.service'
 import { Artist } from '@modules/items/artists'
 import { Image } from '@modules/items/images'
 

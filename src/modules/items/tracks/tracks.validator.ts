@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 
-import { AlbumsService } from '../albums'
+import { AlbumsService } from '../albums/albums.service'
 
 import { TracksRepository } from './tracks.repository'
 import { Track } from './track.entity'

@@ -4,7 +4,7 @@ import { DataSource, In } from 'typeorm'
 import { Track } from './track.entity'
 import { SdkCreateTrack } from './dtos'
 
-import { Album } from '@modules/items/albums'
+import { Album } from '@modules/items/albums/album.entity'
 import { Artist } from '@modules/items/artists'
 @Injectable()
 export class TracksService {
