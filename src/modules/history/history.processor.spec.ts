@@ -186,4 +186,40 @@ describe('HistoryProcessor', () => {
       expect(getRecentlyPlayedTracksSpy).toHaveBeenCalled()
     })
   })
+
+  describe('EventListeners', () => {
+    let logSpy: MockInstance
+    let errorSpy: MockInstance
+
+    let jobMock: DeepMockProxy<Job<User>>
+
+    beforeEach(() => {
+      // @ts-expect-error - mocking private property
+      logSpy = vi.spyOn(historyProcessor.logger, 'log')
+      // @ts-expect-error - mocking private property
+      errorSpy = vi.spyOn(historyProcessor.logger, 'error')
+
+      jobMock = mockDeep<Job<User>>({
+        data: { profile: { displayName: 'displayName' } },
+      })
+    })
+
+    test('onActive', () => {
+      historyProcessor.onActive(jobMock)
+
+      expect(logSpy).toHaveBeenCalled()
+    })
+
+    test('onCompleted', () => {
+      historyProcessor.onCompleted(jobMock)
+
+      expect(logSpy).toHaveBeenCalled()
+    })
+
+    test('onStalled', () => {
+      historyProcessor.onStalled(jobMock)
+
+      expect(errorSpy).toHaveBeenCalled()
+    })
+  })
 })
