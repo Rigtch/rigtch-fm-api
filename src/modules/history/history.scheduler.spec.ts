@@ -1,18 +1,21 @@
+import { Queue } from 'bull'
+import { MockInstance } from 'vitest'
 import { SchedulerRegistry } from '@nestjs/schedule'
 import { Test, TestingModule } from '@nestjs/testing'
 import { ConfigService } from '@nestjs/config'
+import { getQueueToken } from '@nestjs/bull'
 
 import { HistoryScheduler } from './history.scheduler'
-import { HistoryService } from './history.service'
+import { HISTORY_QUEUE } from './constants'
 
-import { UsersRepository } from '@modules/users'
-import { userMock, usersMock } from '@common/mocks'
+import { User, UsersRepository } from '@modules/users'
+import { usersMock } from '@common/mocks'
 
 describe('HistoryScheduler', () => {
   let moduleRef: TestingModule
   let historyScheduler: HistoryScheduler
   let usersRepository: UsersRepository
-  let historyService: HistoryService
+  let historyQueue: Queue<User>
   let schedulerRegistry: SchedulerRegistry
 
   beforeEach(async () => {
@@ -30,11 +33,10 @@ describe('HistoryScheduler', () => {
             findUsers: vi.fn(),
           },
         },
-
         {
-          provide: HistoryService,
+          provide: getQueueToken(HISTORY_QUEUE),
           useValue: {
-            synchronize: vi.fn(),
+            add: vi.fn(),
           },
         },
         {
@@ -55,7 +57,7 @@ describe('HistoryScheduler', () => {
 
     historyScheduler = moduleRef.get(HistoryScheduler)
     usersRepository = moduleRef.get(UsersRepository)
-    historyService = moduleRef.get(HistoryService)
+    historyQueue = moduleRef.get(getQueueToken(HISTORY_QUEUE))
     schedulerRegistry = moduleRef.get(SchedulerRegistry)
   })
 
@@ -67,39 +69,44 @@ describe('HistoryScheduler', () => {
     expect(historyScheduler).toBeDefined()
   })
 
-  test('should schedule history synchronization for users in onModuleInit', async () => {
-    const findUsersSpy = vi
-      .spyOn(usersRepository, 'findUsers')
-      .mockResolvedValue(usersMock)
-    const triggerFetchingUserHistorySpy = vi
-      .spyOn(historyScheduler, 'triggerUserHistorySynchronization')
-      .mockResolvedValue()
+  describe('onModuleInit', () => {
+    let scheduleHistorySynchronizationSpy: MockInstance
+    let addIntervalSpy: MockInstance
 
-    await historyScheduler.onModuleInit()
+    beforeEach(() => {
+      scheduleHistorySynchronizationSpy = vi
+        .spyOn(historyScheduler, 'scheduleHistorySynchronization')
+        .mockResolvedValue()
+      addIntervalSpy = vi.spyOn(schedulerRegistry, 'addInterval')
+    })
 
-    expect(findUsersSpy).toHaveBeenCalledWith()
-    expect(triggerFetchingUserHistorySpy).toHaveBeenCalledTimes(
-      usersMock.length
-    )
+    test('should schedule history synchronization', () => {
+      historyScheduler.onModuleInit()
+
+      expect(scheduleHistorySynchronizationSpy).toHaveBeenCalledTimes(1)
+      expect(addIntervalSpy).toHaveBeenCalledWith(
+        'history-synchronization',
+        expect.anything()
+      )
+    })
   })
 
-  test('should trigger user history synchronization', () => {
-    vi.spyOn(historyScheduler, 'synchronizeUserHistory')
-    const addIntervalSpy = vi.spyOn(schedulerRegistry, 'addInterval')
+  describe('scheduleHistorySynchronization', () => {
+    let findUsersSpy: MockInstance
+    let addSpy: MockInstance
 
-    historyScheduler.triggerUserHistorySynchronization(userMock)
+    beforeEach(() => {
+      findUsersSpy = vi.spyOn(usersRepository, 'findUsers')
+      addSpy = vi.spyOn(historyQueue, 'add')
+    })
 
-    expect(addIntervalSpy).toHaveBeenCalledWith(
-      `fetch-history-${userMock.id}`,
-      expect.anything()
-    )
-  })
+    test('should add synchronize jobs to queue', async () => {
+      findUsersSpy.mockResolvedValue(usersMock)
 
-  test('should synchronize user history', async () => {
-    const synchronize = vi.spyOn(historyService, 'synchronize')
+      await historyScheduler.scheduleHistorySynchronization()
 
-    await historyScheduler.synchronizeUserHistory(userMock)
-
-    expect(synchronize).toHaveBeenCalledWith(userMock)
+      expect(findUsersSpy).toHaveBeenCalledTimes(1)
+      expect(addSpy).toHaveBeenCalledTimes(usersMock.length)
+    })
   })
 })
