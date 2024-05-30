@@ -18,4 +18,6 @@ export const environmentSchema = Joi.object({
   ENABLE_TRACKS_VALIDATOR: Joi.boolean().default(false),
   REDIS_HOST: Joi.string().required(),
   REDIS_PORT: Joi.number().required(),
+  REDIS_USER: Joi.string().allow(null, ''),
+  REDIS_PASSWORD: Joi.string().allow(null, ''),
 })
