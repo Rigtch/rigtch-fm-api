@@ -5,7 +5,7 @@ import { DataSource } from 'typeorm'
 import { HistoryTrack } from './history-track.entity'
 import { CreateHistoryTrack } from './dtos'
 
-import { User } from '@modules/users'
+import { User } from '@modules/users/user.entity'
 import { ItemsService } from '@modules/items'
 import { removeDuplicates } from '@common/utils'
 

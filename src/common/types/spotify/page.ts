@@ -1,6 +1,5 @@
 import { Cursors } from './cursors'
-
-import { Track } from '@common/types/spotify'
+import { Track } from './track'
 
 export interface RecentlyPlayedTracksPage {
   href: string

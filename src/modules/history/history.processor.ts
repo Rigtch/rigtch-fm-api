@@ -11,7 +11,7 @@ import { Logger } from '@nestjs/common'
 import { HISTORY_QUEUE, SYNCHRONIZE_JOB } from './constants'
 import { HistoryTracksRepository, HistoryTracksService } from './tracks'
 
-import { User } from '@modules/users'
+import { User } from '@modules/users/user.entity'
 import { SpotifyService } from '@modules/spotify'
 
 @Processor(HISTORY_QUEUE)

@@ -13,7 +13,8 @@ import { Queue } from 'bull'
 
 import { HISTORY_QUEUE, SYNCHRONIZE_JOB } from './constants'
 
-import { User, UsersRepository } from '@modules/users'
+import { User } from '@modules/users/user.entity'
+import { UsersRepository } from '@modules/users/users.repository'
 import { Environment } from '@config/environment'
 
 const { HISTORY_FETCHING_INTERVAL, HISTORY_FETCHING_DELAY } = Environment

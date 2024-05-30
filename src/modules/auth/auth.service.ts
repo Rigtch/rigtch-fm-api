@@ -3,7 +3,7 @@ import { AccessToken } from '@spotify/web-api-ts-sdk'
 
 import { AuthorizeParams } from './types'
 
-import { UsersRepository } from '@modules/users'
+import { UsersRepository } from '@modules/users/users.repository'
 import { ProfilesRepository } from '@modules/profiles'
 import { SpotifyService } from '@modules/spotify'
 

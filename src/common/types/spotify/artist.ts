@@ -1,4 +1,4 @@
-import { SdkImage } from '.'
+import type { SdkImage } from '.'
 
 export interface Artist {
   id: string

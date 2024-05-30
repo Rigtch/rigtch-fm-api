@@ -1,4 +1,4 @@
-import { SdkImage } from '.'
+import type { SdkImage } from '.'
 
 export interface Profile {
   id: string
