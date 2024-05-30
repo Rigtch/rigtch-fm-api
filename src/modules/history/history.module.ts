@@ -20,7 +20,7 @@ import { SpotifyModule } from '@modules/spotify'
     SpotifyModule,
     HistoryTracksModule,
   ],
-  providers: [HistoryScheduler, HistoryService, HistoryProcessor],
-  exports: [HistoryScheduler, HistoryService, BullModule],
+  providers: [HistoryScheduler, HistoryProcessor],
+  exports: [HistoryScheduler, BullModule],
 })
 export class HistoryModule {}
