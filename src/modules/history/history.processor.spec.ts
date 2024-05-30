@@ -1,23 +1,35 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { MockProxy, mock, mockDeep } from 'vitest-mock-extended'
+import { Job } from 'bull'
 import { AccessToken, MaxInt, PlayHistory } from '@spotify/web-api-ts-sdk'
 import { MockInstance } from 'vitest'
+import { DeepMockProxy, MockProxy, mock, mockDeep } from 'vitest-mock-extended'
 
-import { HistoryService } from './history.service'
+import { HistoryProcessor } from './history.processor'
 import {
   HistoryTrack,
   HistoryTracksRepository,
   HistoryTracksService,
 } from './tracks'
 
-import { accessTokenMock, trackEntityMock, userMock } from '@common/mocks'
-import { QueryRange } from '@modules/spotify/player/types'
-import { SdkRecentlyPlayedTracksPage } from '@common/types/spotify'
 import { SpotifyService } from '@modules/spotify'
+import { accessTokenMock, trackEntityMock, userMock } from '@common/mocks'
+import { SdkRecentlyPlayedTracksPage } from '@common/types/spotify'
+import { QueryRange } from '@modules/spotify/player/types'
+import { User } from '@modules/users'
 
-describe('HistoryService', () => {
+type GetRecentlyPlayedMockInstance = MockInstance<
+  [
+    token: AccessToken,
+    limit: MaxInt<50>,
+    queryRange?: QueryRange,
+    adapt?: false,
+  ],
+  Promise<SdkRecentlyPlayedTracksPage>
+>
+
+describe('HistoryProcessor', () => {
   let moduleRef: TestingModule
-  let historyService: HistoryService
+  let historyProcessor: HistoryProcessor
   let historyTracksRepository: HistoryTracksRepository
   let historyTracksService: HistoryTracksService
   let spotifyService: SpotifyService
@@ -25,7 +37,7 @@ describe('HistoryService', () => {
   beforeEach(async () => {
     moduleRef = await Test.createTestingModule({
       providers: [
-        HistoryService,
+        HistoryProcessor,
         {
           provide: HistoryTracksRepository,
           useValue: {
@@ -50,7 +62,7 @@ describe('HistoryService', () => {
       ],
     }).compile()
 
-    historyService = moduleRef.get(HistoryService)
+    historyProcessor = moduleRef.get(HistoryProcessor)
     historyTracksRepository = moduleRef.get(HistoryTracksRepository)
     historyTracksService = moduleRef.get(HistoryTracksService)
     spotifyService = moduleRef.get(SpotifyService)
@@ -61,24 +73,17 @@ describe('HistoryService', () => {
   })
 
   test('should be defined', () => {
-    expect(historyService).toBeDefined()
+    expect(historyProcessor).toBeDefined()
   })
 
   describe('synchronize', () => {
     let findLastHistoryTrackByUserSpy: MockInstance
     let createSpy: MockInstance
     let tokenSpy: MockInstance
-    let getRecentlyPlayedTracksSpy: MockInstance<
-      [
-        token: AccessToken,
-        limit: MaxInt<50>,
-        queryRange?: QueryRange,
-        adapt?: false,
-      ],
-      Promise<SdkRecentlyPlayedTracksPage>
-    >
+    let getRecentlyPlayedTracksSpy: GetRecentlyPlayedMockInstance
 
     let playHistoryMock: MockProxy<PlayHistory[]>
+    let jobMock: DeepMockProxy<Job<User>>
 
     beforeEach(() => {
       playHistoryMock = mock<PlayHistory[]>()
@@ -92,15 +97,11 @@ describe('HistoryService', () => {
       getRecentlyPlayedTracksSpy = vi.spyOn(
         spotifyService.player,
         'getRecentlyPlayedTracks'
-      ) as unknown as MockInstance<
-        [
-          token: AccessToken,
-          limit: MaxInt<50>,
-          queryRange?: QueryRange,
-          adapt?: false,
-        ],
-        Promise<SdkRecentlyPlayedTracksPage>
-      >
+      ) as unknown as GetRecentlyPlayedMockInstance
+
+      jobMock = mockDeep<Job<User>>({
+        data: userMock,
+      })
     })
 
     test('should create new history tracks', async () => {
@@ -113,7 +114,7 @@ describe('HistoryService', () => {
 
       findLastHistoryTrackByUserSpy.mockResolvedValue(null)
 
-      await historyService.synchronize(userMock)
+      await historyProcessor.synchronize(jobMock)
 
       expect(createSpy).toHaveBeenCalledWith(playHistoryMock, userMock)
       expect(tokenSpy).toHaveBeenCalledWith({
@@ -147,7 +148,7 @@ describe('HistoryService', () => {
         })
       )
 
-      await historyService.synchronize(userMock)
+      await historyProcessor.synchronize(jobMock)
 
       expect(createSpy).toHaveBeenCalledWith([playHistory[0]], userMock)
       expect(tokenSpy).toHaveBeenCalledWith({
@@ -176,7 +177,7 @@ describe('HistoryService', () => {
         items: playHistory,
       } as SdkRecentlyPlayedTracksPage)
 
-      await historyService.synchronize(userMock)
+      await historyProcessor.synchronize(jobMock)
 
       expect(createSpy).not.toHaveBeenCalled()
       expect(tokenSpy).toHaveBeenCalledWith({

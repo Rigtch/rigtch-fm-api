@@ -1,6 +1,8 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common'
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { paginate } from 'nestjs-typeorm-paginate'
+import { InjectQueue } from '@nestjs/bull'
+import { Queue } from 'bull'
 
 import { ApiUser, RequestUser } from '../decorators'
 import { User } from '../user.entity'
@@ -15,7 +17,7 @@ import {
 } from '@modules/history/tracks'
 import { PaginationQuery } from '@common/dtos'
 import { tracksRelations } from '@modules/items/tracks'
-import { HistoryService } from '@modules/history'
+import { HISTORY_QUEUE, SYNCHRONIZE_JOB } from '@modules/history/constants'
 
 @Controller('users/:id/history')
 @ApiTags('users/{id}/history')
@@ -24,7 +26,7 @@ import { HistoryService } from '@modules/history'
 export class UsersHistoryController {
   constructor(
     private readonly historyTracksRepository: HistoryTracksRepository,
-    private readonly historyService: HistoryService
+    @InjectQueue(HISTORY_QUEUE) private readonly historyQueue: Queue<User>
   ) {}
 
   @Get()
@@ -43,7 +45,9 @@ export class UsersHistoryController {
     @Token() _token: string,
     @Query() { limit = 10, page = 1 }: PaginationQuery
   ) {
-    await this.historyService.synchronize(user)
+    const synchronizeJob = await this.historyQueue.add(SYNCHRONIZE_JOB, user)
+
+    console.log(synchronizeJob)
 
     return paginate(
       this.historyTracksRepository,

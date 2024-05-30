@@ -1,7 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { paginate } from 'nestjs-typeorm-paginate'
+import { Queue } from 'bull'
+import { getQueueToken } from '@nestjs/bull'
 
 import { UsersRepository } from '../users.repository'
+import { User } from '../user.entity'
 
 import { UsersHistoryController } from './users-history.controller'
 
@@ -16,7 +19,7 @@ import {
   userMock,
 } from '@common/mocks'
 import { tracksRelations } from '@modules/items/tracks'
-import { HistoryService } from '@modules/history'
+import { HISTORY_QUEUE, SYNCHRONIZE_JOB } from '@modules/history/constants'
 
 vi.mock('nestjs-typeorm-paginate')
 
@@ -24,7 +27,7 @@ describe('UsersHistoryController', () => {
   let moduleRef: TestingModule
   let usersHistoryController: UsersHistoryController
   let historyTracksRepository: HistoryTracksRepository
-  let historyService: HistoryService
+  let historyQueue: Queue<User>
 
   beforeEach(async () => {
     moduleRef = await Test.createTestingModule({
@@ -41,9 +44,9 @@ describe('UsersHistoryController', () => {
           },
         },
         {
-          provide: HistoryService,
+          provide: getQueueToken(HISTORY_QUEUE),
           useValue: {
-            synchronize: vi.fn(),
+            add: vi.fn(),
           },
         },
       ],
@@ -51,7 +54,7 @@ describe('UsersHistoryController', () => {
 
     usersHistoryController = moduleRef.get(UsersHistoryController)
     historyTracksRepository = moduleRef.get(HistoryTracksRepository)
-    historyService = moduleRef.get(HistoryService)
+    historyQueue = moduleRef.get(getQueueToken(HISTORY_QUEUE))
   })
 
   afterEach(() => {
@@ -169,11 +172,11 @@ describe('UsersHistoryController', () => {
     })
 
     test('should synchronize history before getting it', async () => {
-      const synchronizeSpy = vi.spyOn(historyService, 'synchronize')
+      const synchronizeSpy = vi.spyOn(historyQueue, 'add')
 
       await usersHistoryController.getHistory(userMock, '', {})
 
-      expect(synchronizeSpy).toHaveBeenCalledWith(userMock)
+      expect(synchronizeSpy).toHaveBeenCalledWith(SYNCHRONIZE_JOB, userMock)
     })
   })
 })
