@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm'
+import { BullModule } from '@nestjs/bull'
 
 import { environmentSchema } from '@config/environment'
-import { typeorm } from '@config/database'
+import { redis, typeorm } from '@config/database'
 import { AuthModule } from '@modules/auth'
 import { ImagesModule } from '@modules/items/images'
 import { ProfilesModule } from '@modules/profiles'
@@ -29,11 +30,18 @@ import { HistoryModule } from '@modules/history'
       isGlobal: true,
       envFilePath: './.env',
       validationSchema: environmentSchema,
-      load: [typeorm],
+      load: [typeorm, redis],
     }),
     TypeOrmModule.forRootAsync({
       useFactory: (configService: ConfigService) =>
         configService.get<TypeOrmModuleOptions>('typeorm')!,
+      imports: [ConfigModule],
+      inject: [ConfigService],
+    }),
+    BullModule.forRootAsync({
+      useFactory: (configService: ConfigService) => ({
+        redis: configService.get('redis'),
+      }),
       imports: [ConfigModule],
       inject: [ConfigService],
     }),

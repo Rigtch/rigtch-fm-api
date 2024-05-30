@@ -1,9 +1,11 @@
 import { Module, forwardRef } from '@nestjs/common'
 import { ScheduleModule } from '@nestjs/schedule'
+import { BullModule } from '@nestjs/bull'
 
 import { HistoryScheduler } from './history.scheduler'
 import { HistoryTracksModule } from './tracks'
-import { HistoryService } from './history.service'
+import { HISTORY_QUEUE } from './constants'
+import { HistoryProcessor } from './history.processor'
 
 import { UsersModule } from '@modules/users'
 import { SpotifyModule } from '@modules/spotify'
@@ -11,11 +13,14 @@ import { SpotifyModule } from '@modules/spotify'
 @Module({
   imports: [
     ScheduleModule.forRoot(),
+    BullModule.registerQueue({
+      name: HISTORY_QUEUE,
+    }),
     forwardRef(() => UsersModule),
     SpotifyModule,
     HistoryTracksModule,
   ],
-  providers: [HistoryScheduler, HistoryService],
-  exports: [HistoryScheduler, HistoryService],
+  providers: [HistoryScheduler, HistoryService, HistoryProcessor],
+  exports: [HistoryScheduler, HistoryService, BullModule],
 })
 export class HistoryModule {}
