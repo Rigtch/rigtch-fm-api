@@ -1,7 +1,7 @@
 import { SimplifiedArtist } from './artist'
-import { SimplifiedTrack } from './track'
+import type { SimplifiedTrack } from './track'
 
-import { SdkImage } from '.'
+import type { SdkImage } from '.'
 
 export interface Album {
   id: string

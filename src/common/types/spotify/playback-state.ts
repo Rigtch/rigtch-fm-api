@@ -1,4 +1,5 @@
-import { Device, Track } from '.'
+import { Device } from './device'
+import { Track } from './track'
 
 export enum RepeatedState {
   TRACK = 'track',
