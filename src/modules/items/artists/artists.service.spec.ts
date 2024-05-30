@@ -11,10 +11,10 @@ import {
   imagesMock,
   sdkArtistMock,
   transactionFactoryMock,
+  entityManagerFactoryMock,
 } from '@common/mocks'
 import { Image } from '@modules/items/images'
 import { EntityManagerCreateMockInstance } from '@common/types/mocks'
-import { entityManagerFactoryMock } from '@common/mocks'
 
 describe('ArtistsService', () => {
   let moduleRef: TestingModule
