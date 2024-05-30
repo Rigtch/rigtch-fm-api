@@ -1,19 +1,31 @@
-import { Injectable } from '@nestjs/common'
+import {
+  OnQueueActive,
+  OnQueueCompleted,
+  OnQueueStalled,
+  Process,
+  Processor,
+} from '@nestjs/bull'
+import { Job } from 'bull'
+import { Logger } from '@nestjs/common'
 
+import { HISTORY_QUEUE, SYNCHRONIZE_JOB } from './constants'
 import { HistoryTracksRepository, HistoryTracksService } from './tracks'
 
 import { User } from '@modules/users'
 import { SpotifyService } from '@modules/spotify'
 
-@Injectable()
-export class HistoryService {
+@Processor(HISTORY_QUEUE)
+export class HistoryProcessor {
+  private readonly logger = new Logger(HistoryProcessor.name)
+
   constructor(
     private readonly historyTracksRepository: HistoryTracksRepository,
     private readonly historyTracksService: HistoryTracksService,
     private readonly spotifyService: SpotifyService
   ) {}
 
-  async synchronize(user: User) {
+  @Process(SYNCHRONIZE_JOB)
+  async synchronize({ data: user }: Job<User>) {
     const accessToken = await this.spotifyService.auth.token({
       refreshToken: user.refreshToken,
     })
@@ -42,6 +54,31 @@ export class HistoryService {
 
       if (latestPlayHistory.length > 0)
         await this.historyTracksService.create(latestPlayHistory, user)
+      else
+        this.logger.log(
+          `No new tracks found for user: ${user.profile.displayName} - skipping synchronization`
+        )
     } else await this.historyTracksService.create(playHistory, user)
+  }
+
+  @OnQueueActive()
+  onActive({ data: { profile } }: Job<User>) {
+    this.logger.log(
+      `Processing history synchronization for user: ${profile.displayName}...`
+    )
+  }
+
+  @OnQueueCompleted()
+  onCompleted({ data: { profile } }: Job<User>) {
+    this.logger.log(
+      `History synchronization completed for user: ${profile.displayName}`
+    )
+  }
+
+  @OnQueueStalled()
+  onStalled({ data: { profile } }: Job<User>) {
+    this.logger.error(
+      `History synchronization stalled for user: ${profile.displayName}`
+    )
   }
 }
