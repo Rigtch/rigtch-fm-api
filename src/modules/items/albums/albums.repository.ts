@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common'
 import { DataSource, FindOptionsRelations, In, Repository } from 'typeorm'
 
+import { simplifiedTracksRelations } from '../tracks/tracks.repository'
+
 import { Album } from './album.entity'
 import { CreateAlbum } from './dtos'
 
 export const albumsRelations: FindOptionsRelations<Album> = {
   artists: true,
-  tracks: true,
+  tracks: simplifiedTracksRelations,
 }
 
 export const albumsSimplifiedRelations: FindOptionsRelations<Album> = {
