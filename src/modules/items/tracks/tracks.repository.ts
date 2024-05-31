@@ -9,6 +9,10 @@ export const tracksRelations: FindOptionsRelations<Track> = {
   artists: true,
 }
 
+export const simplifiedTracksRelations: FindOptionsRelations<Track> = {
+  artists: true,
+}
+
 @Injectable()
 export class TracksRepository extends Repository<Track> {
   constructor(private readonly dataSource: DataSource) {
