@@ -1,13 +1,15 @@
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { AccessToken, MaxInt, SpotifyApi } from '@spotify/web-api-ts-sdk'
+import { AccessToken, MaxInt, Page, SpotifyApi } from '@spotify/web-api-ts-sdk'
 import { backOff } from 'exponential-backoff'
 
 import { analysisFactory } from './utils'
 import { TimeRange } from './enums'
+import { GetTopItemsParams } from './types'
 
 import { Environment } from '@config/environment'
 import { AdaptersService } from '@common/adapters'
+import { Artist, SdkArtist, SdkTrack, Track } from '@common/types/spotify'
 
 @Injectable()
 export class SpotifyUsersService {
@@ -31,46 +33,70 @@ export class SpotifyUsersService {
     )
   }
 
+  public getTopArtists(
+    token: AccessToken,
+    params: GetTopItemsParams,
+    adapt?: true
+  ): Promise<Page<Artist>>
+
+  public getTopArtists(
+    token: AccessToken,
+    params: GetTopItemsParams,
+    adapt: false
+  ): Promise<Page<SdkArtist>>
+
   async getTopArtists(
     token: AccessToken,
-    timeRange = TimeRange.LONG_TERM,
-    limit: MaxInt<50> = 20,
-    offset = 0
+    {
+      limit = 20,
+      offset = 0,
+      timeRange = TimeRange.LONG_TERM,
+    }: GetTopItemsParams,
+    adapt = true
   ) {
     this.spotifySdk = SpotifyApi.withAccessToken(
       this.configService.get<string>(Environment.SPOTIFY_CLIENT_ID)!,
       token
     )
 
-    return backOff(() =>
-      this.spotifySdk!.currentUser.topItems(
-        'artists',
-        timeRange,
-        limit,
-        offset
-      ).then(data => this.adaptersService.artists.adapt(data))
+    const topArtists = await backOff(() =>
+      this.spotifySdk!.currentUser.topItems('artists', timeRange, limit, offset)
     )
+
+    return adapt ? this.adaptersService.artists.adapt(topArtists) : topArtists
   }
+
+  public getTopTracks(
+    token: AccessToken,
+    params: GetTopItemsParams,
+    adapt?: true
+  ): Promise<Page<Track>>
+
+  public getTopTracks(
+    token: AccessToken,
+    params: GetTopItemsParams,
+    adapt: false
+  ): Promise<Page<SdkTrack>>
 
   async getTopTracks(
     token: AccessToken,
-    timeRange = TimeRange.LONG_TERM,
-    limit: MaxInt<50> = 20,
-    offset = 0
+    {
+      limit = 20,
+      offset = 0,
+      timeRange = TimeRange.LONG_TERM,
+    }: GetTopItemsParams,
+    adapt = true
   ) {
     this.spotifySdk = SpotifyApi.withAccessToken(
       this.configService.get<string>(Environment.SPOTIFY_CLIENT_ID)!,
       token
     )
 
-    return backOff(() =>
-      this.spotifySdk!.currentUser.topItems(
-        'tracks',
-        timeRange,
-        limit,
-        offset
-      ).then(data => this.adaptersService.tracks.adapt(data))
+    const topTracks = await backOff(() =>
+      this.spotifySdk!.currentUser.topItems('tracks', timeRange, limit, offset)
     )
+
+    return adapt ? this.adaptersService.tracks.adapt(topTracks) : topTracks
   }
 
   async getTopGenres(

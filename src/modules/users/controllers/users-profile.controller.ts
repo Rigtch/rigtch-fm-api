@@ -12,13 +12,17 @@ import { ApiAuth, Token } from '@modules/auth/decorators'
 import { SpotifyService } from '@modules/spotify'
 import { TokenGuard } from '@modules/auth/guards'
 import { Profile } from '@modules/profiles'
+import { ItemsService } from '@modules/items'
 
 @Controller('users/:id/profile')
 @ApiTags('users/{id}/profile')
 @UseGuards(CheckUserIdGuard, TokenGuard)
 @ApiAuth()
 export class UsersProfileController {
-  constructor(private readonly spotifyService: SpotifyService) {}
+  constructor(
+    private readonly spotifyService: SpotifyService,
+    private readonly itemsService: ItemsService
+  ) {}
 
   @Get()
   @ApiOperation({
@@ -66,12 +70,17 @@ export class UsersProfileController {
     @Token() token: AccessToken,
     @Query() { limit, timeRange, offset }: TopItemQuery
   ) {
-    return this.spotifyService.users.getTopArtists(
+    const { items: sdkArtists } = await this.spotifyService.users.getTopArtists(
       token,
-      timeRange,
-      limit,
-      offset
+      {
+        timeRange,
+        limit,
+        offset,
+      },
+      false
     )
+
+    return this.itemsService.findOrCreate(sdkArtists)
   }
 
   @Get('top/tracks')
@@ -87,12 +96,17 @@ export class UsersProfileController {
     @Token() token: AccessToken,
     @Query() { limit, timeRange, offset }: TopItemQuery
   ) {
-    return this.spotifyService.users.getTopTracks(
+    const { items: sdkTracks } = await this.spotifyService.users.getTopTracks(
       token,
-      timeRange,
-      limit,
-      offset
+      {
+        timeRange,
+        limit,
+        offset,
+      },
+      false
     )
+
+    return this.itemsService.findOrCreate(sdkTracks)
   }
 
   @Get('top/genres')

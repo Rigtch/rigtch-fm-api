@@ -11,12 +11,23 @@ import {
   tracksMock,
   topGenresMock,
   pageMockFactory,
-  artistsMock,
   analysisMock,
   accessTokenMock,
   userMock,
+  sdkArtistsMock,
+  artistEntitiesMock,
+  sdkTracksMock,
+  trackEntitiesMock,
 } from '@common/mocks'
 import { SpotifyService } from '@modules/spotify'
+import { ItemsService } from '@modules/items'
+import { Track } from '@modules/items/tracks'
+import { SdkTrack } from '@common/types/spotify'
+
+type FindOrCreateTracksSpy = MockInstance<
+  [tracks: SdkTrack[]],
+  Promise<Track[]>
+>
 
 describe('UsersProfileController', () => {
   const limit = 10
@@ -28,6 +39,7 @@ describe('UsersProfileController', () => {
   let moduleRef: TestingModule
   let usersProfileController: UsersProfileController
   let spotifyService: SpotifyService
+  let itemsService: ItemsService
 
   beforeEach(async () => {
     moduleRef = await Test.createTestingModule({
@@ -39,6 +51,12 @@ describe('UsersProfileController', () => {
             find: vi.fn(),
             findOneBy: vi.fn(),
             findOneByDisplayName: vi.fn(),
+          },
+        },
+        {
+          provide: ItemsService,
+          useValue: {
+            findOrCreate: vi.fn(),
           },
         },
         {
@@ -60,6 +78,7 @@ describe('UsersProfileController', () => {
 
     usersProfileController = moduleRef.get(UsersProfileController)
     spotifyService = moduleRef.get(SpotifyService)
+    itemsService = moduleRef.get(ItemsService)
   })
 
   afterEach(() => {
@@ -118,24 +137,24 @@ describe('UsersProfileController', () => {
 
   describe('getTopArtists', () => {
     let getTopArtistsSpy: MockInstance
+    let findOrCreateSpy: MockInstance
 
     beforeEach(() => {
       getTopArtistsSpy = vi
         .spyOn(spotifyService.users, 'getTopArtists')
-        .mockResolvedValue(pageMockFactory(artistsMock))
+        .mockResolvedValue(pageMockFactory(sdkArtistsMock))
+      findOrCreateSpy = vi
+        .spyOn(itemsService, 'findOrCreate')
+        .mockResolvedValue(artistEntitiesMock)
     })
 
     test('should get user top artists', async () => {
       expect(
         await usersProfileController.getTopArtists(accessTokenMock, {})
-      ).toEqual(pageMockFactory(artistsMock))
+      ).toEqual(artistEntitiesMock)
 
-      expect(getTopArtistsSpy).toHaveBeenCalledWith(
-        accessTokenMock,
-        undefined,
-        undefined,
-        undefined
-      )
+      expect(getTopArtistsSpy).toHaveBeenCalledWith(accessTokenMock, {}, false)
+      expect(findOrCreateSpy).toHaveBeenCalledWith(sdkArtistsMock)
     })
 
     test('should get user top artists with query', async () => {
@@ -145,37 +164,44 @@ describe('UsersProfileController', () => {
           timeRange,
           offset,
         })
-      ).toEqual(pageMockFactory(artistsMock))
+      ).toEqual(artistEntitiesMock)
 
       expect(getTopArtistsSpy).toHaveBeenCalledWith(
         accessTokenMock,
-        timeRange,
-        limit,
-        offset
+        {
+          limit,
+          timeRange,
+          offset,
+        },
+        false
       )
+      expect(findOrCreateSpy).toHaveBeenCalledWith(sdkArtistsMock)
     })
   })
 
   describe('getTopTracks', () => {
     let getTopTracksSpy: MockInstance
+    let findOrCreateSpy: FindOrCreateTracksSpy
 
     beforeEach(() => {
       getTopTracksSpy = vi
         .spyOn(spotifyService.users, 'getTopTracks')
-        .mockResolvedValue(pageMockFactory(tracksMock))
+        .mockResolvedValue(pageMockFactory(sdkTracksMock))
+      findOrCreateSpy = (
+        vi.spyOn(
+          itemsService,
+          'findOrCreate'
+        ) as unknown as FindOrCreateTracksSpy
+      ).mockResolvedValue(trackEntitiesMock)
     })
 
     test('should get user top tracks', async () => {
       expect(
         await usersProfileController.getTopTracks(accessTokenMock, {})
-      ).toEqual(pageMockFactory(tracksMock))
+      ).toEqual(trackEntitiesMock)
 
-      expect(getTopTracksSpy).toHaveBeenCalledWith(
-        accessTokenMock,
-        undefined,
-        undefined,
-        undefined
-      )
+      expect(getTopTracksSpy).toHaveBeenCalledWith(accessTokenMock, {}, false)
+      expect(findOrCreateSpy).toHaveBeenCalledWith(sdkTracksMock)
     })
 
     test('should get user top tracks with query', async () => {
@@ -185,14 +211,18 @@ describe('UsersProfileController', () => {
           timeRange,
           offset,
         })
-      ).toEqual(pageMockFactory(tracksMock))
+      ).toEqual(trackEntitiesMock)
 
       expect(getTopTracksSpy).toHaveBeenCalledWith(
         accessTokenMock,
-        timeRange,
-        limit,
-        offset
+        {
+          limit,
+          timeRange,
+          offset,
+        },
+        false
       )
+      expect(findOrCreateSpy).toHaveBeenCalledWith(sdkTracksMock)
     })
   })
 
