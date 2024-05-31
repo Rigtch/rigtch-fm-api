@@ -6,6 +6,7 @@ import { ApiItemQuery, ApiUser, RequestUser } from '../decorators'
 import { LastItemQuery, TopItemQuery } from '../dtos'
 import { CheckUserIdGuard } from '../guards'
 import { User } from '../user.entity'
+import { ArtistsPageDocument, TracksPageDocument } from '../docs'
 
 import { ONE_SUCCESSFULLY_RETRIEVED } from '@common/constants'
 import { ApiAuth, Token } from '@modules/auth/decorators'
@@ -64,23 +65,30 @@ export class UsersProfileController {
   @ApiItemQuery({ withOffset: true })
   @ApiOkResponse({
     description: ONE_SUCCESSFULLY_RETRIEVED("user's top artists"),
+    type: ArtistsPageDocument,
   })
   @ApiUser()
   async getTopArtists(
     @Token() token: AccessToken,
     @Query() { limit, timeRange, offset }: TopItemQuery
   ) {
-    const { items: sdkArtists } = await this.spotifyService.users.getTopArtists(
-      token,
-      {
-        timeRange,
-        limit,
-        offset,
-      },
-      false
-    )
+    const { items: sdkArtists, ...rest } =
+      await this.spotifyService.users.getTopArtists(
+        token,
+        {
+          timeRange,
+          limit,
+          offset,
+        },
+        false
+      )
 
-    return this.itemsService.findOrCreate(sdkArtists)
+    const artists = await this.itemsService.findOrCreate(sdkArtists)
+
+    return {
+      ...rest,
+      items: artists,
+    }
   }
 
   @Get('top/tracks')
@@ -90,23 +98,30 @@ export class UsersProfileController {
   @ApiItemQuery({ withOffset: true })
   @ApiOkResponse({
     description: ONE_SUCCESSFULLY_RETRIEVED("user's top tracks"),
+    type: TracksPageDocument,
   })
   @ApiUser()
   async getTopTracks(
     @Token() token: AccessToken,
     @Query() { limit, timeRange, offset }: TopItemQuery
   ) {
-    const { items: sdkTracks } = await this.spotifyService.users.getTopTracks(
-      token,
-      {
-        timeRange,
-        limit,
-        offset,
-      },
-      false
-    )
+    const { items: sdkTracks, ...rest } =
+      await this.spotifyService.users.getTopTracks(
+        token,
+        {
+          timeRange,
+          limit,
+          offset,
+        },
+        false
+      )
 
-    return this.itemsService.findOrCreate(sdkTracks)
+    const tracks = await this.itemsService.findOrCreate(sdkTracks)
+
+    return {
+      ...rest,
+      items: tracks,
+    }
   }
 
   @Get('top/genres')

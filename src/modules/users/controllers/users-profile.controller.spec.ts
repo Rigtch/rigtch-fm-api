@@ -151,7 +151,7 @@ describe('UsersProfileController', () => {
     test('should get user top artists', async () => {
       expect(
         await usersProfileController.getTopArtists(accessTokenMock, {})
-      ).toEqual(artistEntitiesMock)
+      ).toEqual(pageMockFactory(artistEntitiesMock))
 
       expect(getTopArtistsSpy).toHaveBeenCalledWith(accessTokenMock, {}, false)
       expect(findOrCreateSpy).toHaveBeenCalledWith(sdkArtistsMock)
@@ -164,7 +164,7 @@ describe('UsersProfileController', () => {
           timeRange,
           offset,
         })
-      ).toEqual(artistEntitiesMock)
+      ).toEqual(pageMockFactory(artistEntitiesMock))
 
       expect(getTopArtistsSpy).toHaveBeenCalledWith(
         accessTokenMock,
@@ -198,7 +198,7 @@ describe('UsersProfileController', () => {
     test('should get user top tracks', async () => {
       expect(
         await usersProfileController.getTopTracks(accessTokenMock, {})
-      ).toEqual(trackEntitiesMock)
+      ).toEqual(pageMockFactory(trackEntitiesMock))
 
       expect(getTopTracksSpy).toHaveBeenCalledWith(accessTokenMock, {}, false)
       expect(findOrCreateSpy).toHaveBeenCalledWith(sdkTracksMock)
@@ -211,7 +211,7 @@ describe('UsersProfileController', () => {
           timeRange,
           offset,
         })
-      ).toEqual(trackEntitiesMock)
+      ).toEqual(pageMockFactory(trackEntitiesMock))
 
       expect(getTopTracksSpy).toHaveBeenCalledWith(
         accessTokenMock,
