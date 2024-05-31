@@ -35,7 +35,7 @@ CLIENT_CALLBACK_URL="http://localhost:3000"
 
 ## Validators Variables
 
-- `ENABLE_TRACKS_VALIDATOR` - If yes every track in database will be validated
+- `ENABLE_TRACKS_VALIDATOR` - If true every track in database will be validated
   before running the application.
 
 ```bash
