@@ -2,6 +2,7 @@ import { DataSource, In } from 'typeorm'
 import { Test, TestingModule } from '@nestjs/testing'
 
 import { AlbumsRepository, albumsRelations } from './albums.repository'
+import { ReleaseDatePrecision } from './enums'
 
 import {
   albumEntityMock,
@@ -124,6 +125,8 @@ describe('AlbumsRepository', () => {
         ...albumMock,
         artists: artistEntitiesMock,
         releaseDate: new Date(sdkAlbumMock.release_date),
+        releaseDatePrecision:
+          sdkAlbumMock.release_date_precision as ReleaseDatePrecision,
         externalId,
         albumType: sdkAlbumMock.album_type,
         images: imagesMock,

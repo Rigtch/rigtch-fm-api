@@ -9,6 +9,7 @@ export interface Album {
   name: string
   images: SdkImage[]
   releaseDate: string
+  releaseDatePrecision: string
   totalTracks: number
   href: string
   tracks: SimplifiedTrack[]
@@ -24,6 +25,7 @@ export interface SimplifiedAlbum {
   popularity: number
   images: SdkImage[]
   releaseDate: string
+  releaseDatePrecision: string
   totalTracks: number
 }
 

@@ -12,6 +12,8 @@ import {
 
 import { Item } from '../types'
 
+import { ReleaseDatePrecision } from './enums'
+
 import { Image } from '@modules/items/images'
 import type { Artist } from '@modules/items/artists'
 import type { Track } from '@modules/items/tracks'
@@ -48,6 +50,18 @@ export class Album implements Item {
       'The date the album was first released. Value can be known in three precision levels: year, month, day.',
   })
   releaseDate: Date
+
+  @Column('enum', {
+    enum: ReleaseDatePrecision,
+    nullable: true,
+    default: ReleaseDatePrecision.DAY,
+  })
+  @ApiProperty({
+    enum: Object.entries(ReleaseDatePrecision),
+    example: ReleaseDatePrecision.DAY,
+    description: 'The precision with which releaseDate is known.',
+  })
+  releaseDatePrecision?: ReleaseDatePrecision
 
   @Column('varchar')
   @ApiProperty({

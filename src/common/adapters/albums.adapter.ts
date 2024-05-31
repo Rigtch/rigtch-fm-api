@@ -40,6 +40,7 @@ export class AlbumsAdapter {
     popularity,
     images,
     release_date,
+    release_date_precision,
     total_tracks,
     ...rest
   }: SdkAlbum | SdkSimplifiedAlbum): Album | SimplifiedAlbum => ({
@@ -50,6 +51,7 @@ export class AlbumsAdapter {
     popularity,
     images,
     releaseDate: release_date,
+    releaseDatePrecision: release_date_precision,
     totalTracks: total_tracks,
     ...('tracks' in rest && {
       tracks: this.tracksAdapter.adapt(rest.tracks.items),

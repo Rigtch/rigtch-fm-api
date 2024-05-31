@@ -20,6 +20,7 @@ import {
   SdkSimplifiedAlbum,
   SimplifiedAlbum,
 } from '@common/types/spotify'
+import { ReleaseDatePrecision } from '@modules/items/albums/enums'
 
 export const sdkSimplifiedAlbumMock: SdkSimplifiedAlbum = {
   album_type: 'album',
@@ -95,6 +96,7 @@ export const albumMock: Album = {
   artists: artistsMock,
   images: imagesMock,
   releaseDate: sdkSimplifiedAlbumMock.release_date,
+  releaseDatePrecision: sdkSimplifiedAlbumMock.release_date_precision,
   totalTracks: sdkSimplifiedAlbumMock.total_tracks,
   href: sdkAlbumMock.external_urls.spotify,
   tracks: simplifiedTracksMock,
@@ -112,6 +114,7 @@ export const simplifiedAlbumMock: SimplifiedAlbum = {
   popularity: sdkAlbumMock.popularity,
   images: imagesMock,
   releaseDate: sdkSimplifiedAlbumMock.release_date,
+  releaseDatePrecision: sdkSimplifiedAlbumMock.release_date_precision,
   totalTracks: sdkSimplifiedAlbumMock.total_tracks,
 }
 
@@ -125,6 +128,7 @@ export const albumEntityMock: AlbumEntity = {
   artists: artistEntitiesMock,
   tracks: trackEntitiesMock,
   releaseDate: new Date(albumMock.releaseDate),
+  releaseDatePrecision: albumMock.releaseDatePrecision as ReleaseDatePrecision,
   albumType: sdkAlbumMock.album_type,
   images: imagesMock,
 }
