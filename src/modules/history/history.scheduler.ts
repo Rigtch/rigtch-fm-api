@@ -2,7 +2,7 @@ import {
   Inject,
   Injectable,
   Logger,
-  OnModuleInit,
+  OnApplicationBootstrap,
   forwardRef,
 } from '@nestjs/common'
 import { SchedulerRegistry } from '@nestjs/schedule'
@@ -20,7 +20,7 @@ import { Environment } from '@config/environment'
 const { HISTORY_FETCHING_INTERVAL, HISTORY_FETCHING_DELAY } = Environment
 
 @Injectable()
-export class HistoryScheduler implements OnModuleInit {
+export class HistoryScheduler implements OnApplicationBootstrap {
   private readonly logger = new Logger(HistoryScheduler.name)
 
   constructor(
@@ -31,7 +31,7 @@ export class HistoryScheduler implements OnModuleInit {
     private readonly configService: ConfigService
   ) {}
 
-  onModuleInit() {
+  onApplicationBootstrap() {
     const INTERVAL_HOURS = ms(
       this.configService.get<string>(HISTORY_FETCHING_INTERVAL)!
     )
