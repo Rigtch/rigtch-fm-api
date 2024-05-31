@@ -69,7 +69,7 @@ describe('HistoryScheduler', () => {
     expect(historyScheduler).toBeDefined()
   })
 
-  describe('onModuleInit', () => {
+  describe('onApplicationBootstrap', () => {
     let scheduleHistorySynchronizationSpy: MockInstance
     let addIntervalSpy: MockInstance
 
@@ -81,7 +81,7 @@ describe('HistoryScheduler', () => {
     })
 
     test('should schedule history synchronization', () => {
-      historyScheduler.onModuleInit()
+      historyScheduler.onApplicationBootstrap()
 
       expect(scheduleHistorySynchronizationSpy).toHaveBeenCalledTimes(1)
       expect(addIntervalSpy).toHaveBeenCalledWith(
