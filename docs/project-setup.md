@@ -2,7 +2,7 @@
 
 ## Installation
 
-Make sure to have installed right version of Node.js in nvm.
+Make sure that you have the right version of Node.js installed in nvm.
 
 ```bash
 nvm use
