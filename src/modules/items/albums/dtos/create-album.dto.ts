@@ -2,6 +2,7 @@ import {
   IsArray,
   IsDate,
   IsDateString,
+  IsEnum,
   IsInt,
   IsObject,
   IsOptional,
@@ -10,6 +11,7 @@ import {
 import type { Page } from '@spotify/web-api-ts-sdk'
 
 import type { Album } from '../album.entity'
+import { ReleaseDatePrecision } from '../enums'
 
 import type { Artist } from '@modules/items/artists'
 import type {
@@ -39,6 +41,9 @@ export abstract class CreateAlbum implements Omit<Album, 'id'> {
   @IsDate()
   readonly releaseDate: Date
 
+  @IsEnum(ReleaseDatePrecision)
+  readonly releaseDatePrecision: ReleaseDatePrecision
+
   @IsArray()
   readonly images: Image[]
 
@@ -57,7 +62,6 @@ export abstract class SdkCreateAlbum
       | 'genres'
       | 'label'
       | 'popularity'
-      | 'release_date_precision'
       | 'type'
       | 'artists'
       | 'uri'
@@ -82,6 +86,8 @@ export abstract class SdkCreateAlbum
 
   @IsDateString()
   readonly release_date: string
+
+  readonly release_date_precision: string
 
   @IsOptional()
   @IsArray()

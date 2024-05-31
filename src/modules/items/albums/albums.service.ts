@@ -3,6 +3,7 @@ import { DataSource, In } from 'typeorm'
 
 import { CreateAlbum, SdkCreateAlbum } from './dtos'
 import { Album } from './album.entity'
+import { ReleaseDatePrecision } from './enums'
 
 import { TracksService } from '@modules/items/tracks/tracks.service'
 import { Artist } from '@modules/items/artists'
@@ -30,6 +31,7 @@ export class AlbumsService {
       id,
       name,
       release_date,
+      release_date_precision,
       album_type: albumType,
       total_tracks: totalTracks,
       external_urls: { spotify: href },
@@ -44,6 +46,7 @@ export class AlbumsService {
       href,
       albumType,
       releaseDate: new Date(release_date),
+      releaseDatePrecision: release_date_precision as ReleaseDatePrecision,
       totalTracks,
     }
 

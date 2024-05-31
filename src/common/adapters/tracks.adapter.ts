@@ -68,6 +68,7 @@ export class TracksAdapter {
         genres: rest.album.genres,
         popularity: rest.album.popularity,
         releaseDate: rest.album.release_date,
+        releaseDatePrecision: rest.album.release_date_precision,
         totalTracks: rest.album.total_tracks,
       },
     }),

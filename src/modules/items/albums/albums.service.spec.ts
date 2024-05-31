@@ -90,6 +90,7 @@ describe('AlbumsService', () => {
             href: sdkAlbumMock.external_urls.spotify,
             albumType: sdkAlbumMock.album_type,
             releaseDate: new Date(sdkAlbumMock.release_date),
+            releaseDatePrecision: sdkAlbumMock.release_date_precision,
             totalTracks: sdkAlbumMock.total_tracks,
           }
         )
@@ -132,6 +133,7 @@ describe('AlbumsService', () => {
           href: sdkAlbumMock.external_urls.spotify,
           albumType: sdkAlbumMock.album_type,
           releaseDate: new Date(sdkAlbumMock.release_date),
+          releaseDatePrecision: sdkAlbumMock.release_date_precision,
           totalTracks: sdkAlbumMock.total_tracks,
           images: imagesMock,
           artists: artistEntitiesMock,
