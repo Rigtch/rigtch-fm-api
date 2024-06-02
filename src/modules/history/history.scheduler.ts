@@ -17,7 +17,7 @@ import { User } from '@modules/users/user.entity'
 import { UsersRepository } from '@modules/users/users.repository'
 import { Environment } from '@config/environment'
 
-const { HISTORY_FETCHING_INTERVAL, HISTORY_FETCHING_DELAY } = Environment
+const { HISTORY_FETCHING_INTERVAL } = Environment
 
 @Injectable()
 export class HistoryScheduler implements OnApplicationBootstrap {
@@ -51,12 +51,8 @@ export class HistoryScheduler implements OnApplicationBootstrap {
     this.logger.log(`Adding synchronize jobs for ${users.length} users`)
 
     for (const user of users) {
-      const index = users.findIndex(({ id }) => id === user.id)
-
       await this.historyQueue.add(SYNCHRONIZE_JOB, user, {
         priority: 1,
-        delay:
-          ms(this.configService.get<string>(HISTORY_FETCHING_DELAY)!) * index,
       })
     }
   }

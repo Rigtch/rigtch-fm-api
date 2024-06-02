@@ -15,6 +15,10 @@ import { SpotifyModule } from '@modules/spotify'
     ScheduleModule.forRoot(),
     BullModule.registerQueue({
       name: HISTORY_QUEUE,
+      defaultJobOptions: {
+        removeOnComplete: true,
+        removeOnFail: true,
+      },
     }),
     forwardRef(() => UsersModule),
     SpotifyModule,
