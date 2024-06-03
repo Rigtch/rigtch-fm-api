@@ -1,4 +1,4 @@
-import { Body, Controller, Get, UseGuards } from '@nestjs/common'
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common'
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { UsersRepository } from '../users.repository'
@@ -39,7 +39,15 @@ export class UsersController {
     return this.usersRepository.findUsers()
   }
 
-  @Get('/me')
+  @Post('/me')
+  @ApiOperation({
+    summary: 'Getting current user.',
+    description: 'Getting current user that is logged in.',
+  })
+  @ApiOkResponse({
+    description: ONE_SUCCESSFULLY_RETRIEVED(USER),
+    type: User,
+  })
   async getMe(@Body() { refreshToken }: MeBody) {
     const token = await this.spotifyService.auth.token({ refreshToken })
     const spotifyProfile = await this.spotifyService.users.profile(token)

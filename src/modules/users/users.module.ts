@@ -15,6 +15,7 @@ import { SpotifyModule } from '@modules/spotify'
 import { HistoryTracksModule } from '@modules/history/tracks'
 import { HistoryModule } from '@modules/history'
 import { ItemsModule } from '@modules/items'
+import { ProfilesModule } from '@modules/profiles'
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { ItemsModule } from '@modules/items'
     HistoryTracksModule,
     HistoryModule,
     SpotifyModule,
+    ProfilesModule,
     ItemsModule,
   ],
   providers: [UsersRepository],
