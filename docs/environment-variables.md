@@ -45,13 +45,12 @@ ENABLE_TRACKS_VALIDATOR=false
 ## History Module Variables
 
 - `HISTORY_FETCHING_INTERVAL` - The interval for user's listening history synchronization.
-- `HISTORY_FETCHING_DELAY` - The delay between user's history synchronization.
 - `ENABLE_HISTORY_SYNCHRONIZATION` - If true the history synchronization will
   be enabled.
 
 ```bash
 HISTORY_FETCHING_INTERVAL="1h"
-HISTORY_FETCHING_DELAY="2m"
+ENABLE_HISTORY_SYNCHRONIZATION=false
 ```
 
 ## Database Variables
