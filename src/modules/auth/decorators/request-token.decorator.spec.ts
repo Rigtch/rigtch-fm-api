@@ -1,21 +1,21 @@
 import { UnauthorizedException } from '@nestjs/common'
 
-import { Token, getToken } from './token.decorator'
+import { RequestToken, getRequestToken } from './request-token.decorator'
 
 import { accessTokenMock, contextFactoryMock } from '@common/mocks'
 
-describe('TokenDecorator', () => {
+describe('RequestTokenDecorator', () => {
   test('should be defined', () => {
-    expect(Token).toBeDefined()
-    expect(getToken).toBeDefined()
+    expect(RequestToken).toBeDefined()
+    expect(getRequestToken).toBeDefined()
   })
 
-  describe('getToken', () => {
+  describe('getRequestToken', () => {
     test('should return the access token from header', () => {
       const accessToken = 'access-token'
 
       expect(
-        getToken(
+        getRequestToken(
           {},
           contextFactoryMock({
             headers: {
@@ -29,7 +29,7 @@ describe('TokenDecorator', () => {
 
     test('should throw unauthorized exception if no access token is provided', () => {
       expect(() =>
-        getToken(
+        getRequestToken(
           {},
           contextFactoryMock({
             headers: {},

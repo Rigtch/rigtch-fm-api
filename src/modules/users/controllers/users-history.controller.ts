@@ -10,7 +10,7 @@ import { CheckUserIdGuard } from '../guards'
 import { PaginationHistoryTracksDocument } from '../docs'
 
 import { ONE_SUCCESSFULLY_RETRIEVED } from '@common/constants'
-import { ApiAuth, Token } from '@modules/auth/decorators'
+import { ApiAuth, RequestToken } from '@modules/auth/decorators'
 import {
   HistoryTracksRepository,
   historyTracksOrder,
@@ -42,7 +42,7 @@ export class UsersHistoryController {
   @ApiUser()
   async getHistory(
     @RequestUser() user: User,
-    @Token() _token: string,
+    @RequestToken() _token: string,
     @Query() { limit = 10, page = 1 }: PaginationQuery
   ) {
     if (page === 1) {
