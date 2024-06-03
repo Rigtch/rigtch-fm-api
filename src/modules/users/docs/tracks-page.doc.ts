@@ -8,5 +8,5 @@ export abstract class TracksPageDocument extends PageDocument {
   @ApiProperty({
     type: [TrackDocument],
   })
-  tracks: TrackDocument[]
+  items: TrackDocument[]
 }
