@@ -10,6 +10,7 @@ export const environmentSchema = Joi.object({
   CLIENT_CALLBACK_URL: Joi.string().required(),
   HISTORY_FETCHING_INTERVAL: Joi.string().default('1h'),
   HISTORY_FETCHING_DELAY: Joi.string().default('2m'),
+  ENABLE_HISTORY_SYNCHRONIZATION: Joi.boolean().default(true),
   DATABASE_HOST: Joi.string().required(),
   DATABASE_PORT: Joi.number().required(),
   DATABASE_USERNAME: Joi.string().required(),

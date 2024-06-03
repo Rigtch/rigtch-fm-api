@@ -46,6 +46,8 @@ ENABLE_TRACKS_VALIDATOR=false
 
 - `HISTORY_FETCHING_INTERVAL` - The interval for user's listening history synchronization.
 - `HISTORY_FETCHING_DELAY` - The delay between user's history synchronization.
+- `ENABLE_HISTORY_SYNCHRONIZATION` - If true the history synchronization will
+  be enabled.
 
 ```bash
 HISTORY_FETCHING_INTERVAL="1h"
@@ -66,4 +68,16 @@ DATABASE_PORT=5432
 DATABASE_USERNAME="postgres"
 DATABASE_PASSWORD="postgres"
 DATABASE_NAME="rigtch-fm-db"
+```
+
+## Redis Variables
+
+- `REDIS_HOST` - The host for the redis server.
+- `REDIS_PORT` - The port for the redis server.
+- `REDIS_USER` - The username for the redis user(optional).
+- `REDIS_PASSWORD` - The password for the redis user(optional).
+
+```bash
+REDIS_HOST="localhost"
+REDIS_PORT=6379
 ```
