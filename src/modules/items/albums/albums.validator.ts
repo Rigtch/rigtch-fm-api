@@ -35,9 +35,9 @@ export class AlbumsValidator implements OnModuleInit {
 
     const albums = await this.albumsRepository.findAlbums()
 
-    for (const album of albums) {
+    for await (const album of albums) {
       this.validateTracksExistence(album)
-      this.validateReleaseDatePrecision(album)
+      await this.validateReleaseDatePrecision(album)
     }
   }
 
@@ -68,17 +68,29 @@ export class AlbumsValidator implements OnModuleInit {
   }
 
   private async validateReleaseDatePrecision(album: Album) {
-    if (!album.releaseDatePrecision) {
+    if (
+      !album.releaseDatePrecision ||
+      album.releaseDatePrecision === ReleaseDatePrecision.DAY
+    ) {
       this.logger.log(
         `Updating album ${album.name} with release date precision`
       )
 
-      const sdkAlbum = await this.spotifyService.albums.get(album.id, false)
+      const sdkAlbum = await this.spotifyService.albums.get(
+        album.externalId,
+        false
+      )
+
+      console.log(sdkAlbum.release_date_precision)
+
+      if (sdkAlbum.release_date_precision === 'day') return
 
       album.releaseDatePrecision =
         sdkAlbum.release_date_precision as ReleaseDatePrecision
 
-      await this.albumsRepository.save(album)
+      const updatedAlbum = await this.albumsRepository.save(album)
+
+      console.log(updatedAlbum.releaseDatePrecision)
     }
   }
 }
