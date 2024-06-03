@@ -8,5 +8,5 @@ export abstract class ArtistsPageDocument extends PageDocument {
   @ApiProperty({
     type: [Artist],
   })
-  artists: Artist[]
+  items: Artist[]
 }
