@@ -45,9 +45,11 @@ export class UsersHistoryController {
     @Token() _token: string,
     @Query() { limit = 10, page = 1 }: PaginationQuery
   ) {
-    const synchronizeJob = await this.historyQueue.add(SYNCHRONIZE_JOB, user)
+    if (page === 1) {
+      const synchronizeJob = await this.historyQueue.add(SYNCHRONIZE_JOB, user)
 
-    await synchronizeJob.finished()
+      await synchronizeJob.finished()
+    }
 
     return paginate(
       this.historyTracksRepository,

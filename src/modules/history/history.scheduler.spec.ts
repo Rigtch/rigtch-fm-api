@@ -17,6 +17,7 @@ describe('HistoryScheduler', () => {
   let usersRepository: UsersRepository
   let historyQueue: Queue<User>
   let schedulerRegistry: SchedulerRegistry
+  let configService: ConfigService
 
   beforeEach(async () => {
     vi.spyOn(globalThis, 'setTimeout').mockImplementation(((
@@ -59,6 +60,7 @@ describe('HistoryScheduler', () => {
     usersRepository = moduleRef.get(UsersRepository)
     historyQueue = moduleRef.get(getQueueToken(HISTORY_QUEUE))
     schedulerRegistry = moduleRef.get(SchedulerRegistry)
+    configService = moduleRef.get(ConfigService)
   })
 
   afterEach(() => {
@@ -70,14 +72,25 @@ describe('HistoryScheduler', () => {
   })
 
   describe('onApplicationBootstrap', () => {
+    let getConfigSpy: MockInstance
     let scheduleHistorySynchronizationSpy: MockInstance
     let addIntervalSpy: MockInstance
 
     beforeEach(() => {
+      getConfigSpy = vi.spyOn(configService, 'get')
       scheduleHistorySynchronizationSpy = vi
         .spyOn(historyScheduler, 'scheduleHistorySynchronization')
         .mockResolvedValue()
       addIntervalSpy = vi.spyOn(schedulerRegistry, 'addInterval')
+    })
+
+    test('should not schedule history synchronization if history synchronization is disabled', () => {
+      getConfigSpy.mockReturnValue(false)
+
+      historyScheduler.onApplicationBootstrap()
+
+      expect(scheduleHistorySynchronizationSpy).not.toHaveBeenCalled()
+      expect(addIntervalSpy).not.toHaveBeenCalled()
     })
 
     test('should schedule history synchronization', () => {

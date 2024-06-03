@@ -17,7 +17,8 @@ import { User } from '@modules/users/user.entity'
 import { UsersRepository } from '@modules/users/users.repository'
 import { Environment } from '@config/environment'
 
-const { HISTORY_FETCHING_INTERVAL } = Environment
+const { HISTORY_FETCHING_INTERVAL, ENABLE_HISTORY_SYNCHRONIZATION } =
+  Environment
 
 @Injectable()
 export class HistoryScheduler implements OnApplicationBootstrap {
@@ -32,6 +33,13 @@ export class HistoryScheduler implements OnApplicationBootstrap {
   ) {}
 
   onApplicationBootstrap() {
+    if (
+      this.configService.get<boolean>(ENABLE_HISTORY_SYNCHRONIZATION) === false
+    ) {
+      this.logger.log('History synchronization is disabled')
+      return
+    }
+
     const INTERVAL_HOURS = ms(
       this.configService.get<string>(HISTORY_FETCHING_INTERVAL)!
     )
