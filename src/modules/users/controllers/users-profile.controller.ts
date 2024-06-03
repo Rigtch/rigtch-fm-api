@@ -9,7 +9,7 @@ import { User } from '../user.entity'
 import { ArtistsPageDocument, TracksPageDocument } from '../docs'
 
 import { ONE_SUCCESSFULLY_RETRIEVED } from '@common/constants'
-import { ApiAuth, Token } from '@modules/auth/decorators'
+import { ApiAuth, RequestToken } from '@modules/auth/decorators'
 import { SpotifyService } from '@modules/spotify'
 import { TokenGuard } from '@modules/auth/guards'
 import { Profile } from '@modules/profiles'
@@ -49,7 +49,7 @@ export class UsersProfileController {
   })
   @ApiUser()
   async getRecentlyPlayed(
-    @Token() token: AccessToken,
+    @RequestToken() token: AccessToken,
     @Query() { limit = 10, before, after }: LastItemQuery
   ) {
     return this.spotifyService.player.getRecentlyPlayedTracks(token, limit, {
@@ -69,7 +69,7 @@ export class UsersProfileController {
   })
   @ApiUser()
   async getTopArtists(
-    @Token() token: AccessToken,
+    @RequestToken() token: AccessToken,
     @Query() { limit, timeRange, offset }: TopItemQuery
   ) {
     const { items: sdkArtists, ...rest } =
@@ -102,7 +102,7 @@ export class UsersProfileController {
   })
   @ApiUser()
   async getTopTracks(
-    @Token() token: AccessToken,
+    @RequestToken() token: AccessToken,
     @Query() { limit, timeRange, offset }: TopItemQuery
   ) {
     const { items: sdkTracks, ...rest } =
@@ -134,7 +134,7 @@ export class UsersProfileController {
   })
   @ApiUser()
   async getTopGenres(
-    @Token() token: AccessToken,
+    @RequestToken() token: AccessToken,
     @Query() { limit, timeRange, offset }: TopItemQuery
   ) {
     return this.spotifyService.users.getTopGenres(
@@ -153,7 +153,7 @@ export class UsersProfileController {
     description: ONE_SUCCESSFULLY_RETRIEVED("user's analysis"),
   })
   @ApiUser()
-  async getAnalysis(@Token() token: AccessToken) {
+  async getAnalysis(@RequestToken() token: AccessToken) {
     return this.spotifyService.users.getAnalysis(token)
   }
 }

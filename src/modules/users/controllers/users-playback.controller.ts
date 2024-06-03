@@ -6,7 +6,7 @@ import { CheckIsCurrentUserGuard, CheckUserIdGuard } from '../guards'
 import { ApiUser } from '../decorators'
 
 import { ONE_SUCCESSFULLY_RETRIEVED } from '@common/constants'
-import { ApiAuth, Token } from '@modules/auth/decorators'
+import { ApiAuth, RequestToken } from '@modules/auth/decorators'
 import { Success } from '@common/dtos'
 import { SpotifyService } from '@modules/spotify'
 import { TokenGuard } from '@modules/auth/guards'
@@ -26,7 +26,7 @@ export class UsersPlaybackController {
     description: ONE_SUCCESSFULLY_RETRIEVED('playback state'),
   })
   @ApiUser()
-  async getPlaybackState(@Token() token: AccessToken) {
+  async getPlaybackState(@RequestToken() token: AccessToken) {
     return this.spotifyService.player.getPlaybackState(token)
   }
 
@@ -39,7 +39,7 @@ export class UsersPlaybackController {
     description: 'Playback paused.',
   })
   @ApiUser()
-  async pausePlayback(@Token() token: AccessToken): Promise<Success> {
+  async pausePlayback(@RequestToken() token: AccessToken): Promise<Success> {
     return {
       success: await this.spotifyService.player.pausePlayback(token),
     }
@@ -55,7 +55,7 @@ export class UsersPlaybackController {
     description: 'Playback resumed.',
   })
   @ApiUser()
-  async resumePlayback(@Token() token: AccessToken): Promise<Success> {
+  async resumePlayback(@RequestToken() token: AccessToken): Promise<Success> {
     return {
       success: await this.spotifyService.player.resumePlayback(token),
     }

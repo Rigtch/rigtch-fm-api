@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common'
 import { Request } from 'express'
 
-export function getToken(data: unknown, context: ExecutionContext) {
+export function getRequestToken(data: unknown, context: ExecutionContext) {
   const { headers, token } = context.switchToHttp().getRequest<Request>()
 
   const accessToken = headers.authorization?.slice(7)
@@ -16,4 +16,4 @@ export function getToken(data: unknown, context: ExecutionContext) {
   return token!
 }
 
-export const Token = createParamDecorator(getToken)
+export const RequestToken = createParamDecorator(getRequestToken)
