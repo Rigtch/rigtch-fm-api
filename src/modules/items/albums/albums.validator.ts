@@ -81,16 +81,12 @@ export class AlbumsValidator implements OnModuleInit {
         false
       )
 
-      console.log(sdkAlbum.release_date_precision)
-
       if (sdkAlbum.release_date_precision === 'day') return
 
       album.releaseDatePrecision =
         sdkAlbum.release_date_precision as ReleaseDatePrecision
 
-      const updatedAlbum = await this.albumsRepository.save(album)
-
-      console.log(updatedAlbum.releaseDatePrecision)
+      await this.albumsRepository.save(album)
     }
   }
 }

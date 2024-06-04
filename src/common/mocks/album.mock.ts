@@ -67,7 +67,7 @@ export const sdkSimplifiedAlbumMock: SdkSimplifiedAlbum = {
   images: imagesMock,
   name: 'Substrata + Man with a Movie Camera',
   release_date: '1997-07-12',
-  release_date_precision: 'day',
+  release_date_precision: 'month',
   total_tracks: 21,
   type: 'album',
   uri: 'spotify:album:5QIf4hNIAksV1uMCXHVkAZ',

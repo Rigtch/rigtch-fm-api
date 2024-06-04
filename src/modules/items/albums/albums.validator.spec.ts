@@ -102,6 +102,11 @@ describe('AlbumsValidator', () => {
       let updateOrCreateSpy: MockInstance
 
       beforeEach(() => {
+        vi.spyOn(
+          albumsValidator as never,
+          'validateReleaseDatePrecision'
+        ).mockResolvedValue(null)
+
         getTracksSpy = vi.spyOn(spotifyService.tracks, 'get')
         updateOrCreateSpy = vi.spyOn(tracksService, 'updateOrCreate')
 
@@ -140,9 +145,8 @@ describe('AlbumsValidator', () => {
           sdkAlbumMock.tracks.items.map(({ id }) => id),
           false
         )
-        // Should be called but vitest throws an error
-        // expect(updateOrCreateSpy).toHaveBeenCalled()
-        // expect(saveSpy).toHaveBeenCalled()
+        expect(updateOrCreateSpy).toHaveBeenCalled()
+        expect(saveSpy).toHaveBeenCalled()
       })
     })
 
