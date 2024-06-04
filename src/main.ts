@@ -31,7 +31,7 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document)
 
   app.enableCors({
-    origin: configService.get(Environment.CLIENT_CALLBACK_URL),
+    origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   })
