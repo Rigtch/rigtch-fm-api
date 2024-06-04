@@ -49,20 +49,22 @@ export class SpotifyAuthService {
       callbackUrl && params.append('redirect_uri', callbackUrl)
     }
 
-    return backOff(() =>
-      firstValueFrom(
-        this.httpService
-          .post<AccessToken>(url, params, {
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-              Authorization: `Basic ${bufferedCredentials}`,
-            },
-          })
-          .pipe(
-            map(response => response.data),
-            catchError(catchSpotifyError)
-          )
-      )
+    return backOff(
+      () =>
+        firstValueFrom(
+          this.httpService
+            .post<AccessToken>(url, params, {
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                Authorization: `Basic ${bufferedCredentials}`,
+              },
+            })
+            .pipe(
+              map(response => response.data),
+              catchError(catchSpotifyError)
+            )
+        ),
+      { numOfAttempts: 3 }
     )
   }
 
