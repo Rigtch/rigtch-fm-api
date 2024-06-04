@@ -33,6 +33,7 @@ describe('UsersController', () => {
             findUserById: vi.fn(),
             findUserByProfileId: vi.fn(),
             createUser: vi.fn(),
+            update: vi.fn(),
           },
         },
         {
@@ -91,6 +92,7 @@ describe('UsersController', () => {
     let findUserByProfileIdSpy: MockInstance
     let createProfileSpy: MockInstance
     let createUserSpy: MockInstance
+    let updateSpy: MockInstance
 
     beforeEach(() => {
       tokenSpy = vi
@@ -102,6 +104,7 @@ describe('UsersController', () => {
       findUserByProfileIdSpy = vi.spyOn(usersRepository, 'findUserByProfileId')
       createProfileSpy = vi.spyOn(profilesRepository, 'createProfile')
       createUserSpy = vi.spyOn(usersRepository, 'createUser')
+      updateSpy = vi.spyOn(usersRepository, 'update')
     })
 
     test('should get me', async () => {
@@ -112,6 +115,7 @@ describe('UsersController', () => {
       expect(tokenSpy).toHaveBeenCalledWith(body)
       expect(profileSpy).toHaveBeenCalledWith(accessTokenMock)
       expect(findUserByProfileIdSpy).toHaveBeenCalledWith(profileMock.id)
+      expect(updateSpy).toHaveBeenCalledWith(userMock.id, body)
       expect(createProfileSpy).not.toHaveBeenCalled()
       expect(createUserSpy).not.toHaveBeenCalled()
     })
@@ -131,6 +135,7 @@ describe('UsersController', () => {
         profile: profileMock,
         refreshToken: body.refreshToken,
       })
+      expect(updateSpy).not.toHaveBeenCalled()
     })
   })
 

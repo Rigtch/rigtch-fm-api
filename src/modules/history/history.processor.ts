@@ -1,6 +1,8 @@
 import {
   OnQueueActive,
   OnQueueCompleted,
+  OnQueueError,
+  OnQueueFailed,
   OnQueueStalled,
   Process,
   Processor,
@@ -26,9 +28,13 @@ export class HistoryProcessor {
 
   @Process(SYNCHRONIZE_JOB)
   async synchronize({ data: user }: Job<User>) {
+    console.log(user)
+
     const accessToken = await this.spotifyService.auth.token({
       refreshToken: user.refreshToken,
     })
+
+    console.log(accessToken)
 
     const { items: playHistory } =
       await this.spotifyService.player.getRecentlyPlayedTracks(
@@ -37,6 +43,8 @@ export class HistoryProcessor {
         {},
         false
       )
+
+    console.log(playHistory.length)
 
     const lastHistoryTrack =
       await this.historyTracksRepository.findLastHistoryTrackByUser(user.id)
@@ -59,6 +67,19 @@ export class HistoryProcessor {
           `No new tracks found for user: ${user.profile.displayName} - skipping synchronization`
         )
     } else await this.historyTracksService.create(playHistory, user)
+  }
+
+  @OnQueueError()
+  onError(error: Error) {
+    this.logger.error(error)
+  }
+
+  @OnQueueFailed()
+  onFailed({ data: { profile } }: Job<User>, error: Error) {
+    this.logger.error(
+      `History synchronization failed for user: ${profile.displayName}`
+    )
+    this.logger.error(error)
   }
 
   @OnQueueActive()

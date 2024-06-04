@@ -56,6 +56,8 @@ export class HistoryScheduler implements OnApplicationBootstrap {
   async scheduleHistorySynchronization() {
     const users = await this.usersRepository.findUsers()
 
+    console.log(users)
+
     this.logger.log(`Adding synchronize jobs for ${users.length} users`)
 
     for (const user of users) {

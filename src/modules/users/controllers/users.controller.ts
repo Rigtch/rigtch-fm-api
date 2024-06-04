@@ -66,6 +66,10 @@ export class UsersController {
       })
     }
 
+    await this.usersRepository.update(foundUser.id, {
+      refreshToken,
+    })
+
     return foundUser
   }
 
