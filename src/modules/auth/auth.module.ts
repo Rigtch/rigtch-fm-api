@@ -1,7 +1,6 @@
 import { Module, forwardRef } from '@nestjs/common'
 
 import { AuthService } from './auth.service'
-import { AuthController } from './auth.controller'
 
 import { UsersModule } from '@modules/users'
 import { ProfilesModule } from '@modules/profiles'
@@ -16,7 +15,6 @@ import { HistoryModule } from '@modules/history'
     forwardRef(() => UsersModule),
   ],
   providers: [AuthService],
-  controllers: [AuthController],
   exports: [AuthService],
 })
 export class AuthModule {}
