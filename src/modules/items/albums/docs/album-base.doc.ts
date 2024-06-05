@@ -1,5 +1,14 @@
-import { OmitType } from '@nestjs/swagger'
+import { ApiProperty, OmitType } from '@nestjs/swagger'
 
 import { Album } from '../album.entity'
 
-export class AlbumBaseDocument extends OmitType(Album, ['tracks', 'artists']) {}
+import { Artist } from '@modules/items/artists'
+
+export class AlbumBaseDocument extends OmitType(Album, ['tracks', 'artists']) {
+  @ApiProperty({
+    type: [Artist],
+    description:
+      'The artists of the album. Each artist object includes a link in href to more detailed information about the artist.',
+  })
+  artists: Artist[]
+}
