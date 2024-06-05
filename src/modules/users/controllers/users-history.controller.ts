@@ -1,23 +1,29 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common'
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
-import { paginate } from 'nestjs-typeorm-paginate'
+import { Controller, Get, UseGuards } from '@nestjs/common'
+import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { InjectQueue } from '@nestjs/bull'
 import { Queue } from 'bull'
+import {
+  Paginate,
+  PaginateConfig,
+  PaginateQuery,
+  PaginatedSwaggerDocs,
+  paginate,
+} from 'nestjs-paginate'
 
 import { ApiUser, RequestUser } from '../decorators'
 import { User } from '../user.entity'
 import { CheckUserIdGuard } from '../guards'
-import { PaginationHistoryTracksDocument } from '../docs'
 
-import { ONE_SUCCESSFULLY_RETRIEVED } from '@common/constants'
 import { ApiAuth, RequestToken } from '@common/decorators'
-import {
-  HistoryTracksRepository,
-  historyTracksOrder,
-} from '@modules/history/tracks'
-import { PaginationQuery } from '@common/dtos'
-import { tracksRelations } from '@modules/items/tracks'
+import { HistoryTrack, HistoryTracksRepository } from '@modules/history/tracks'
 import { HISTORY_QUEUE, SYNCHRONIZE_JOB } from '@modules/history/constants'
+
+export const historyTracksPaginateConfig: PaginateConfig<HistoryTrack> = {
+  sortableColumns: ['playedAt'],
+  nullSort: 'last',
+  defaultLimit: 10,
+  defaultSortBy: [['playedAt', 'DESC']],
+}
 
 @Controller('users/:id/history')
 @ApiTags('users/{id}/history')
@@ -35,36 +41,35 @@ export class UsersHistoryController {
     description:
       "Getting user's listening history, synchronized with Spotify's recently played.",
   })
-  @ApiOkResponse({
-    description: ONE_SUCCESSFULLY_RETRIEVED("user's history"),
-    type: [PaginationHistoryTracksDocument],
-  })
+  @PaginatedSwaggerDocs(HistoryTrack, historyTracksPaginateConfig)
   @ApiUser()
   async getHistory(
     @RequestUser() user: User,
     @RequestToken() _token: string,
-    @Query() { limit = 10, page = 1 }: PaginationQuery
+    @Paginate() query: PaginateQuery
   ) {
-    if (page === 1) {
+    if (!query.page || query.page === 1) {
       const synchronizeJob = await this.historyQueue.add(SYNCHRONIZE_JOB, user)
 
       await synchronizeJob.finished()
     }
 
-    return paginate(
-      this.historyTracksRepository,
-      { limit, page },
-      {
-        where: {
-          user: {
-            id: user.id,
-          },
-        },
-        relations: {
-          track: tracksRelations,
-        },
-        order: historyTracksOrder,
-      }
-    )
+    const queryBuilder = this.historyTracksRepository
+      .createQueryBuilder('historyTrack')
+      .leftJoinAndSelect('historyTrack.track', 'track')
+      .leftJoinAndSelect('track.artists', 'artists')
+      .leftJoinAndSelect('artists.images', 'artistImages')
+      .leftJoinAndSelect('track.album', 'album')
+      .leftJoinAndSelect('album.images', 'albumImages')
+      .leftJoinAndSelect('album.artists', 'albumArtists')
+      .leftJoinAndSelect('albumArtists.images', 'albumArtistImages')
+      .where('historyTrack.userId = :userId', { userId: user.id })
+      .orderBy({
+        'albumImages.width': 'ASC',
+        'artistImages.width': 'ASC',
+        'albumArtistImages.width': 'ASC',
+      })
+
+    return paginate(query, queryBuilder, historyTracksPaginateConfig)
   }
 }

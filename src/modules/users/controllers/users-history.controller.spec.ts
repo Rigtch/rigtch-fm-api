@@ -1,25 +1,21 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { paginate } from 'nestjs-typeorm-paginate'
 import { Job, Queue } from 'bull'
 import { getQueueToken } from '@nestjs/bull'
 import { DeepMockProxy, mockDeep } from 'vitest-mock-extended'
+import { PaginateQuery } from 'nestjs-paginate'
+import { MockInstance } from 'vitest'
 
 import { UsersRepository } from '../users.repository'
 import { User } from '../user.entity'
 
 import { UsersHistoryController } from './users-history.controller'
 
+import { HistoryTrack, HistoryTracksRepository } from '@modules/history/tracks'
 import {
-  HistoryTracksRepository,
-  historyTracksOrder,
-} from '@modules/history/tracks'
-import {
-  generatePaginatedResponseFactoryMock,
-  paginatedResponseMockImplementation,
+  createQueryBuilderFactoryMock,
   trackEntityMock,
   userMock,
 } from '@common/mocks'
-import { tracksRelations } from '@modules/items/tracks'
 import { HISTORY_QUEUE, SYNCHRONIZE_JOB } from '@modules/history/constants'
 
 vi.mock('nestjs-typeorm-paginate')
@@ -27,11 +23,18 @@ vi.mock('nestjs-typeorm-paginate')
 describe('UsersHistoryController', () => {
   let moduleRef: TestingModule
   let usersHistoryController: UsersHistoryController
-  let historyTracksRepository: HistoryTracksRepository
   let historyQueue: Queue<User>
+
+  let historyTrackMock: HistoryTrack
   let synchronizeJobMock: DeepMockProxy<Job<User>>
 
   beforeEach(async () => {
+    historyTrackMock = {
+      id: 'id',
+      track: trackEntityMock,
+      user: userMock,
+      playedAt: new Date(),
+    }
     synchronizeJobMock = mockDeep<Job<User>>({
       finished: vi.fn(),
     })
@@ -41,7 +44,9 @@ describe('UsersHistoryController', () => {
         UsersHistoryController,
         {
           provide: HistoryTracksRepository,
-          useValue: {},
+          useValue: {
+            createQueryBuilder: createQueryBuilderFactoryMock(historyTrackMock),
+          },
         },
         {
           provide: UsersRepository,
@@ -59,7 +64,6 @@ describe('UsersHistoryController', () => {
     }).compile()
 
     usersHistoryController = moduleRef.get(UsersHistoryController)
-    historyTracksRepository = moduleRef.get(HistoryTracksRepository)
     historyQueue = moduleRef.get(getQueueToken(HISTORY_QUEUE))
   })
 
@@ -72,119 +76,82 @@ describe('UsersHistoryController', () => {
   })
 
   describe('getHistory', () => {
-    const id = userMock.id
-    const item = {
-      track: trackEntityMock,
-      playedAt: new Date(),
-    }
-    const paginateSpy = vi
-      .mocked(paginate)
-      .mockImplementation(paginatedResponseMockImplementation(item))
+    let paginateQueryMock: PaginateQuery
+
+    beforeEach(() => {
+      paginateQueryMock = {
+        path: '',
+      }
+    })
 
     test('should get paginated history', async () => {
-      const paginatedResponseMock = generatePaginatedResponseFactoryMock(item)
-
-      const response = await usersHistoryController.getHistory(userMock, '', {})
-
-      expect(response).toEqual(paginatedResponseMock)
-      expect(response.items.length).toEqual(10)
-      expect(paginateSpy).toHaveBeenCalledWith(
-        historyTracksRepository,
-        {
-          limit: 10,
-          page: 1,
-        },
-        {
-          where: {
-            user: {
-              id,
-            },
-          },
-          relations: {
-            track: tracksRelations,
-          },
-          order: historyTracksOrder,
-        }
+      const response = await usersHistoryController.getHistory(
+        userMock,
+        '',
+        paginateQueryMock
       )
+
+      expect(response.data).toEqual(historyTrackMock)
+      expect(response.meta.itemsPerPage).toEqual(10)
+      expect(response.meta.currentPage).toEqual(1)
     })
 
     test('should get paginated history with limit', async () => {
       const limit = 50
 
-      const paginatedResponseMock = generatePaginatedResponseFactoryMock(
-        item,
-        50
+      paginateQueryMock.limit = limit
+
+      const response = await usersHistoryController.getHistory(
+        userMock,
+        '',
+        paginateQueryMock
       )
 
-      const response = await usersHistoryController.getHistory(userMock, '', {
-        limit,
-      })
-
-      expect(response).toEqual(paginatedResponseMock)
-      expect(response.items.length).toEqual(limit)
-      expect(paginateSpy).toHaveBeenCalledWith(
-        historyTracksRepository,
-        {
-          limit,
-          page: 1,
-        },
-        {
-          where: {
-            user: {
-              id,
-            },
-          },
-          relations: {
-            track: tracksRelations,
-          },
-          order: historyTracksOrder,
-        }
-      )
+      expect(response.data).toEqual(historyTrackMock)
+      expect(response.meta.itemsPerPage).toEqual(limit)
+      expect(response.meta.currentPage).toEqual(1)
     })
 
     test('should get paginated history with page', async () => {
       const page = 2
 
-      const paginatedResponseMock = generatePaginatedResponseFactoryMock(
-        item,
-        undefined,
-        2
+      paginateQueryMock.page = page
+
+      const response = await usersHistoryController.getHistory(
+        userMock,
+        '',
+        paginateQueryMock
       )
 
-      const response = await usersHistoryController.getHistory(userMock, '', {
-        page,
-      })
-
-      expect(response).toEqual(paginatedResponseMock)
-      expect(response.items.length).toEqual(10)
-      expect(paginateSpy).toHaveBeenCalledWith(
-        historyTracksRepository,
-        {
-          limit: 10,
-          page,
-        },
-        {
-          where: {
-            user: {
-              id,
-            },
-          },
-          relations: {
-            track: tracksRelations,
-          },
-          order: historyTracksOrder,
-        }
-      )
+      expect(response.data).toEqual(historyTrackMock)
+      expect(response.meta.itemsPerPage).toEqual(10)
+      expect(response.meta.currentPage).toEqual(page)
     })
 
-    test('should synchronize history before getting it', async () => {
-      const synchronizeSpy = vi.spyOn(historyQueue, 'add')
-      const finishedSpy = vi.spyOn(synchronizeJobMock, 'finished')
+    describe('synchronize', () => {
+      let synchronizeSpy: MockInstance
+      let finishedSpy: MockInstance
 
-      await usersHistoryController.getHistory(userMock, '', {})
+      beforeEach(() => {
+        synchronizeSpy = vi.spyOn(historyQueue, 'add')
+        finishedSpy = vi.spyOn(synchronizeJobMock, 'finished')
+      })
 
-      expect(synchronizeSpy).toHaveBeenCalledWith(SYNCHRONIZE_JOB, userMock)
-      expect(finishedSpy).toHaveBeenCalled()
+      test('should synchronize history on first page', async () => {
+        await usersHistoryController.getHistory(userMock, '', paginateQueryMock)
+
+        expect(synchronizeSpy).toHaveBeenCalledWith(SYNCHRONIZE_JOB, userMock)
+        expect(finishedSpy).toHaveBeenCalled()
+      })
+
+      test('should not synchronize history on other pages', async () => {
+        paginateQueryMock.page = 2
+
+        await usersHistoryController.getHistory(userMock, '', paginateQueryMock)
+
+        expect(synchronizeSpy).not.toHaveBeenCalled()
+        expect(finishedSpy).not.toHaveBeenCalled()
+      })
     })
   })
 })
