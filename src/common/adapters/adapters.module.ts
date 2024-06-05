@@ -8,7 +8,6 @@ import { PageAdapter } from './page.adapter'
 import { TracksAdapter } from './tracks.adapter'
 import { PlaybackStateAdapter } from './playback-state.adapter'
 import { ProfileAdapter } from './profile.adapter'
-import { SecretDataAdapter } from './secret-data.adapter'
 import { AdaptersService } from './adapters.service'
 import { AlbumsAdapter } from './albums.adapter'
 
@@ -23,7 +22,6 @@ import { AlbumsAdapter } from './albums.adapter'
     PageAdapter,
     PlaybackStateAdapter,
     ProfileAdapter,
-    SecretDataAdapter,
     AlbumsAdapter,
     AdaptersService,
   ],
