@@ -8,7 +8,6 @@ import { TracksAdapter } from './tracks.adapter'
 import { PlaybackStateAdapter } from './playback-state.adapter'
 import { ProfileAdapter } from './profile.adapter'
 import { ArtistsAdapter } from './artists.adapter'
-import { SecretDataAdapter } from './secret-data.adapter'
 import { AlbumsAdapter } from './albums.adapter'
 
 @Injectable()
@@ -22,7 +21,6 @@ export class AdaptersService {
     readonly page: PageAdapter,
     readonly playbackState: PlaybackStateAdapter,
     readonly profile: ProfileAdapter,
-    readonly secretData: SecretDataAdapter,
     readonly albums: AlbumsAdapter
   ) {}
 }
