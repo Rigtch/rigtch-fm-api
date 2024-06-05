@@ -1,17 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { NotFoundException } from '@nestjs/common'
-import { paginate } from 'nestjs-typeorm-paginate'
+import { PaginateQuery } from 'nestjs-paginate'
+import { MockInstance } from 'vitest'
 
 import { ArtistsController } from './artists.controller'
 import { ArtistsRepository } from './artists.repository'
 
 import {
   artistEntityMock,
-  generatePaginatedResponseFactoryMock,
-  paginatedResponseMockImplementation,
+  createQueryBuilderFactoryMock,
+  createQueryBuilderMockImplementation,
 } from '@common/mocks'
-
-vi.mock('nestjs-typeorm-paginate')
 
 describe('ArtistsController', () => {
   let moduleRef: TestingModule
@@ -25,7 +24,7 @@ describe('ArtistsController', () => {
         {
           provide: ArtistsRepository,
           useValue: {
-            findArtistById: vi.fn(),
+            createQueryBuilder: createQueryBuilderFactoryMock(artistEntityMock),
           },
         },
       ],
@@ -44,89 +43,76 @@ describe('ArtistsController', () => {
   })
 
   describe('getArtists', () => {
-    const paginateSpy = vi
-      .mocked(paginate)
-      .mockImplementation(paginatedResponseMockImplementation(artistEntityMock))
+    let paginateQueryMock: PaginateQuery
+
+    beforeEach(() => {
+      paginateQueryMock = {
+        path: '',
+      }
+    })
 
     test('should get paginated artists', async () => {
-      const paginatedResponseMock =
-        generatePaginatedResponseFactoryMock(artistEntityMock)
+      const response = await artistsController.getArtists(paginateQueryMock)
 
-      const response = await artistsController.getArtists({})
-
-      expect(response).toEqual(paginatedResponseMock)
-      expect(response.items.length).toEqual(10)
-      expect(paginateSpy).toHaveBeenCalledWith(artistsRepository, {
-        limit: 10,
-        page: 1,
-      })
+      expect(response.data).toEqual(artistEntityMock)
+      expect(response.meta.itemsPerPage).toEqual(10)
+      expect(response.meta.currentPage).toEqual(1)
     })
 
     test('should get paginated artists with limit', async () => {
       const limit = 50
 
-      const paginatedResponseMock = generatePaginatedResponseFactoryMock(
-        artistEntityMock,
-        50
-      )
+      paginateQueryMock.limit = limit
 
-      const response = await artistsController.getArtists({
-        limit,
-      })
+      const response = await artistsController.getArtists(paginateQueryMock)
 
-      expect(response).toEqual(paginatedResponseMock)
-      expect(response.items.length).toEqual(50)
-      expect(paginateSpy).toHaveBeenCalledWith(artistsRepository, {
-        limit: 50,
-        page: 1,
-      })
+      expect(response.data).toEqual(artistEntityMock)
+      expect(response.meta.itemsPerPage).toEqual(limit)
+      expect(response.meta.currentPage).toEqual(1)
     })
 
     test('should get paginated artists with page', async () => {
       const page = 2
 
-      const paginatedResponseMock = generatePaginatedResponseFactoryMock(
-        artistEntityMock,
-        undefined,
-        2
-      )
+      paginateQueryMock.page = page
 
-      const response = await artistsController.getArtists({
-        page,
-      })
+      const response = await artistsController.getArtists(paginateQueryMock)
 
-      expect(response).toEqual(paginatedResponseMock)
-      expect(response.items.length).toEqual(10)
-      expect(paginateSpy).toHaveBeenCalledWith(artistsRepository, {
-        limit: 10,
-        page: 2,
-      })
+      expect(response.data).toEqual(artistEntityMock)
+      expect(response.meta.itemsPerPage).toEqual(10)
+      expect(response.meta.currentPage).toEqual(page)
     })
   })
 
   describe('getArtistById', () => {
     const id = 'id'
 
+    let createQueryBuilderSpy: MockInstance
+
+    beforeEach(() => {
+      createQueryBuilderSpy = vi.spyOn(artistsRepository, 'createQueryBuilder')
+    })
+
     test('should get artist by id', async () => {
-      const findArtistByExternalIdSpy = vi
-        .spyOn(artistsRepository, 'findArtistById')
-        .mockResolvedValue(artistEntityMock)
+      createQueryBuilderSpy.mockReturnValue(
+        createQueryBuilderMockImplementation(artistEntityMock)
+      )
 
       expect(await artistsController.getArtistById(id)).toEqual(
         artistEntityMock
       )
-      expect(findArtistByExternalIdSpy).toHaveBeenCalledWith(id)
+      expect(createQueryBuilderSpy).toHaveBeenCalledWith('artist')
     })
 
     test('should throw not found exception', async () => {
-      const findArtistByExternalIdSpy = vi
-        .spyOn(artistsRepository, 'findArtistById')
-        .mockResolvedValue(null)
+      createQueryBuilderSpy.mockReturnValue(
+        createQueryBuilderMockImplementation(null)
+      )
 
       await expect(artistsController.getArtistById(id)).rejects.toThrowError(
         NotFoundException
       )
-      expect(findArtistByExternalIdSpy).toHaveBeenCalledWith(id)
+      expect(createQueryBuilderSpy).toHaveBeenCalledWith('artist')
     })
   })
 })
