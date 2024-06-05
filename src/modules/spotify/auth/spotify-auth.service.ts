@@ -20,34 +20,22 @@ export class SpotifyAuthService {
     private readonly adaptersService: AdaptersService
   ) {}
 
-  token({ refreshToken, code }: TokenOptions) {
+  token({ refreshToken }: TokenOptions) {
     const url = `${this.configService.get(
       Environment.SPOTIFY_ACCOUNTS_URL
     )}/api/token`
-    const clientId = this.configService.get<string>(
-      Environment.SPOTIFY_CLIENT_ID
-    )
-    const clientSecret = this.configService.get<string>(
+    const clientId = this.configService.get(Environment.SPOTIFY_CLIENT_ID)
+    const clientSecret = this.configService.get(
       Environment.SPOTIFY_CLIENT_SECRET
     )
-    const callbackUrl = this.configService.get<string>(
-      Environment.SPOTIFY_CALLBACK_URL
-    )
-
     const bufferedCredentials = Buffer.from(
       `${clientId}:${clientSecret}`
     ).toString('base64')
-    const params = new URLSearchParams()
 
-    if (refreshToken) {
-      params.append('refresh_token', refreshToken)
-      params.append('grant_type', 'refresh_token')
-    }
-    if (code) {
-      params.append('code', code)
-      params.append('grant_type', 'authorization_code')
-      callbackUrl && params.append('redirect_uri', callbackUrl)
-    }
+    const params = new URLSearchParams({
+      grant_type: 'refresh_token',
+      refresh_token: refreshToken,
+    })
 
     return backOff(
       () =>

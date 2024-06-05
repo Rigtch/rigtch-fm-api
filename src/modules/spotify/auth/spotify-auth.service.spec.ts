@@ -5,7 +5,6 @@ import { of } from 'rxjs'
 
 import { spotifyTokenMock } from './mocks'
 import { SpotifyAuthService } from './spotify-auth.service'
-import { SpotifyToken } from './types/spotify'
 
 import {
   axiosResponseMockFactory,
@@ -55,22 +54,6 @@ describe('SpotifyAuthService', () => {
   })
 
   describe('token', () => {
-    test('should generate token object using code method', async () => {
-      const code = 'code'
-      const clientId = 'clientId'
-
-      const getSpy = vi.spyOn(configService, 'get').mockReturnValue(clientId)
-      const postSpy = vi
-        .spyOn(httpService, 'post')
-        .mockReturnValue(
-          of(axiosResponseMockFactory<SpotifyToken>(spotifyTokenMock))
-        )
-
-      expect(await spotifyAuthService.token({ code })).toEqual(spotifyTokenMock)
-      expect(getSpy).toHaveBeenCalledTimes(4)
-      expect(postSpy).toHaveBeenCalled()
-    })
-
     test('should generate token object using refreshToken method', async () => {
       const refreshToken = 'refreshToken'
       const clientId = 'clientId'
@@ -85,7 +68,7 @@ describe('SpotifyAuthService', () => {
       expect(await spotifyAuthService.token({ refreshToken })).toEqual(
         spotifyTokenMock
       )
-      expect(getSpy).toHaveBeenCalledTimes(4)
+      expect(getSpy).toHaveBeenCalledTimes(3)
       expect(postSpy).toHaveBeenCalled()
     })
   })
