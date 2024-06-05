@@ -3,7 +3,7 @@ import {
   Get,
   NotFoundException,
   Param,
-  Query,
+  ParseUUIDPipe,
 } from '@nestjs/common'
 import {
   ApiBadRequestResponse,
@@ -13,18 +13,32 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger'
-import { paginate } from 'nestjs-typeorm-paginate'
+import {
+  Paginate,
+  PaginateConfig,
+  PaginateQuery,
+  PaginatedSwaggerDocs,
+  paginate,
+} from 'nestjs-paginate'
 
-import { TracksRepository, tracksRelations } from './tracks.repository'
-import { PaginationTracksDocument, TrackDocument } from './docs'
+import { TracksRepository } from './tracks.repository'
+import { TrackBaseDocument, TrackDocument } from './docs'
+import { Track } from './track.entity'
 
 import {
-  MANY_SUCCESSFULLY_RETRIEVED,
   NOT_BEEN_FOUND,
   ONE_IS_INVALID,
   ONE_SUCCESSFULLY_RETRIEVED,
 } from '@common/constants'
-import { PaginationQuery } from '@common/dtos'
+
+export const tracksPaginateConfig: PaginateConfig<Track> = {
+  sortableColumns: ['name'],
+  nullSort: 'last',
+  defaultLimit: 10,
+  filterableColumns: {
+    name: true,
+  },
+}
 
 @Controller('tracks')
 @ApiTags('tracks')
@@ -36,18 +50,20 @@ export class TracksController {
     summary: 'Getting all tracks.',
     description: 'Getting all tracks that are synchronized.',
   })
-  @ApiOkResponse({
-    description: MANY_SUCCESSFULLY_RETRIEVED('tracks'),
-    type: [PaginationTracksDocument],
-  })
-  getTracks(@Query() { limit = 10, page = 1 }: PaginationQuery) {
-    return paginate(
-      this.tracksRepository,
-      { limit, page },
-      {
-        relations: tracksRelations,
-      }
-    )
+  @PaginatedSwaggerDocs(TrackBaseDocument, tracksPaginateConfig)
+  getTracks(@Paginate() query: PaginateQuery) {
+    const queryBuilder = this.tracksRepository
+      .createQueryBuilder('track')
+      .leftJoinAndSelect('track.artists', 'artists')
+      .leftJoinAndSelect('artists.images', 'artistImages')
+      .leftJoinAndSelect('track.album', 'album')
+      .leftJoinAndSelect('album.images', 'images')
+      .orderBy({
+        'images.width': 'ASC',
+        'artistImages.width': 'ASC',
+      })
+
+    return paginate(query, queryBuilder, tracksPaginateConfig)
   }
 
   @Get(':id')
@@ -70,8 +86,19 @@ export class TracksController {
   @ApiBadRequestResponse({
     description: ONE_IS_INVALID('uuid'),
   })
-  async getTrackById(@Param('id') id: string) {
-    const foundTrack = await this.tracksRepository.findTrackById(id)
+  async getTrackById(@Param('id', ParseUUIDPipe) id: string) {
+    const foundTrack = await this.tracksRepository
+      .createQueryBuilder('track')
+      .leftJoinAndSelect('track.artists', 'artists')
+      .leftJoinAndSelect('artists.images', 'artistImages')
+      .leftJoinAndSelect('track.album', 'album')
+      .leftJoinAndSelect('album.images', 'images')
+      .orderBy({
+        'images.width': 'ASC',
+        'artistImages.width': 'ASC',
+      })
+      .where('track.id = :id', { id })
+      .getOne()
 
     if (!foundTrack) throw new NotFoundException(NOT_BEEN_FOUND('track'))
 

@@ -1,17 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { NotFoundException } from '@nestjs/common'
-import { paginate } from 'nestjs-typeorm-paginate'
+import { PaginateQuery } from 'nestjs-paginate'
+import { MockInstance } from 'vitest'
 
 import { TracksController } from './tracks.controller'
-import { TracksRepository, tracksRelations } from './tracks.repository'
+import { TracksRepository } from './tracks.repository'
 
 import {
   trackEntityMock,
-  generatePaginatedResponseFactoryMock,
-  paginatedResponseMockImplementation,
+  createQueryBuilderFactoryMock,
+  createQueryBuilderMockImplementation,
 } from '@common/mocks'
-
-vi.mock('nestjs-typeorm-paginate')
 
 describe('TracksController', () => {
   let moduleRef: TestingModule
@@ -26,6 +25,7 @@ describe('TracksController', () => {
           provide: TracksRepository,
           useValue: {
             findTrackById: vi.fn(),
+            createQueryBuilder: createQueryBuilderFactoryMock(trackEntityMock),
           },
         },
       ],
@@ -44,101 +44,74 @@ describe('TracksController', () => {
   })
 
   describe('getTracks', () => {
-    const paginateSpy = vi
-      .mocked(paginate)
-      .mockImplementation(paginatedResponseMockImplementation(trackEntityMock))
+    let paginateQueryMock: PaginateQuery
+
+    beforeEach(() => {
+      paginateQueryMock = {
+        path: '',
+      }
+    })
 
     test('should get paginated tracks', async () => {
-      const paginatedResponseMock =
-        generatePaginatedResponseFactoryMock(trackEntityMock)
+      const response = await tracksController.getTracks(paginateQueryMock)
 
-      const response = await tracksController.getTracks({})
-
-      expect(response).toEqual(paginatedResponseMock)
-      expect(response.items.length).toEqual(10)
-      expect(paginateSpy).toHaveBeenCalledWith(
-        tracksRepository,
-        {
-          limit: 10,
-          page: 1,
-        },
-        {
-          relations: tracksRelations,
-        }
-      )
+      expect(response.data).toEqual(trackEntityMock)
+      expect(response.meta.itemsPerPage).toEqual(10)
+      expect(response.meta.currentPage).toEqual(1)
     })
 
     test('should get paginated tracks with limit', async () => {
       const limit = 50
 
-      const paginatedResponseMock = generatePaginatedResponseFactoryMock(
-        trackEntityMock,
-        limit
-      )
+      paginateQueryMock.limit = limit
 
-      const response = await tracksController.getTracks({ limit })
+      const response = await tracksController.getTracks(paginateQueryMock)
 
-      expect(response).toEqual(paginatedResponseMock)
-      expect(response.items.length).toEqual(limit)
-      expect(paginateSpy).toHaveBeenCalledWith(
-        tracksRepository,
-        {
-          limit,
-          page: 1,
-        },
-        {
-          relations: tracksRelations,
-        }
-      )
+      expect(response.data).toEqual(trackEntityMock)
+      expect(response.meta.itemsPerPage).toEqual(limit)
+      expect(response.meta.currentPage).toEqual(1)
     })
 
     test('should get paginated tracks with page', async () => {
       const page = 2
 
-      const paginatedResponseMock = generatePaginatedResponseFactoryMock(
-        trackEntityMock,
-        undefined,
-        page
-      )
+      paginateQueryMock.page = page
 
-      const response = await tracksController.getTracks({ page })
+      const response = await tracksController.getTracks(paginateQueryMock)
 
-      expect(response).toEqual(paginatedResponseMock)
-      expect(response.items.length).toEqual(10)
-      expect(paginateSpy).toHaveBeenCalledWith(
-        tracksRepository,
-        {
-          limit: 10,
-          page,
-        },
-        {
-          relations: tracksRelations,
-        }
-      )
+      expect(response.data).toEqual(trackEntityMock)
+      expect(response.meta.itemsPerPage).toEqual(10)
+      expect(response.meta.currentPage).toEqual(page)
     })
   })
 
   describe('getTrackById', () => {
     const id = 'id'
 
+    let createQueryBuilderSpy: MockInstance
+
+    beforeEach(() => {
+      createQueryBuilderSpy = vi.spyOn(tracksRepository, 'createQueryBuilder')
+    })
+
     test('should get track', async () => {
-      const findTrackByIdSpy = vi
-        .spyOn(tracksRepository, 'findTrackById')
-        .mockResolvedValue(trackEntityMock)
+      createQueryBuilderSpy.mockReturnValue(
+        createQueryBuilderMockImplementation(trackEntityMock)
+      )
 
       expect(await tracksController.getTrackById(id)).toEqual(trackEntityMock)
-      expect(findTrackByIdSpy).toHaveBeenCalledWith(id)
+      expect(createQueryBuilderSpy).toHaveBeenCalledWith('track')
     })
 
     test('should throw not found exception', async () => {
-      const findTrackByIdSpy = vi
-        .spyOn(tracksRepository, 'findTrackById')
-        .mockResolvedValue(null)
+      createQueryBuilderSpy.mockReturnValue(
+        createQueryBuilderMockImplementation(null)
+      )
 
       await expect(tracksController.getTrackById(id)).rejects.toThrowError(
         NotFoundException
       )
-      expect(findTrackByIdSpy).toHaveBeenCalledWith(id)
+      expect(createQueryBuilderSpy).toHaveBeenCalledWith('track')
     })
   })
 })
