@@ -5,7 +5,6 @@ import { BullModule } from '@nestjs/bull'
 
 import { environmentSchema } from '@config/environment'
 import { redis, typeorm } from '@config/database'
-import { AuthModule } from '@modules/auth'
 import { ImagesModule } from '@modules/items/images'
 import { ProfilesModule } from '@modules/profiles'
 import { UsersModule } from '@modules/users'
@@ -18,7 +17,6 @@ import { HistoryModule } from '@modules/history'
 @Module({
   imports: [
     AdaptersModule,
-    AuthModule,
     ImagesModule,
     ProfilesModule,
     UsersModule,

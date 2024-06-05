@@ -1,4 +1,4 @@
-import { Module, forwardRef } from '@nestjs/common'
+import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
 import { User } from './user.entity'
@@ -10,7 +10,6 @@ import {
   UsersProfileController,
 } from './controllers'
 
-import { AuthModule } from '@modules/auth'
 import { SpotifyModule } from '@modules/spotify'
 import { HistoryTracksModule } from '@modules/history/tracks'
 import { HistoryModule } from '@modules/history'
@@ -20,7 +19,6 @@ import { ProfilesModule } from '@modules/profiles'
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
-    forwardRef(() => AuthModule),
     HistoryTracksModule,
     HistoryModule,
     SpotifyModule,
