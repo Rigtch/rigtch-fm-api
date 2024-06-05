@@ -12,7 +12,7 @@ import {
   MANY_SUCCESSFULLY_RETRIEVED,
   ONE_SUCCESSFULLY_RETRIEVED,
 } from '@common/constants'
-import { ApiAuth, RequestToken } from '@modules/auth/decorators'
+import { ApiAuth, RequestToken } from '@common/decorators'
 import { SpotifyService } from '@modules/spotify'
 import { ProfilesRepository } from '@modules/profiles'
 

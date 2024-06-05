@@ -6,10 +6,10 @@ import { CheckIsCurrentUserGuard, CheckUserIdGuard } from '../guards'
 import { ApiUser } from '../decorators'
 
 import { ONE_SUCCESSFULLY_RETRIEVED } from '@common/constants'
-import { ApiAuth, RequestToken } from '@modules/auth/decorators'
+import { ApiAuth, RequestToken } from '@common/decorators'
 import { Success } from '@common/dtos'
 import { SpotifyService } from '@modules/spotify'
-import { TokenGuard } from '@modules/auth/guards'
+import { TokenGuard } from '@common/guards'
 
 @Controller('users/:id/playback')
 @ApiTags('users/{id}/playback')

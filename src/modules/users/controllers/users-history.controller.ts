@@ -10,7 +10,7 @@ import { CheckUserIdGuard } from '../guards'
 import { PaginationHistoryTracksDocument } from '../docs'
 
 import { ONE_SUCCESSFULLY_RETRIEVED } from '@common/constants'
-import { ApiAuth, RequestToken } from '@modules/auth/decorators'
+import { ApiAuth, RequestToken } from '@common/decorators'
 import {
   HistoryTracksRepository,
   historyTracksOrder,
