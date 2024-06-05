@@ -9,9 +9,9 @@ import { User } from '../user.entity'
 import { ArtistsPageDocument, TracksPageDocument } from '../docs'
 
 import { ONE_SUCCESSFULLY_RETRIEVED } from '@common/constants'
-import { ApiAuth, RequestToken } from '@modules/auth/decorators'
+import { ApiAuth, RequestToken } from '@common/decorators'
 import { SpotifyService } from '@modules/spotify'
-import { TokenGuard } from '@modules/auth/guards'
+import { TokenGuard } from '@common/guards'
 import { Profile } from '@modules/profiles'
 import { ItemsService } from '@modules/items'
 

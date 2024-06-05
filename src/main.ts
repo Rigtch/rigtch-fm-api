@@ -6,7 +6,7 @@ import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common'
 
 import { Environment } from '@config/environment'
 import { AppModule } from '@modules/app'
-import { BEARER } from '@modules/auth/constants'
+import { BEARER } from '@common/constants'
 import { QueryExceptionFilter } from '@common/filters'
 
 async function bootstrap() {
