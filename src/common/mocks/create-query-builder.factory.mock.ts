@@ -1,5 +1,9 @@
-export function createQueryBuilderFactoryMock<T>(entity: T) {
-  return vi.fn().mockReturnValue({
+export function createQueryBuilderFactoryMock<T>(entity?: T) {
+  return vi.fn().mockReturnValue(createQueryBuilderMockImplementation(entity))
+}
+
+export function createQueryBuilderMockImplementation<T>(entity?: T) {
+  return {
     orderBy: vi.fn().mockReturnThis(),
     connection: {
       createQueryBuilder: vi.fn().mockReturnThis(),
@@ -19,6 +23,9 @@ export function createQueryBuilderFactoryMock<T>(entity: T) {
     take: vi.fn().mockReturnThis(),
     cache: vi.fn().mockReturnThis(),
     clone: vi.fn().mockReturnThis(),
-    getMany: vi.fn().mockResolvedValue([entity]),
-  })
+    addOrderBy: vi.fn().mockReturnThis(),
+    getMany: vi.fn().mockResolvedValue([entity, entity]),
+    getManyAndCount: vi.fn().mockResolvedValue([entity, entity]),
+    getOne: vi.fn().mockResolvedValue(entity),
+  }
 }
