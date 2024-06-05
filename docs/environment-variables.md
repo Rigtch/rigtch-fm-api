@@ -7,12 +7,10 @@ _#readme/rigtch-fm-api_ channel on rigtch discord server.
 
 - `SPOTIFY_CLIENT_ID` - The Spotify's application client id.
 - `SPOTIFY_CLIENT_SECRET` = The Spotify's application client secret.
-- `SPOTIFY_REDIRECT_URI` = The uri for authentication callback.
 
 ```bash
 SPOTIFY_CLIENT_ID="*****"
 SPOTIFY_CLIENT_SECRET="*****"
-SPOTIFY_REDIRECT_URI="http://localhost:4000/auth/callback"
 ```
 
 ## Spotify API Variables
@@ -23,14 +21,6 @@ SPOTIFY_REDIRECT_URI="http://localhost:4000/auth/callback"
 ```bash
 SPOTIFY_BASE_URL="https://api.spotify.com/v1"
 SPOTIFY_ACCOUNTS_URL="https://accounts.spotify.com"
-```
-
-## Client Authentication Variables
-
-- `CLIENT_CALLBACK_URL` - The url for the client's authentication callback.
-
-```bash
-CLIENT_CALLBACK_URL="http://localhost:3000"
 ```
 
 ## Validators Variables
