@@ -1,1 +1,1 @@
-export * from './token-options.type'
+export * from './token-options.interface'
