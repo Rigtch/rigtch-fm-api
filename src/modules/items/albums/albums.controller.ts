@@ -3,7 +3,7 @@ import {
   Get,
   NotFoundException,
   Param,
-  Query,
+  ParseUUIDPipe,
 } from '@nestjs/common'
 import {
   ApiBadRequestResponse,
@@ -13,20 +13,33 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger'
-import { paginate } from 'nestjs-typeorm-paginate'
-
 import {
-  AlbumsRepository,
-  albumsSimplifiedRelations,
-} from './albums.repository'
-import { AlbumDocument, PaginationAlbumsDocument } from './docs'
+  Paginate,
+  PaginateConfig,
+  PaginateQuery,
+  PaginatedSwaggerDocs,
+  paginate,
+} from 'nestjs-paginate'
+
+import { AlbumsRepository } from './albums.repository'
+import { AlbumBaseDocument, AlbumDocument } from './docs'
+import { Album } from './album.entity'
 
 import {
   NOT_BEEN_FOUND,
   ONE_IS_INVALID,
   ONE_SUCCESSFULLY_RETRIEVED,
 } from '@common/constants'
-import { PaginationQuery } from '@common/dtos'
+
+export const albumsPaginateConfig: PaginateConfig<Album> = {
+  sortableColumns: ['name'],
+  nullSort: 'last',
+  defaultLimit: 10,
+  filterableColumns: {
+    name: true,
+    albumType: true,
+  },
+}
 
 @Controller('albums')
 @ApiTags('albums')
@@ -38,18 +51,19 @@ export class AlbumsController {
     summary: 'Getting all albums.',
     description: 'Getting all albums that are synchronized',
   })
-  @ApiOkResponse({
-    description: 'Albums successfully found.',
-    type: [PaginationAlbumsDocument],
-  })
-  async getAlbums(@Query() { limit = 10, page = 1 }: PaginationQuery) {
-    return paginate(
-      this.albumsRepository,
-      { limit, page },
-      {
-        relations: albumsSimplifiedRelations,
-      }
-    )
+  @PaginatedSwaggerDocs(AlbumBaseDocument, albumsPaginateConfig)
+  async getAlbums(@Paginate() query: PaginateQuery) {
+    const queryBuilder = this.albumsRepository
+      .createQueryBuilder('album')
+      .leftJoinAndSelect('album.images', 'images')
+      .leftJoinAndSelect('album.artists', 'artists')
+      .leftJoinAndSelect('artists.images', 'artistImages')
+      .orderBy({
+        'images.width': 'ASC',
+        'artistImages.width': 'ASC',
+      })
+
+    return paginate(query, queryBuilder, albumsPaginateConfig)
   }
 
   @Get(':id')
@@ -72,8 +86,22 @@ export class AlbumsController {
   @ApiBadRequestResponse({
     description: ONE_IS_INVALID('uuid'),
   })
-  async getAlbumById(@Param('id') id: string) {
-    const foundAlbum = await this.albumsRepository.findAlbumById(id)
+  async getAlbumById(@Param('id', ParseUUIDPipe) id: string) {
+    const foundAlbum = await this.albumsRepository
+      .createQueryBuilder('album')
+      .leftJoinAndSelect('album.images', 'images')
+      .leftJoinAndSelect('album.artists', 'artists')
+      .leftJoinAndSelect('artists.images', 'artistImages')
+      .leftJoinAndSelect('album.tracks', 'tracks')
+      .leftJoinAndSelect('tracks.artists', 'trackArtists')
+      .leftJoinAndSelect('trackArtists.images', 'trackArtistImages')
+      .orderBy({
+        'images.width': 'ASC',
+        'artistImages.width': 'ASC',
+        'trackArtistImages.width': 'ASC',
+      })
+      .where('album.id = :id', { id })
+      .getOne()
 
     if (!foundAlbum) throw new NotFoundException(NOT_BEEN_FOUND('album'))
 
