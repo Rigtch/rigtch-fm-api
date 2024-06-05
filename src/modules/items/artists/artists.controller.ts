@@ -3,7 +3,7 @@ import {
   Get,
   NotFoundException,
   Param,
-  Query,
+  ParseUUIDPipe,
 } from '@nestjs/common'
 import {
   ApiBadRequestResponse,
@@ -13,18 +13,31 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger'
-import { paginate } from 'nestjs-typeorm-paginate'
+import {
+  Paginate,
+  PaginateConfig,
+  PaginateQuery,
+  PaginatedSwaggerDocs,
+  paginate,
+} from 'nestjs-paginate'
 
 import { ArtistsRepository } from './artists.repository'
 import { Artist } from './artist.entity'
-import { PaginationArtistsDocument } from './docs'
 
-import { PaginationQuery } from '@common/dtos'
 import {
   NOT_BEEN_FOUND,
   ONE_IS_INVALID,
   ONE_SUCCESSFULLY_RETRIEVED,
 } from '@common/constants'
+
+export const artistsPaginateConfig: PaginateConfig<Artist> = {
+  sortableColumns: ['name'],
+  nullSort: 'last',
+  defaultLimit: 10,
+  filterableColumns: {
+    name: true,
+  },
+}
 
 @Controller('artists')
 @ApiTags('artists')
@@ -36,12 +49,14 @@ export class ArtistsController {
     summary: 'Getting all artists.',
     description: 'Getting all artists that are synchronized.',
   })
-  @ApiOkResponse({
-    description: 'Artists successfully found.',
-    type: [PaginationArtistsDocument],
-  })
-  getArtists(@Query() { limit = 10, page = 1 }: PaginationQuery) {
-    return paginate(this.artistsRepository, { limit, page })
+  @PaginatedSwaggerDocs(Artist, artistsPaginateConfig)
+  getArtists(@Paginate() query: PaginateQuery) {
+    const queryBuilder = this.artistsRepository
+      .createQueryBuilder('artist')
+      .leftJoinAndSelect('artist.images', 'images')
+      .orderBy('images.width', 'ASC')
+
+    return paginate(query, queryBuilder, artistsPaginateConfig)
   }
 
   @Get(':id')
@@ -64,8 +79,13 @@ export class ArtistsController {
   @ApiBadRequestResponse({
     description: ONE_IS_INVALID('uuid'),
   })
-  async getArtistById(@Param('id') id: string) {
-    const foundArtist = await this.artistsRepository.findArtistById(id)
+  async getArtistById(@Param('id', ParseUUIDPipe) id: string) {
+    const foundArtist = await this.artistsRepository
+      .createQueryBuilder('artist')
+      .leftJoinAndSelect('artist.images', 'images')
+      .orderBy('images.width', 'ASC')
+      .where('artist.id = :id', { id })
+      .getOne()
 
     if (!foundArtist) throw new NotFoundException(NOT_BEEN_FOUND('artist'))
 
