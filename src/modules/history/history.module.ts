@@ -18,8 +18,8 @@ import { SpotifyModule } from '@modules/spotify'
     BullModule.registerQueue({
       name: HISTORY_QUEUE,
       defaultJobOptions: {
-        removeOnComplete: true,
-        removeOnFail: true,
+        removeOnComplete: 50,
+        removeOnFail: 200,
       },
     }),
     BullBoardModule.forFeature({
