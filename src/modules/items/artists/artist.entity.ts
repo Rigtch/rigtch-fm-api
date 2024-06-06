@@ -80,7 +80,6 @@ export class Artist implements Item {
   @Column('enum', {
     enum: ItemType,
     default: ItemType.ARTIST,
-    nullable: true,
   })
   @Exclude()
   type: ItemType

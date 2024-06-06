@@ -55,7 +55,6 @@ export class Album implements Item {
 
   @Column('enum', {
     enum: ReleaseDatePrecision,
-    nullable: true,
     default: ReleaseDatePrecision.DAY,
   })
   @ApiProperty({
@@ -63,7 +62,7 @@ export class Album implements Item {
     example: ReleaseDatePrecision.DAY,
     description: 'The precision with which releaseDate is known.',
   })
-  releaseDatePrecision?: ReleaseDatePrecision
+  releaseDatePrecision: ReleaseDatePrecision
 
   @Column('varchar')
   @ApiProperty({
@@ -88,9 +87,7 @@ export class Album implements Item {
   })
   href: string
 
-  @Column('simple-array', {
-    nullable: true,
-  })
+  @Column('simple-array')
   @ApiProperty({
     type: [String],
     example: '(P) 2012 RCA Records, a division of Sony Music Entertainment',
@@ -98,9 +95,7 @@ export class Album implements Item {
   })
   copyrights: string[]
 
-  @Column('simple-array', {
-    nullable: true,
-  })
+  @Column('simple-array')
   @ApiProperty({
     type: [String],
     example: [
@@ -115,9 +110,7 @@ export class Album implements Item {
   })
   genres: string[]
 
-  @Column('varchar', {
-    nullable: true,
-  })
+  @Column('varchar')
   @ApiProperty({
     example: 'Mr.305/Polo Grounds Music/RCA Records',
     description: 'The label associated with the album.',
@@ -126,7 +119,6 @@ export class Album implements Item {
 
   @Column('enum', {
     enum: ItemType,
-    nullable: true,
     default: ItemType.ALBUM,
   })
   @Exclude()

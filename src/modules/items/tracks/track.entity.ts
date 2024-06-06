@@ -75,9 +75,7 @@ export class Track implements Item {
   })
   discNumber: number
 
-  @Column('boolean', {
-    nullable: true,
-  })
+  @Column('boolean')
   @ApiProperty({
     type: Boolean,
     example: true,
@@ -88,7 +86,6 @@ export class Track implements Item {
   @Column('enum', {
     enum: ItemType,
     default: ItemType.TRACK,
-    nullable: true,
   })
   @Exclude()
   type: ItemType
