@@ -6,6 +6,7 @@ import {
   forwardRef,
 } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
+import { IsNull } from 'typeorm'
 
 import { TracksService } from '../tracks/tracks.service'
 
@@ -33,12 +34,20 @@ export class AlbumsValidator implements OnModuleInit {
   async onModuleInit() {
     if (!this.configService.get<boolean>(ENABLE_ALBUMS_VALIDATOR)) return
 
-    const albums = await this.albumsRepository.findAlbums()
+    const albums = await this.albumsRepository.findBy({
+      label: IsNull(),
+      copyrights: IsNull(),
+      genres: IsNull(),
+    })
 
     for await (const album of albums) {
-      this.validateTracksExistence(album)
-      await this.validateReleaseDatePrecision(album)
-      this.validateLabelCopyrightsAndGenres(album)
+      console.log(
+        `${albums.findIndex(a => a.id === album.id)} / ${albums.length}`
+      )
+
+      // this.validateTracksExistence(album)
+      // await this.validateReleaseDatePrecision(album)
+      await this.validateLabelCopyrightsAndGenres(album)
     }
   }
 
@@ -63,7 +72,9 @@ export class AlbumsValidator implements OnModuleInit {
       album.copyrights = sdkAlbum.copyrights.map(({ text }) => text)
       album.genres = sdkAlbum.genres
 
-      await this.albumsRepository.save(album)
+      const updated = await this.albumsRepository.save(album)
+
+      this.logger.log(`Updated album ${updated.name}`)
     }
   }
 

@@ -126,6 +126,7 @@ export class Album implements Item {
 
   @Column('enum', {
     enum: ItemType,
+    nullable: true,
     default: ItemType.ALBUM,
   })
   @Exclude()
