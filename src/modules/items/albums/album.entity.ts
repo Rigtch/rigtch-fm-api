@@ -9,8 +9,10 @@ import {
   Relation,
   Unique,
 } from 'typeorm'
+import { Exclude } from 'class-transformer'
 
 import { Item } from '../types'
+import { ItemType } from '../enums'
 
 import { ReleaseDatePrecision } from './enums'
 
@@ -85,6 +87,13 @@ export class Album implements Item {
     description: 'The Spotify URL for the object.',
   })
   href: string
+
+  @Column('enum', {
+    enum: ItemType,
+    default: ItemType.ALBUM,
+  })
+  @Exclude()
+  type: ItemType
 
   @ManyToMany('Image', 'albums', {
     cascade: true,

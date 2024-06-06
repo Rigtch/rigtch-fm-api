@@ -10,6 +10,7 @@ import { sdkSimplifiedTrackMock } from './simplified-track.mock'
 import { SdkCreateTrack } from '@modules/items/tracks/dtos'
 import { SdkTrack, Track } from '@common/types/spotify'
 import { Track as TrackEntity } from '@modules/items/tracks'
+import { ItemType } from '@modules/items/enums'
 
 export const sdkTrackMock: SdkTrack = {
   album: sdkSimplifiedAlbumMock,
@@ -51,6 +52,7 @@ export const trackEntityMock: TrackEntity = {
   externalId: trackMock.id,
   album: albumEntityMock,
   artists: artistEntitiesMock,
+  type: ItemType.TRACK,
 }
 
 export const trackEntitiesMock = Array.from({ length: 5 }).map(

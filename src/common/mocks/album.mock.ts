@@ -21,6 +21,7 @@ import {
   SimplifiedAlbum,
 } from '@common/types/spotify'
 import { ReleaseDatePrecision } from '@modules/items/albums/enums'
+import { ItemType } from '@modules/items/enums'
 
 export const sdkSimplifiedAlbumMock: SdkSimplifiedAlbum = {
   album_type: 'album',
@@ -131,6 +132,7 @@ export const albumEntityMock: AlbumEntity = {
   releaseDatePrecision: albumMock.releaseDatePrecision as ReleaseDatePrecision,
   albumType: sdkAlbumMock.album_type,
   images: imagesMock,
+  type: ItemType.ALBUM,
 }
 
 export const albumsEntitiesMock = Array.from({ length: 5 }).map(
