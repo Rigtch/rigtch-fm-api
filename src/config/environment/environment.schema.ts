@@ -13,8 +13,6 @@ export const environmentSchema = Joi.object({
   DATABASE_USERNAME: Joi.string().required(),
   DATABASE_PASSWORD: Joi.string().required(),
   DATABASE_NAME: Joi.string().required(),
-  ENABLE_TRACKS_VALIDATOR: Joi.boolean().default(false),
-  ENABLE_ALBUMS_VALIDATOR: Joi.boolean().default(false),
   REDIS_HOST: Joi.string().required(),
   REDIS_PORT: Joi.number().required(),
   REDIS_USER: Joi.string().allow(null, ''),
