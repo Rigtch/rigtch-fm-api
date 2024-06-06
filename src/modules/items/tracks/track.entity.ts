@@ -88,6 +88,7 @@ export class Track implements Item {
   @Column('enum', {
     enum: ItemType,
     default: ItemType.TRACK,
+    nullable: true,
   })
   @Exclude()
   type: ItemType

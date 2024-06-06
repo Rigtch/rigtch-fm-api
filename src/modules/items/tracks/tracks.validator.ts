@@ -6,6 +6,7 @@ import {
   forwardRef,
 } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
+import { IsNull } from 'typeorm'
 
 import { AlbumsService } from '../albums/albums.service'
 
@@ -14,6 +15,7 @@ import { Track } from './track.entity'
 
 import { SpotifyService } from '@modules/spotify'
 import { Environment } from '@config/environment'
+import { CHUNK_SIZE } from '@modules/spotify/constants'
 
 const { ENABLE_TRACKS_VALIDATOR } = Environment
 
@@ -32,12 +34,37 @@ export class TracksValidator implements OnModuleInit {
   async onModuleInit() {
     if (!this.configService.get<boolean>(ENABLE_TRACKS_VALIDATOR)) return
 
-    const tracks = await this.tracksRepository.findTracks()
+    const tracks = await this.tracksRepository.findBy({
+      explicit: IsNull(),
+    })
 
-    for (const track of tracks) {
-      this.validateAlbumExistence(track)
-      this.validateTrackNumberAndDiscNumber(track)
-      this.validateTrackExplicit(track)
+    const chunks: Track[][] = []
+
+    if (tracks.length > CHUNK_SIZE)
+      for (let index = 0; index < tracks.length; index += CHUNK_SIZE) {
+        chunks.push(tracks.slice(index, index + CHUNK_SIZE))
+      }
+    else chunks.push(tracks)
+
+    for await (const chunk of chunks) {
+      // this.validateAlbumExistence(track)
+      // this.validateTrackNumberAndDiscNumber(track)
+
+      await Promise.all(
+        chunk.map(track =>
+          this.validateTrackExplicit(track).then(() => {
+            console.log(
+              `${tracks.findIndex(t => t.id === track.id)} / ${tracks.length}`
+            )
+          })
+        )
+      )
+
+      // this.validateTrackExplicit(track).then(() => {
+      //   console.log(
+      //     `${tracks.findIndex(t => t.id === track.id)} / ${tracks.length}`
+      //   )
+      // })
     }
   }
 
@@ -57,7 +84,9 @@ export class TracksValidator implements OnModuleInit {
 
       track.album = album
 
-      await this.tracksRepository.save(track)
+      const updated = await this.tracksRepository.save(track)
+
+      this.logger.log(`Updated track ${updated.name}`)
     }
   }
 
