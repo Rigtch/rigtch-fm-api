@@ -17,6 +17,7 @@ import { CheckUserIdGuard } from '../guards'
 import { ApiAuth, RequestToken } from '@common/decorators'
 import { HistoryTrack, HistoryTracksRepository } from '@modules/history/tracks'
 import { HISTORY_QUEUE, SYNCHRONIZE_JOB } from '@modules/history/constants'
+import { synchronizeJobIdFactory } from '@modules/history/utils'
 
 export const historyTracksPaginateConfig: PaginateConfig<HistoryTrack> = {
   sortableColumns: ['playedAt'],
@@ -49,7 +50,13 @@ export class UsersHistoryController {
     @Paginate() query: PaginateQuery
   ) {
     if (!query.page || query.page === 1) {
-      const synchronizeJob = await this.historyQueue.add(SYNCHRONIZE_JOB, user)
+      const synchronizeJob = await this.historyQueue.add(
+        SYNCHRONIZE_JOB,
+        user,
+        {
+          jobId: synchronizeJobIdFactory(user.id),
+        }
+      )
 
       await synchronizeJob.finished()
     }

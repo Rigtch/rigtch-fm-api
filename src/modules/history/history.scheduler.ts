@@ -12,6 +12,7 @@ import { InjectQueue } from '@nestjs/bull'
 import { Queue } from 'bull'
 
 import { HISTORY_QUEUE, SYNCHRONIZE_JOB } from './constants'
+import { synchronizeJobIdFactory } from './utils'
 
 import { User } from '@modules/users/user.entity'
 import { UsersRepository } from '@modules/users/users.repository'
@@ -61,6 +62,7 @@ export class HistoryScheduler implements OnApplicationBootstrap {
     for (const user of users) {
       await this.historyQueue.add(SYNCHRONIZE_JOB, user, {
         priority: 1,
+        jobId: synchronizeJobIdFactory(user.id),
       })
     }
   }

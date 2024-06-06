@@ -6,10 +6,10 @@ import { ConfigService } from '@nestjs/config'
 import { getQueueToken } from '@nestjs/bull'
 
 import { HistoryScheduler } from './history.scheduler'
-import { HISTORY_QUEUE } from './constants'
+import { HISTORY_QUEUE, SYNCHRONIZE_JOB } from './constants'
 
 import { User, UsersRepository } from '@modules/users'
-import { usersMock } from '@common/mocks'
+import { userMock, usersMock } from '@common/mocks'
 
 describe('HistoryScheduler', () => {
   let moduleRef: TestingModule
@@ -119,6 +119,10 @@ describe('HistoryScheduler', () => {
       await historyScheduler.scheduleHistorySynchronization()
 
       expect(findUsersSpy).toHaveBeenCalledTimes(1)
+      expect(addSpy).toHaveBeenCalledWith(SYNCHRONIZE_JOB, userMock, {
+        priority: 1,
+        jobId: expect.any(String),
+      })
       expect(addSpy).toHaveBeenCalledTimes(usersMock.length)
     })
   })
