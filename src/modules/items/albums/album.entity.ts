@@ -88,6 +88,42 @@ export class Album implements Item {
   })
   href: string
 
+  @Column('simple-array', {
+    nullable: true,
+  })
+  @ApiProperty({
+    type: [String],
+    example: '(P) 2012 RCA Records, a division of Sony Music Entertainment',
+    description: 'The copyright statements of the album.',
+  })
+  copyrights: string[]
+
+  @Column('simple-array', {
+    nullable: true,
+  })
+  @ApiProperty({
+    type: [String],
+    example: [
+      'black metal',
+      'norwegian black metal',
+      'norwegian metal',
+      'pagan black metal',
+      'symphonic black metal',
+    ],
+    description:
+      'A list of the genres the album is associated with. If not yet classified, the array is empty.',
+  })
+  genres: string[]
+
+  @Column('varchar', {
+    nullable: true,
+  })
+  @ApiProperty({
+    example: 'Mr.305/Polo Grounds Music/RCA Records',
+    description: 'The label associated with the album.',
+  })
+  label: string
+
   @Column('enum', {
     enum: ItemType,
     default: ItemType.ALBUM,

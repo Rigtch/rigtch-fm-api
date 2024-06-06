@@ -44,6 +44,19 @@ export abstract class CreateAlbum implements Omit<Album, 'id' | 'type'> {
   @IsEnum(ReleaseDatePrecision)
   readonly releaseDatePrecision: ReleaseDatePrecision
 
+  @IsString({
+    each: true,
+  })
+  readonly copyrights: string[]
+
+  @IsString({
+    each: true,
+  })
+  genres: string[]
+
+  @IsString()
+  readonly label: string
+
   @IsArray()
   readonly images: Image[]
 
@@ -57,10 +70,7 @@ export abstract class SdkCreateAlbum
       SdkAlbum,
       | 'available_markets'
       | 'href'
-      | 'copyrights'
       | 'external_ids'
-      | 'genres'
-      | 'label'
       | 'popularity'
       | 'type'
       | 'artists'
@@ -87,7 +97,24 @@ export abstract class SdkCreateAlbum
   @IsDateString()
   readonly release_date: string
 
+  @IsString()
   readonly release_date_precision: string
+
+  @IsObject({
+    each: true,
+  })
+  readonly copyrights: {
+    readonly text: string
+    readonly type: string
+  }[]
+
+  @IsString()
+  readonly label: string
+
+  @IsString({
+    each: true,
+  })
+  readonly genres: string[]
 
   @IsOptional()
   @IsArray()

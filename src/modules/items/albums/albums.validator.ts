@@ -38,6 +38,32 @@ export class AlbumsValidator implements OnModuleInit {
     for await (const album of albums) {
       this.validateTracksExistence(album)
       await this.validateReleaseDatePrecision(album)
+      this.validateLabelCopyrightsAndGenres(album)
+    }
+  }
+
+  private async validateLabelCopyrightsAndGenres(album: Album) {
+    if (
+      !album.label ||
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      album?.copyrights?.length === 0 ||
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      album?.genres?.length === 0
+    ) {
+      this.logger.log(
+        `Updating album ${album.name} with label, copyrights and genres`
+      )
+
+      const sdkAlbum = await this.spotifyService.albums.get(
+        album.externalId,
+        false
+      )
+
+      album.label = sdkAlbum.label
+      album.copyrights = sdkAlbum.copyrights.map(({ text }) => text)
+      album.genres = sdkAlbum.genres
+
+      await this.albumsRepository.save(album)
     }
   }
 

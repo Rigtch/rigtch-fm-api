@@ -91,6 +91,9 @@ describe('AlbumsService', () => {
             albumType: sdkAlbumMock.album_type,
             releaseDate: new Date(sdkAlbumMock.release_date),
             releaseDatePrecision: sdkAlbumMock.release_date_precision,
+            label: sdkAlbumMock.label,
+            copyrights: sdkAlbumMock.copyrights.map(({ text }) => text),
+            genres: sdkAlbumMock.genres,
             totalTracks: sdkAlbumMock.total_tracks,
           }
         )
@@ -135,6 +138,9 @@ describe('AlbumsService', () => {
           releaseDate: new Date(sdkAlbumMock.release_date),
           releaseDatePrecision: sdkAlbumMock.release_date_precision,
           totalTracks: sdkAlbumMock.total_tracks,
+          label: sdkAlbumMock.label,
+          copyrights: sdkAlbumMock.copyrights.map(({ text }) => text),
+          genres: sdkAlbumMock.genres,
           images: imagesMock,
           artists: artistEntitiesMock,
         })

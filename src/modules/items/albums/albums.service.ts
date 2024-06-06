@@ -32,6 +32,9 @@ export class AlbumsService {
       name,
       release_date,
       release_date_precision,
+      label,
+      copyrights,
+      genres,
       album_type: albumType,
       total_tracks: totalTracks,
       external_urls: { spotify: href },
@@ -47,6 +50,9 @@ export class AlbumsService {
       albumType,
       releaseDate: new Date(release_date),
       releaseDatePrecision: release_date_precision as ReleaseDatePrecision,
+      label,
+      copyrights: copyrights.map(({ text }) => text),
+      genres,
       totalTracks,
     }
 
