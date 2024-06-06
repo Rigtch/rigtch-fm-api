@@ -16,6 +16,7 @@ import { ReleaseDatePrecision } from './enums'
 
 import { SpotifyService } from '@modules/spotify'
 import { Environment } from '@config/environment'
+import { CHUNK_SIZE } from '@modules/spotify/constants'
 
 const { ENABLE_ALBUMS_VALIDATOR } = Environment
 
@@ -40,14 +41,24 @@ export class AlbumsValidator implements OnModuleInit {
       genres: IsNull(),
     })
 
-    for await (const album of albums) {
-      console.log(
-        `${albums.findIndex(a => a.id === album.id)} / ${albums.length}`
-      )
+    const chunks: Album[][] = []
 
-      // this.validateTracksExistence(album)
-      // await this.validateReleaseDatePrecision(album)
-      await this.validateLabelCopyrightsAndGenres(album)
+    if (albums.length > CHUNK_SIZE)
+      for (let index = 0; index < albums.length; index += CHUNK_SIZE) {
+        chunks.push(albums.slice(index, index + CHUNK_SIZE))
+      }
+    else chunks.push(albums)
+
+    for await (const chunk of chunks) {
+      await Promise.all(
+        chunk.map(album =>
+          this.validateLabelCopyrightsAndGenres(album).then(() => {
+            console.log(
+              `${albums.findIndex(a => a.id === album.id)} / ${albums.length}`
+            )
+          })
+        )
+      )
     }
   }
 

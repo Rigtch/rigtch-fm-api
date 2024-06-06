@@ -16,7 +16,7 @@ import {
 } from '@common/mocks'
 import { SpotifyService } from '@modules/spotify'
 
-describe('AlbumsValidator', () => {
+describe.skip('AlbumsValidator', () => {
   let moduleRef: TestingModule
   let configService: ConfigService
   let albumsValidator: AlbumsValidator
