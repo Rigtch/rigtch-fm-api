@@ -129,6 +129,9 @@ describe('AlbumsRepository', () => {
           sdkAlbumMock.release_date_precision as ReleaseDatePrecision,
         externalId,
         albumType: sdkAlbumMock.album_type,
+        label: sdkAlbumMock.label,
+        copyrights: sdkAlbumMock.copyrights.map(({ text }) => text),
+        genres: sdkAlbumMock.genres,
         images: imagesMock,
       })
     ).toEqual(albumEntityMock)

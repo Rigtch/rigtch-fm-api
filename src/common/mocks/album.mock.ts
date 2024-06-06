@@ -132,6 +132,9 @@ export const albumEntityMock: AlbumEntity = {
   releaseDatePrecision: albumMock.releaseDatePrecision as ReleaseDatePrecision,
   albumType: sdkAlbumMock.album_type,
   images: imagesMock,
+  label: sdkAlbumMock.label,
+  copyrights: sdkAlbumMock.copyrights.map(({ text }) => text),
+  genres: sdkAlbumMock.genres,
   type: ItemType.ALBUM,
 }
 
