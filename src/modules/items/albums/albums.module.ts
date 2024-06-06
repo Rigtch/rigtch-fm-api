@@ -5,7 +5,6 @@ import { Album } from './album.entity'
 import { AlbumsRepository } from './albums.repository'
 import { AlbumsController } from './albums.controller'
 import { AlbumsService } from './albums.service'
-import { AlbumsValidator } from './albums.validator'
 
 import { TracksModule } from '@modules/items/tracks'
 import { SpotifyModule } from '@modules/spotify'
@@ -16,7 +15,7 @@ import { SpotifyModule } from '@modules/spotify'
     forwardRef(() => TracksModule),
     SpotifyModule,
   ],
-  providers: [AlbumsRepository, AlbumsService, AlbumsValidator],
+  providers: [AlbumsRepository, AlbumsService],
   controllers: [AlbumsController],
   exports: [AlbumsRepository, AlbumsService],
 })
