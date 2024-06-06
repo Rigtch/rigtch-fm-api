@@ -75,6 +75,16 @@ export class Track implements Item {
   })
   discNumber: number
 
+  @Column('boolean', {
+    nullable: true,
+  })
+  @ApiProperty({
+    type: Boolean,
+    example: true,
+    description: 'Whether or not the track has explicit lyrics.',
+  })
+  explicit: boolean
+
   @Column('enum', {
     enum: ItemType,
     default: ItemType.TRACK,

@@ -1,4 +1,4 @@
-import { IsArray, IsInt, IsString } from 'class-validator'
+import { IsArray, IsBoolean, IsInt, IsString } from 'class-validator'
 
 import { Track } from '../track.entity'
 
@@ -26,6 +26,9 @@ export abstract class CreateTrack implements Omit<Track, 'id' | 'type'> {
   @IsInt()
   readonly discNumber: number
 
+  @IsBoolean()
+  readonly explicit: boolean
+
   @IsArray()
   readonly artists: Artist[]
 
@@ -39,12 +42,11 @@ export abstract class SdkCreateTrack
       | 'images'
       | 'external_ids'
       | 'href'
-      | 'popularity'
       | 'available_markets'
       | 'preview_url'
-      | 'explicit'
       | 'is_local'
       | 'type'
+      | 'popularity'
       | 'uri'
       | 'track'
       | 'episode'
@@ -70,6 +72,9 @@ export abstract class SdkCreateTrack
 
   @IsInt()
   readonly disc_number: number
+
+  @IsBoolean()
+  readonly explicit: boolean
 
   @IsArray()
   readonly artists: SdkSimplifiedArtist[]
