@@ -52,6 +52,7 @@ export const trackEntityMock: TrackEntity = {
   externalId: trackMock.id,
   album: albumEntityMock,
   artists: artistEntitiesMock,
+  explicit: sdkTrackMock.explicit,
   type: ItemType.TRACK,
 }
 

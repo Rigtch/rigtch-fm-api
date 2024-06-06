@@ -6,6 +6,7 @@ import { RemoveHistoryEntity1716207087982 } from './1716207087982-remove-history
 import { AddTrackNumberAndDiscNumberPropertiesToUserEntity1716804618570 } from './1716804618570-add-track-number-and-disc-number-properties-to-user-entity'
 import { MakeDiscNumberAndTrackNumberPropertiesRequiredInUserEntity1716814787203 } from './1716814787203-make-disc-number-and-track-number-properties-required-in-user-entity'
 import { AddReleaseDatePrecisionColumnToAlbumEntity1717144663672 } from './1717144663672-add-release-date-precision-column-to-album-entity'
+import { AddExplicitColumnToTrackEntity1717684160130 } from './1717684160130-add-explicit-column-to-track-entity'
 
 export const migrations = [
   Migration1697539455661,
@@ -16,4 +17,5 @@ export const migrations = [
   AddTrackNumberAndDiscNumberPropertiesToUserEntity1716804618570,
   MakeDiscNumberAndTrackNumberPropertiesRequiredInUserEntity1716814787203,
   AddReleaseDatePrecisionColumnToAlbumEntity1717144663672,
+  AddExplicitColumnToTrackEntity1717684160130,
 ]

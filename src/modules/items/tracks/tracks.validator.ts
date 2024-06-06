@@ -37,6 +37,7 @@ export class TracksValidator implements OnModuleInit {
     for (const track of tracks) {
       this.validateAlbumExistence(track)
       this.validateTrackNumberAndDiscNumber(track)
+      this.validateTrackExplicit(track)
     }
   }
 
@@ -55,6 +56,23 @@ export class TracksValidator implements OnModuleInit {
       const album = await this.albumsService.updateOrCreate(sdkAlbum)
 
       track.album = album
+
+      await this.tracksRepository.save(track)
+    }
+  }
+
+  private async validateTrackExplicit(track: Track) {
+    if (!track.explicit) {
+      this.logger.log(
+        `Updating track ${track.name} with explicit and popularity`
+      )
+
+      const sdkTrack = await this.spotifyService.tracks.get(
+        track.externalId,
+        false
+      )
+
+      track.explicit = sdkTrack.explicit
 
       await this.tracksRepository.save(track)
     }
