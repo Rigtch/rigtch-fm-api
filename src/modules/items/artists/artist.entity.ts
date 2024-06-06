@@ -8,8 +8,10 @@ import {
   Relation,
   Unique,
 } from 'typeorm'
+import { Exclude } from 'class-transformer'
 
 import { Item } from '../types'
+import { ItemType } from '../enums'
 
 import { Image } from '@modules/items/images'
 
@@ -74,6 +76,13 @@ export class Artist implements Item {
     description: "The total number of artist's followers.",
   })
   followers: number
+
+  @Column('enum', {
+    enum: ItemType,
+    default: ItemType.ARTIST,
+  })
+  @Exclude()
+  type: ItemType
 
   @ManyToMany('Image', 'artists', {
     cascade: true,

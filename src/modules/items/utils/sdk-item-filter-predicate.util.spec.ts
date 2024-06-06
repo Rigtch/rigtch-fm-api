@@ -1,8 +1,15 @@
+import { ItemType } from '../enums'
 import { Item } from '../types'
 
 import { sdkItemFilterPredicate } from './sdk-item-filter-predicate.util'
 
-const itemFactoryMock = (externalId: string): Item => ({ externalId, id: '' })
+const itemFactoryMock = (externalId: string): Item => ({
+  externalId,
+  id: '',
+  name: '',
+  href: '',
+  type: ItemType.ALBUM,
+})
 
 describe('sdkItemFilterPredicate', () => {
   const items = [itemFactoryMock('1'), itemFactoryMock('2')]

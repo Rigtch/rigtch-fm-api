@@ -11,7 +11,7 @@ export abstract class Followers {
   total: number
 }
 
-export abstract class CreateArtist implements Omit<Artist, 'id'> {
+export abstract class CreateArtist implements Omit<Artist, 'id' | 'type'> {
   @IsString()
   readonly externalId: string
 

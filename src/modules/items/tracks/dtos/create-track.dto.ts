@@ -7,7 +7,7 @@ import { Artist } from '@modules/items/artists'
 import type { Album } from '@modules/items/albums'
 import type { SdkCreateAlbum } from '@modules/items/albums/dtos'
 
-export abstract class CreateTrack implements Omit<Track, 'id'> {
+export abstract class CreateTrack implements Omit<Track, 'id' | 'type'> {
   @IsString()
   readonly externalId: string
 

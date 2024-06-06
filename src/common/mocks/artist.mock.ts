@@ -7,6 +7,7 @@ import {
 
 import { imagesMock } from './image.mock'
 
+import { ItemType } from '@modules/items/enums'
 import { Artist as ArtistEntity } from '@modules/items/artists'
 
 export const sdkArtistMock: SdkArtist = {
@@ -58,6 +59,7 @@ export const artistEntityMock: ArtistEntity = {
   images: imagesMock,
   popularity: sdkArtistMock.popularity,
   followers: sdkArtistMock.followers.total,
+  type: ItemType.ARTIST,
 }
 
 export const artistEntitiesMock = Array.from({ length: 5 }).map(

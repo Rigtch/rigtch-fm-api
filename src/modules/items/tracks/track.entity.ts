@@ -10,8 +10,10 @@ import {
   Relation,
   Unique,
 } from 'typeorm'
+import { Exclude } from 'class-transformer'
 
 import { Item } from '../types'
+import { ItemType } from '../enums'
 
 import type { Album } from '@modules/items/albums'
 import type { Artist } from '@modules/items/artists'
@@ -72,6 +74,13 @@ export class Track implements Item {
       'The disc number (usually 1 unless the album consists of more than one disc).',
   })
   discNumber: number
+
+  @Column('enum', {
+    enum: ItemType,
+    default: ItemType.TRACK,
+  })
+  @Exclude()
+  type: ItemType
 
   @ManyToOne('Album', 'tracks', {
     nullable: true,

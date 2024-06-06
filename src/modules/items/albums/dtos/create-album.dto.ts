@@ -22,7 +22,7 @@ import type {
 } from '@common/types/spotify'
 import type { Image } from '@modules/items/images'
 
-export abstract class CreateAlbum implements Omit<Album, 'id'> {
+export abstract class CreateAlbum implements Omit<Album, 'id' | 'type'> {
   @IsString()
   readonly externalId: string
 
