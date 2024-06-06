@@ -140,7 +140,9 @@ describe('UsersHistoryController', () => {
       test('should synchronize history on first page', async () => {
         await usersHistoryController.getHistory(userMock, '', paginateQueryMock)
 
-        expect(synchronizeSpy).toHaveBeenCalledWith(SYNCHRONIZE_JOB, userMock)
+        expect(synchronizeSpy).toHaveBeenCalledWith(SYNCHRONIZE_JOB, userMock, {
+          jobId: expect.any(String),
+        })
         expect(finishedSpy).toHaveBeenCalled()
       })
 
