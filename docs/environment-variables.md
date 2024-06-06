@@ -23,15 +23,6 @@ SPOTIFY_BASE_URL="https://api.spotify.com/v1"
 SPOTIFY_ACCOUNTS_URL="https://accounts.spotify.com"
 ```
 
-## Validators Variables
-
-- `ENABLE_TRACKS_VALIDATOR` - If true every track in database will be validated
-  before running the application.
-
-```bash
-ENABLE_TRACKS_VALIDATOR=false
-```
-
 ## History Module Variables
 
 - `HISTORY_FETCHING_INTERVAL` - The interval for user's listening history synchronization.
