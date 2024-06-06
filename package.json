@@ -28,17 +28,14 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli",
-    "schema:sync": "yarn typeorm schema:sync -d ./dist/config/database/typeorm.config.js",
-    "migration:run": "yarn typeorm migration:run -d ./dist/config/database/typeorm.config.js",
-    "migration:generate": "yarn typeorm migration:generate -d ./dist/config/database/typeorm.config.js ./src/migrations/$NAME",
-    "migration:create": "yarn typeorm migration:create ./src/migrations/$NAME",
-    "migration:revert": "yarn typeorm migration:revert -d ./src/config/database/typeorm.config.ts",
+    "schema:sync": "bun run typeorm schema:sync -d ./dist/config/database/typeorm.config.js",
+    "migration:run": "bun run typeorm migration:run -d ./dist/config/database/typeorm.config.js",
+    "migration:generate": "bun run typeorm migration:generate -d ./dist/config/database/typeorm.config.js ./src/migrations/$NAME",
+    "migration:create": "bun run typeorm migration:create ./src/migrations/$NAME",
+    "migration:revert": "bun run typeorm migration:revert -d ./src/config/database/typeorm.config.ts",
     "prepare": "husky"
   },
   "sideEffects": false,
-  "lint-staged": {
-    "*.{js,ts}": "eslint --cache --fix"
-  },
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
