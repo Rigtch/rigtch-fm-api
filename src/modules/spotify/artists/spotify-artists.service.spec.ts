@@ -137,7 +137,7 @@ describe('SpotifyArtistsService', () => {
         expect(getMock).toHaveBeenCalledWith(ids)
       })
 
-      test('should get many by using chunks', async () => {
+      test('should get many artists by using chunks', async () => {
         const largeSdkArtistsMock = Array.from(
           { length: 40 },
           () => sdkArtistMock
