@@ -21,6 +21,8 @@ import {
   paginate,
 } from 'nestjs-paginate'
 
+import { ITEM_CACHE_DURATION } from '../constants'
+
 import { ArtistsRepository } from './artists.repository'
 import { Artist } from './artist.entity'
 
@@ -85,6 +87,7 @@ export class ArtistsController {
       .leftJoinAndSelect('artist.images', 'images')
       .orderBy('images.width', 'ASC')
       .where('artist.id = :id', { id })
+      .cache(`artist:${id}`, ITEM_CACHE_DURATION)
       .getOne()
 
     if (!foundArtist) throw new NotFoundException(NOT_BEEN_FOUND('artist'))
