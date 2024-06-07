@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { Market, SpotifyApi } from '@spotify/web-api-ts-sdk'
+import { Market, Page, SpotifyApi } from '@spotify/web-api-ts-sdk'
 import { backOff } from 'exponential-backoff'
 
 import { CHUNK_SIZE } from '../constants'
@@ -8,7 +8,7 @@ import { splitIntoChunks } from '../utils'
 
 import { AdaptersService } from '@common/adapters'
 import { Environment } from '@config/environment'
-import { Artist, SdkArtist } from '@common/types/spotify'
+import { Artist, SdkArtist, SdkSimplifiedAlbum } from '@common/types/spotify'
 
 @Injectable()
 export class SpotifyArtistsService {
@@ -49,6 +49,21 @@ export class SpotifyArtistsService {
     return tracks
   }
 
+  async albums(artistId: string) {
+    this.spotifySdk = SpotifyApi.withClientCredentials(
+      this.configService.get<string>(Environment.SPOTIFY_CLIENT_ID)!,
+      this.configService.get<string>(Environment.SPOTIFY_CLIENT_SECRET)!
+    )
+
+    const { items: albums } = await this.getArtistMissingAlbums(
+      await backOff(() =>
+        this.spotifySdk!.artists.albums(artistId, undefined, undefined, 50)
+      )
+    )
+
+    return albums
+  }
+
   private async getOne(id: string) {
     this.spotifySdk = SpotifyApi.withClientCredentials(
       this.configService.get<string>(Environment.SPOTIFY_CLIENT_ID)!,
@@ -71,5 +86,29 @@ export class SpotifyArtistsService {
     )
 
     return artists.flat()
+  }
+
+  private async getArtistMissingAlbums(albumsPage: Page<SdkSimplifiedAlbum>) {
+    if (albumsPage.next) {
+      let offset = albumsPage.offset + albumsPage.items.length
+
+      while (albumsPage.items.length < albumsPage.total) {
+        const albums = await backOff(() =>
+          this.spotifySdk!.artists.albums(
+            albumsPage.items[0].id,
+            undefined,
+            undefined,
+            50,
+            offset
+          )
+        )
+
+        albumsPage.items.push(...albums.items)
+
+        offset += albums.items.length
+      }
+    }
+
+    return albumsPage
   }
 }

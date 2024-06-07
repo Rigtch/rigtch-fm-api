@@ -9,6 +9,8 @@ import { AdaptersModule } from '@common/adapters'
 import {
   artistMock,
   artistsMock,
+  pageMockFactory,
+  sdkAlbumsMock,
   sdkArtistMock,
   sdkArtistsMock,
   sdkTracksMock,
@@ -212,6 +214,66 @@ describe('SpotifyArtistsService', () => {
         expect.any(String)
       )
       expect(topTracksMock).toHaveBeenCalledWith(artistId, market)
+    })
+  })
+
+  describe('albums', () => {
+    const artistId = 'id'
+
+    let withClientCredentialsSpy: MockInstance
+    let getAlbumsMock: MockInstance
+
+    beforeEach(() => {
+      getAlbumsMock = vi.fn()
+
+      withClientCredentialsSpy = vi
+        .spyOn(SpotifyApi, 'withClientCredentials')
+        .mockReturnValue({
+          artists: {
+            albums: getAlbumsMock,
+          },
+        } as unknown as SpotifyApi)
+    })
+
+    test('should return artist albums', async () => {
+      getAlbumsMock.mockResolvedValue(pageMockFactory(sdkAlbumsMock))
+
+      expect(await spotifyArtistsService.albums(artistId)).toEqual(
+        sdkAlbumsMock
+      )
+
+      expect(withClientCredentialsSpy).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.any(String)
+      )
+      expect(getAlbumsMock).toHaveBeenCalledWith(
+        artistId,
+        undefined,
+        undefined,
+        50
+      )
+    })
+
+    test('should return artist albums with missing items', async () => {
+      const albumsPageMock = pageMockFactory(sdkAlbumsMock, 10)
+
+      getAlbumsMock.mockResolvedValue(albumsPageMock)
+
+      expect(await spotifyArtistsService.albums(artistId)).toEqual(
+        sdkAlbumsMock
+      )
+
+      expect(withClientCredentialsSpy).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.any(String)
+      )
+      expect(getAlbumsMock).toHaveBeenCalledWith(
+        artistId,
+        undefined,
+        undefined,
+        50
+      )
+      expect(getAlbumsMock).toHaveBeenCalledTimes(2)
     })
   })
 })
