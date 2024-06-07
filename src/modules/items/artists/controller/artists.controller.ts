@@ -104,7 +104,7 @@ export class ArtistsController {
   @Get(':id/top-tracks')
   @ApiOperation({
     summary: 'Getting top tracks of an artist by id.',
-    description: 'Getting top tracks of an artist specified by the id.',
+    description: 'Getting artist top tracks specified by their id.',
   })
   @ApiParam({
     name: 'id',
