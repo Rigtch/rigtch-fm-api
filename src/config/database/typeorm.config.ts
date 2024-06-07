@@ -36,13 +36,6 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   migrationsRun: true,
   autoLoadEntities: true,
   synchronize: false,
-  cache: {
-    type: 'ioredis',
-    options: {
-      ...configService.get('redis'),
-      db: 1,
-    },
-  },
 }
 
 export const typeorm = registerAs('typeorm', () => typeOrmConfig)

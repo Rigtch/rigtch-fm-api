@@ -76,7 +76,6 @@ export class UsersHistoryController {
         'artistImages.width': 'ASC',
         'albumArtistImages.width': 'ASC',
       })
-      .cache(`history:${user.id}`)
 
     return paginate(query, queryBuilder, historyTracksPaginateConfig)
   }

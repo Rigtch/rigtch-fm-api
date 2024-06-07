@@ -9,7 +9,6 @@ import {
 } from '@nestjs/bull'
 import { Job } from 'bull'
 import { Logger } from '@nestjs/common'
-import { DataSource } from 'typeorm'
 
 import { HISTORY_QUEUE, SYNCHRONIZE_JOB } from './constants'
 import { HistoryTracksRepository, HistoryTracksService } from './tracks'
@@ -24,8 +23,7 @@ export class HistoryProcessor {
   constructor(
     private readonly historyTracksRepository: HistoryTracksRepository,
     private readonly historyTracksService: HistoryTracksService,
-    private readonly spotifyService: SpotifyService,
-    private readonly dataSource: DataSource
+    private readonly spotifyService: SpotifyService
   ) {}
 
   @Process(SYNCHRONIZE_JOB)
@@ -86,12 +84,10 @@ export class HistoryProcessor {
   }
 
   @OnQueueCompleted()
-  async onCompleted({ data: { profile, id } }: Job<User>) {
+  onCompleted({ data: { profile } }: Job<User>) {
     this.logger.log(
       `History synchronization completed for user: ${profile.displayName}`
     )
-
-    await this.dataSource.queryResultCache?.remove([`history:${id}`])
   }
 
   @OnQueueStalled()
