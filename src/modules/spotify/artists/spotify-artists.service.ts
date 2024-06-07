@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { SpotifyApi } from '@spotify/web-api-ts-sdk'
+import { Market, SpotifyApi } from '@spotify/web-api-ts-sdk'
 import { backOff } from 'exponential-backoff'
 
 import { CHUNK_SIZE } from '../constants'
@@ -34,6 +34,19 @@ export class SpotifyArtistsService {
     const artists = await this.getMany(idOrIds)
 
     return adapt ? this.adaptersService.artists.adapt(artists) : artists
+  }
+
+  async topTracks(artistId: string, market: Market = 'US') {
+    this.spotifySdk = SpotifyApi.withClientCredentials(
+      this.configService.get<string>(Environment.SPOTIFY_CLIENT_ID)!,
+      this.configService.get<string>(Environment.SPOTIFY_CLIENT_SECRET)!
+    )
+
+    const { tracks } = await backOff(() =>
+      this.spotifySdk!.artists.topTracks(artistId, market)
+    )
+
+    return tracks
   }
 
   private async getOne(id: string) {

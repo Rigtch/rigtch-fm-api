@@ -1,7 +1,7 @@
 import { ConfigService } from '@nestjs/config'
 import { Test, TestingModule } from '@nestjs/testing'
 import { MockInstance } from 'vitest'
-import { SpotifyApi } from '@spotify/web-api-ts-sdk'
+import { Market, SpotifyApi } from '@spotify/web-api-ts-sdk'
 
 import { SpotifyArtistsService } from './spotify-artists.service'
 
@@ -11,6 +11,7 @@ import {
   artistsMock,
   sdkArtistMock,
   sdkArtistsMock,
+  sdkTracksMock,
 } from '@common/mocks'
 
 vi.mock('@spotify/web-api-ts-sdk', () => {
@@ -158,6 +159,59 @@ describe('SpotifyArtistsService', () => {
         expect(getMock).toHaveBeenCalledWith(ids.splice(0, 20))
         expect(getMock).toHaveBeenCalledTimes(2)
       })
+    })
+  })
+
+  describe('topTracks', () => {
+    const artistId = 'id'
+
+    let withClientCredentialsSpy: MockInstance
+    let topTracksMock: MockInstance
+
+    beforeEach(() => {
+      topTracksMock = vi.fn()
+
+      withClientCredentialsSpy = vi
+        .spyOn(SpotifyApi, 'withClientCredentials')
+        .mockReturnValue({
+          artists: {
+            topTracks: topTracksMock,
+          },
+        } as unknown as SpotifyApi)
+    })
+
+    test('should return top tracks', async () => {
+      topTracksMock.mockResolvedValue({
+        tracks: sdkTracksMock,
+      })
+
+      const tracks = await spotifyArtistsService.topTracks(artistId)
+
+      expect(tracks).toEqual(sdkTracksMock)
+
+      expect(withClientCredentialsSpy).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.any(String)
+      )
+      expect(topTracksMock).toHaveBeenCalledWith(artistId, 'US')
+    })
+
+    test('should return top tracks with market', async () => {
+      const market: Market = 'PL'
+
+      topTracksMock.mockResolvedValue({
+        tracks: sdkTracksMock,
+      })
+
+      const tracks = await spotifyArtistsService.topTracks(artistId, market)
+
+      expect(tracks).toEqual(sdkTracksMock)
+
+      expect(withClientCredentialsSpy).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.any(String)
+      )
+      expect(topTracksMock).toHaveBeenCalledWith(artistId, market)
     })
   })
 })
