@@ -21,6 +21,8 @@ import {
   paginate,
 } from 'nestjs-paginate'
 
+import { ITEM_CACHE_DURATION } from '../constants'
+
 import { AlbumsRepository } from './albums.repository'
 import { AlbumBaseDocument, AlbumDocument } from './docs'
 import { Album } from './album.entity'
@@ -101,6 +103,7 @@ export class AlbumsController {
         'trackArtistImages.width': 'ASC',
       })
       .where('album.id = :id', { id })
+      .cache(`album:${id}`, ITEM_CACHE_DURATION)
       .getOne()
 
     if (!foundAlbum) throw new NotFoundException(NOT_BEEN_FOUND('album'))

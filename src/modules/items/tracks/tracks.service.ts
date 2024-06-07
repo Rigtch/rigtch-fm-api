@@ -25,6 +25,7 @@ export class TracksService {
     duration_ms,
     track_number,
     disc_number,
+    explicit,
     external_urls: { spotify: href },
     artists: fetchedTrackArtists,
     album: fetchedTrackAlbum,
@@ -48,6 +49,7 @@ export class TracksService {
         duration: duration_ms,
         trackNumber: track_number,
         discNumber: disc_number,
+        explicit,
         album: album!,
         artists,
       })

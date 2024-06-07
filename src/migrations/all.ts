@@ -10,6 +10,7 @@ import { AddExplicitColumnToTrackEntity1717684160130 } from './1717684160130-add
 import { AddCopyrightsLabelAndGenresColumnsToAlbumEntity1717685603039 } from './1717685603039-add-copyrights-label-and-genres-columns-to-album-entity'
 import { TypeColumnNullableInItemsEntities1717685923338 } from './1717685923338-type-column-nullable-in-items-entities'
 import { MakeItemsColumnsRequired1717699326064 } from './1717699326064-make-items-columns-required'
+import { EnableCache1717744803994 } from './1717744803994-enable-cache'
 
 export const migrations = [
   Migration1697539455661,
@@ -24,4 +25,5 @@ export const migrations = [
   AddCopyrightsLabelAndGenresColumnsToAlbumEntity1717685603039,
   TypeColumnNullableInItemsEntities1717685923338,
   MakeItemsColumnsRequired1717699326064,
+  EnableCache1717744803994,
 ]
