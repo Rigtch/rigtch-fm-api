@@ -97,6 +97,7 @@ describe('TracksService', () => {
           duration: sdkTrackMock.duration_ms,
           trackNumber: sdkTrackMock.track_number,
           discNumber: sdkTrackMock.disc_number,
+          explicit: sdkTrackMock.explicit,
           album: albumEntityMock,
           artists: artistEntitiesMock,
         })
