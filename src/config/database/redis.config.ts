@@ -12,7 +12,6 @@ export const redisConfig: RedisOptions = {
   port: configService.get(REDIS_PORT),
   username: configService.get(REDIS_USER),
   password: configService.get(REDIS_PASSWORD),
-  lazyConnect: true,
 }
 
 export const redis = registerAs('redis', () => redisConfig)
