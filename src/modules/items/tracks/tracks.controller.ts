@@ -21,8 +21,6 @@ import {
   paginate,
 } from 'nestjs-paginate'
 
-import { ITEM_CACHE_DURATION } from '../constants'
-
 import { TracksRepository } from './tracks.repository'
 import { TrackBaseDocument, TrackDocument } from './docs'
 import { Track } from './track.entity'
@@ -100,7 +98,7 @@ export class TracksController {
         'artistImages.width': 'ASC',
       })
       .where('track.id = :id', { id })
-      .cache(`track:${id}`, ITEM_CACHE_DURATION)
+
       .getOne()
 
     if (!foundTrack) throw new NotFoundException(NOT_BEEN_FOUND('track'))

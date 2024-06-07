@@ -3,7 +3,6 @@ import { Job } from 'bull'
 import { AccessToken, MaxInt, PlayHistory } from '@spotify/web-api-ts-sdk'
 import { MockInstance } from 'vitest'
 import { DeepMockProxy, MockProxy, mock, mockDeep } from 'vitest-mock-extended'
-import { DataSource } from 'typeorm'
 
 import { HistoryProcessor } from './history.processor'
 import {
@@ -34,7 +33,6 @@ describe('HistoryProcessor', () => {
   let historyTracksRepository: HistoryTracksRepository
   let historyTracksService: HistoryTracksService
   let spotifyService: SpotifyService
-  let dataSource: DataSource
 
   beforeEach(async () => {
     moduleRef = await Test.createTestingModule({
@@ -61,14 +59,6 @@ describe('HistoryProcessor', () => {
             },
           },
         },
-        {
-          provide: DataSource,
-          useValue: {
-            queryResultCache: {
-              remove: vi.fn(),
-            },
-          },
-        },
       ],
     }).compile()
 
@@ -76,7 +66,6 @@ describe('HistoryProcessor', () => {
     historyTracksRepository = moduleRef.get(HistoryTracksRepository)
     historyTracksService = moduleRef.get(HistoryTracksService)
     spotifyService = moduleRef.get(SpotifyService)
-    dataSource = moduleRef.get(DataSource)
   })
 
   afterEach(() => {
@@ -236,12 +225,9 @@ describe('HistoryProcessor', () => {
     })
 
     test('onCompleted', () => {
-      const removeSpy = vi.spyOn(dataSource.queryResultCache as never, 'remove')
-
       historyProcessor.onCompleted(jobMock)
 
       expect(logSpy).toHaveBeenCalled()
-      expect(removeSpy).toHaveBeenCalledWith([`history:${jobMock.data.id}`])
     })
 
     test('onStalled', () => {
