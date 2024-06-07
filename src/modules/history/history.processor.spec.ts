@@ -3,6 +3,7 @@ import { Job } from 'bull'
 import { AccessToken, MaxInt, PlayHistory } from '@spotify/web-api-ts-sdk'
 import { MockInstance } from 'vitest'
 import { DeepMockProxy, MockProxy, mock, mockDeep } from 'vitest-mock-extended'
+import { DataSource } from 'typeorm'
 
 import { HistoryProcessor } from './history.processor'
 import {
@@ -33,6 +34,7 @@ describe('HistoryProcessor', () => {
   let historyTracksRepository: HistoryTracksRepository
   let historyTracksService: HistoryTracksService
   let spotifyService: SpotifyService
+  let dataSource: DataSource
 
   beforeEach(async () => {
     moduleRef = await Test.createTestingModule({
@@ -59,6 +61,14 @@ describe('HistoryProcessor', () => {
             },
           },
         },
+        {
+          provide: DataSource,
+          useValue: {
+            queryResultCache: {
+              remove: vi.fn(),
+            },
+          },
+        },
       ],
     }).compile()
 
@@ -66,6 +76,7 @@ describe('HistoryProcessor', () => {
     historyTracksRepository = moduleRef.get(HistoryTracksRepository)
     historyTracksService = moduleRef.get(HistoryTracksService)
     spotifyService = moduleRef.get(SpotifyService)
+    dataSource = moduleRef.get(DataSource)
   })
 
   afterEach(() => {
@@ -191,6 +202,7 @@ describe('HistoryProcessor', () => {
     let logSpy: MockInstance
     let errorSpy: MockInstance
 
+    let errorMock: Error
     let jobMock: DeepMockProxy<Job<User>>
 
     beforeEach(() => {
@@ -202,6 +214,19 @@ describe('HistoryProcessor', () => {
       jobMock = mockDeep<Job<User>>({
         data: { profile: { displayName: 'displayName' } },
       })
+      errorMock = new Error('error')
+    })
+
+    test('onError', () => {
+      historyProcessor.onError(errorMock)
+
+      expect(errorSpy).toHaveBeenCalled()
+    })
+
+    test('onFailed', () => {
+      historyProcessor.onFailed(jobMock, errorMock)
+
+      expect(errorSpy).toHaveBeenCalledTimes(2)
     })
 
     test('onActive', () => {
@@ -211,9 +236,12 @@ describe('HistoryProcessor', () => {
     })
 
     test('onCompleted', () => {
+      const removeSpy = vi.spyOn(dataSource.queryResultCache as never, 'remove')
+
       historyProcessor.onCompleted(jobMock)
 
       expect(logSpy).toHaveBeenCalled()
+      expect(removeSpy).toHaveBeenCalledWith([`history:${jobMock.data.id}`])
     })
 
     test('onStalled', () => {
