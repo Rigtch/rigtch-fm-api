@@ -306,7 +306,7 @@ describe('SpotifyPlayerService', () => {
         } as unknown as SpotifyApi)
     })
 
-    test('should return a playback state', async () => {
+    test('should return playback state', async () => {
       getAvailableDevicesMock.mockResolvedValue({
         devices: [{ id: deviceId, is_active: true }],
       })
