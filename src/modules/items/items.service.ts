@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 
 import { AlbumsRepository, AlbumsService } from './albums'
 import { Artist, ArtistsRepository, ArtistsService } from './artists'
-import { Track, TracksRepository } from './tracks'
+import { Track, TracksRepository, TracksService } from './tracks'
 import { sdkItemFilterPredicate } from './utils'
 
 import { removeDuplicates } from '@common/utils'
@@ -17,6 +17,7 @@ export class ItemsService {
     private readonly albumsRepository: AlbumsRepository,
     private readonly artistsService: ArtistsService,
     private readonly artistsRepository: ArtistsRepository,
+    private readonly tracksService: TracksService,
     private readonly tracksRepository: TracksRepository,
     private readonly imagesService: ImagesService,
     private readonly spotifyService: SpotifyService
@@ -94,6 +95,23 @@ export class ItemsService {
       albumsExternalIds,
       false
     )
+
+    for await (const foundAlbum of foundAlbums) {
+      if (foundAlbum.tracks?.length === 0) {
+        const fetchedAlbum = fetchedAlbums.find(
+          ({ id }) => id === foundAlbum.externalId
+        )!
+
+        foundAlbum.tracks = await this.tracksService.updateOrCreate(
+          fetchedAlbum.tracks.items.map(track => ({
+            ...track,
+            album: fetchedAlbum,
+          }))
+        )
+
+        await this.albumsRepository.save(foundAlbum)
+      }
+    }
 
     return fetchedAlbums.filter(({ id }) =>
       sdkItemFilterPredicate(id, foundAlbums)
