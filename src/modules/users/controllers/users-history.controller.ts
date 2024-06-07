@@ -71,11 +71,6 @@ export class UsersHistoryController {
       .leftJoinAndSelect('album.artists', 'albumArtists')
       .leftJoinAndSelect('albumArtists.images', 'albumArtistImages')
       .where('historyTrack.userId = :userId', { userId: user.id })
-      .orderBy({
-        'albumImages.width': 'ASC',
-        'artistImages.width': 'ASC',
-        'albumArtistImages.width': 'ASC',
-      })
 
     return paginate(query, queryBuilder, historyTracksPaginateConfig)
   }

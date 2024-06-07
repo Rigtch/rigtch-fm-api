@@ -11,6 +11,7 @@ import { AddCopyrightsLabelAndGenresColumnsToAlbumEntity1717685603039 } from './
 import { TypeColumnNullableInItemsEntities1717685923338 } from './1717685923338-type-column-nullable-in-items-entities'
 import { MakeItemsColumnsRequired1717699326064 } from './1717699326064-make-items-columns-required'
 import { EnableCache1717744803994 } from './1717744803994-enable-cache'
+import { DisableCache1717771878472 } from './1717771878472-disable-cache'
 
 export const migrations = [
   Migration1697539455661,
@@ -26,4 +27,5 @@ export const migrations = [
   TypeColumnNullableInItemsEntities1717685923338,
   MakeItemsColumnsRequired1717699326064,
   EnableCache1717744803994,
+  DisableCache1717771878472,
 ]
