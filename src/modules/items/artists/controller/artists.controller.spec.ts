@@ -3,19 +3,26 @@ import { NotFoundException } from '@nestjs/common'
 import { PaginateQuery } from 'nestjs-paginate'
 import { MockInstance } from 'vitest'
 
+import { ArtistsRepository } from '../artists.repository'
+
 import { ArtistsController } from './artists.controller'
-import { ArtistsRepository } from './artists.repository'
 
 import {
   artistEntityMock,
   createQueryBuilderFactoryMock,
   createQueryBuilderMockImplementation,
+  sdkTracksMock,
+  trackEntitiesMock,
 } from '@common/mocks'
+import { SpotifyService } from '@modules/spotify'
+import { ItemsService } from '@modules/items/items.service'
 
 describe('ArtistsController', () => {
   let moduleRef: TestingModule
   let artistsController: ArtistsController
   let artistsRepository: ArtistsRepository
+  let spotifyService: SpotifyService
+  let itemsService: ItemsService
 
   beforeEach(async () => {
     moduleRef = await Test.createTestingModule({
@@ -25,6 +32,21 @@ describe('ArtistsController', () => {
           provide: ArtistsRepository,
           useValue: {
             createQueryBuilder: createQueryBuilderFactoryMock(artistEntityMock),
+            findOneBy: vi.fn(),
+          },
+        },
+        {
+          provide: SpotifyService,
+          useValue: {
+            artists: {
+              topTracks: vi.fn(),
+            },
+          },
+        },
+        {
+          provide: ItemsService,
+          useValue: {
+            findOrCreate: vi.fn(),
           },
         },
       ],
@@ -32,6 +54,8 @@ describe('ArtistsController', () => {
 
     artistsController = moduleRef.get(ArtistsController)
     artistsRepository = moduleRef.get(ArtistsRepository)
+    spotifyService = moduleRef.get(SpotifyService)
+    itemsService = moduleRef.get(ItemsService)
   })
 
   afterEach(() => {
@@ -113,6 +137,50 @@ describe('ArtistsController', () => {
         NotFoundException
       )
       expect(createQueryBuilderSpy).toHaveBeenCalledWith('artist')
+    })
+  })
+
+  describe('getArtistTopTracks', () => {
+    const id = 'id'
+
+    let findOneBySpy: MockInstance
+    let topTracksSpy: MockInstance
+    let findOrCreateSpy: MockInstance
+
+    beforeEach(() => {
+      findOneBySpy = vi.spyOn(artistsRepository, 'findOneBy')
+      topTracksSpy = vi.spyOn(spotifyService.artists, 'topTracks')
+      findOrCreateSpy = vi.spyOn(itemsService, 'findOrCreate')
+    })
+
+    test('should get top tracks of an artist by id', async () => {
+      findOneBySpy.mockReturnValue(artistEntityMock)
+      topTracksSpy.mockReturnValue(sdkTracksMock)
+      findOrCreateSpy.mockReturnValue(trackEntitiesMock)
+
+      expect(await artistsController.getArtistTopTracks(id)).toEqual({
+        tracks: trackEntitiesMock,
+      })
+
+      expect(findOneBySpy).toHaveBeenCalledWith({
+        id,
+      })
+      expect(topTracksSpy).toHaveBeenCalledWith(artistEntityMock.externalId)
+      expect(findOrCreateSpy).toHaveBeenCalledWith(sdkTracksMock)
+    })
+
+    test('should throw not found exception', async () => {
+      findOneBySpy.mockReturnValue(null)
+
+      await expect(
+        artistsController.getArtistTopTracks(id)
+      ).rejects.toThrowError(NotFoundException)
+
+      expect(findOneBySpy).toHaveBeenCalledWith({
+        id,
+      })
+      expect(topTracksSpy).not.toHaveBeenCalled()
+      expect(findOrCreateSpy).not.toHaveBeenCalled()
     })
   })
 })
