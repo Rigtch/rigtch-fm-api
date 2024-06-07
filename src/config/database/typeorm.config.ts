@@ -38,7 +38,10 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   synchronize: false,
   cache: {
     type: 'ioredis',
-    options: configService.get('redis'),
+    options: {
+      ...configService.get('redis'),
+      db: 1,
+    },
   },
 }
 
