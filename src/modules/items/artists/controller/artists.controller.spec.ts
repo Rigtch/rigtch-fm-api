@@ -153,7 +153,7 @@ describe('ArtistsController', () => {
       findOrCreateSpy = vi.spyOn(itemsService, 'findOrCreate')
     })
 
-    test('should get top tracks of an artist by id', async () => {
+    test('should get artist top tracks by id', async () => {
       findOneBySpy.mockReturnValue(artistEntityMock)
       topTracksSpy.mockReturnValue(sdkTracksMock)
       findOrCreateSpy.mockReturnValue(trackEntitiesMock)
