@@ -215,7 +215,7 @@ describe('SpotifyPlayerService', () => {
         } as unknown as SpotifyApi)
     })
 
-    test('should return a playback state', async () => {
+    test('should return playback state', async () => {
       getPlaybackStateMock.mockResolvedValue(sdkPlaybackStateMock)
 
       const playbackState =
