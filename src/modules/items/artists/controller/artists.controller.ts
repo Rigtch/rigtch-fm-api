@@ -21,14 +21,18 @@ import {
   paginate,
 } from 'nestjs-paginate'
 
-import { ArtistsRepository } from './artists.repository'
-import { Artist } from './artist.entity'
+import { ArtistsRepository } from '../artists.repository'
+import { Artist } from '../artist.entity'
 
+import { ArtistsTopTracksDocument } from './docs'
+
+import { ItemsService } from '@modules/items'
 import {
   NOT_BEEN_FOUND,
   ONE_IS_INVALID,
   ONE_SUCCESSFULLY_RETRIEVED,
 } from '@common/constants'
+import { SpotifyService } from '@modules/spotify'
 
 export const artistsPaginateConfig: PaginateConfig<Artist> = {
   sortableColumns: ['name'],
@@ -42,7 +46,11 @@ export const artistsPaginateConfig: PaginateConfig<Artist> = {
 @Controller('artists')
 @ApiTags('artists')
 export class ArtistsController {
-  constructor(private readonly artistsRepository: ArtistsRepository) {}
+  constructor(
+    private readonly artistsRepository: ArtistsRepository,
+    private readonly spotifyService: SpotifyService,
+    private readonly itemsService: ItemsService
+  ) {}
 
   @Get()
   @ApiOperation({
@@ -91,5 +99,45 @@ export class ArtistsController {
     if (!foundArtist) throw new NotFoundException(NOT_BEEN_FOUND('artist'))
 
     return foundArtist
+  }
+
+  @Get(':id/top-tracks')
+  @ApiOperation({
+    summary: 'Getting top tracks of an artist by id.',
+    description: 'Getting top tracks of an artist specified by the id.',
+  })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    example: '293456e8-64f4-49f0-9811-6344bbf350a7',
+  })
+  @ApiOkResponse({
+    description: ONE_SUCCESSFULLY_RETRIEVED("artist's top tracks"),
+    type: ArtistsTopTracksDocument,
+  })
+  @ApiNotFoundResponse({
+    description: NOT_BEEN_FOUND('artist'),
+  })
+  @ApiBadRequestResponse({
+    description: ONE_IS_INVALID('uuid'),
+  })
+  async getArtistTopTracks(
+    @Param('id', ParseUUIDPipe) id: string
+  ): Promise<ArtistsTopTracksDocument> {
+    const foundArtist = await this.artistsRepository.findOneBy({
+      id,
+    })
+
+    if (!foundArtist) throw new NotFoundException(NOT_BEEN_FOUND('artist'))
+
+    const sdkTracks = await this.spotifyService.artists.topTracks(
+      foundArtist.externalId
+    )
+
+    const tracks = await this.itemsService.findOrCreate(sdkTracks)
+
+    return {
+      tracks,
+    }
   }
 }

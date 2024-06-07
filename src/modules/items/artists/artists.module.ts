@@ -3,13 +3,13 @@ import { Module } from '@nestjs/common'
 
 import { Artist } from './artist.entity'
 import { ArtistsRepository } from './artists.repository'
-import { ArtistsController } from './artists.controller'
 import { ArtistsService } from './artists.service'
 
+import { SpotifyModule } from '@modules/spotify'
+
 @Module({
-  imports: [TypeOrmModule.forFeature([Artist])],
+  imports: [TypeOrmModule.forFeature([Artist]), SpotifyModule],
   providers: [ArtistsRepository, ArtistsService],
-  controllers: [ArtistsController],
   exports: [ArtistsRepository, ArtistsService],
 })
 export class ArtistsModule {}
