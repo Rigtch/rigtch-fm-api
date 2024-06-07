@@ -4,6 +4,7 @@ import { Injectable } from '@nestjs/common'
 import { backOff } from 'exponential-backoff'
 
 import { CHUNK_SIZE } from '../constants'
+import { splitIntoChunks } from '../utils'
 
 import { AdaptersService } from '@common/adapters'
 import { Environment } from '@config/environment'
@@ -50,13 +51,7 @@ export class SpotifyTracksService {
       this.configService.get<string>(Environment.SPOTIFY_CLIENT_SECRET)!
     )
 
-    const chunks: string[][] = []
-
-    if (ids.length > CHUNK_SIZE)
-      for (let index = 0; index < ids.length; index += CHUNK_SIZE) {
-        chunks.push(ids.slice(index, index + CHUNK_SIZE))
-      }
-    else chunks.push(ids)
+    const chunks = splitIntoChunks(ids, CHUNK_SIZE)
 
     const tracks = await Promise.all(
       chunks.map(chunk => backOff(() => this.spotifySdk!.tracks.get(chunk)))
