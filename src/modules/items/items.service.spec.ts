@@ -51,6 +51,7 @@ describe('ItemsService', () => {
           provide: AlbumsRepository,
           useValue: {
             findAlbumsByExternalIds: vi.fn(),
+            find: vi.fn(),
             save: vi.fn(),
           },
         },
@@ -318,6 +319,7 @@ describe('ItemsService', () => {
 
     describe('findOrCreateAlbums', () => {
       let findAlbumsByExternalIdsSpy: MockInstance
+      let findSpy: MockInstance
       let getAlbumsSpy: GetItemsMockInstance<SdkAlbum>
       let albumsUpdateOrCreate: MockInstance
 
@@ -326,6 +328,7 @@ describe('ItemsService', () => {
           albumsRepository,
           'findAlbumsByExternalIds'
         )
+        findSpy = vi.spyOn(albumsRepository, 'find')
         getAlbumsSpy = vi.spyOn(
           spotifyService.albums,
           'get'
@@ -335,6 +338,7 @@ describe('ItemsService', () => {
 
       test('should find images, artists, albums and return albums', async () => {
         findArtistsByExternalIdsSpy.mockResolvedValue(artistEntitiesMock)
+        findSpy.mockResolvedValue(albumsEntitiesMock)
         findAlbumsByExternalIdsSpy.mockResolvedValue(albumsEntitiesMock)
         getAlbumsSpy.mockResolvedValue(sdkAlbumsMock)
         getArtistsSpy.mockResolvedValue(sdkArtistsMock)
@@ -355,9 +359,8 @@ describe('ItemsService', () => {
 
       test('should create images, artists, albums and return albums', async () => {
         findArtistsByExternalIdsSpy.mockResolvedValue([])
-        findAlbumsByExternalIdsSpy
-          .mockResolvedValueOnce([])
-          .mockResolvedValue(albumsEntitiesMock)
+        findAlbumsByExternalIdsSpy.mockResolvedValue([])
+        findSpy.mockResolvedValue(albumsEntitiesMock)
         getAlbumsSpy.mockResolvedValue(sdkAlbumsMock)
         getArtistsSpy.mockResolvedValue(sdkArtistsMock)
 
