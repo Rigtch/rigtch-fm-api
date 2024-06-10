@@ -8,9 +8,11 @@ import { ArtistsRepository } from '../artists.repository'
 import { ArtistsController } from './artists.controller'
 
 import {
+  albumsEntitiesMock,
   artistEntityMock,
   createQueryBuilderFactoryMock,
   createQueryBuilderMockImplementation,
+  sdkAlbumsMock,
   sdkTracksMock,
   trackEntitiesMock,
 } from '@common/mocks'
@@ -40,6 +42,7 @@ describe('ArtistsController', () => {
           useValue: {
             artists: {
               topTracks: vi.fn(),
+              albums: vi.fn(),
             },
           },
         },
@@ -200,6 +203,50 @@ describe('ArtistsController', () => {
         id,
       })
       expect(topTracksSpy).not.toHaveBeenCalled()
+      expect(findOrCreateSpy).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('getArtistAlbums', () => {
+    const id = 'id'
+
+    let findOneBySpy: MockInstance
+    let albumsSpy: MockInstance
+    let findOrCreateSpy: MockInstance
+
+    beforeEach(() => {
+      findOneBySpy = vi.spyOn(artistsRepository, 'findOneBy')
+      albumsSpy = vi.spyOn(spotifyService.artists, 'albums')
+      findOrCreateSpy = vi.spyOn(itemsService, 'findOrCreate')
+    })
+
+    test('should get artist albums by id', async () => {
+      findOneBySpy.mockReturnValue(artistEntityMock)
+      albumsSpy.mockReturnValue(sdkAlbumsMock)
+      findOrCreateSpy.mockReturnValue(albumsEntitiesMock)
+
+      expect(await artistsController.getArtistAlbums(id)).toEqual({
+        albums: albumsEntitiesMock,
+      })
+
+      expect(findOneBySpy).toHaveBeenCalledWith({
+        id,
+      })
+      expect(albumsSpy).toHaveBeenCalledWith(artistEntityMock.externalId)
+      expect(findOrCreateSpy).toHaveBeenCalledWith(sdkAlbumsMock)
+    })
+
+    test('should throw not found exception', async () => {
+      findOneBySpy.mockReturnValue(null)
+
+      await expect(artistsController.getArtistAlbums(id)).rejects.toThrowError(
+        NotFoundException
+      )
+
+      expect(findOneBySpy).toHaveBeenCalledWith({
+        id,
+      })
+      expect(albumsSpy).not.toHaveBeenCalled()
       expect(findOrCreateSpy).not.toHaveBeenCalled()
     })
   })
