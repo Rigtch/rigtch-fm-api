@@ -22,11 +22,16 @@ import {
 import { SpotifyService } from '@modules/spotify'
 import { ItemsService } from '@modules/items'
 import { Track } from '@modules/items/tracks'
-import { SdkTrack } from '@common/types/spotify'
+import { SdkArtist, SdkTrack } from '@common/types/spotify'
+import { Artist } from '@modules/items/artists'
 
 type FindOrCreateTracksSpy = MockInstance<
   [tracks: SdkTrack[]],
   Promise<Track[]>
+>
+type FindOrCreateArtistsSpy = MockInstance<
+  [artists: SdkArtist[]],
+  Promise<Artist[]>
 >
 
 describe('UsersProfileController', () => {
@@ -137,15 +142,18 @@ describe('UsersProfileController', () => {
 
   describe('getTopArtists', () => {
     let getTopArtistsSpy: MockInstance
-    let findOrCreateSpy: MockInstance
+    let findOrCreateSpy: FindOrCreateArtistsSpy
 
     beforeEach(() => {
       getTopArtistsSpy = vi
         .spyOn(spotifyService.users, 'getTopArtists')
         .mockResolvedValue(pageMockFactory(sdkArtistsMock))
-      findOrCreateSpy = vi
-        .spyOn(itemsService, 'findOrCreate')
-        .mockResolvedValue(artistEntitiesMock)
+      findOrCreateSpy = (
+        vi.spyOn(
+          itemsService,
+          'findOrCreate'
+        ) as unknown as FindOrCreateArtistsSpy
+      ).mockResolvedValue(artistEntitiesMock)
     })
 
     test('should get user top artists', async () => {
