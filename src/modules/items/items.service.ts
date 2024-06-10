@@ -1,6 +1,12 @@
 import { Injectable } from '@nestjs/common'
+import { In } from 'typeorm'
 
-import { Album, AlbumsRepository, AlbumsService } from './albums'
+import {
+  Album,
+  AlbumsRepository,
+  AlbumsService,
+  albumsSimplifiedRelations,
+} from './albums'
 import { Artist, ArtistsRepository, ArtistsService } from './artists'
 import { Track, TracksRepository, TracksService } from './tracks'
 import { sdkItemFilterPredicate } from './utils'
@@ -110,7 +116,10 @@ export class ItemsService {
     if (filteredAlbums.length > 0)
       await this.albumsService.updateOrCreate(filteredAlbums)
 
-    return this.albumsRepository.findAlbumsByExternalIds(albumsExternalIds)
+    return this.albumsRepository.find({
+      where: { externalId: In(albumsExternalIds) },
+      relations: albumsSimplifiedRelations,
+    })
   }
 
   private async getFilteredArtists(artistsExternalIds: string[]) {
