@@ -13,6 +13,8 @@ import { Exclude } from 'class-transformer'
 import { Item } from '../types'
 import { ItemType } from '../enums'
 
+import { API_ARTIST_ID_EXAMPLE } from './constants'
+
 import { Image } from '@modules/items/images'
 
 @Entity()
@@ -20,7 +22,7 @@ import { Image } from '@modules/items/images'
 export class Artist implements Item {
   @PrimaryGeneratedColumn('uuid')
   @ApiProperty({
-    example: '293456e8-64f4-49f0-9811-6344bbf350a7',
+    example: API_ARTIST_ID_EXAMPLE,
   })
   id: string
 
