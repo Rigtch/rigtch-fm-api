@@ -50,7 +50,7 @@ export class ArtistsController {
   @Get()
   @ApiOperation({
     summary: 'Getting all artists (cached).',
-    description: 'Getting all artists that are synchronized (cached).',
+    description: 'Getting all synchronized artists (cached).',
   })
   @PaginatedSwaggerDocs(Artist, artistsPaginateConfig)
   getArtists(@Paginate() query: PaginateQuery) {
