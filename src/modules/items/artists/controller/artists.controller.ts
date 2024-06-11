@@ -4,6 +4,7 @@ import {
   NotFoundException,
   Param,
   ParseUUIDPipe,
+  Query,
 } from '@nestjs/common'
 import {
   ApiBadRequestResponse,
@@ -11,6 +12,7 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiParam,
+  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger'
 import {
@@ -25,6 +27,7 @@ import { ArtistsRepository } from '../artists.repository'
 import { Artist } from '../artist.entity'
 
 import { ArtistsTopTracksDocument } from './docs'
+import { ArtistTopTracksQuery } from './dtos'
 
 import { ItemsService } from '@modules/items'
 import {
@@ -111,6 +114,12 @@ export class ArtistsController {
     required: true,
     example: '293456e8-64f4-49f0-9811-6344bbf350a7',
   })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    description: 'The number of tracks to return.',
+    example: 5,
+  })
   @ApiOkResponse({
     description: ONE_SUCCESSFULLY_RETRIEVED("artist's top tracks"),
     type: ArtistsTopTracksDocument,
@@ -122,7 +131,8 @@ export class ArtistsController {
     description: ONE_IS_INVALID('uuid'),
   })
   async getArtistTopTracks(
-    @Param('id', ParseUUIDPipe) id: string
+    @Param('id', ParseUUIDPipe) id: string,
+    @Query() { limit = 5 }: ArtistTopTracksQuery
   ): Promise<ArtistsTopTracksDocument> {
     const foundArtist = await this.artistsRepository.findOneBy({
       id,
@@ -137,7 +147,7 @@ export class ArtistsController {
     const tracks = await this.itemsService.findOrCreate(sdkTracks)
 
     return {
-      tracks,
+      tracks: tracks.slice(0, limit),
     }
   }
 }

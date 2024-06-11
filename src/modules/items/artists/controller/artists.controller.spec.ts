@@ -158,9 +158,29 @@ describe('ArtistsController', () => {
       topTracksSpy.mockReturnValue(sdkTracksMock)
       findOrCreateSpy.mockReturnValue(trackEntitiesMock)
 
-      expect(await artistsController.getArtistTopTracks(id)).toEqual({
+      expect(await artistsController.getArtistTopTracks(id, {})).toEqual({
         tracks: trackEntitiesMock,
       })
+
+      expect(findOneBySpy).toHaveBeenCalledWith({
+        id,
+      })
+      expect(topTracksSpy).toHaveBeenCalledWith(artistEntityMock.externalId)
+      expect(findOrCreateSpy).toHaveBeenCalledWith(sdkTracksMock)
+    })
+
+    test('should get artist top tracks by id with limit', async () => {
+      const limit = 10
+
+      findOneBySpy.mockReturnValue(artistEntityMock)
+      topTracksSpy.mockReturnValue(sdkTracksMock)
+      findOrCreateSpy.mockReturnValue(trackEntitiesMock)
+
+      expect(await artistsController.getArtistTopTracks(id, { limit })).toEqual(
+        {
+          tracks: trackEntitiesMock.slice(0, limit),
+        }
+      )
 
       expect(findOneBySpy).toHaveBeenCalledWith({
         id,
@@ -173,7 +193,7 @@ describe('ArtistsController', () => {
       findOneBySpy.mockReturnValue(null)
 
       await expect(
-        artistsController.getArtistTopTracks(id)
+        artistsController.getArtistTopTracks(id, {})
       ).rejects.toThrowError(NotFoundException)
 
       expect(findOneBySpy).toHaveBeenCalledWith({
