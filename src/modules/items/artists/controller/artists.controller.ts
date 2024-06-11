@@ -5,6 +5,7 @@ import {
   Param,
   ParseUUIDPipe,
   Query,
+  UseInterceptors,
 } from '@nestjs/common'
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 import {
@@ -14,6 +15,7 @@ import {
   PaginatedSwaggerDocs,
   paginate,
 } from 'nestjs-paginate'
+import { CacheInterceptor } from '@nestjs/cache-manager'
 
 import { ArtistsRepository } from '../artists.repository'
 import { Artist } from '../artist.entity'
@@ -36,6 +38,7 @@ export const artistsPaginateConfig: PaginateConfig<Artist> = {
 }
 
 @Controller('artists')
+@UseInterceptors(CacheInterceptor)
 @ApiTags('artists')
 export class ArtistsController {
   constructor(
@@ -46,8 +49,8 @@ export class ArtistsController {
 
   @Get()
   @ApiOperation({
-    summary: 'Getting all artists.',
-    description: 'Getting all artists that are synchronized.',
+    summary: 'Getting all artists (cached).',
+    description: 'Getting all artists that are synchronized (cached).',
   })
   @PaginatedSwaggerDocs(Artist, artistsPaginateConfig)
   getArtists(@Paginate() query: PaginateQuery) {
@@ -61,8 +64,8 @@ export class ArtistsController {
 
   @Get(':id')
   @ApiOperation({
-    summary: 'Getting an artist by id.',
-    description: 'Getting one artist specified by the id.',
+    summary: 'Getting an artist by id (cached).',
+    description: 'Getting one artist specified by the id (cached).',
   })
   @ApiArtist()
   @ApiOkResponse({
@@ -85,8 +88,8 @@ export class ArtistsController {
 
   @Get(':id/top-tracks')
   @ApiOperation({
-    summary: 'Getting artist top tracks by id.',
-    description: 'Getting artist top tracks specified by their id.',
+    summary: 'Getting artist top tracks by id (cached).',
+    description: 'Getting artist top tracks specified by their id (cached).',
   })
   @ApiArtist()
   @ApiOkResponse({
@@ -116,8 +119,8 @@ export class ArtistsController {
 
   @Get(':id/albums')
   @ApiOperation({
-    summary: 'Getting artist albums by id.',
-    description: 'Getting artist albums specified by their id.',
+    summary: 'Getting artist albums by id (cached).',
+    description: 'Getting artist albums specified by their id (cached).',
   })
   @ApiArtist()
   @ApiOkResponse({

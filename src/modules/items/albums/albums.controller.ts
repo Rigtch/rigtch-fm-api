@@ -4,6 +4,7 @@ import {
   NotFoundException,
   Param,
   ParseUUIDPipe,
+  UseInterceptors,
 } from '@nestjs/common'
 import {
   ApiBadRequestResponse,
@@ -20,6 +21,7 @@ import {
   PaginatedSwaggerDocs,
   paginate,
 } from 'nestjs-paginate'
+import { CacheInterceptor } from '@nestjs/cache-manager'
 
 import { AlbumsRepository } from './albums.repository'
 import { AlbumBaseDocument, AlbumDocument } from './docs'
@@ -42,14 +44,15 @@ export const albumsPaginateConfig: PaginateConfig<Album> = {
 }
 
 @Controller('albums')
+@UseInterceptors(CacheInterceptor)
 @ApiTags('albums')
 export class AlbumsController {
   constructor(private readonly albumsRepository: AlbumsRepository) {}
 
   @Get()
   @ApiOperation({
-    summary: 'Getting all albums.',
-    description: 'Getting all albums that are synchronized',
+    summary: 'Getting all albums (cached).',
+    description: 'Getting all albums that are synchronized (cached).',
   })
   @PaginatedSwaggerDocs(AlbumBaseDocument, albumsPaginateConfig)
   async getAlbums(@Paginate() query: PaginateQuery) {
@@ -68,8 +71,8 @@ export class AlbumsController {
 
   @Get(':id')
   @ApiOperation({
-    summary: 'Getting an album by id.',
-    description: 'Getting one album specified by the id.',
+    summary: 'Getting an album by id (cached).',
+    description: 'Getting one album specified by the id (cached).',
   })
   @ApiParam({
     name: 'id',
