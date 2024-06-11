@@ -21,13 +21,15 @@ export class SpotifyAuthService {
   ) {}
 
   token({ refreshToken }: TokenOptions) {
-    const url = `${this.configService.get(
+    const url = `${this.configService.get<string>(
       Environment.SPOTIFY_ACCOUNTS_URL
-    )}/api/token`
-    const clientId = this.configService.get(Environment.SPOTIFY_CLIENT_ID)
-    const clientSecret = this.configService.get(
+    )!}/api/token`
+    const clientId = this.configService.get<string>(
+      Environment.SPOTIFY_CLIENT_ID
+    )!
+    const clientSecret = this.configService.get<string>(
       Environment.SPOTIFY_CLIENT_SECRET
-    )
+    )!
     const bufferedCredentials = Buffer.from(
       `${clientId}:${clientSecret}`
     ).toString('base64')
