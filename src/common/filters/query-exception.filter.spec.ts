@@ -42,7 +42,6 @@ describe('QueryExceptionFilter', () => {
     test('should call response.status with 500', () => {
       queryExceptionFilter.catch(exception, hostMock)
 
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(responseMock.status).toHaveBeenCalledWith(500)
       expect(responseMock.json).toHaveBeenCalledWith({
         statusCode: 500,
