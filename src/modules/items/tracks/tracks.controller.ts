@@ -51,7 +51,7 @@ export class TracksController {
   @Get()
   @ApiOperation({
     summary: 'Getting all tracks (cached).',
-    description: 'Getting all tracks that are synchronized (cached).',
+    description: 'Getting all synchronized tracks (cached).',
   })
   @PaginatedSwaggerDocs(TrackBaseDocument, tracksPaginateConfig)
   getTracks(@Paginate() query: PaginateQuery) {
