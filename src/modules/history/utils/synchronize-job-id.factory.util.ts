@@ -1,6 +1,5 @@
-import type { User } from '@modules/users'
+import type { UserId } from '../types'
 
-export type UserId = User['id']
 export type Timestamp = number
 export type JobId = `synchronize-history-${UserId}-${Timestamp}`
 
