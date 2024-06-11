@@ -4,6 +4,8 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm'
 import { BullModule } from '@nestjs/bull'
 import { BullBoardModule } from '@bull-board/nestjs'
 import { ExpressAdapter } from '@bull-board/express'
+import { CacheModule } from '@nestjs/cache-manager'
+import { redisStore } from 'cache-manager-ioredis-yet'
 
 import { environmentSchema } from '@config/environment'
 import { redis, typeorm } from '@config/database'
@@ -53,6 +55,16 @@ import { ArtistsControllerModule } from '@modules/items/artists/controller'
     BullBoardModule.forRoot({
       route: '/queues',
       adapter: ExpressAdapter,
+    }),
+    CacheModule.registerAsync({
+      isGlobal: true,
+      useFactory: async (configService: ConfigService) => ({
+        store: await redisStore({
+          ...configService.get('redis'),
+          db: 1,
+        }),
+      }),
+      inject: [ConfigService],
     }),
   ],
 })
