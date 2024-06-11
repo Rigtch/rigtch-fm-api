@@ -45,7 +45,7 @@
     "@bull-board/api": "^5.19.2",
     "@bull-board/express": "^5.19.2",
     "@bull-board/nestjs": "^5.19.2",
-    "@nestjs/axios": "3.0.1",
+    "@nestjs/axios": "3.0.2",
     "@nestjs/bull": "^10.1.1",
     "@nestjs/cache-manager": "^2.2.2",
     "@nestjs/common": "^10.3.0",
