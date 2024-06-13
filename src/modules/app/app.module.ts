@@ -17,7 +17,7 @@ import { ArtistsModule } from '@modules/items/artists'
 import { AlbumsModule } from '@modules/items/albums'
 import { TracksModule } from '@modules/items/tracks'
 import { HistoryModule } from '@modules/history'
-import { ArtistsControllerModule } from '@modules/items/artists/controller'
+import { ArtistsRouterModule } from '@modules/items/artists/router'
 
 @Module({
   imports: [
@@ -26,7 +26,7 @@ import { ArtistsControllerModule } from '@modules/items/artists/controller'
     ProfilesModule,
     UsersModule,
     ArtistsModule,
-    ArtistsControllerModule,
+    ArtistsRouterModule,
     AlbumsModule,
     TracksModule,
     HistoryModule,

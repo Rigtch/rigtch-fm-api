@@ -11,4 +11,4 @@ import { SpotifyModule } from '@modules/spotify'
   imports: [ArtistsModule, ItemsModule, SpotifyModule],
   controllers: [ArtistsController],
 })
-export class ArtistsControllerModule {}
+export class ArtistsRouterModule {}
