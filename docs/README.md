@@ -1,5 +1,7 @@
 # RigtchFM Api Documentation
 
+- [Queues Board](https://rigtch-fm-api.up.railway.app/queues)
+
 ## Setup
 
 For project setup see [Project Setup](project-setup.md).
