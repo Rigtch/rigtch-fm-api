@@ -18,6 +18,7 @@ import { AlbumsModule } from '@modules/items/albums'
 import { TracksModule } from '@modules/items/tracks'
 import { HistoryModule } from '@modules/history'
 import { ArtistsRouterModule } from '@modules/items/artists/router'
+import { HistoryRouterModule } from '@modules/history/router'
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { ArtistsRouterModule } from '@modules/items/artists/router'
     AlbumsModule,
     TracksModule,
     HistoryModule,
+    HistoryRouterModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: './.env',
