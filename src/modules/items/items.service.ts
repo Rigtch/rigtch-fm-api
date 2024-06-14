@@ -1,13 +1,24 @@
 import { Injectable } from '@nestjs/common'
+import { In } from 'typeorm'
 
-import { AlbumsRepository, AlbumsService } from './albums'
+import {
+  Album,
+  AlbumsRepository,
+  AlbumsService,
+  albumsSimplifiedRelations,
+} from './albums'
 import { Artist, ArtistsRepository, ArtistsService } from './artists'
 import { Track, TracksRepository, TracksService } from './tracks'
 import { sdkItemFilterPredicate } from './utils'
 
 import { removeDuplicates } from '@common/utils'
 import { ImagesService } from '@modules/items/images'
-import { SdkArtist, SdkTrack } from '@common/types/spotify'
+import {
+  SdkAlbum,
+  SdkArtist,
+  SdkSimplifiedAlbum,
+  SdkTrack,
+} from '@common/types/spotify'
 import { SpotifyService } from '@modules/spotify'
 
 @Injectable()
@@ -25,13 +36,17 @@ export class ItemsService {
 
   public findOrCreate(tracks: SdkTrack[]): Promise<Track[]>
   public findOrCreate(artists: SdkArtist[]): Promise<Artist[]>
+  public findOrCreate(albums: SdkSimplifiedAlbum[]): Promise<Album[]>
 
-  async findOrCreate(items: SdkTrack[] | SdkArtist[]) {
+  async findOrCreate(items: SdkTrack[] | SdkArtist[] | SdkSimplifiedAlbum[]) {
     if (items.length === 0) return []
 
-    if ('artists' in items[0])
+    if (items.every(({ type }) => type === 'track'))
       return this.findOrCreateTracks(items as SdkTrack[])
-    return this.findOrCreateArtists(items as SdkArtist[])
+    else if (items.every(({ type }) => type === 'artist'))
+      return this.findOrCreateArtists(items as SdkArtist[])
+    else if (items.every(({ type }) => type === 'album'))
+      return this.findOrCreateAlbums(items as SdkSimplifiedAlbum[])
   }
 
   private async findOrCreateArtists(artists: SdkArtist[]) {
@@ -75,6 +90,38 @@ export class ItemsService {
     )
   }
 
+  private async findOrCreateAlbums(fetchedAlbums: SdkSimplifiedAlbum[]) {
+    const albumsExternalIds = removeDuplicates(
+      fetchedAlbums.map(({ id }) => id)
+    )
+
+    const filteredArtists = await this.getFilteredArtists(
+      removeDuplicates(
+        fetchedAlbums.flatMap(({ artists }) => artists.map(({ id }) => id))
+      )
+    )
+
+    const filteredAlbums = await this.getFilteredAlbums(
+      removeDuplicates(fetchedAlbums.map(({ id }) => id))
+    )
+
+    const images = [
+      ...filteredArtists.flatMap(({ images }) => images),
+      ...filteredAlbums.flatMap(({ images }) => images),
+    ]
+
+    if (images.length > 0) await this.imagesService.findOrCreate(images)
+    if (filteredArtists.length > 0)
+      await this.artistsService.updateOrCreate(filteredArtists)
+    if (filteredAlbums.length > 0)
+      await this.albumsService.updateOrCreate(filteredAlbums)
+
+    return this.albumsRepository.find({
+      where: { externalId: In(albumsExternalIds) },
+      relations: albumsSimplifiedRelations,
+    })
+  }
+
   private async getFilteredArtists(artistsExternalIds: string[]) {
     const foundArtists =
       await this.artistsRepository.findArtistsByExternalIds(artistsExternalIds)
@@ -89,12 +136,23 @@ export class ItemsService {
   }
 
   private async getFilteredAlbums(albumsExternalIds: string[]) {
-    const foundAlbums =
-      await this.albumsRepository.findAlbumsByExternalIds(albumsExternalIds)
     const fetchedAlbums = await this.spotifyService.albums.get(
       albumsExternalIds,
       false
     )
+    const foundAlbums = await this.getAlbums(albumsExternalIds, fetchedAlbums)
+
+    return fetchedAlbums.filter(({ id }) =>
+      sdkItemFilterPredicate(id, foundAlbums)
+    )
+  }
+
+  private async getAlbums(
+    albumsExternalIds: string[],
+    fetchedAlbums: SdkAlbum[]
+  ) {
+    const foundAlbums =
+      await this.albumsRepository.findAlbumsByExternalIds(albumsExternalIds)
 
     for await (const foundAlbum of foundAlbums) {
       if (foundAlbum.tracks?.length === 0) {
@@ -113,8 +171,6 @@ export class ItemsService {
       }
     }
 
-    return fetchedAlbums.filter(({ id }) =>
-      sdkItemFilterPredicate(id, foundAlbums)
-    )
+    return foundAlbums
   }
 }

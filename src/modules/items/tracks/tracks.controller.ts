@@ -4,6 +4,7 @@ import {
   NotFoundException,
   Param,
   ParseUUIDPipe,
+  UseInterceptors,
 } from '@nestjs/common'
 import {
   ApiBadRequestResponse,
@@ -20,6 +21,7 @@ import {
   PaginatedSwaggerDocs,
   paginate,
 } from 'nestjs-paginate'
+import { CacheInterceptor } from '@nestjs/cache-manager'
 
 import { TracksRepository } from './tracks.repository'
 import { TrackBaseDocument, TrackDocument } from './docs'
@@ -41,14 +43,15 @@ export const tracksPaginateConfig: PaginateConfig<Track> = {
 }
 
 @Controller('tracks')
+@UseInterceptors(CacheInterceptor)
 @ApiTags('tracks')
 export class TracksController {
   constructor(private readonly tracksRepository: TracksRepository) {}
 
   @Get()
   @ApiOperation({
-    summary: 'Getting all tracks.',
-    description: 'Getting all tracks that are synchronized.',
+    summary: 'Getting all tracks (cached).',
+    description: 'Getting all synchronized tracks (cached).',
   })
   @PaginatedSwaggerDocs(TrackBaseDocument, tracksPaginateConfig)
   getTracks(@Paginate() query: PaginateQuery) {
@@ -68,8 +71,8 @@ export class TracksController {
 
   @Get(':id')
   @ApiOperation({
-    summary: 'Getting a track by id.',
-    description: 'Getting one track specified by the id.',
+    summary: 'Getting a track by id (cached).',
+    description: 'Getting one track specified by the id (cached).',
   })
   @ApiParam({
     name: 'id',

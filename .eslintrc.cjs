@@ -88,6 +88,18 @@ module.exports = {
     '@typescript-eslint/no-unsafe-argument': 'off',
     '@typescript-eslint/no-unsafe-assignment': 'off',
     '@typescript-eslint/no-unsafe-member-access': 'off',
+    '@typescript-eslint/restrict-template-expressions': [
+      'error',
+      {
+        allowNumber: true,
+      },
+    ],
+    '@typescript-eslint/no-unnecessary-type-assertion': [
+      'error',
+      {
+        typesToIgnore: ['const'],
+      },
+    ],
     '@trilon/detect-circular-reference': 'off',
     'nestjs/use-validation-pipe': 'off',
     'import/order': [
@@ -102,6 +114,7 @@ module.exports = {
     'unicorn/no-array-callback-reference': 'off',
     'unicorn/prefer-top-level-await': 'off',
     'unicorn/no-useless-undefined': 'off',
+    'unicorn/throw-new-error': 'off',
     'unicorn/prevent-abbreviations': [
       'error',
       {

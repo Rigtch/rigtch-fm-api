@@ -10,10 +10,9 @@ import {
   paginate,
 } from 'nestjs-paginate'
 
-import { ApiUser, RequestUser } from '../decorators'
-import { User } from '../user.entity'
-import { CheckUserIdGuard } from '../guards'
-
+import { ApiUser, RequestUser } from '@modules/users/decorators'
+import { User } from '@modules/users/user.entity'
+import { CheckUserIdGuard } from '@modules/users/guards'
 import { ApiAuth, RequestToken } from '@common/decorators'
 import { HistoryTrack, HistoryTracksRepository } from '@modules/history/tracks'
 import { HISTORY_QUEUE, SYNCHRONIZE_JOB } from '@modules/history/constants'
@@ -30,7 +29,7 @@ export const historyTracksPaginateConfig: PaginateConfig<HistoryTrack> = {
 @ApiTags('users/{id}/history')
 @UseGuards(CheckUserIdGuard)
 @ApiAuth()
-export class UsersHistoryController {
+export class HistoryController {
   constructor(
     private readonly historyTracksRepository: HistoryTracksRepository,
     @InjectQueue(HISTORY_QUEUE) private readonly historyQueue: Queue<User>

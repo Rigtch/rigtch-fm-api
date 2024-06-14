@@ -4,6 +4,8 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm'
 import { BullModule } from '@nestjs/bull'
 import { BullBoardModule } from '@bull-board/nestjs'
 import { ExpressAdapter } from '@bull-board/express'
+import { CacheModule } from '@nestjs/cache-manager'
+import { redisStore } from 'cache-manager-ioredis-yet'
 
 import { environmentSchema } from '@config/environment'
 import { redis, typeorm } from '@config/database'
@@ -15,7 +17,8 @@ import { ArtistsModule } from '@modules/items/artists'
 import { AlbumsModule } from '@modules/items/albums'
 import { TracksModule } from '@modules/items/tracks'
 import { HistoryModule } from '@modules/history'
-import { ArtistsControllerModule } from '@modules/items/artists/controller'
+import { ArtistsRouterModule } from '@modules/items/artists/router'
+import { HistoryRouterModule } from '@modules/history/router'
 
 @Module({
   imports: [
@@ -24,10 +27,11 @@ import { ArtistsControllerModule } from '@modules/items/artists/controller'
     ProfilesModule,
     UsersModule,
     ArtistsModule,
-    ArtistsControllerModule,
+    ArtistsRouterModule,
     AlbumsModule,
     TracksModule,
     HistoryModule,
+    HistoryRouterModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: './.env',
@@ -53,6 +57,16 @@ import { ArtistsControllerModule } from '@modules/items/artists/controller'
     BullBoardModule.forRoot({
       route: '/queues',
       adapter: ExpressAdapter,
+    }),
+    CacheModule.registerAsync({
+      isGlobal: true,
+      useFactory: async (configService: ConfigService) => ({
+        store: await redisStore({
+          ...configService.get('redis'),
+          db: 1,
+        }),
+      }),
+      inject: [ConfigService],
     }),
   ],
 })

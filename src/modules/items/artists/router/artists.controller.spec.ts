@@ -2,15 +2,18 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { NotFoundException } from '@nestjs/common'
 import { PaginateQuery } from 'nestjs-paginate'
 import { MockInstance } from 'vitest'
+import { CacheInterceptor } from '@nestjs/cache-manager'
 
 import { ArtistsRepository } from '../artists.repository'
 
 import { ArtistsController } from './artists.controller'
 
 import {
+  albumsEntitiesMock,
   artistEntityMock,
   createQueryBuilderFactoryMock,
   createQueryBuilderMockImplementation,
+  sdkAlbumsMock,
   sdkTracksMock,
   trackEntitiesMock,
 } from '@common/mocks'
@@ -40,6 +43,7 @@ describe('ArtistsController', () => {
           useValue: {
             artists: {
               topTracks: vi.fn(),
+              albums: vi.fn(),
             },
           },
         },
@@ -50,7 +54,12 @@ describe('ArtistsController', () => {
           },
         },
       ],
-    }).compile()
+    })
+      .overrideInterceptor(CacheInterceptor)
+      .useValue({
+        intercept: vi.fn(),
+      })
+      .compile()
 
     artistsController = moduleRef.get(ArtistsController)
     artistsRepository = moduleRef.get(ArtistsRepository)
@@ -158,9 +167,29 @@ describe('ArtistsController', () => {
       topTracksSpy.mockReturnValue(sdkTracksMock)
       findOrCreateSpy.mockReturnValue(trackEntitiesMock)
 
-      expect(await artistsController.getArtistTopTracks(id)).toEqual({
+      expect(await artistsController.getArtistTopTracks(id, {})).toEqual({
         tracks: trackEntitiesMock,
       })
+
+      expect(findOneBySpy).toHaveBeenCalledWith({
+        id,
+      })
+      expect(topTracksSpy).toHaveBeenCalledWith(artistEntityMock.externalId)
+      expect(findOrCreateSpy).toHaveBeenCalledWith(sdkTracksMock)
+    })
+
+    test('should get artist top tracks by id with limit', async () => {
+      const limit = 10
+
+      findOneBySpy.mockReturnValue(artistEntityMock)
+      topTracksSpy.mockReturnValue(sdkTracksMock)
+      findOrCreateSpy.mockReturnValue(trackEntitiesMock)
+
+      expect(await artistsController.getArtistTopTracks(id, { limit })).toEqual(
+        {
+          tracks: trackEntitiesMock.slice(0, limit),
+        }
+      )
 
       expect(findOneBySpy).toHaveBeenCalledWith({
         id,
@@ -173,13 +202,57 @@ describe('ArtistsController', () => {
       findOneBySpy.mockReturnValue(null)
 
       await expect(
-        artistsController.getArtistTopTracks(id)
+        artistsController.getArtistTopTracks(id, {})
       ).rejects.toThrowError(NotFoundException)
 
       expect(findOneBySpy).toHaveBeenCalledWith({
         id,
       })
       expect(topTracksSpy).not.toHaveBeenCalled()
+      expect(findOrCreateSpy).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('getArtistAlbums', () => {
+    const id = 'id'
+
+    let findOneBySpy: MockInstance
+    let albumsSpy: MockInstance
+    let findOrCreateSpy: MockInstance
+
+    beforeEach(() => {
+      findOneBySpy = vi.spyOn(artistsRepository, 'findOneBy')
+      albumsSpy = vi.spyOn(spotifyService.artists, 'albums')
+      findOrCreateSpy = vi.spyOn(itemsService, 'findOrCreate')
+    })
+
+    test('should get artist albums by id', async () => {
+      findOneBySpy.mockReturnValue(artistEntityMock)
+      albumsSpy.mockReturnValue(sdkAlbumsMock)
+      findOrCreateSpy.mockReturnValue(albumsEntitiesMock)
+
+      expect(await artistsController.getArtistAlbums(id)).toEqual({
+        albums: albumsEntitiesMock,
+      })
+
+      expect(findOneBySpy).toHaveBeenCalledWith({
+        id,
+      })
+      expect(albumsSpy).toHaveBeenCalledWith(artistEntityMock.externalId)
+      expect(findOrCreateSpy).toHaveBeenCalledWith(sdkAlbumsMock)
+    })
+
+    test('should throw not found exception', async () => {
+      findOneBySpy.mockReturnValue(null)
+
+      await expect(artistsController.getArtistAlbums(id)).rejects.toThrowError(
+        NotFoundException
+      )
+
+      expect(findOneBySpy).toHaveBeenCalledWith({
+        id,
+      })
+      expect(albumsSpy).not.toHaveBeenCalled()
       expect(findOrCreateSpy).not.toHaveBeenCalled()
     })
   })

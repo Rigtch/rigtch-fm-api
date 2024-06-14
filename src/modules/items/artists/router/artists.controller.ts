@@ -4,15 +4,10 @@ import {
   NotFoundException,
   Param,
   ParseUUIDPipe,
+  Query,
+  UseInterceptors,
 } from '@nestjs/common'
-import {
-  ApiBadRequestResponse,
-  ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiParam,
-  ApiTags,
-} from '@nestjs/swagger'
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 import {
   Paginate,
   PaginateConfig,
@@ -20,18 +15,17 @@ import {
   PaginatedSwaggerDocs,
   paginate,
 } from 'nestjs-paginate'
+import { CacheInterceptor } from '@nestjs/cache-manager'
 
 import { ArtistsRepository } from '../artists.repository'
 import { Artist } from '../artist.entity'
 
-import { ArtistsTopTracksDocument } from './docs'
+import { ArtistTopTracksQuery } from './dtos'
+import { ArtistAlbumsDocument, ArtistTopTracksDocument } from './docs'
+import { ApiArtist } from './decorators'
 
 import { ItemsService } from '@modules/items'
-import {
-  NOT_BEEN_FOUND,
-  ONE_IS_INVALID,
-  ONE_SUCCESSFULLY_RETRIEVED,
-} from '@common/constants'
+import { NOT_BEEN_FOUND, ONE_SUCCESSFULLY_RETRIEVED } from '@common/constants'
 import { SpotifyService } from '@modules/spotify'
 
 export const artistsPaginateConfig: PaginateConfig<Artist> = {
@@ -44,6 +38,7 @@ export const artistsPaginateConfig: PaginateConfig<Artist> = {
 }
 
 @Controller('artists')
+@UseInterceptors(CacheInterceptor)
 @ApiTags('artists')
 export class ArtistsController {
   constructor(
@@ -54,8 +49,8 @@ export class ArtistsController {
 
   @Get()
   @ApiOperation({
-    summary: 'Getting all artists.',
-    description: 'Getting all artists that are synchronized.',
+    summary: 'Getting all artists (cached).',
+    description: 'Getting all synchronized artists (cached).',
   })
   @PaginatedSwaggerDocs(Artist, artistsPaginateConfig)
   getArtists(@Paginate() query: PaginateQuery) {
@@ -69,23 +64,13 @@ export class ArtistsController {
 
   @Get(':id')
   @ApiOperation({
-    summary: 'Getting an artist by id.',
-    description: 'Getting one artist specified by the id.',
+    summary: 'Getting an artist by id (cached).',
+    description: 'Getting one artist specified by the id (cached).',
   })
-  @ApiParam({
-    name: 'id',
-    required: true,
-    example: '293456e8-64f4-49f0-9811-6344bbf350a7',
-  })
+  @ApiArtist()
   @ApiOkResponse({
     description: ONE_SUCCESSFULLY_RETRIEVED('artist'),
     type: Artist,
-  })
-  @ApiNotFoundResponse({
-    description: NOT_BEEN_FOUND('artist'),
-  })
-  @ApiBadRequestResponse({
-    description: ONE_IS_INVALID('uuid'),
   })
   async getArtistById(@Param('id', ParseUUIDPipe) id: string) {
     const foundArtist = await this.artistsRepository
@@ -103,27 +88,18 @@ export class ArtistsController {
 
   @Get(':id/top-tracks')
   @ApiOperation({
-    summary: 'Getting artist top tracks by id.',
-    description: 'Getting artist top tracks specified by their id.',
+    summary: 'Getting artist top tracks by id (cached).',
+    description: 'Getting artist top tracks specified by their id (cached).',
   })
-  @ApiParam({
-    name: 'id',
-    required: true,
-    example: '293456e8-64f4-49f0-9811-6344bbf350a7',
-  })
+  @ApiArtist()
   @ApiOkResponse({
     description: ONE_SUCCESSFULLY_RETRIEVED("artist's top tracks"),
-    type: ArtistsTopTracksDocument,
-  })
-  @ApiNotFoundResponse({
-    description: NOT_BEEN_FOUND('artist'),
-  })
-  @ApiBadRequestResponse({
-    description: ONE_IS_INVALID('uuid'),
+    type: ArtistTopTracksDocument,
   })
   async getArtistTopTracks(
-    @Param('id', ParseUUIDPipe) id: string
-  ): Promise<ArtistsTopTracksDocument> {
+    @Param('id', ParseUUIDPipe) id: string,
+    @Query() { limit = 5 }: ArtistTopTracksQuery
+  ): Promise<ArtistTopTracksDocument> {
     const foundArtist = await this.artistsRepository.findOneBy({
       id,
     })
@@ -137,7 +113,37 @@ export class ArtistsController {
     const tracks = await this.itemsService.findOrCreate(sdkTracks)
 
     return {
-      tracks,
+      tracks: tracks.slice(0, limit),
+    }
+  }
+
+  @Get(':id/albums')
+  @ApiOperation({
+    summary: 'Getting artist albums by id (cached).',
+    description: 'Getting artist albums specified by their id (cached).',
+  })
+  @ApiArtist()
+  @ApiOkResponse({
+    description: ONE_SUCCESSFULLY_RETRIEVED("artist's albums"),
+    type: ArtistAlbumsDocument,
+  })
+  async getArtistAlbums(
+    @Param('id', ParseUUIDPipe) id: string
+  ): Promise<ArtistAlbumsDocument> {
+    const foundArtist = await this.artistsRepository.findOneBy({
+      id,
+    })
+
+    if (!foundArtist) throw new NotFoundException(NOT_BEEN_FOUND('artist'))
+
+    const sdkAlbums = await this.spotifyService.artists.albums(
+      foundArtist.externalId
+    )
+
+    const albums = await this.itemsService.findOrCreate(sdkAlbums)
+
+    return {
+      albums,
     }
   }
 }

@@ -15,6 +15,7 @@ import {
   sdkAlbumsMock,
   sdkArtistMock,
   sdkArtistsMock,
+  sdkSimplifiedAlbumsMock,
   sdkSimplifiedTracksMock,
   sdkTrackMock,
   sdkTracksMock,
@@ -50,6 +51,7 @@ describe('ItemsService', () => {
           provide: AlbumsRepository,
           useValue: {
             findAlbumsByExternalIds: vi.fn(),
+            find: vi.fn(),
             save: vi.fn(),
           },
         },
@@ -306,6 +308,104 @@ describe('ItemsService', () => {
           ...albumEntityMock,
           tracks: trackEntitiesMock,
         })
+        expect(tracksUpdateOrCreateSpy).toHaveBeenCalledWith(
+          sdkSimplifiedTracksMock.map(track => ({
+            ...track,
+            album: sdkAlbumMock,
+          }))
+        )
+      })
+    })
+
+    describe('findOrCreateAlbums', () => {
+      let findAlbumsByExternalIdsSpy: MockInstance
+      let findSpy: MockInstance
+      let getAlbumsSpy: GetItemsMockInstance<SdkAlbum>
+      let albumsUpdateOrCreate: MockInstance
+
+      beforeEach(() => {
+        findAlbumsByExternalIdsSpy = vi.spyOn(
+          albumsRepository,
+          'findAlbumsByExternalIds'
+        )
+        findSpy = vi.spyOn(albumsRepository, 'find')
+        getAlbumsSpy = vi.spyOn(
+          spotifyService.albums,
+          'get'
+        ) as unknown as GetItemsMockInstance<SdkAlbum>
+        albumsUpdateOrCreate = vi.spyOn(albumsService, 'updateOrCreate')
+      })
+
+      test('should find images, artists, albums and return albums', async () => {
+        findArtistsByExternalIdsSpy.mockResolvedValue(artistEntitiesMock)
+        findSpy.mockResolvedValue(albumsEntitiesMock)
+        findAlbumsByExternalIdsSpy.mockResolvedValue(albumsEntitiesMock)
+        getAlbumsSpy.mockResolvedValue(sdkAlbumsMock)
+        getArtistsSpy.mockResolvedValue(sdkArtistsMock)
+
+        expect(
+          await itemsService.findOrCreate(sdkSimplifiedAlbumsMock)
+        ).toEqual(albumsEntitiesMock)
+        expect(findArtistsByExternalIdsSpy).toHaveBeenCalledWith([
+          sdkArtistMock.id,
+        ])
+        expect(findAlbumsByExternalIdsSpy).toHaveBeenCalledWith([
+          sdkAlbumMock.id,
+        ])
+        expect(getArtistsSpy).toHaveBeenCalledWith([sdkArtistMock.id], false)
+        expect(getAlbumsSpy).toHaveBeenCalledWith([sdkAlbumMock.id], false)
+        expect(albumsUpdateOrCreate).not.toHaveBeenCalledWith()
+      })
+
+      test('should create images, artists, albums and return albums', async () => {
+        findArtistsByExternalIdsSpy.mockResolvedValue([])
+        findAlbumsByExternalIdsSpy.mockResolvedValue([])
+        findSpy.mockResolvedValue(albumsEntitiesMock)
+        getAlbumsSpy.mockResolvedValue(sdkAlbumsMock)
+        getArtistsSpy.mockResolvedValue(sdkArtistsMock)
+
+        expect(
+          await itemsService.findOrCreate(sdkSimplifiedAlbumsMock)
+        ).toEqual(albumsEntitiesMock)
+
+        expect(findArtistsByExternalIdsSpy).toHaveBeenCalledWith([
+          sdkArtistMock.id,
+        ])
+        expect(findAlbumsByExternalIdsSpy).toHaveBeenCalledWith([
+          sdkAlbumMock.id,
+        ])
+        expect(getAlbumsSpy).toHaveBeenCalledWith([sdkAlbumMock.id], false)
+        expect(getArtistsSpy).toHaveBeenCalledWith([sdkArtistMock.id], false)
+        expect(albumsUpdateOrCreate).toHaveBeenCalledWith(sdkAlbumsMock)
+      })
+
+      test('should create missing tracks in albums', async () => {
+        findAlbumsByExternalIdsSpy.mockResolvedValue([
+          {
+            ...albumEntityMock,
+            tracks: [],
+          },
+        ])
+        getAlbumsSpy.mockResolvedValue(sdkAlbumsMock)
+        getArtistsSpy.mockResolvedValue(sdkArtistsMock)
+        findArtistsByExternalIdsSpy.mockResolvedValue(artistEntitiesMock)
+
+        const tracksUpdateOrCreateSpy = vi
+          .spyOn(tracksService, 'updateOrCreate')
+          .mockResolvedValue(trackEntitiesMock)
+
+        const albumsSaveSpy = vi.spyOn(albumsRepository, 'save')
+
+        await itemsService.findOrCreate(sdkSimplifiedAlbumsMock)
+
+        expect(findAlbumsByExternalIdsSpy).toHaveBeenCalledWith([
+          sdkAlbumMock.id,
+        ])
+        expect(albumsSaveSpy).toHaveBeenCalledWith({
+          ...albumEntityMock,
+          tracks: trackEntitiesMock,
+        })
+        expect(getAlbumsSpy).toHaveBeenCalledWith([sdkAlbumMock.id], false)
         expect(tracksUpdateOrCreateSpy).toHaveBeenCalledWith(
           sdkSimplifiedTracksMock.map(track => ({
             ...track,
