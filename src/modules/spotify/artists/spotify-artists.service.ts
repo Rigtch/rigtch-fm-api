@@ -58,7 +58,8 @@ export class SpotifyArtistsService {
     const { items: albums } = await this.getArtistMissingAlbums(
       await backOff(() =>
         this.spotifySdk!.artists.albums(artistId, undefined, undefined, 50)
-      )
+      ),
+      artistId
     )
 
     return albums
@@ -88,20 +89,25 @@ export class SpotifyArtistsService {
     return artists.flat()
   }
 
-  private async getArtistMissingAlbums(albumsPage: Page<SdkSimplifiedAlbum>) {
+  private async getArtistMissingAlbums(
+    albumsPage: Page<SdkSimplifiedAlbum>,
+    artistId: string
+  ) {
     if (albumsPage.next) {
       let offset = albumsPage.offset + albumsPage.items.length
 
       while (albumsPage.items.length < albumsPage.total) {
         const albums = await backOff(() =>
           this.spotifySdk!.artists.albums(
-            albumsPage.items[0].id,
+            artistId,
             undefined,
             undefined,
             50,
             offset
           )
         )
+
+        if (albums.items.length === 0) return albumsPage
 
         albumsPage.items.push(...albums.items)
 
