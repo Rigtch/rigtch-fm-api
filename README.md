@@ -54,4 +54,4 @@ when you have registered on **rigtch.fm**.
 
 ## License
 
-Rigtch Music is [Apache 2.0 licensed](LICENSE).
+Rigtch FM is [Apache 2.0 licensed](LICENSE).
