@@ -19,6 +19,12 @@ To see how to run the tests, please see [Project Setup](project-setup.md).
 
 While creating commits please refer to [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/#specification).
 
+You can use [commitizen](https://github.com/commitizen/cz-cli) to create commits.
+
+```bash
+nr commit
+```
+
 ## Merging the Pull Request & releasing a new version
 
 Releases are automated using semantic-release.
