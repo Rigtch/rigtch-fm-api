@@ -33,7 +33,8 @@
     "migration:generate": "bun run typeorm migration:generate -d ./dist/config/database/typeorm.config.js ./src/migrations/$NAME",
     "migration:create": "bun run typeorm migration:create ./src/migrations/$NAME",
     "migration:revert": "bun run typeorm migration:revert -d ./src/config/database/typeorm.config.ts",
-    "prepare": "husky"
+    "prepare": "husky",
+    "commit": "cz"
   },
   "sideEffects": false,
   "config": {
@@ -94,6 +95,7 @@
     "@types/passport-spotify": "2.0.4",
     "@typescript-eslint/eslint-plugin": "^7.13.0",
     "@typescript-eslint/parser": "^7.13.0",
+    "commitizen": "^4.3.0",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-import-resolver-alias": "^1.1.2",
