@@ -3,8 +3,10 @@ import {
   CanActivate,
   ExecutionContext,
   NotFoundException,
+  BadRequestException,
 } from '@nestjs/common'
 import { Request } from 'express'
+import { isUUID } from 'class-validator'
 
 import { UsersRepository } from '../users.repository'
 import { USER } from '../constants'
@@ -19,6 +21,8 @@ export class CheckUserIdGuard implements CanActivate {
     const request = context.switchToHttp().getRequest<Request>()
 
     const { id } = request.params
+
+    if (!isUUID(id)) throw new BadRequestException('id must be a UUID')
 
     const user = await this.usersRepository.findOneBy({ id })
 
