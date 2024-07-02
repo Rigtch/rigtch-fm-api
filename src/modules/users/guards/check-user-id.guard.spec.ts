@@ -1,7 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { MockInstance } from 'vitest'
 import { DeepMockProxy } from 'vitest-mock-extended'
-import { ExecutionContext, NotFoundException } from '@nestjs/common'
+import {
+  BadRequestException,
+  ExecutionContext,
+  NotFoundException,
+} from '@nestjs/common'
 
 import { UsersRepository } from '../users.repository'
 
@@ -10,7 +14,7 @@ import { CheckUserIdGuard } from './check-user-id.guard'
 import { contextFactoryMock, userMock } from '@common/mocks'
 
 describe('CheckUserIdGuard', () => {
-  const id = 'id'
+  const id = '2a348ca4-7a80-4f0f-b42a-c6c62a1145c6'
 
   let moduleRef: TestingModule
   let checkUserIdGuard: CheckUserIdGuard
@@ -53,6 +57,20 @@ describe('CheckUserIdGuard', () => {
           id,
         },
       })
+    })
+
+    test('should throw BadRequestException if id is not a UUID', async () => {
+      const id = 'not-a-uuid'
+
+      contextMock = contextFactoryMock({
+        params: {
+          id,
+        },
+      })
+
+      await expect(
+        checkUserIdGuard.canActivate(contextMock)
+      ).rejects.toThrowError(BadRequestException)
     })
 
     test('should return true if user is found', async () => {
