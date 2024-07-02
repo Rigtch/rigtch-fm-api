@@ -1,29 +1,19 @@
+import { countBy, entries, flow, head, last, maxBy, partialRight } from 'lodash'
+
 export function getMostFrequentItems(array: string[], limit = 1) {
-  if (array.length === 0) return array
+  const results: string[] = []
 
-  const frequencies = {}
+  while (results.length < limit) {
+    const mostFrequentItem = flow(
+      countBy,
+      entries,
+      partialRight(maxBy, last),
+      head<string>
+    )(array.filter(item => !results.includes(item)))
 
-  for (const item of array) {
-    frequencies[item] =
-      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-      frequencies[item] === undefined ? 1 : frequencies[item] + 1
+    if (mostFrequentItem) results.push(mostFrequentItem)
+    else break
   }
 
-  const frequencyArray = []
-
-  for (const key in frequencies) {
-    frequencyArray.push([frequencies[key], key] as never)
-  }
-
-  frequencyArray.sort((a, b) => {
-    return b[0] - a[0]
-  })
-
-  const mostFrequentItems = []
-
-  for (let index = 0; index < limit; index++) {
-    frequencyArray[index] && mostFrequentItems.push(frequencyArray[index]?.[1])
-  }
-
-  return mostFrequentItems
+  return results
 }
