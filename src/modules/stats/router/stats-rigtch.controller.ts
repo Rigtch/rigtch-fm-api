@@ -43,7 +43,7 @@ export class StatsRigtchController {
       "Getting user's top listened tracks via rigtch provider (cached).",
   })
   @ApiOkResponse({
-    description: `${MANY_SUCCESSFULLY_RETRIEVED('top track')} The response type will contain only one \`plays\` or \`playTime\` property depending on the \`measurement\` query parameter.`,
+    description: `${MANY_SUCCESSFULLY_RETRIEVED('top track')} The response type will contain either \`plays\` or \`playTime\` property depending on the \`measurement\` query parameter.`,
     type: RigtchTopTracksDocument,
   })
   async getTopTracks(
@@ -74,7 +74,7 @@ export class StatsRigtchController {
       "Getting user's top listened artists via rigtch provider (cached).",
   })
   @ApiOkResponse({
-    description: `${MANY_SUCCESSFULLY_RETRIEVED('top artist')} The response type will contain only one \`plays\` or \`playTime\` property depending on the \`measurement\` query parameter.`,
+    description: `${MANY_SUCCESSFULLY_RETRIEVED('top artist')} The response type will contain either \`plays\` or \`playTime\` property depending on the \`measurement\` query parameter.`,
     type: RigtchTopArtistsDocument,
   })
   async getTopArtists(
@@ -105,7 +105,7 @@ export class StatsRigtchController {
       "Getting user's top listened albums via rigtch provider (cached).",
   })
   @ApiOkResponse({
-    description: `${MANY_SUCCESSFULLY_RETRIEVED('top album')} The response type will contain only one \`plays\` or \`playTime\` property depending on the \`measurement\` query parameter.`,
+    description: `${MANY_SUCCESSFULLY_RETRIEVED('top album')} The response type will contain either \`plays\` or \`playTime\` property depending on the \`measurement\` query parameter.`,
     type: RigtchTopAlbumsDocument,
   })
   async getTopAlbums(
@@ -136,7 +136,7 @@ export class StatsRigtchController {
       "Getting user's top listened genres via rigtch provider (cached).",
   })
   @ApiOkResponse({
-    description: `${MANY_SUCCESSFULLY_RETRIEVED('top genre')} The response type will contain only one \`plays\` or \`playTime\` property depending on the \`measurement\` query parameter.`,
+    description: `${MANY_SUCCESSFULLY_RETRIEVED('top genre')} The response type will contain either \`plays\` or \`playTime\` property depending on the \`measurement\` query parameter.`,
     type: RigtchTopGenresDocument,
   })
   async getTopGenres(
