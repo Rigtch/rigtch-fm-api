@@ -1,4 +1,4 @@
-import { Between, DataSource } from 'typeorm'
+import { And, DataSource, LessThanOrEqual, MoreThanOrEqual } from 'typeorm'
 import { Test, TestingModule } from '@nestjs/testing'
 import { MockProxy, mock } from 'vitest-mock-extended'
 
@@ -88,7 +88,8 @@ describe('HistoryTracksRepository', () => {
   })
 
   test('should find history tracks by user and between dates', async () => {
-    const date = new Date()
+    const after = new Date()
+    const before = new Date()
 
     const findSpy = vi
       .spyOn(historyTracksRepository, 'find')
@@ -97,8 +98,8 @@ describe('HistoryTracksRepository', () => {
     expect(
       await historyTracksRepository.findByUserAndBetweenDates(
         userId,
-        date,
-        date
+        after,
+        before
       )
     ).toEqual(historyTracksMock)
 
@@ -107,7 +108,7 @@ describe('HistoryTracksRepository', () => {
         user: {
           id: userId,
         },
-        playedAt: Between(date, date),
+        playedAt: And(MoreThanOrEqual(after), LessThanOrEqual(before)),
       },
       relations: {
         track: {

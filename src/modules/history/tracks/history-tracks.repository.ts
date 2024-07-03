@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common'
 import {
-  Between,
+  And,
   DataSource,
   FindOptionsOrder,
   FindOptionsRelations,
+  LessThanOrEqual,
+  MoreThanOrEqual,
   Repository,
 } from 'typeorm'
 
@@ -53,7 +55,7 @@ export class HistoryTracksRepository extends Repository<HistoryTrack> {
         user: {
           id: userId,
         },
-        playedAt: Between(after, before),
+        playedAt: And(MoreThanOrEqual(after), LessThanOrEqual(before)),
       },
       relations: {
         track: {
