@@ -15,7 +15,8 @@ import {
   getMostListenedItemsByDuration,
 } from '@common/utils'
 import type { Track } from '@modules/items/tracks'
-import { Artist } from '@modules/items/artists'
+import type { Artist } from '@modules/items/artists'
+import type { Album } from '@modules/items/albums'
 
 vi.mock('@common/utils')
 
@@ -64,6 +65,9 @@ describe('StatsRigtchService', () => {
           artists: Array.from({ length: 2 }, (_, index) => ({
             id: `id-artist-${index}`,
           })),
+          album: {
+            id: `id-album-${index}`,
+          },
         },
       })
     )
@@ -209,6 +213,84 @@ describe('StatsRigtchService', () => {
 
       expect(
         await statsRigtchService.getTopArtists(
+          {
+            before: date,
+            after: date,
+            limit: 10,
+            measurement: StatsMeasurement.PLAY_TIME,
+          },
+          userMock
+        )
+      ).toMatchObject(
+        result.map(item => ({
+          item: item,
+          playTime: 1,
+        }))
+      )
+
+      expect(findByUserAndBetweenDatesSpy).toHaveBeenCalledWith(
+        userMock.id,
+        date,
+        date
+      )
+      expect(getMostListenedTracksByDurationSpy).toHaveBeenCalled()
+    })
+  })
+
+  describe('getTopAlbums', () => {
+    let result: Album[]
+
+    beforeEach(() => {
+      result = historyTracksMock
+        .flatMap(({ track: { album } }) => album!)
+        .slice(0, 10)
+    })
+
+    test('should get top albums with plays measurement', async () => {
+      getMostFrequentItemsSpy.mockReturnValue(
+        result.map(({ id }) => ({
+          item: id,
+          count: 1,
+        }))
+      )
+      findByUserAndBetweenDatesSpy.mockResolvedValue(historyTracksMock)
+
+      expect(
+        await statsRigtchService.getTopAlbums(
+          {
+            before: date,
+            after: date,
+            limit: 10,
+            measurement: StatsMeasurement.PLAYS,
+          },
+          userMock
+        )
+      ).toMatchObject(
+        result.map(item => ({
+          item: item,
+          plays: 1,
+        }))
+      )
+
+      expect(findByUserAndBetweenDatesSpy).toHaveBeenCalledWith(
+        userMock.id,
+        date,
+        date
+      )
+      expect(getMostFrequentItemsSpy).toHaveBeenCalled()
+    })
+
+    test('should get top albums with play time measurement', async () => {
+      getMostListenedTracksByDurationSpy.mockReturnValue(
+        result.map(({ id }) => ({
+          id,
+          totalDuration: 1,
+        }))
+      )
+      findByUserAndBetweenDatesSpy.mockResolvedValue(historyTracksMock)
+
+      expect(
+        await statsRigtchService.getTopAlbums(
           {
             before: date,
             after: date,

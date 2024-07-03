@@ -58,7 +58,9 @@ export class HistoryTracksRepository extends Repository<HistoryTrack> {
       relations: {
         track: {
           artists: true,
-          album: true,
+          album: {
+            artists: true,
+          },
         },
       },
       order: historyTracksOrder,

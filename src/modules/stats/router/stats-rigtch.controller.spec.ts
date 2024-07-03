@@ -7,7 +7,7 @@ import { StatsMeasurement } from '../enums'
 
 import { StatsRigtchController } from './stats-rigtch.controller'
 
-import { artistMock, trackMock, userMock } from '@common/mocks'
+import { albumMock, artistMock, trackMock, userMock } from '@common/mocks'
 import { UsersRepository } from '@modules/users'
 
 describe('StatsRigtchController', () => {
@@ -26,6 +26,7 @@ describe('StatsRigtchController', () => {
           useValue: {
             getTopTracks: vi.fn(),
             getTopArtists: vi.fn(),
+            getTopAlbums: vi.fn(),
           },
         },
         {
@@ -111,6 +112,40 @@ describe('StatsRigtchController', () => {
       ).toEqual(result)
 
       expect(getTopArtistsSpy).toHaveBeenCalledWith(
+        {
+          before: date,
+          after: date,
+          limit,
+          measurement: StatsMeasurement.PLAYS,
+        },
+        userMock
+      )
+    })
+  })
+
+  describe('getTopAlbums', () => {
+    let getTopAlbumsSpy: MockInstance
+
+    beforeEach(() => {
+      getTopAlbumsSpy = vi.spyOn(statsRigtchService, 'getTopAlbums')
+    })
+
+    test('should get top albums', async () => {
+      const limit = 10
+      const result = Array.from({ length: limit }, () => albumMock)
+
+      getTopAlbumsSpy.mockResolvedValue(result)
+
+      expect(
+        await statsRigtchController.getTopAlbums(userMock, {
+          before: date,
+          after: date,
+          limit: 10,
+          measurement: StatsMeasurement.PLAYS,
+        })
+      ).toEqual(result)
+
+      expect(getTopAlbumsSpy).toHaveBeenCalledWith(
         {
           before: date,
           after: date,
