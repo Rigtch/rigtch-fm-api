@@ -25,7 +25,10 @@ describe('getMostListenedTracksByDuration', () => {
     ]
 
     expect(getMostListenedTracksByDuration(tracksMock, 1)).toMatchObject([
-      mostListenedTrackId,
+      {
+        id: mostListenedTrackId,
+        totalDuration: 500,
+      },
     ])
   })
 
@@ -55,9 +58,18 @@ describe('getMostListenedTracksByDuration', () => {
     ]
 
     expect(getMostListenedTracksByDuration(tracksMock, 3)).toMatchObject([
-      mostListenedTrackId,
-      secondMostListenedTrackId,
-      thirdMostListenedTrackId,
+      {
+        id: mostListenedTrackId,
+        totalDuration: 1000,
+      },
+      {
+        id: secondMostListenedTrackId,
+        totalDuration: 800,
+      },
+      {
+        id: thirdMostListenedTrackId,
+        totalDuration: 600,
+      },
     ])
   })
 })
