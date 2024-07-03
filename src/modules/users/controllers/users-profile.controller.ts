@@ -69,6 +69,7 @@ export class UsersProfileController {
   @UseInterceptors(CacheInterceptor)
   @ApiOperation({
     summary: "Getting user's top artists (cached).",
+    deprecated: true,
   })
   @ApiItemQuery({ withOffset: true })
   @ApiOkResponse({
@@ -103,6 +104,7 @@ export class UsersProfileController {
   @UseInterceptors(CacheInterceptor)
   @ApiOperation({
     summary: "Getting user's top tracks (cached).",
+    deprecated: true,
   })
   @ApiItemQuery({ withOffset: true })
   @ApiOkResponse({
@@ -137,6 +139,7 @@ export class UsersProfileController {
   @UseInterceptors(CacheInterceptor)
   @ApiOperation({
     summary: "Getting user's top genres (cached).",
+    deprecated: true,
   })
   @ApiItemQuery()
   @ApiOkResponse({
@@ -159,6 +162,7 @@ export class UsersProfileController {
   @UseInterceptors(CacheInterceptor)
   @ApiOperation({
     summary: "Getting user's analysis (cached).",
+    deprecated: true,
   })
   @ApiOkResponse({
     description: ONE_SUCCESSFULLY_RETRIEVED("user's analysis"),
