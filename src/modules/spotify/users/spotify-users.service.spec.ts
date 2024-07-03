@@ -409,7 +409,7 @@ describe('SpotifyUsersService', () => {
         genres: getMostFrequentItems(
           sdkArtistsMock.flatMap(({ genres }) => genres),
           20
-        ),
+        ).map(({ item }) => item),
       })
 
       expect(withAccessTokenSpy).toHaveBeenCalledWith(
@@ -440,7 +440,7 @@ describe('SpotifyUsersService', () => {
         genres: getMostFrequentItems(
           sdkArtistsMock.flatMap(({ genres }) => genres),
           limit
-        ),
+        ).map(({ item }) => item),
       })
 
       expect(withAccessTokenSpy).toHaveBeenCalledWith(

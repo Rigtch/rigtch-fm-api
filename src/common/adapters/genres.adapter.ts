@@ -11,7 +11,7 @@ export class GenresAdapter {
       genres: getMostFrequentItems(
         artists.flatMap(({ genres }) => genres),
         limit
-      ),
+      ).map(({ item }) => item),
     }
   }
 }
