@@ -56,9 +56,9 @@ export class StatsRigtchService {
       limit
     )
 
-    return mostListenedTrackByDuration.map(id => ({
+    return mostListenedTrackByDuration.map(({ id, totalDuration }) => ({
       item: tracks.find(track => track.id === id)!,
-      playTime: 1,
+      playTime: totalDuration,
     }))
   }
 }

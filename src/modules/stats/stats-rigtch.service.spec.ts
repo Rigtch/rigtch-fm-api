@@ -121,7 +121,10 @@ describe('StatsRigtchService', () => {
 
     test('should get top tracks with play time measurement', async () => {
       getMostListenedTracksByDurationSpy.mockReturnValue(
-        result.map(({ id }) => id)
+        result.map(({ id }) => ({
+          id,
+          totalDuration: 1,
+        }))
       )
 
       findSpy.mockResolvedValue(historyTracksMock)

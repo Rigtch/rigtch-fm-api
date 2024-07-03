@@ -2,25 +2,27 @@ import { chain, sumBy } from 'lodash'
 
 import type { Track } from '@modules/items/tracks'
 
+interface MostListenedTrack {
+  id: string
+  totalDuration: number
+}
+
 export function getMostListenedTracksByDuration(
   tracks: Pick<Track, 'id' | 'duration'>[],
   limit = 1
-): string[] {
+): MostListenedTrack[] {
   if (tracks.length === 0) {
     return []
   }
 
-  const trackDurations = chain(tracks)
+  return chain(tracks)
     .groupBy('id')
     .map((groupedTracks, id) => ({
       id,
-      duration: sumBy(groupedTracks, 'duration'),
-      track: groupedTracks[0],
+      totalDuration: sumBy(groupedTracks, 'duration'),
     }))
-    .sortBy('duration')
+    .sortBy('totalDuration')
     .reverse()
     .take(limit)
     .value()
-
-  return trackDurations.map(item => item.track.id)
 }
