@@ -9,7 +9,7 @@ import { HistoryTrack, HistoryTracksRepository } from '@modules/history/tracks'
 import { userMock } from '@common/mocks'
 import {
   getMostFrequentItems,
-  getMostListenedTracksByDuration,
+  getMostListenedItemsByDuration,
 } from '@common/utils'
 import { Track } from '@modules/items/tracks'
 
@@ -70,7 +70,7 @@ describe('StatsRigtchService', () => {
       )
       getMostFrequentItemsSpy = vi.mocked(getMostFrequentItems)
       getMostListenedTracksByDurationSpy = vi.mocked(
-        getMostListenedTracksByDuration
+        getMostListenedItemsByDuration
       )
 
       result = historyTracksMock.slice(0, 10).map(({ track }) => track)

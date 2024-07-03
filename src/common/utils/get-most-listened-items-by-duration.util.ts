@@ -2,15 +2,15 @@ import { chain, sumBy } from 'lodash'
 
 import type { Track } from '@modules/items/tracks'
 
-interface MostListenedTrack {
+interface MostListenedItem {
   id: string
   totalDuration: number
 }
 
-export function getMostListenedTracksByDuration(
+export function getMostListenedItemsByDuration(
   tracks: Pick<Track, 'id' | 'duration'>[],
   limit = 1
-): MostListenedTrack[] {
+): MostListenedItem[] {
   if (tracks.length === 0) {
     return []
   }
