@@ -12,6 +12,7 @@ import {
 } from '@common/utils'
 import type { Track } from '@modules/items/tracks'
 import type { Artist } from '@modules/items/artists'
+import type { Album } from '@modules/items/albums'
 
 @Injectable()
 export class StatsRigtchService {
@@ -88,6 +89,45 @@ export class StatsRigtchService {
 
     return mostListenedArtistByDuration.map(({ id, totalDuration }) => ({
       item: artists.find(artist => artist.id === id)!,
+      playTime: totalDuration,
+    }))
+  }
+
+  async getTopAlbums(
+    { before, after, limit, measurement }: Required<StatsRigtchQuery>,
+    user: User
+  ): Promise<TopItem<Album>[]> {
+    const historyTracks =
+      await this.historyTracksRepository.findByUserAndBetweenDates(
+        user.id,
+        after,
+        before
+      )
+    const tracks = historyTracks.map(({ track }) => track)
+    const albums = tracks.flatMap(({ album }) => album)
+
+    if (measurement === StatsMeasurement.PLAYS) {
+      const mostFrequentItems = getMostFrequentItems(
+        albums.map(album => album!.id),
+        limit
+      )
+
+      return mostFrequentItems.map(({ item: id, count }) => ({
+        item: albums.find(album => album!.id === id)!,
+        plays: count,
+      }))
+    }
+
+    const mostListenedAlbumByDuration = getMostListenedItemsByDuration(
+      tracks.flatMap(({ album, duration }) => ({
+        id: album!.id,
+        duration,
+      })),
+      limit
+    )
+
+    return mostListenedAlbumByDuration.map(({ id, totalDuration }) => ({
+      item: albums.find(album => album!.id === id)!,
       playTime: totalDuration,
     }))
   }

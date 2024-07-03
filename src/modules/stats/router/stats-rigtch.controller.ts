@@ -89,4 +89,34 @@ export class StatsRigtchController {
       user
     )
   }
+
+  @Get('/top-albums')
+  @ApiOperation({
+    summary: "Getting user's top albums via rigtch provider (cached).",
+    description:
+      "Getting user's top listened albums via rigtch provider (cached).",
+  })
+  @ApiOkResponse({
+    description: MANY_SUCCESSFULLY_RETRIEVED('top albums'),
+  })
+  async getTopAlbums(
+    @RequestUser() user: User,
+    @Query()
+    {
+      before = new Date(),
+      after,
+      limit = 10,
+      measurement = StatsMeasurement.PLAYS,
+    }: StatsRigtchQuery
+  ) {
+    return this.statsRigtchService.getTopAlbums(
+      {
+        before,
+        after,
+        limit,
+        measurement,
+      },
+      user
+    )
+  }
 }

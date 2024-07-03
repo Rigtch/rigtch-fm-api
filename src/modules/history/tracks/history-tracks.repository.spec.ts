@@ -112,7 +112,9 @@ describe('HistoryTracksRepository', () => {
       relations: {
         track: {
           artists: true,
-          album: true,
+          album: {
+            artists: true,
+          },
         },
       },
       order: historyTracksOrder,
