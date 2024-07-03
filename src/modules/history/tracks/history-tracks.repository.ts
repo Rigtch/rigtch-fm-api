@@ -12,7 +12,7 @@ import {
 import { HistoryTrack } from './history-track.entity'
 import { CreateHistoryTrack } from './dtos'
 
-export const relations: FindOptionsRelations<HistoryTrack> = {
+export const historyTracksRelations: FindOptionsRelations<HistoryTrack> = {
   user: true,
 }
 export const historyTracksOrder: FindOptionsOrder<HistoryTrack> = {
@@ -32,7 +32,7 @@ export class HistoryTracksRepository extends Repository<HistoryTrack> {
           id: userId,
         },
       },
-      relations,
+      relations: historyTracksRelations,
       order: historyTracksOrder,
     })
   }
@@ -44,12 +44,17 @@ export class HistoryTracksRepository extends Repository<HistoryTrack> {
           id: userId,
         },
       },
-      relations,
+      relations: historyTracksRelations,
       order: historyTracksOrder,
     })
   }
 
-  findByUserAndBetweenDates(userId: string, after: Date, before: Date) {
+  findByUserAndBetweenDates(
+    userId: string,
+    after: Date,
+    before: Date,
+    relations: FindOptionsRelations<HistoryTrack>
+  ) {
     return this.find({
       where: {
         user: {
@@ -57,14 +62,7 @@ export class HistoryTracksRepository extends Repository<HistoryTrack> {
         },
         playedAt: And(MoreThanOrEqual(after), LessThanOrEqual(before)),
       },
-      relations: {
-        track: {
-          artists: true,
-          album: {
-            artists: true,
-          },
-        },
-      },
+      relations,
       order: historyTracksOrder,
     })
   }
