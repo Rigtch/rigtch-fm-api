@@ -3,6 +3,7 @@ import { Between } from 'typeorm'
 
 import type { StatsRigtchQuery } from './router/dtos'
 import { StatsMeasurement } from './enums'
+import type { TopItem } from './types'
 
 import { HistoryTracksRepository } from '@modules/history/tracks'
 import type { User } from '@modules/users'
@@ -10,6 +11,7 @@ import {
   getMostFrequentItems,
   getMostListenedTracksByDuration,
 } from '@common/utils'
+import type { Track } from '@modules/items/tracks'
 
 @Injectable()
 export class StatsRigtchService {
@@ -20,7 +22,7 @@ export class StatsRigtchService {
   async getTopTracks(
     { before, after, limit, measurement }: Required<StatsRigtchQuery>,
     user: User
-  ) {
+  ): Promise<TopItem<Track>[]> {
     const historyTracks = await this.historyTracksRepository.find({
       where: {
         user: {
@@ -43,7 +45,10 @@ export class StatsRigtchService {
         limit
       )
 
-      return mostFrequentItems.map(id => tracks.find(track => track.id === id))
+      return mostFrequentItems.map(({ item: id, count }) => ({
+        item: tracks.find(track => track.id === id)!,
+        plays: count,
+      }))
     }
 
     const mostListenedTrackByDuration = getMostListenedTracksByDuration(
@@ -51,8 +56,9 @@ export class StatsRigtchService {
       limit
     )
 
-    return mostListenedTrackByDuration.map(id =>
-      tracks.find(track => track.id === id)
-    )
+    return mostListenedTrackByDuration.map(id => ({
+      item: tracks.find(track => track.id === id)!,
+      playTime: 1,
+    }))
   }
 }

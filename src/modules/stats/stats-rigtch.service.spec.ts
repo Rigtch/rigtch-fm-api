@@ -75,7 +75,12 @@ describe('StatsRigtchService', () => {
     })
 
     test('should get top tracks with plays measurement', async () => {
-      getMostFrequentItemsSpy.mockReturnValue(result.map(({ id }) => id))
+      getMostFrequentItemsSpy.mockReturnValue(
+        result.map(({ id }) => ({
+          item: id,
+          count: 1,
+        }))
+      )
 
       findSpy.mockResolvedValue(historyTracksMock)
 
@@ -89,7 +94,12 @@ describe('StatsRigtchService', () => {
           },
           userMock
         )
-      ).toMatchObject(historyTracksMock.slice(0, 10).map(({ track }) => track))
+      ).toMatchObject(
+        historyTracksMock.slice(0, 10).map(({ track }) => ({
+          item: track,
+          plays: 1,
+        }))
+      )
 
       expect(findSpy).toHaveBeenCalledWith({
         where: {
@@ -126,7 +136,12 @@ describe('StatsRigtchService', () => {
           },
           userMock
         )
-      ).toMatchObject(historyTracksMock.slice(0, 10).map(({ track }) => track))
+      ).toMatchObject(
+        historyTracksMock.slice(0, 10).map(({ track }) => ({
+          item: track,
+          playTime: 1,
+        }))
+      )
 
       expect(findSpy).toHaveBeenCalledWith({
         where: {

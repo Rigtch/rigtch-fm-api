@@ -1,19 +1,22 @@
-import { countBy, entries, flow, head, last, maxBy, partialRight } from 'lodash'
+import { countBy, entries, sortBy } from 'lodash'
 
-export function getMostFrequentItems(array: string[], limit = 1) {
-  const results: string[] = []
+interface FrequentItem {
+  item: string
+  count: number
+}
 
-  while (results.length < limit) {
-    const mostFrequentItem = flow(
-      countBy,
-      entries,
-      partialRight(maxBy, last),
-      head<string>
-    )(array.filter(item => !results.includes(item)))
+export function getMostFrequentItems(
+  array: string[],
+  limit = 1
+): FrequentItem[] {
+  const itemCounts = countBy(array)
 
-    if (mostFrequentItem) results.push(mostFrequentItem)
-    else break
-  }
+  const itemsWithCounts: FrequentItem[] = entries(itemCounts).map(
+    ([item, count]) => ({
+      item,
+      count,
+    })
+  )
 
-  return results
+  return sortBy(itemsWithCounts, 'count').reverse().slice(0, limit)
 }
