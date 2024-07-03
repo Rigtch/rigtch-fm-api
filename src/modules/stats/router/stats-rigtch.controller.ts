@@ -119,4 +119,34 @@ export class StatsRigtchController {
       user
     )
   }
+
+  @Get('/top-genres')
+  @ApiOperation({
+    summary: "Getting user's top genres via rigtch provider (cached).",
+    description:
+      "Getting user's top listened genres via rigtch provider (cached).",
+  })
+  @ApiOkResponse({
+    description: MANY_SUCCESSFULLY_RETRIEVED('top genres'),
+  })
+  async getTopGenres(
+    @RequestUser() user: User,
+    @Query()
+    {
+      before = new Date(),
+      after,
+      limit = 10,
+      measurement = StatsMeasurement.PLAYS,
+    }: StatsRigtchQuery
+  ) {
+    return this.statsRigtchService.getTopGenres(
+      {
+        before,
+        after,
+        limit,
+        measurement,
+      },
+      user
+    )
+  }
 }

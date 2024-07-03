@@ -131,4 +131,42 @@ export class StatsRigtchService {
       playTime: totalDuration,
     }))
   }
+
+  async getTopGenres(
+    { before, after, limit, measurement }: Required<StatsRigtchQuery>,
+    user: User
+  ): Promise<TopItem<string>[]> {
+    const historyTracks =
+      await this.historyTracksRepository.findByUserAndBetweenDates(
+        user.id,
+        after,
+        before
+      )
+    const tracks = historyTracks.map(({ track }) => track)
+    const artists = tracks.flatMap(({ artists }) => artists)
+    const genres = artists.flatMap(({ genres }) => genres)
+
+    if (measurement === StatsMeasurement.PLAYS) {
+      const mostFrequentItems = getMostFrequentItems(genres, limit)
+
+      return mostFrequentItems.map(({ item, count }) => ({
+        item,
+        plays: count,
+      }))
+    }
+
+    const mostListenedGenreByDuration = getMostListenedItemsByDuration(
+      tracks.flatMap(({ artists, duration }) =>
+        artists
+          .flatMap(({ genres }) => genres)
+          .map(genre => ({ id: genre, duration }))
+      ),
+      limit
+    )
+
+    return mostListenedGenreByDuration.map(({ id, totalDuration }) => ({
+      item: id,
+      playTime: totalDuration,
+    }))
+  }
 }
