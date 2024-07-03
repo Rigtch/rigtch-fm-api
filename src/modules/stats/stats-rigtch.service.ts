@@ -11,6 +11,7 @@ import {
   getMostListenedItemsByDuration,
 } from '@common/utils'
 import type { Track } from '@modules/items/tracks'
+import type { Artist } from '@modules/items/artists'
 
 @Injectable()
 export class StatsRigtchService {
@@ -56,7 +57,7 @@ export class StatsRigtchService {
   async getTopArtists(
     { before, after, limit, measurement }: Required<StatsRigtchQuery>,
     user: User
-  ) {
+  ): Promise<TopItem<Artist>[]> {
     const historyTracks =
       await this.historyTracksRepository.findByUserAndBetweenDates(
         user.id,

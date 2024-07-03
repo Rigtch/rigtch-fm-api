@@ -1,24 +1,34 @@
-import { Test, TestingModule } from '@nestjs/testing'
-import { MockProxy, mock } from 'vitest-mock-extended'
+import { Test, type TestingModule } from '@nestjs/testing'
+import { type MockProxy, mock } from 'vitest-mock-extended'
 import { MockInstance } from 'vitest'
 
 import { StatsRigtchService } from './stats-rigtch.service'
 import { StatsMeasurement } from './enums'
 
-import { HistoryTrack, HistoryTracksRepository } from '@modules/history/tracks'
+import {
+  type HistoryTrack,
+  HistoryTracksRepository,
+} from '@modules/history/tracks'
 import { userMock } from '@common/mocks'
 import {
   getMostFrequentItems,
   getMostListenedItemsByDuration,
 } from '@common/utils'
-import { Track } from '@modules/items/tracks'
+import type { Track } from '@modules/items/tracks'
+import { Artist } from '@modules/items/artists'
 
 vi.mock('@common/utils')
 
 describe('StatsRigtchService', () => {
+  const date = new Date()
+
   let moduleRef: TestingModule
   let statsRigtchService: StatsRigtchService
   let historyTracksRepository: HistoryTracksRepository
+
+  let findByUserAndBetweenDatesSpy: MockInstance
+  let getMostFrequentItemsSpy: MockInstance
+  let getMostListenedTracksByDurationSpy: MockInstance
 
   let historyTracksMock: MockProxy<HistoryTrack>[]
 
@@ -38,10 +48,22 @@ describe('StatsRigtchService', () => {
     statsRigtchService = moduleRef.get(StatsRigtchService)
     historyTracksRepository = moduleRef.get(HistoryTracksRepository)
 
+    findByUserAndBetweenDatesSpy = vi.spyOn(
+      historyTracksRepository,
+      'findByUserAndBetweenDates'
+    )
+    getMostFrequentItemsSpy = vi.mocked(getMostFrequentItems)
+    getMostListenedTracksByDurationSpy = vi.mocked(
+      getMostListenedItemsByDuration
+    )
+
     historyTracksMock = Array.from({ length: 20 }, (_, index) =>
       mock<HistoryTrack>({
         track: {
           id: `id-${index}`,
+          artists: Array.from({ length: 2 }, (_, index) => ({
+            id: `id-artist-${index}`,
+          })),
         },
       })
     )
@@ -56,23 +78,9 @@ describe('StatsRigtchService', () => {
   })
 
   describe('getTopTracks', () => {
-    const date = new Date()
-
-    let findByUserAndBetweenDatesSpy: MockInstance
-    let getMostFrequentItemsSpy: MockInstance
-    let getMostListenedTracksByDurationSpy: MockInstance
     let result: Track[]
 
     beforeEach(() => {
-      findByUserAndBetweenDatesSpy = vi.spyOn(
-        historyTracksRepository,
-        'findByUserAndBetweenDates'
-      )
-      getMostFrequentItemsSpy = vi.mocked(getMostFrequentItems)
-      getMostListenedTracksByDurationSpy = vi.mocked(
-        getMostListenedItemsByDuration
-      )
-
       result = historyTracksMock.slice(0, 10).map(({ track }) => track)
     })
 
@@ -83,7 +91,6 @@ describe('StatsRigtchService', () => {
           count: 1,
         }))
       )
-
       findByUserAndBetweenDatesSpy.mockResolvedValue(historyTracksMock)
 
       expect(
@@ -119,7 +126,6 @@ describe('StatsRigtchService', () => {
           totalDuration: 1,
         }))
       )
-
       findByUserAndBetweenDatesSpy.mockResolvedValue(historyTracksMock)
 
       expect(
@@ -135,6 +141,85 @@ describe('StatsRigtchService', () => {
       ).toMatchObject(
         historyTracksMock.slice(0, 10).map(({ track }) => ({
           item: track,
+          playTime: 1,
+        }))
+      )
+
+      expect(findByUserAndBetweenDatesSpy).toHaveBeenCalledWith(
+        userMock.id,
+        date,
+        date
+      )
+      expect(getMostListenedTracksByDurationSpy).toHaveBeenCalled()
+    })
+  })
+
+  describe('getTopArtists', () => {
+    let result: Artist[]
+
+    beforeEach(() => {
+      result = historyTracksMock
+        .flatMap(({ track: { artists } }) => artists)
+        .slice(0, 10)
+    })
+
+    test('should get top artists with plays measurement', async () => {
+      getMostFrequentItemsSpy.mockReturnValue(
+        result.map(({ id }) => ({
+          item: id,
+          count: 1,
+        }))
+      )
+      findByUserAndBetweenDatesSpy.mockResolvedValue(historyTracksMock)
+
+      expect(
+        await statsRigtchService.getTopArtists(
+          {
+            before: date,
+            after: date,
+            limit: 10,
+            measurement: StatsMeasurement.PLAYS,
+          },
+          userMock
+        )
+      ).toMatchObject(
+        result.map(item => ({
+          item: item,
+          plays: 1,
+        }))
+      )
+
+      expect(findByUserAndBetweenDatesSpy).toHaveBeenCalledWith(
+        userMock.id,
+        date,
+        date
+      )
+      expect(getMostFrequentItemsSpy).toHaveBeenCalled()
+    })
+
+    test('should get top artists with play time measurement', async () => {
+      getMostListenedTracksByDurationSpy.mockReturnValue(
+        result.map(({ id }) => ({
+          id,
+          totalDuration: 1,
+        }))
+      )
+
+      findByUserAndBetweenDatesSpy.mockResolvedValue(historyTracksMock)
+
+      expect(
+        await statsRigtchService.getTopArtists(
+          {
+            before: date,
+            after: date,
+            limit: 10,
+            measurement: StatsMeasurement.PLAY_TIME,
+          },
+          userMock
+        )
+      ).toMatchObject(
+        result.map(item => ({
+          item: item,
           playTime: 1,
         }))
       )

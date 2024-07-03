@@ -7,10 +7,12 @@ import { StatsMeasurement } from '../enums'
 
 import { StatsRigtchController } from './stats-rigtch.controller'
 
-import { trackMock, userMock } from '@common/mocks'
+import { artistMock, trackMock, userMock } from '@common/mocks'
 import { UsersRepository } from '@modules/users'
 
 describe('StatsRigtchController', () => {
+  const date = new Date()
+
   let moduleRef: TestingModule
   let statsRigtchController: StatsRigtchController
   let statsRigtchService: StatsRigtchService
@@ -23,6 +25,7 @@ describe('StatsRigtchController', () => {
           provide: StatsRigtchService,
           useValue: {
             getTopTracks: vi.fn(),
+            getTopArtists: vi.fn(),
           },
         },
         {
@@ -59,7 +62,6 @@ describe('StatsRigtchController', () => {
     })
 
     test('should get top tracks', async () => {
-      const date = new Date()
       const limit = 10
       const result = Array.from({ length: limit }, () => trackMock)
 
@@ -75,6 +77,40 @@ describe('StatsRigtchController', () => {
       ).toEqual(result)
 
       expect(getTopTracksSpy).toHaveBeenCalledWith(
+        {
+          before: date,
+          after: date,
+          limit,
+          measurement: StatsMeasurement.PLAYS,
+        },
+        userMock
+      )
+    })
+  })
+
+  describe('getTopArtists', () => {
+    let getTopArtistsSpy: MockInstance
+
+    beforeEach(() => {
+      getTopArtistsSpy = vi.spyOn(statsRigtchService, 'getTopArtists')
+    })
+
+    test('should get top artists', async () => {
+      const limit = 10
+      const result = Array.from({ length: limit }, () => artistMock)
+
+      getTopArtistsSpy.mockResolvedValue(result)
+
+      expect(
+        await statsRigtchController.getTopArtists(userMock, {
+          before: date,
+          after: date,
+          limit: 10,
+          measurement: StatsMeasurement.PLAYS,
+        })
+      ).toEqual(result)
+
+      expect(getTopArtistsSpy).toHaveBeenCalledWith(
         {
           before: date,
           after: date,

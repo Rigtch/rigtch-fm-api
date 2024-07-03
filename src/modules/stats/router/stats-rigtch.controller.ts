@@ -25,6 +25,8 @@ import { MANY_SUCCESSFULLY_RETRIEVED } from '@common/constants'
 @UseGuards(CheckUserIdGuard)
 @UseInterceptors(CacheInterceptor)
 @ApiAuth()
+@ApiStatsRigtchQuery()
+@ApiUser()
 export class StatsRigtchController {
   constructor(private readonly statsRigtchService: StatsRigtchService) {}
 
@@ -37,8 +39,6 @@ export class StatsRigtchController {
   @ApiOkResponse({
     description: MANY_SUCCESSFULLY_RETRIEVED('top tracks'),
   })
-  @ApiStatsRigtchQuery()
-  @ApiUser()
   async getTopTracks(
     @RequestUser() user: User,
     @Query()
@@ -50,6 +50,36 @@ export class StatsRigtchController {
     }: StatsRigtchQuery
   ) {
     return this.statsRigtchService.getTopTracks(
+      {
+        before,
+        after,
+        limit,
+        measurement,
+      },
+      user
+    )
+  }
+
+  @Get('/top-artists')
+  @ApiOperation({
+    summary: "Getting user's top artists via rigtch provider (cached).",
+    description:
+      "Getting user's top listened artists via rigtch provider (cached).",
+  })
+  @ApiOkResponse({
+    description: MANY_SUCCESSFULLY_RETRIEVED('top artists'),
+  })
+  async getTopArtists(
+    @RequestUser() user: User,
+    @Query()
+    {
+      before = new Date(),
+      after,
+      limit = 10,
+      measurement = StatsMeasurement.PLAYS,
+    }: StatsRigtchQuery
+  ) {
+    return this.statsRigtchService.getTopArtists(
       {
         before,
         after,
