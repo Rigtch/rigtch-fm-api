@@ -1,10 +1,10 @@
 import { mock, mockDeep } from 'vitest-mock-extended'
 
-import { getMostListenedTracksByDuration } from './get-most-listened-tracks-by-duration.util'
+import { getMostListenedItemsByDuration } from './get-most-listened-items-by-duration.util'
 
 import { Track } from '@modules/items/tracks'
 
-describe('getMostListenedTracksByDuration', () => {
+describe('getMostListenedItemsByDuration', () => {
   const mostListenedTrackId = '1'
   const mostListenedTrack = mock<Track>({
     id: mostListenedTrackId,
@@ -24,7 +24,7 @@ describe('getMostListenedTracksByDuration', () => {
       }),
     ]
 
-    expect(getMostListenedTracksByDuration(tracksMock, 1)).toMatchObject([
+    expect(getMostListenedItemsByDuration(tracksMock, 1)).toMatchObject([
       {
         id: mostListenedTrackId,
         totalDuration: 500,
@@ -57,7 +57,7 @@ describe('getMostListenedTracksByDuration', () => {
       mostListenedTrack,
     ]
 
-    expect(getMostListenedTracksByDuration(tracksMock, 3)).toMatchObject([
+    expect(getMostListenedItemsByDuration(tracksMock, 3)).toMatchObject([
       {
         id: mostListenedTrackId,
         totalDuration: 1000,
