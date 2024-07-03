@@ -29,7 +29,7 @@ describe('StatsRigtchService', () => {
 
   let findByUserAndBetweenDatesSpy: MockInstance
   let getMostFrequentItemsSpy: MockInstance
-  let getMostListenedTracksByDurationSpy: MockInstance
+  let getMostListenedItemsByDurationSpy: MockInstance
 
   let historyTracksMock: MockProxy<HistoryTrack>[]
 
@@ -54,7 +54,7 @@ describe('StatsRigtchService', () => {
       'findByUserAndBetweenDates'
     )
     getMostFrequentItemsSpy = vi.mocked(getMostFrequentItems)
-    getMostListenedTracksByDurationSpy = vi.mocked(
+    getMostListenedItemsByDurationSpy = vi.mocked(
       getMostListenedItemsByDuration
     )
 
@@ -120,11 +120,11 @@ describe('StatsRigtchService', () => {
         date
       )
       expect(getMostFrequentItemsSpy).toHaveBeenCalled()
-      expect(getMostListenedTracksByDurationSpy).not.toHaveBeenCalled()
+      expect(getMostListenedItemsByDurationSpy).not.toHaveBeenCalled()
     })
 
     test('should get top tracks with play time measurement', async () => {
-      getMostListenedTracksByDurationSpy.mockReturnValue(
+      getMostListenedItemsByDurationSpy.mockReturnValue(
         result.map(({ id }) => ({
           id,
           totalDuration: 1,
@@ -154,7 +154,7 @@ describe('StatsRigtchService', () => {
         date,
         date
       )
-      expect(getMostListenedTracksByDurationSpy).toHaveBeenCalled()
+      expect(getMostListenedItemsByDurationSpy).toHaveBeenCalled()
     })
   })
 
@@ -202,7 +202,7 @@ describe('StatsRigtchService', () => {
     })
 
     test('should get top artists with play time measurement', async () => {
-      getMostListenedTracksByDurationSpy.mockReturnValue(
+      getMostListenedItemsByDurationSpy.mockReturnValue(
         result.map(({ id }) => ({
           id,
           totalDuration: 1,
@@ -233,7 +233,7 @@ describe('StatsRigtchService', () => {
         date,
         date
       )
-      expect(getMostListenedTracksByDurationSpy).toHaveBeenCalled()
+      expect(getMostListenedItemsByDurationSpy).toHaveBeenCalled()
     })
   })
 
@@ -281,7 +281,7 @@ describe('StatsRigtchService', () => {
     })
 
     test('should get top albums with play time measurement', async () => {
-      getMostListenedTracksByDurationSpy.mockReturnValue(
+      getMostListenedItemsByDurationSpy.mockReturnValue(
         result.map(({ id }) => ({
           id,
           totalDuration: 1,
@@ -311,7 +311,86 @@ describe('StatsRigtchService', () => {
         date,
         date
       )
-      expect(getMostListenedTracksByDurationSpy).toHaveBeenCalled()
+      expect(getMostListenedItemsByDurationSpy).toHaveBeenCalled()
+    })
+  })
+
+  describe('getTopGenres', () => {
+    let result: string[]
+
+    beforeEach(() => {
+      result = historyTracksMock
+        .flatMap(({ track: { artists } }) => artists)
+        .flatMap(({ genres }) => genres)
+        .slice(0, 10)
+    })
+
+    test('should get top genres with plays measurement', async () => {
+      getMostFrequentItemsSpy.mockReturnValue(
+        result.map(item => ({
+          item,
+          count: 1,
+        }))
+      )
+      findByUserAndBetweenDatesSpy.mockResolvedValue(historyTracksMock)
+
+      expect(
+        await statsRigtchService.getTopGenres(
+          {
+            before: date,
+            after: date,
+            limit: 10,
+            measurement: StatsMeasurement.PLAYS,
+          },
+          userMock
+        )
+      ).toMatchObject(
+        result.map(item => ({
+          item,
+          plays: 1,
+        }))
+      )
+
+      expect(findByUserAndBetweenDatesSpy).toHaveBeenCalledWith(
+        userMock.id,
+        date,
+        date
+      )
+      expect(getMostFrequentItemsSpy).toHaveBeenCalled()
+    })
+
+    test('should get top genres with play time measurement', async () => {
+      getMostListenedItemsByDurationSpy.mockReturnValue(
+        result.map(item => ({
+          id: item,
+          totalDuration: 1,
+        }))
+      )
+      findByUserAndBetweenDatesSpy.mockResolvedValue(historyTracksMock)
+
+      expect(
+        await statsRigtchService.getTopGenres(
+          {
+            before: date,
+            after: date,
+            limit: 10,
+            measurement: StatsMeasurement.PLAY_TIME,
+          },
+          userMock
+        )
+      ).toMatchObject(
+        result.map(item => ({
+          item,
+          playTime: 1,
+        }))
+      )
+
+      expect(findByUserAndBetweenDatesSpy).toHaveBeenCalledWith(
+        userMock.id,
+        date,
+        date
+      )
+      expect(getMostListenedItemsByDurationSpy).toHaveBeenCalled()
     })
   })
 })

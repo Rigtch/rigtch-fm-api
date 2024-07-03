@@ -27,6 +27,7 @@ describe('StatsRigtchController', () => {
             getTopTracks: vi.fn(),
             getTopArtists: vi.fn(),
             getTopAlbums: vi.fn(),
+            getTopGenres: vi.fn(),
           },
         },
         {
@@ -146,6 +147,40 @@ describe('StatsRigtchController', () => {
       ).toEqual(result)
 
       expect(getTopAlbumsSpy).toHaveBeenCalledWith(
+        {
+          before: date,
+          after: date,
+          limit,
+          measurement: StatsMeasurement.PLAYS,
+        },
+        userMock
+      )
+    })
+  })
+
+  describe('getTopGenres', () => {
+    let getTopGenresSpy: MockInstance
+
+    beforeEach(() => {
+      getTopGenresSpy = vi.spyOn(statsRigtchService, 'getTopGenres')
+    })
+
+    test('should get top genres', async () => {
+      const limit = 10
+      const result = Array.from({ length: limit }, () => 'genre')
+
+      getTopGenresSpy.mockResolvedValue(result)
+
+      expect(
+        await statsRigtchController.getTopGenres(userMock, {
+          before: date,
+          after: date,
+          limit: 10,
+          measurement: StatsMeasurement.PLAYS,
+        })
+      ).toEqual(result)
+
+      expect(getTopGenresSpy).toHaveBeenCalledWith(
         {
           before: date,
           after: date,
