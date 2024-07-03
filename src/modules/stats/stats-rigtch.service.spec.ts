@@ -82,6 +82,13 @@ describe('StatsRigtchService', () => {
   })
 
   describe('getTopTracks', () => {
+    const relations = {
+      track: {
+        artists: true,
+        album: true,
+      },
+    }
+
     let result: Track[]
 
     beforeEach(() => {
@@ -117,7 +124,8 @@ describe('StatsRigtchService', () => {
       expect(findByUserAndBetweenDatesSpy).toHaveBeenCalledWith(
         userMock.id,
         date,
-        date
+        date,
+        relations
       )
       expect(getMostFrequentItemsSpy).toHaveBeenCalled()
       expect(getMostListenedItemsByDurationSpy).not.toHaveBeenCalled()
@@ -152,13 +160,20 @@ describe('StatsRigtchService', () => {
       expect(findByUserAndBetweenDatesSpy).toHaveBeenCalledWith(
         userMock.id,
         date,
-        date
+        date,
+        relations
       )
       expect(getMostListenedItemsByDurationSpy).toHaveBeenCalled()
     })
   })
 
   describe('getTopArtists', () => {
+    const relations = {
+      track: {
+        artists: true,
+      },
+    }
+
     let result: Artist[]
 
     beforeEach(() => {
@@ -196,7 +211,8 @@ describe('StatsRigtchService', () => {
       expect(findByUserAndBetweenDatesSpy).toHaveBeenCalledWith(
         userMock.id,
         date,
-        date
+        date,
+        relations
       )
       expect(getMostFrequentItemsSpy).toHaveBeenCalled()
     })
@@ -231,13 +247,22 @@ describe('StatsRigtchService', () => {
       expect(findByUserAndBetweenDatesSpy).toHaveBeenCalledWith(
         userMock.id,
         date,
-        date
+        date,
+        relations
       )
       expect(getMostListenedItemsByDurationSpy).toHaveBeenCalled()
     })
   })
 
   describe('getTopAlbums', () => {
+    const relations = {
+      track: {
+        album: {
+          artists: true,
+        },
+      },
+    }
+
     let result: Album[]
 
     beforeEach(() => {
@@ -275,7 +300,8 @@ describe('StatsRigtchService', () => {
       expect(findByUserAndBetweenDatesSpy).toHaveBeenCalledWith(
         userMock.id,
         date,
-        date
+        date,
+        relations
       )
       expect(getMostFrequentItemsSpy).toHaveBeenCalled()
     })
@@ -309,13 +335,20 @@ describe('StatsRigtchService', () => {
       expect(findByUserAndBetweenDatesSpy).toHaveBeenCalledWith(
         userMock.id,
         date,
-        date
+        date,
+        relations
       )
       expect(getMostListenedItemsByDurationSpy).toHaveBeenCalled()
     })
   })
 
   describe('getTopGenres', () => {
+    const relations = {
+      track: {
+        artists: true,
+      },
+    }
+
     let result: string[]
 
     beforeEach(() => {
@@ -354,7 +387,8 @@ describe('StatsRigtchService', () => {
       expect(findByUserAndBetweenDatesSpy).toHaveBeenCalledWith(
         userMock.id,
         date,
-        date
+        date,
+        relations
       )
       expect(getMostFrequentItemsSpy).toHaveBeenCalled()
     })
@@ -388,7 +422,8 @@ describe('StatsRigtchService', () => {
       expect(findByUserAndBetweenDatesSpy).toHaveBeenCalledWith(
         userMock.id,
         date,
-        date
+        date,
+        relations
       )
       expect(getMostListenedItemsByDurationSpy).toHaveBeenCalled()
     })

@@ -28,7 +28,13 @@ export class StatsRigtchService {
       await this.historyTracksRepository.findByUserAndBetweenDates(
         user.id,
         after,
-        before
+        before,
+        {
+          track: {
+            artists: true,
+            album: true,
+          },
+        }
       )
     const tracks = historyTracks.map(({ track }) => track)
 
@@ -63,7 +69,12 @@ export class StatsRigtchService {
       await this.historyTracksRepository.findByUserAndBetweenDates(
         user.id,
         after,
-        before
+        before,
+        {
+          track: {
+            artists: true,
+          },
+        }
       )
     const tracks = historyTracks.map(({ track }) => track)
     const artists = tracks.flatMap(({ artists }) => artists)
@@ -101,7 +112,14 @@ export class StatsRigtchService {
       await this.historyTracksRepository.findByUserAndBetweenDates(
         user.id,
         after,
-        before
+        before,
+        {
+          track: {
+            album: {
+              artists: true,
+            },
+          },
+        }
       )
     const tracks = historyTracks.map(({ track }) => track)
     const albums = tracks.flatMap(({ album }) => album)
@@ -140,7 +158,12 @@ export class StatsRigtchService {
       await this.historyTracksRepository.findByUserAndBetweenDates(
         user.id,
         after,
-        before
+        before,
+        {
+          track: {
+            artists: true,
+          },
+        }
       )
     const tracks = historyTracks.map(({ track }) => track)
     const artists = tracks.flatMap(({ artists }) => artists)

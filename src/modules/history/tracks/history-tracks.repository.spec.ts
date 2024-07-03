@@ -5,7 +5,7 @@ import { MockProxy, mock } from 'vitest-mock-extended'
 import {
   HistoryTracksRepository,
   historyTracksOrder,
-  relations,
+  historyTracksRelations,
 } from './history-tracks.repository'
 import { HistoryTrack } from './history-track.entity'
 import { CreateHistoryTrack } from './dtos'
@@ -62,7 +62,7 @@ describe('HistoryTracksRepository', () => {
           id: userId,
         },
       },
-      relations,
+      relations: historyTracksRelations,
       order: historyTracksOrder,
     })
   })
@@ -82,7 +82,7 @@ describe('HistoryTracksRepository', () => {
           id: userId,
         },
       },
-      relations,
+      relations: historyTracksRelations,
       order: historyTracksOrder,
     })
   })
@@ -99,7 +99,8 @@ describe('HistoryTracksRepository', () => {
       await historyTracksRepository.findByUserAndBetweenDates(
         userId,
         after,
-        before
+        before,
+        historyTracksRelations
       )
     ).toEqual(historyTracksMock)
 
@@ -110,14 +111,7 @@ describe('HistoryTracksRepository', () => {
         },
         playedAt: And(MoreThanOrEqual(after), LessThanOrEqual(before)),
       },
-      relations: {
-        track: {
-          artists: true,
-          album: {
-            artists: true,
-          },
-        },
-      },
+      relations: historyTracksRelations,
       order: historyTracksOrder,
     })
   })
