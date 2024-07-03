@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import {
+  Between,
   DataSource,
   FindOptionsOrder,
   FindOptionsRelations,
@@ -42,6 +43,24 @@ export class HistoryTracksRepository extends Repository<HistoryTrack> {
         },
       },
       relations,
+      order: historyTracksOrder,
+    })
+  }
+
+  findByUserAndBetweenDates(userId: string, after: Date, before: Date) {
+    return this.find({
+      where: {
+        user: {
+          id: userId,
+        },
+        playedAt: Between(after, before),
+      },
+      relations: {
+        track: {
+          artists: true,
+          album: true,
+        },
+      },
       order: historyTracksOrder,
     })
   }

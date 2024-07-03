@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { MockProxy, mock } from 'vitest-mock-extended'
 import { MockInstance } from 'vitest'
-import { Between } from 'typeorm'
 
 import { StatsRigtchService } from './stats-rigtch.service'
 import { StatsMeasurement } from './enums'
@@ -30,7 +29,7 @@ describe('StatsRigtchService', () => {
         {
           provide: HistoryTracksRepository,
           useValue: {
-            find: vi.fn(),
+            findByUserAndBetweenDates: vi.fn(),
           },
         },
       ],
@@ -59,13 +58,16 @@ describe('StatsRigtchService', () => {
   describe('getTopTracks', () => {
     const date = new Date()
 
-    let findSpy: MockInstance
+    let findByUserAndBetweenDatesSpy: MockInstance
     let getMostFrequentItemsSpy: MockInstance
     let getMostListenedTracksByDurationSpy: MockInstance
     let result: Track[]
 
     beforeEach(() => {
-      findSpy = vi.spyOn(historyTracksRepository, 'find')
+      findByUserAndBetweenDatesSpy = vi.spyOn(
+        historyTracksRepository,
+        'findByUserAndBetweenDates'
+      )
       getMostFrequentItemsSpy = vi.mocked(getMostFrequentItems)
       getMostListenedTracksByDurationSpy = vi.mocked(
         getMostListenedTracksByDuration
@@ -82,7 +84,7 @@ describe('StatsRigtchService', () => {
         }))
       )
 
-      findSpy.mockResolvedValue(historyTracksMock)
+      findByUserAndBetweenDatesSpy.mockResolvedValue(historyTracksMock)
 
       expect(
         await statsRigtchService.getTopTracks(
@@ -101,20 +103,11 @@ describe('StatsRigtchService', () => {
         }))
       )
 
-      expect(findSpy).toHaveBeenCalledWith({
-        where: {
-          user: {
-            id: userMock.id,
-          },
-          playedAt: Between(date, date),
-        },
-        relations: {
-          track: {
-            artists: true,
-            album: true,
-          },
-        },
-      })
+      expect(findByUserAndBetweenDatesSpy).toHaveBeenCalledWith(
+        userMock.id,
+        date,
+        date
+      )
       expect(getMostFrequentItemsSpy).toHaveBeenCalled()
       expect(getMostListenedTracksByDurationSpy).not.toHaveBeenCalled()
     })
@@ -127,7 +120,7 @@ describe('StatsRigtchService', () => {
         }))
       )
 
-      findSpy.mockResolvedValue(historyTracksMock)
+      findByUserAndBetweenDatesSpy.mockResolvedValue(historyTracksMock)
 
       expect(
         await statsRigtchService.getTopTracks(
@@ -146,20 +139,11 @@ describe('StatsRigtchService', () => {
         }))
       )
 
-      expect(findSpy).toHaveBeenCalledWith({
-        where: {
-          user: {
-            id: userMock.id,
-          },
-          playedAt: Between(date, date),
-        },
-        relations: {
-          track: {
-            artists: true,
-            album: true,
-          },
-        },
-      })
+      expect(findByUserAndBetweenDatesSpy).toHaveBeenCalledWith(
+        userMock.id,
+        date,
+        date
+      )
       expect(getMostListenedTracksByDurationSpy).toHaveBeenCalled()
     })
   })
