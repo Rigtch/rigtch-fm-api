@@ -1,4 +1,4 @@
-import { DataSource } from 'typeorm'
+import { Between, DataSource } from 'typeorm'
 import { Test, TestingModule } from '@nestjs/testing'
 import { MockProxy, mock } from 'vitest-mock-extended'
 
@@ -83,6 +83,38 @@ describe('HistoryTracksRepository', () => {
         },
       },
       relations,
+      order: historyTracksOrder,
+    })
+  })
+
+  test('should find history tracks by user and between dates', async () => {
+    const date = new Date()
+
+    const findSpy = vi
+      .spyOn(historyTracksRepository, 'find')
+      .mockResolvedValue(historyTracksMock)
+
+    expect(
+      await historyTracksRepository.findByUserAndBetweenDates(
+        userId,
+        date,
+        date
+      )
+    ).toEqual(historyTracksMock)
+
+    expect(findSpy).toHaveBeenCalledWith({
+      where: {
+        user: {
+          id: userId,
+        },
+        playedAt: Between(date, date),
+      },
+      relations: {
+        track: {
+          artists: true,
+          album: true,
+        },
+      },
       order: historyTracksOrder,
     })
   })

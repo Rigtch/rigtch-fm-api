@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common'
-import { Between } from 'typeorm'
 
 import type { StatsRigtchQuery } from './router/dtos'
 import { StatsMeasurement } from './enums'
@@ -23,20 +22,12 @@ export class StatsRigtchService {
     { before, after, limit, measurement }: Required<StatsRigtchQuery>,
     user: User
   ): Promise<TopItem<Track>[]> {
-    const historyTracks = await this.historyTracksRepository.find({
-      where: {
-        user: {
-          id: user.id,
-        },
-        playedAt: Between(after, before),
-      },
-      relations: {
-        track: {
-          artists: true,
-          album: true,
-        },
-      },
-    })
+    const historyTracks =
+      await this.historyTracksRepository.findByUserAndBetweenDates(
+        user.id,
+        after,
+        before
+      )
     const tracks = historyTracks.map(({ track }) => track)
 
     if (measurement === StatsMeasurement.PLAYS) {
