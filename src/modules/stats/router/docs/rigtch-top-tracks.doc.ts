@@ -20,5 +20,5 @@ export abstract class RigtchTopTracksDocument {
     type: Number,
     description: 'The total duration of the track.',
   })
-  playTime?: number
+  playtime?: number
 }

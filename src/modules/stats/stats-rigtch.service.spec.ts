@@ -153,7 +153,7 @@ describe('StatsRigtchService', () => {
       ).toMatchObject(
         historyTracksMock.slice(0, 10).map(({ track }) => ({
           item: track,
-          playTime: 1,
+          playtime: 1,
         }))
       )
 
@@ -240,7 +240,7 @@ describe('StatsRigtchService', () => {
       ).toMatchObject(
         result.map(item => ({
           item: item,
-          playTime: 1,
+          playtime: 1,
         }))
       )
 
@@ -328,7 +328,7 @@ describe('StatsRigtchService', () => {
       ).toMatchObject(
         result.map(item => ({
           item: item,
-          playTime: 1,
+          playtime: 1,
         }))
       )
 
@@ -415,7 +415,7 @@ describe('StatsRigtchService', () => {
       ).toMatchObject(
         result.map(item => ({
           item,
-          playTime: 1,
+          playtime: 1,
         }))
       )
 

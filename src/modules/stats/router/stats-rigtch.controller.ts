@@ -43,8 +43,8 @@ export class StatsRigtchController {
       "Getting user's top listened tracks via rigtch provider (cached).",
   })
   @ApiOkResponse({
-    description: `${MANY_SUCCESSFULLY_RETRIEVED('top track')} The response type will contain either \`plays\` or \`playTime\` property depending on the \`measurement\` query parameter.`,
-    type: RigtchTopTracksDocument,
+    description: `${MANY_SUCCESSFULLY_RETRIEVED('top track')} The response type will contain either \`plays\` or \`playtime\` property depending on the \`measurement\` query parameter.`,
+    type: [RigtchTopTracksDocument],
   })
   async getTopTracks(
     @RequestUser() user: User,
@@ -74,8 +74,8 @@ export class StatsRigtchController {
       "Getting user's top listened artists via rigtch provider (cached).",
   })
   @ApiOkResponse({
-    description: `${MANY_SUCCESSFULLY_RETRIEVED('top artist')} The response type will contain either \`plays\` or \`playTime\` property depending on the \`measurement\` query parameter.`,
-    type: RigtchTopArtistsDocument,
+    description: `${MANY_SUCCESSFULLY_RETRIEVED('top artist')} The response type will contain either \`plays\` or \`playtime\` property depending on the \`measurement\` query parameter.`,
+    type: [RigtchTopArtistsDocument],
   })
   async getTopArtists(
     @RequestUser() user: User,
@@ -105,8 +105,8 @@ export class StatsRigtchController {
       "Getting user's top listened albums via rigtch provider (cached).",
   })
   @ApiOkResponse({
-    description: `${MANY_SUCCESSFULLY_RETRIEVED('top album')} The response type will contain either \`plays\` or \`playTime\` property depending on the \`measurement\` query parameter.`,
-    type: RigtchTopAlbumsDocument,
+    description: `${MANY_SUCCESSFULLY_RETRIEVED('top album')} The response type will contain either \`plays\` or \`playtime\` property depending on the \`measurement\` query parameter.`,
+    type: [RigtchTopAlbumsDocument],
   })
   async getTopAlbums(
     @RequestUser() user: User,
@@ -136,8 +136,8 @@ export class StatsRigtchController {
       "Getting user's top listened genres via rigtch provider (cached).",
   })
   @ApiOkResponse({
-    description: `${MANY_SUCCESSFULLY_RETRIEVED('top genre')} The response type will contain either \`plays\` or \`playTime\` property depending on the \`measurement\` query parameter.`,
-    type: RigtchTopGenresDocument,
+    description: `${MANY_SUCCESSFULLY_RETRIEVED('top genre')} The response type will contain either \`plays\` or \`playtime\` property depending on the \`measurement\` query parameter.`,
+    type: [RigtchTopGenresDocument],
   })
   async getTopGenres(
     @RequestUser() user: User,

@@ -57,7 +57,7 @@ export class StatsRigtchService {
 
     return mostListenedTrackByDuration.map(({ id, totalDuration }) => ({
       item: tracks.find(track => track.id === id)!,
-      playTime: totalDuration,
+      playtime: totalDuration,
     }))
   }
 
@@ -100,7 +100,7 @@ export class StatsRigtchService {
 
     return mostListenedArtistByDuration.map(({ id, totalDuration }) => ({
       item: artists.find(artist => artist.id === id)!,
-      playTime: totalDuration,
+      playtime: totalDuration,
     }))
   }
 
@@ -146,7 +146,7 @@ export class StatsRigtchService {
 
     return mostListenedAlbumByDuration.map(({ id, totalDuration }) => ({
       item: albums.find(album => album!.id === id)!,
-      playTime: totalDuration,
+      playtime: totalDuration,
     }))
   }
 
@@ -189,7 +189,7 @@ export class StatsRigtchService {
 
     return mostListenedGenreByDuration.map(({ id, totalDuration }) => ({
       item: id,
-      playTime: totalDuration,
+      playtime: totalDuration,
     }))
   }
 }

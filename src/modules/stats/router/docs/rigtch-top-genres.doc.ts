@@ -17,5 +17,5 @@ export abstract class RigtchTopGenresDocument {
     type: Number,
     description: 'The total duration of the genre.',
   })
-  playTime?: number
+  playtime?: number
 }

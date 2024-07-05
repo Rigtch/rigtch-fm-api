@@ -6,10 +6,10 @@ export type TopItem<T extends Artist | Album | Track | string> =
   | ({
       item: T
     } & {
-      playTime: number
+      playtime: number
       plays?: never
     })
   | {
       plays: number
-      playTime?: never
+      playtime?: never
     }

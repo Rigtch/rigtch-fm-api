@@ -20,5 +20,5 @@ export abstract class RigtchTopAlbumsDocument {
     type: Number,
     description: 'The total duration of the album.',
   })
-  playTime?: number
+  playtime?: number
 }
