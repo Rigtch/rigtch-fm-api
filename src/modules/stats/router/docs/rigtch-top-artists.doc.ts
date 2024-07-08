@@ -19,5 +19,5 @@ export abstract class RigtchTopArtistsDocument {
     type: Number,
     description: 'The total duration of the artist.',
   })
-  playtime?: number
+  playTime?: number
 }
