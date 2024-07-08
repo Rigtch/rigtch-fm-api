@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common'
 
-import type { StatsRigtchQuery } from './router/dtos'
 import { StatsMeasurement } from './enums'
+import type { StatsRigtchQuery } from './router/dtos'
 import type { TopItem } from './types'
 
-import { HistoryTracksRepository } from '@modules/history/tracks'
-import type { User } from '@modules/users'
 import {
   getMostFrequentItems,
   getMostListenedItemsByDuration,
 } from '@common/utils'
-import type { Track } from '@modules/items/tracks'
-import type { Artist } from '@modules/items/artists'
+import { HistoryTracksRepository } from '@modules/history/tracks'
 import type { Album } from '@modules/items/albums'
+import type { Artist } from '@modules/items/artists'
+import type { Track } from '@modules/items/tracks'
+import type { User } from '@modules/users'
 
 @Injectable()
 export class StatsRigtchService {
@@ -57,7 +57,7 @@ export class StatsRigtchService {
 
     return mostListenedTrackByDuration.map(({ id, totalDuration }) => ({
       item: tracks.find(track => track.id === id)!,
-      playtime: totalDuration,
+      playTime: totalDuration,
     }))
   }
 
@@ -100,7 +100,7 @@ export class StatsRigtchService {
 
     return mostListenedArtistByDuration.map(({ id, totalDuration }) => ({
       item: artists.find(artist => artist.id === id)!,
-      playtime: totalDuration,
+      playTime: totalDuration,
     }))
   }
 
@@ -146,7 +146,7 @@ export class StatsRigtchService {
 
     return mostListenedAlbumByDuration.map(({ id, totalDuration }) => ({
       item: albums.find(album => album!.id === id)!,
-      playtime: totalDuration,
+      playTime: totalDuration,
     }))
   }
 
@@ -189,7 +189,7 @@ export class StatsRigtchService {
 
     return mostListenedGenreByDuration.map(({ id, totalDuration }) => ({
       item: id,
-      playtime: totalDuration,
+      playTime: totalDuration,
     }))
   }
 }

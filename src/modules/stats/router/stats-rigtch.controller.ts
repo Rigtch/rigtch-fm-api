@@ -8,23 +8,23 @@ import {
 } from '@nestjs/common'
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 
-import { StatsRigtchService } from '../stats-rigtch.service'
 import { StatsMeasurement } from '../enums'
+import { StatsRigtchService } from '../stats-rigtch.service'
 
-import { StatsRigtchQuery } from './dtos'
 import { ApiStatsRigtchQuery } from './decorators'
 import {
+  RigtchTopAlbumsDocument,
   RigtchTopArtistsDocument,
   RigtchTopGenresDocument,
   RigtchTopTracksDocument,
-  RigtchTopAlbumsDocument,
 } from './docs'
+import { StatsRigtchQuery } from './dtos'
 
-import { CheckUserIdGuard } from '@modules/users/guards'
-import { ApiAuth } from '@common/decorators'
-import { ApiUser, RequestUser } from '@modules/users/decorators'
-import type { User } from '@modules/users'
 import { MANY_SUCCESSFULLY_RETRIEVED } from '@common/constants'
+import { ApiAuth } from '@common/decorators'
+import type { User } from '@modules/users'
+import { ApiUser, RequestUser } from '@modules/users/decorators'
+import { CheckUserIdGuard } from '@modules/users/guards'
 
 @Controller('/users/:id/stats/rigtch')
 @ApiTags('users/{id}/stats/rigtch')
@@ -43,7 +43,7 @@ export class StatsRigtchController {
       "Getting user's top listened tracks via rigtch provider (cached).",
   })
   @ApiOkResponse({
-    description: `${MANY_SUCCESSFULLY_RETRIEVED('top track')} The response type will contain either \`plays\` or \`playtime\` property depending on the \`measurement\` query parameter.`,
+    description: `${MANY_SUCCESSFULLY_RETRIEVED('top track')} The response type will contain either \`plays\` or \`playTime\` property depending on the \`measurement\` query parameter.`,
     type: [RigtchTopTracksDocument],
   })
   async getTopTracks(
@@ -74,7 +74,7 @@ export class StatsRigtchController {
       "Getting user's top listened artists via rigtch provider (cached).",
   })
   @ApiOkResponse({
-    description: `${MANY_SUCCESSFULLY_RETRIEVED('top artist')} The response type will contain either \`plays\` or \`playtime\` property depending on the \`measurement\` query parameter.`,
+    description: `${MANY_SUCCESSFULLY_RETRIEVED('top artist')} The response type will contain either \`plays\` or \`playTime\` property depending on the \`measurement\` query parameter.`,
     type: [RigtchTopArtistsDocument],
   })
   async getTopArtists(
@@ -105,7 +105,7 @@ export class StatsRigtchController {
       "Getting user's top listened albums via rigtch provider (cached).",
   })
   @ApiOkResponse({
-    description: `${MANY_SUCCESSFULLY_RETRIEVED('top album')} The response type will contain either \`plays\` or \`playtime\` property depending on the \`measurement\` query parameter.`,
+    description: `${MANY_SUCCESSFULLY_RETRIEVED('top album')} The response type will contain either \`plays\` or \`playTime\` property depending on the \`measurement\` query parameter.`,
     type: [RigtchTopAlbumsDocument],
   })
   async getTopAlbums(
@@ -136,7 +136,7 @@ export class StatsRigtchController {
       "Getting user's top listened genres via rigtch provider (cached).",
   })
   @ApiOkResponse({
-    description: `${MANY_SUCCESSFULLY_RETRIEVED('top genre')} The response type will contain either \`plays\` or \`playtime\` property depending on the \`measurement\` query parameter.`,
+    description: `${MANY_SUCCESSFULLY_RETRIEVED('top genre')} The response type will contain either \`plays\` or \`playTime\` property depending on the \`measurement\` query parameter.`,
     type: [RigtchTopGenresDocument],
   })
   async getTopGenres(

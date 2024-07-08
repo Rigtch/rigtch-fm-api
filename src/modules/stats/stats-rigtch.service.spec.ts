@@ -1,22 +1,22 @@
 import { Test, type TestingModule } from '@nestjs/testing'
-import { type MockProxy, mock } from 'vitest-mock-extended'
 import { MockInstance } from 'vitest'
+import { type MockProxy, mock } from 'vitest-mock-extended'
 
-import { StatsRigtchService } from './stats-rigtch.service'
 import { StatsMeasurement } from './enums'
+import { StatsRigtchService } from './stats-rigtch.service'
 
-import {
-  type HistoryTrack,
-  HistoryTracksRepository,
-} from '@modules/history/tracks'
 import { userMock } from '@common/mocks'
 import {
   getMostFrequentItems,
   getMostListenedItemsByDuration,
 } from '@common/utils'
-import type { Track } from '@modules/items/tracks'
-import type { Artist } from '@modules/items/artists'
+import {
+  type HistoryTrack,
+  HistoryTracksRepository,
+} from '@modules/history/tracks'
 import type { Album } from '@modules/items/albums'
+import type { Artist } from '@modules/items/artists'
+import type { Track } from '@modules/items/tracks'
 
 vi.mock('@common/utils')
 
@@ -153,7 +153,7 @@ describe('StatsRigtchService', () => {
       ).toMatchObject(
         historyTracksMock.slice(0, 10).map(({ track }) => ({
           item: track,
-          playtime: 1,
+          playTime: 1,
         }))
       )
 
@@ -240,7 +240,7 @@ describe('StatsRigtchService', () => {
       ).toMatchObject(
         result.map(item => ({
           item: item,
-          playtime: 1,
+          playTime: 1,
         }))
       )
 
@@ -328,7 +328,7 @@ describe('StatsRigtchService', () => {
       ).toMatchObject(
         result.map(item => ({
           item: item,
-          playtime: 1,
+          playTime: 1,
         }))
       )
 
@@ -415,7 +415,7 @@ describe('StatsRigtchService', () => {
       ).toMatchObject(
         result.map(item => ({
           item,
-          playtime: 1,
+          playTime: 1,
         }))
       )
 

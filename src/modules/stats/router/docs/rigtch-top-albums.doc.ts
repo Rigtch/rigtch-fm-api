@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
 
-import { AlbumDocument } from '@modules/items/albums/docs'
 import type { Album } from '@modules/items/albums'
+import { AlbumDocument } from '@modules/items/albums/docs'
 
 export abstract class RigtchTopAlbumsDocument {
   @ApiProperty({
@@ -20,5 +20,5 @@ export abstract class RigtchTopAlbumsDocument {
     type: Number,
     description: 'The total duration of the album.',
   })
-  playtime?: number
+  playTime?: number
 }
