@@ -19,6 +19,7 @@ import {
   RigtchTopTracksDocument,
 } from './docs'
 import { StatsRigtchQuery } from './dtos'
+import { TimeRangeGuard } from './guards'
 
 import { MANY_SUCCESSFULLY_RETRIEVED } from '@common/constants'
 import { ApiAuth } from '@common/decorators'
@@ -28,7 +29,7 @@ import { CheckUserIdGuard } from '@modules/users/guards'
 
 @Controller('/users/:id/stats/rigtch')
 @ApiTags('users/{id}/stats/rigtch')
-@UseGuards(CheckUserIdGuard)
+@UseGuards(CheckUserIdGuard, TimeRangeGuard)
 @UseInterceptors(CacheInterceptor)
 @ApiAuth()
 @ApiStatsRigtchQuery()
