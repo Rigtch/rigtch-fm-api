@@ -23,6 +23,7 @@ import {
 import { ApiAuth, RequestToken } from '@common/decorators'
 import { SpotifyService } from '@modules/spotify'
 import { ProfilesRepository } from '@modules/profiles'
+import { HistoryScheduler } from '@modules/history/history.scheduler'
 
 @Controller(USERS)
 @ApiTags(USERS)
@@ -31,7 +32,8 @@ export class UsersController {
   constructor(
     private readonly usersRepository: UsersRepository,
     private readonly spotifyService: SpotifyService,
-    private readonly profilesRepository: ProfilesRepository
+    private readonly profilesRepository: ProfilesRepository,
+    private readonly historyScheduler: HistoryScheduler
   ) {}
 
   @Get()
@@ -68,10 +70,16 @@ export class UsersController {
       const profile =
         await this.profilesRepository.createProfile(spotifyProfile)
 
-      return this.usersRepository.createUser({
+      const createdUser = await this.usersRepository.createUser({
         profile,
         refreshToken,
       })
+
+      await this.historyScheduler.scheduleHistorySynchronizationForUser(
+        createdUser
+      )
+
+      return createdUser
     }
 
     await this.usersRepository.update(foundUser.id, {

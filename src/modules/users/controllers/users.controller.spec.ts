@@ -15,6 +15,7 @@ import {
 } from '@common/mocks'
 import { ProfilesRepository } from '@modules/profiles'
 import { SpotifyService } from '@modules/spotify'
+import { HistoryScheduler } from '@modules/history'
 
 describe('UsersController', () => {
   let moduleRef: TestingModule
@@ -22,6 +23,7 @@ describe('UsersController', () => {
   let usersRepository: UsersRepository
   let profilesRepository: ProfilesRepository
   let spotifyService: SpotifyService
+  let historyScheduler: HistoryScheduler
 
   beforeEach(async () => {
     moduleRef = await Test.createTestingModule({
@@ -54,6 +56,12 @@ describe('UsersController', () => {
             },
           },
         },
+        {
+          provide: HistoryScheduler,
+          useValue: {
+            scheduleHistorySynchronizationForUser: vi.fn(),
+          },
+        },
       ],
     })
       .overrideInterceptor(CacheInterceptor)
@@ -66,6 +74,7 @@ describe('UsersController', () => {
     usersRepository = moduleRef.get(UsersRepository)
     profilesRepository = moduleRef.get(ProfilesRepository)
     spotifyService = moduleRef.get(SpotifyService)
+    historyScheduler = moduleRef.get(HistoryScheduler)
   })
 
   afterEach(() => {
@@ -99,6 +108,7 @@ describe('UsersController', () => {
     let createProfileSpy: MockInstance
     let createUserSpy: MockInstance
     let updateSpy: MockInstance
+    let scheduleHistorySynchronizationForUserSpy: MockInstance
 
     beforeEach(() => {
       tokenSpy = vi
@@ -111,6 +121,10 @@ describe('UsersController', () => {
       createProfileSpy = vi.spyOn(profilesRepository, 'createProfile')
       createUserSpy = vi.spyOn(usersRepository, 'createUser')
       updateSpy = vi.spyOn(usersRepository, 'update')
+      scheduleHistorySynchronizationForUserSpy = vi.spyOn(
+        historyScheduler,
+        'scheduleHistorySynchronizationForUser'
+      )
     })
 
     test('should get me', async () => {
@@ -124,6 +138,7 @@ describe('UsersController', () => {
       expect(updateSpy).toHaveBeenCalledWith(userMock.id, body)
       expect(createProfileSpy).not.toHaveBeenCalled()
       expect(createUserSpy).not.toHaveBeenCalled()
+      expect(scheduleHistorySynchronizationForUserSpy).not.toHaveBeenCalled()
     })
 
     test('should get me and create user', async () => {
@@ -141,6 +156,9 @@ describe('UsersController', () => {
         profile: profileMock,
         refreshToken: body.refreshToken,
       })
+      expect(scheduleHistorySynchronizationForUserSpy).toHaveBeenCalledWith(
+        userMock
+      )
       expect(updateSpy).not.toHaveBeenCalled()
     })
   })
