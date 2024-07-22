@@ -25,12 +25,13 @@ SPOTIFY_ACCOUNTS_URL="https://accounts.spotify.com"
 
 ## History Module Variables
 
-- `HISTORY_FETCHING_INTERVAL` - The interval for user's listening history synchronization.
+- `HISTORY_SYNCHRONIZATION_CRONTIME` - The crontime for user's listening history
+  synchronization.
 - `ENABLE_HISTORY_SYNCHRONIZATION` - If true the history synchronization will
   be enabled.
 
 ```bash
-HISTORY_FETCHING_INTERVAL="1h"
+HISTORY_SYNCHRONIZATION_CRONTIME="0 */1 * * *"
 ENABLE_HISTORY_SYNCHRONIZATION=false
 ```
 

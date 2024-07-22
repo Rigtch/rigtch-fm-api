@@ -6,7 +6,7 @@ export const environmentSchema = Joi.object({
   SPOTIFY_CLIENT_SECRET: Joi.string().required(),
   SPOTIFY_BASE_URL: Joi.string().required(),
   SPOTIFY_ACCOUNTS_URL: Joi.string().required(),
-  HISTORY_FETCHING_INTERVAL: Joi.string().default('1h'),
+  HISTORY_SYNCHRONIZATION_CRONTIME: Joi.string().default('0 */1 * * *'),
   ENABLE_HISTORY_SYNCHRONIZATION: Joi.boolean().default(true),
   DATABASE_HOST: Joi.string().required(),
   DATABASE_PORT: Joi.number().required(),
