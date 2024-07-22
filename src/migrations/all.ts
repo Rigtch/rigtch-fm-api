@@ -12,6 +12,7 @@ import { TypeColumnNullableInItemsEntities1717685923338 } from './1717685923338-
 import { MakeItemsColumnsRequired1717699326064 } from './1717699326064-make-items-columns-required'
 import { EnableCache1717744803994 } from './1717744803994-enable-cache'
 import { DisableCache1717771878472 } from './1717771878472-disable-cache'
+import { AddCreatedAtColumnToUserEntity1721641599620 } from './1721641599620-add-created-at-column-to-user-entity'
 
 export const migrations = [
   Migration1697539455661,
@@ -28,4 +29,5 @@ export const migrations = [
   MakeItemsColumnsRequired1717699326064,
   EnableCache1717744803994,
   DisableCache1717771878472,
+  AddCreatedAtColumnToUserEntity1721641599620,
 ]
