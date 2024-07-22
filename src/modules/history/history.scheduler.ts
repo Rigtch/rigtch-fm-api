@@ -5,9 +5,7 @@ import {
   OnApplicationBootstrap,
   forwardRef,
 } from '@nestjs/common'
-import { SchedulerRegistry } from '@nestjs/schedule'
 import { ConfigService } from '@nestjs/config'
-import ms from 'ms'
 import { InjectQueue } from '@nestjs/bull'
 import { Queue } from 'bull'
 
@@ -18,7 +16,7 @@ import { User } from '@modules/users/user.entity'
 import { UsersRepository } from '@modules/users/users.repository'
 import { Environment } from '@config/environment'
 
-const { HISTORY_FETCHING_INTERVAL, ENABLE_HISTORY_SYNCHRONIZATION } =
+const { HISTORY_SYNCHRONIZATION_CRONTIME, ENABLE_HISTORY_SYNCHRONIZATION } =
   Environment
 
 @Injectable()
@@ -29,41 +27,47 @@ export class HistoryScheduler implements OnApplicationBootstrap {
     @Inject(forwardRef(() => UsersRepository))
     private readonly usersRepository: UsersRepository,
     @InjectQueue(HISTORY_QUEUE) private readonly historyQueue: Queue<User>,
-    private readonly schedulerRegistry: SchedulerRegistry,
     private readonly configService: ConfigService
   ) {}
 
   onApplicationBootstrap() {
     if (
-      this.configService.get<boolean>(ENABLE_HISTORY_SYNCHRONIZATION) === false
-    ) {
-      this.logger.log('History synchronization is disabled')
-      return
-    }
-
-    const INTERVAL_HOURS = ms(
-      this.configService.get<string>(HISTORY_FETCHING_INTERVAL)!
+      this.configService.get<boolean>(ENABLE_HISTORY_SYNCHRONIZATION) === true
     )
+      return this.scheduleHistorySynchronization()
 
-    this.scheduleHistorySynchronization()
-
-    const interval = setInterval(() => {
-      this.scheduleHistorySynchronization()
-    }, INTERVAL_HOURS)
-
-    this.schedulerRegistry.addInterval('history-synchronization', interval)
+    this.logger.log('History synchronization is disabled')
   }
 
   async scheduleHistorySynchronization() {
-    const users = await this.usersRepository.findUsers()
+    const users = await this.usersRepository.find()
 
     this.logger.log(`Adding synchronize jobs for ${users.length} users`)
 
     for (const user of users) {
-      await this.historyQueue.add(SYNCHRONIZE_JOB, user, {
-        priority: 1,
-        jobId: synchronizeJobIdFactory(user.id),
-      })
+      await this.scheduleHistorySynchronizationForUser(user)
     }
+  }
+
+  async scheduleHistorySynchronizationForUser(user: User) {
+    const jobId = synchronizeJobIdFactory(user.id, true)
+    const repeatableJobs = await this.historyQueue.getRepeatableJobs()
+
+    for (const synchronizeJob of repeatableJobs)
+      if (synchronizeJob.id === jobId)
+        await this.historyQueue.removeRepeatableByKey(synchronizeJob.key)
+
+    this.logger.log(
+      `Adding repeatable synchronize job for user: ${user.profile.displayName}`
+    )
+
+    await this.historyQueue.add(SYNCHRONIZE_JOB, user, {
+      priority: 1,
+      repeat: {
+        cron: this.configService.get<string>(HISTORY_SYNCHRONIZATION_CRONTIME)!,
+      },
+      attempts: 3,
+      jobId,
+    })
   }
 }
