@@ -1,5 +1,6 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   OneToOne,
@@ -27,4 +28,9 @@ export class User {
   @Column()
   @Exclude()
   refreshToken: string
+
+  @CreateDateColumn({
+    type: 'timestamptz',
+  })
+  createdAt: Date
 }
