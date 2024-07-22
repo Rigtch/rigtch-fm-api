@@ -12,12 +12,14 @@ import {
 import { SpotifyModule } from '@modules/spotify'
 import { ItemsModule } from '@modules/items'
 import { ProfilesModule } from '@modules/profiles'
+import { HistoryModule } from '@modules/history'
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
     SpotifyModule,
     ProfilesModule,
+    HistoryModule,
     ItemsModule,
   ],
   providers: [UsersRepository],
