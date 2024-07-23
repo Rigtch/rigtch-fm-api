@@ -11,7 +11,7 @@ import { CacheInterceptor } from '@nestjs/cache-manager'
 
 import { ApiItemQuery, ApiUser, RequestUser } from '../decorators'
 import { LastItemQuery, TopItemQuery } from '../dtos'
-import { CheckUserIdGuard } from '../guards'
+import { ValidateUserIdGuard } from '../guards'
 import { User } from '../user.entity'
 import { ArtistsPageDocument, TracksPageDocument } from '../docs'
 
@@ -24,7 +24,7 @@ import { ItemsService } from '@modules/items'
 
 @Controller('users/:id/profile')
 @ApiTags('users/{id}/profile')
-@UseGuards(CheckUserIdGuard, TokenGuard)
+@UseGuards(ValidateUserIdGuard, TokenGuard)
 @ApiAuth()
 export class UsersProfileController {
   constructor(

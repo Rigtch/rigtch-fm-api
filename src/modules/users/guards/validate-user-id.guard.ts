@@ -14,7 +14,7 @@ import { USER } from '../constants'
 import { NOT_BEEN_FOUND } from '@common/constants'
 
 @Injectable()
-export class CheckUserIdGuard implements CanActivate {
+export class ValidateUserIdGuard implements CanActivate {
   constructor(private readonly usersRepository: UsersRepository) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {

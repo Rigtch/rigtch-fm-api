@@ -4,7 +4,7 @@ import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { UsersRepository } from '../users.repository'
 import { User } from '../user.entity'
 import { USERS, USER } from '../constants'
-import { CheckUserIdGuard } from '../guards'
+import { ValidateUserIdGuard } from '../guards'
 import { ApiUser, RequestUser } from '../decorators'
 import { MeBody } from '../dtos'
 
@@ -82,7 +82,7 @@ export class UsersController {
   }
 
   @Get(':id')
-  @UseGuards(CheckUserIdGuard)
+  @UseGuards(ValidateUserIdGuard)
   @ApiOperation({
     summary: 'Getting one user by id.',
     description: 'Getting one user specified by the id.',

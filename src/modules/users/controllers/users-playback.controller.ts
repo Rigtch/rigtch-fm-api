@@ -2,7 +2,7 @@ import { Controller, Get, Put, UseGuards } from '@nestjs/common'
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { AccessToken } from '@spotify/web-api-ts-sdk'
 
-import { CheckIsCurrentUserGuard, CheckUserIdGuard } from '../guards'
+import { CheckIsCurrentUserGuard, ValidateUserIdGuard } from '../guards'
 import { ApiUser } from '../decorators'
 
 import { ONE_SUCCESSFULLY_RETRIEVED } from '@common/constants'
@@ -13,7 +13,7 @@ import { TokenGuard } from '@common/guards'
 
 @Controller('users/:id/playback')
 @ApiTags('users/{id}/playback')
-@UseGuards(CheckUserIdGuard, TokenGuard)
+@UseGuards(ValidateUserIdGuard, TokenGuard)
 @ApiAuth()
 export class UsersPlaybackController {
   constructor(private readonly spotifyService: SpotifyService) {}
