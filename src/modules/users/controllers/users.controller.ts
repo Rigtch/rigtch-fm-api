@@ -7,7 +7,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common'
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
-import { CacheInterceptor } from '@nestjs/cache-manager'
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager'
 
 import { UsersRepository } from '../users.repository'
 import { User } from '../user.entity'
@@ -92,6 +92,7 @@ export class UsersController {
   @Get(':id')
   @UseGuards(CheckUserIdGuard)
   @UseInterceptors(CacheInterceptor)
+  @CacheTTL(3600)
   @ApiOperation({
     summary: 'Getting one user by id (cached).',
     description: 'Getting one user specified by the id (cached).',
