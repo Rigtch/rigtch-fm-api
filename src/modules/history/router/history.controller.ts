@@ -12,7 +12,7 @@ import {
 
 import { ApiUser, RequestUser } from '@modules/users/decorators'
 import { User } from '@modules/users/user.entity'
-import { CheckUserIdGuard } from '@modules/users/guards'
+import { ValidateUserIdGuard } from '@modules/users/guards'
 import { ApiAuth, RequestToken } from '@common/decorators'
 import { HistoryTrack, HistoryTracksRepository } from '@modules/history/tracks'
 import { HISTORY_QUEUE, SYNCHRONIZE_JOB } from '@modules/history/constants'
@@ -27,7 +27,7 @@ export const historyTracksPaginateConfig: PaginateConfig<HistoryTrack> = {
 
 @Controller('users/:id/history')
 @ApiTags('users/{id}/history')
-@UseGuards(CheckUserIdGuard)
+@UseGuards(ValidateUserIdGuard)
 @ApiAuth()
 export class HistoryController {
   constructor(

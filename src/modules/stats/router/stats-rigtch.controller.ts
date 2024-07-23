@@ -25,11 +25,11 @@ import { MANY_SUCCESSFULLY_RETRIEVED } from '@common/constants'
 import { ApiAuth } from '@common/decorators'
 import type { User } from '@modules/users'
 import { ApiUser, RequestUser } from '@modules/users/decorators'
-import { CheckUserIdGuard } from '@modules/users/guards'
+import { ValidateUserIdGuard } from '@modules/users/guards'
 
 @Controller('/users/:id/stats/rigtch')
 @ApiTags('users/{id}/stats/rigtch')
-@UseGuards(CheckUserIdGuard, TimeRangeGuard)
+@UseGuards(ValidateUserIdGuard, TimeRangeGuard)
 @UseInterceptors(CacheInterceptor)
 @ApiAuth()
 @ApiStatsRigtchQuery()

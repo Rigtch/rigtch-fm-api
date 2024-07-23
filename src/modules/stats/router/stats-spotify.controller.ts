@@ -11,7 +11,7 @@ import { AccessToken } from '@spotify/web-api-ts-sdk'
 
 import { ApiAuth, RequestToken } from '@common/decorators'
 import { TokenGuard } from '@common/guards'
-import { CheckUserIdGuard } from '@modules/users/guards'
+import { ValidateUserIdGuard } from '@modules/users/guards'
 import { ItemsService } from '@modules/items'
 import { SpotifyService } from '@modules/spotify'
 import { ApiItemQuery, ApiUser } from '@modules/users/decorators'
@@ -24,7 +24,7 @@ import { TopItemQuery } from '@modules/users/dtos'
 
 @Controller('/users/:id/stats/spotify')
 @ApiTags('users/{id}/stats/spotify')
-@UseGuards(CheckUserIdGuard, TokenGuard)
+@UseGuards(ValidateUserIdGuard, TokenGuard)
 @UseInterceptors(CacheInterceptor)
 @ApiAuth()
 @ApiUser()

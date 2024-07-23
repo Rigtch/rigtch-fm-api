@@ -9,21 +9,21 @@ import {
 
 import { UsersRepository } from '../users.repository'
 
-import { CheckUserIdGuard } from './check-user-id.guard'
+import { ValidateUserIdGuard } from './validate-user-id.guard'
 
 import { contextFactoryMock, userMock } from '@common/mocks'
 
-describe('CheckUserIdGuard', () => {
+describe('ValidateUserIdGuard', () => {
   const id = '2a348ca4-7a80-4f0f-b42a-c6c62a1145c6'
 
   let moduleRef: TestingModule
-  let checkUserIdGuard: CheckUserIdGuard
+  let validateUserIdGuard: ValidateUserIdGuard
   let usersRepository: UsersRepository
 
   beforeEach(async () => {
     moduleRef = await Test.createTestingModule({
       providers: [
-        CheckUserIdGuard,
+        ValidateUserIdGuard,
         {
           provide: UsersRepository,
           useValue: {
@@ -33,7 +33,7 @@ describe('CheckUserIdGuard', () => {
       ],
     }).compile()
 
-    checkUserIdGuard = moduleRef.get(CheckUserIdGuard)
+    validateUserIdGuard = moduleRef.get(ValidateUserIdGuard)
     usersRepository = moduleRef.get(UsersRepository)
   })
 
@@ -42,7 +42,7 @@ describe('CheckUserIdGuard', () => {
   })
 
   it('should be defined', () => {
-    expect(checkUserIdGuard).toBeDefined()
+    expect(validateUserIdGuard).toBeDefined()
   })
 
   describe('canActivate', () => {
@@ -69,14 +69,14 @@ describe('CheckUserIdGuard', () => {
       })
 
       await expect(
-        checkUserIdGuard.canActivate(contextMock)
+        validateUserIdGuard.canActivate(contextMock)
       ).rejects.toThrowError(BadRequestException)
     })
 
     test('should return true if user is found', async () => {
       findOneBySpy.mockResolvedValueOnce(userMock)
 
-      expect(await checkUserIdGuard.canActivate(contextMock)).toBeTruthy()
+      expect(await validateUserIdGuard.canActivate(contextMock)).toBeTruthy()
 
       expect(findOneBySpy).toHaveBeenCalledWith({ id })
     })
@@ -85,7 +85,7 @@ describe('CheckUserIdGuard', () => {
       findOneBySpy.mockResolvedValueOnce(null)
 
       await expect(
-        checkUserIdGuard.canActivate(contextMock)
+        validateUserIdGuard.canActivate(contextMock)
       ).rejects.toThrowError(NotFoundException)
 
       expect(findOneBySpy).toHaveBeenCalledWith({ id })
