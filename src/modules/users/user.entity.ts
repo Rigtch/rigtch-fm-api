@@ -32,5 +32,10 @@ export class User {
   @CreateDateColumn({
     type: 'timestamptz',
   })
+  @ApiProperty({
+    type: Date,
+    example: '2024-05-28T07:08:59.724Z',
+    description: 'The date and time the user was created.',
+  })
   createdAt: Date
 }
