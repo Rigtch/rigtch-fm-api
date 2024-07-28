@@ -43,9 +43,9 @@
     }
   },
   "dependencies": {
-    "@bull-board/api": "^5.20.1",
-    "@bull-board/express": "^5.20.1",
-    "@bull-board/nestjs": "^5.20.1",
+    "@bull-board/api": "^5.21.1",
+    "@bull-board/express": "^5.21.1",
+    "@bull-board/nestjs": "^5.21.1",
     "@nestjs/axios": "3.0.2",
     "@nestjs/bull": "^10.1.1",
     "@nestjs/cache-manager": "^2.2.2",
@@ -59,7 +59,7 @@
     "@spotify/web-api-ts-sdk": "1.2.0",
     "@vitest/coverage-v8": "1.6.0",
     "axios": "1.7.2",
-    "bull": "^4.12.9",
+    "bull": "^4.15.1",
     "cache-manager": "^5.6.1",
     "cache-manager-ioredis-yet": "^2.1.1",
     "class-transformer": "0.5.1",
