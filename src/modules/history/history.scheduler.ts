@@ -8,6 +8,7 @@ import {
 import { ConfigService } from '@nestjs/config'
 import { InjectQueue } from '@nestjs/bull'
 import { Queue } from 'bull'
+import { CronJob } from 'cron'
 
 import { HISTORY_QUEUE, SYNCHRONIZE_JOB } from './constants'
 import { synchronizeJobIdFactory } from './utils'
@@ -31,12 +32,16 @@ export class HistoryScheduler implements OnApplicationBootstrap {
   ) {}
 
   onApplicationBootstrap() {
-    if (
-      this.configService.get<boolean>(ENABLE_HISTORY_SYNCHRONIZATION) === true
-    )
-      return this.scheduleHistorySynchronization()
+    if (!this.configService.get<boolean>(ENABLE_HISTORY_SYNCHRONIZATION))
+      this.logger.log('History synchronization is disabled')
 
-    this.logger.log('History synchronization is disabled')
+    CronJob.from({
+      cronTime: this.configService.get<string>(
+        HISTORY_SYNCHRONIZATION_CRONTIME
+      )!,
+      onTick: () => this.triggerHistorySynchronization(),
+      start: true,
+    })
   }
 
   async scheduleHistorySynchronization() {
@@ -46,6 +51,27 @@ export class HistoryScheduler implements OnApplicationBootstrap {
 
     for (const user of users) {
       await this.scheduleHistorySynchronizationForUser(user)
+    }
+  }
+
+  async triggerHistorySynchronization() {
+    const users = await this.usersRepository.find()
+
+    for (const user of users) {
+      this.logger.log(
+        `Triggering synchronize job for user: ${user.profile.displayName}`
+      )
+
+      await this.historyQueue.add(SYNCHRONIZE_JOB, user, {
+        priority: 1,
+        repeat: {
+          cron: this.configService.get<string>(
+            HISTORY_SYNCHRONIZATION_CRONTIME
+          )!,
+        },
+        attempts: 3,
+        jobId: synchronizeJobIdFactory(user.id),
+      })
     }
   }
 
