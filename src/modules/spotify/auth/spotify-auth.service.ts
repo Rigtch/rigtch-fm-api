@@ -11,6 +11,7 @@ import { Environment } from '@config/environment'
 import { catchSpotifyError } from '@common/utils'
 import { Profile, SdkProfile } from '@common/types/spotify'
 import { AdaptersService } from '@common/adapters'
+import { defaultBackoffOptions } from '@common/options'
 
 @Injectable()
 export class SpotifyAuthService {
@@ -54,7 +55,7 @@ export class SpotifyAuthService {
               catchError(catchSpotifyError)
             )
         ),
-      { numOfAttempts: 3 }
+      defaultBackoffOptions
     )
   }
 
