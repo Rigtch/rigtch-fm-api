@@ -111,7 +111,7 @@
     "eslint-plugin-vitest": "0.3.20",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.0",
-    "node-mocks-http": "1.13.0",
+    "node-mocks-http": "1.15.0",
     "prettier": "^3.2.4",
     "source-map-support": "^0.5.21",
     "ts-loader": "^9.5.1",
