@@ -1,8 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { Job } from 'bullmq'
+import { Job, Queue } from 'bullmq'
 import { AccessToken, MaxInt, PlayHistory } from '@spotify/web-api-ts-sdk'
 import { MockInstance } from 'vitest'
 import { DeepMockProxy, MockProxy, mock, mockDeep } from 'vitest-mock-extended'
+import { getQueueToken } from '@nestjs/bullmq'
+import { UnauthorizedException } from '@nestjs/common'
 
 import { HistoryProcessor } from './history.processor'
 import {
@@ -10,6 +12,7 @@ import {
   HistoryTracksRepository,
   HistoryTracksService,
 } from './tracks'
+import { HISTORY_QUEUE } from './constants'
 
 import { SpotifyService } from '@modules/spotify'
 import { accessTokenMock, trackEntityMock, userMock } from '@common/mocks'
@@ -33,6 +36,7 @@ describe('HistoryProcessor', () => {
   let historyTracksRepository: HistoryTracksRepository
   let historyTracksService: HistoryTracksService
   let spotifyService: SpotifyService
+  let historyQueue: Queue<User>
 
   beforeEach(async () => {
     moduleRef = await Test.createTestingModule({
@@ -59,6 +63,13 @@ describe('HistoryProcessor', () => {
             },
           },
         },
+        {
+          provide: getQueueToken(HISTORY_QUEUE),
+          useValue: {
+            remove: vi.fn(),
+            removeRepeatableByKey: vi.fn(),
+          },
+        },
       ],
     }).compile()
 
@@ -66,6 +77,7 @@ describe('HistoryProcessor', () => {
     historyTracksRepository = moduleRef.get(HistoryTracksRepository)
     historyTracksService = moduleRef.get(HistoryTracksService)
     spotifyService = moduleRef.get(SpotifyService)
+    historyQueue = moduleRef.get(getQueueToken(HISTORY_QUEUE))
   })
 
   afterEach(() => {
@@ -185,43 +197,13 @@ describe('HistoryProcessor', () => {
       })
       expect(getRecentlyPlayedTracksSpy).toHaveBeenCalled()
     })
-
-    test('should not create history tracks if refresh token is revoked', async () => {
-      const errorMock = {
-        error_description: 'Refresh token revoked',
-      }
-
-      tokenSpy.mockRejectedValue(errorMock)
-
-      await historyProcessor.process(jobMock)
-
-      expect(tokenSpy).toHaveBeenCalledWith({
-        refreshToken: userMock.refreshToken,
-      })
-      expect(getRecentlyPlayedTracksSpy).not.toHaveBeenCalled()
-      expect(createSpy).not.toHaveBeenCalled()
-    })
-
-    test('should throw error', async () => {
-      const errorMock = new Error('error')
-
-      tokenSpy.mockRejectedValue(errorMock)
-
-      await expect(historyProcessor.process(jobMock)).rejects.toThrowError(
-        errorMock
-      )
-
-      expect(tokenSpy).toHaveBeenCalledWith({
-        refreshToken: userMock.refreshToken,
-      })
-      expect(getRecentlyPlayedTracksSpy).not.toHaveBeenCalled()
-      expect(createSpy).not.toHaveBeenCalled()
-    })
   })
 
   describe('EventListeners', () => {
     let logSpy: MockInstance
     let errorSpy: MockInstance
+    let removeSpy: MockInstance
+    let removeRepeatableByKeySpy: MockInstance
 
     let errorMock: Error
     let jobMock: DeepMockProxy<Job<User>>
@@ -231,6 +213,8 @@ describe('HistoryProcessor', () => {
       logSpy = vi.spyOn(historyProcessor.logger, 'log')
       // @ts-expect-error - mocking private property
       errorSpy = vi.spyOn(historyProcessor.logger, 'error')
+      removeSpy = vi.spyOn(historyQueue, 'remove')
+      removeRepeatableByKeySpy = vi.spyOn(historyQueue, 'removeRepeatableByKey')
 
       jobMock = mockDeep<Job<User>>({
         data: { profile: { displayName: 'displayName' } },
@@ -244,10 +228,33 @@ describe('HistoryProcessor', () => {
       expect(errorSpy).toHaveBeenCalled()
     })
 
-    test('onFailed', () => {
-      historyProcessor.onFailed(jobMock, errorMock)
+    describe('onFailed', () => {
+      test('should log error', () => {
+        historyProcessor.onFailed(jobMock, errorMock)
 
-      expect(errorSpy).toHaveBeenCalledTimes(2)
+        expect(errorSpy).toHaveBeenCalledTimes(2)
+      })
+
+      describe('Invalid token error', () => {
+        beforeEach(() => {
+          errorMock = new UnauthorizedException('Invalid token')
+        })
+
+        test('should remove job from the queue', () => {
+          jobMock.repeatJobKey = undefined
+
+          historyProcessor.onFailed(jobMock, errorMock)
+
+          expect(removeSpy).toHaveBeenCalled()
+          expect(removeRepeatableByKeySpy).not.toHaveBeenCalled()
+        })
+
+        test('should remove repeatable job from the queue', () => {
+          historyProcessor.onFailed(jobMock, errorMock)
+
+          expect(removeRepeatableByKeySpy).toHaveBeenCalled()
+        })
+      })
     })
 
     test('onActive', () => {
