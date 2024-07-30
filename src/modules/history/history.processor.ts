@@ -1,9 +1,10 @@
 import { OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq'
-import { Job } from 'bullmq'
-import { Logger } from '@nestjs/common'
+import { Job, Queue } from 'bullmq'
+import { Logger, UnauthorizedException } from '@nestjs/common'
 
 import { HISTORY_QUEUE } from './constants'
 import { HistoryTracksRepository, HistoryTracksService } from './tracks'
+import { InjectHistoryQueue } from './decorators'
 
 import { User } from '@modules/users/user.entity'
 import { SpotifyService } from '@modules/spotify'
@@ -15,56 +16,46 @@ export class HistoryProcessor extends WorkerHost {
   constructor(
     private readonly historyTracksRepository: HistoryTracksRepository,
     private readonly historyTracksService: HistoryTracksService,
-    private readonly spotifyService: SpotifyService
+    private readonly spotifyService: SpotifyService,
+    @InjectHistoryQueue() private readonly historyQueue: Queue<User>
   ) {
     super()
   }
 
   async process({ data: user }: Job<User>) {
-    try {
-      const accessToken = await this.spotifyService.auth.token({
-        refreshToken: user.refreshToken,
-      })
+    const accessToken = await this.spotifyService.auth.token({
+      refreshToken: user.refreshToken,
+    })
 
-      const { items: playHistory } =
-        await this.spotifyService.player.getRecentlyPlayedTracks(
-          accessToken,
-          50,
-          {},
-          false
-        )
-
-      const lastHistoryTrack =
-        await this.historyTracksRepository.findLastHistoryTrackByUser(user.id)
-
-      if (lastHistoryTrack) {
-        const latestTrackIndex = playHistory.findIndex(
-          ({ track, played_at }) =>
-            track.id === lastHistoryTrack.track.externalId &&
-            new Date(played_at).getTime() ===
-              lastHistoryTrack.playedAt.getTime()
-        )
-
-        const latestPlayHistory = playHistory.filter((_, index) =>
-          latestTrackIndex === -1 ? true : index < latestTrackIndex
-        )
-
-        if (latestPlayHistory.length > 0)
-          await this.historyTracksService.create(latestPlayHistory, user)
-        else
-          this.logger.log(
-            `No new tracks found for user: ${user.profile.displayName} - skipping synchronization`
-          )
-      } else await this.historyTracksService.create(playHistory, user)
-    } catch (error) {
-      if (
-        'error_description' in error &&
-        error.error_description === 'Refresh token revoked'
+    const { items: playHistory } =
+      await this.spotifyService.player.getRecentlyPlayedTracks(
+        accessToken,
+        50,
+        {},
+        false
       )
-        return
 
-      throw error
-    }
+    const lastHistoryTrack =
+      await this.historyTracksRepository.findLastHistoryTrackByUser(user.id)
+
+    if (lastHistoryTrack) {
+      const latestTrackIndex = playHistory.findIndex(
+        ({ track, played_at }) =>
+          track.id === lastHistoryTrack.track.externalId &&
+          new Date(played_at).getTime() === lastHistoryTrack.playedAt.getTime()
+      )
+
+      const latestPlayHistory = playHistory.filter((_, index) =>
+        latestTrackIndex === -1 ? true : index < latestTrackIndex
+      )
+
+      if (latestPlayHistory.length > 0)
+        await this.historyTracksService.create(latestPlayHistory, user)
+      else
+        this.logger.log(
+          `No new tracks found for user: ${user.profile.displayName} - skipping synchronization`
+        )
+    } else await this.historyTracksService.create(playHistory, user)
   }
 
   @OnWorkerEvent('error')
@@ -73,11 +64,29 @@ export class HistoryProcessor extends WorkerHost {
   }
 
   @OnWorkerEvent('failed')
-  onFailed({ data: { profile } }: Job<User>, error: Error) {
+  onFailed({ data: { profile }, id, repeatJobKey }: Job<User>, error: Error) {
     this.logger.error(
       `History synchronization failed for user: ${profile.displayName}`
     )
     this.logger.error(error)
+
+    if (
+      error instanceof UnauthorizedException &&
+      error.message === 'Invalid token' &&
+      id
+    ) {
+      this.historyQueue.remove(id)
+
+      this.logger.warn(`Job has been removed from the queue`)
+
+      if (repeatJobKey) {
+        this.historyQueue.removeRepeatableByKey(repeatJobKey)
+
+        this.logger.warn(
+          `Repeatable job for user ${profile.displayName} has been removed from the queue`
+        )
+      }
+    }
   }
 
   @OnWorkerEvent('active')
