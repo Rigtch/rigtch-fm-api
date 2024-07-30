@@ -185,6 +185,38 @@ describe('HistoryProcessor', () => {
       })
       expect(getRecentlyPlayedTracksSpy).toHaveBeenCalled()
     })
+
+    test('should not create history tracks if refresh token is revoked', async () => {
+      const errorMock = {
+        error_description: 'Refresh token revoked',
+      }
+
+      tokenSpy.mockRejectedValue(errorMock)
+
+      await historyProcessor.process(jobMock)
+
+      expect(tokenSpy).toHaveBeenCalledWith({
+        refreshToken: userMock.refreshToken,
+      })
+      expect(getRecentlyPlayedTracksSpy).not.toHaveBeenCalled()
+      expect(createSpy).not.toHaveBeenCalled()
+    })
+
+    test('should throw error', async () => {
+      const errorMock = new Error('error')
+
+      tokenSpy.mockRejectedValue(errorMock)
+
+      await expect(historyProcessor.process(jobMock)).rejects.toThrowError(
+        errorMock
+      )
+
+      expect(tokenSpy).toHaveBeenCalledWith({
+        refreshToken: userMock.refreshToken,
+      })
+      expect(getRecentlyPlayedTracksSpy).not.toHaveBeenCalled()
+      expect(createSpy).not.toHaveBeenCalled()
+    })
   })
 
   describe('EventListeners', () => {
