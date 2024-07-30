@@ -4,6 +4,7 @@ import { getQueueToken } from '@nestjs/bullmq'
 import { DeepMockProxy, mockDeep } from 'vitest-mock-extended'
 import { PaginateQuery } from 'nestjs-paginate'
 import { MockInstance } from 'vitest'
+import { CacheInterceptor } from '@nestjs/cache-manager'
 
 import { HistoryQueueEvents } from '../history.queue-events'
 
@@ -71,7 +72,12 @@ describe('HistoryController', () => {
           },
         },
       ],
-    }).compile()
+    })
+      .overrideInterceptor(CacheInterceptor)
+      .useValue({
+        intercept: vi.fn(),
+      })
+      .compile()
 
     historyController = moduleRef.get(HistoryController)
     historyQueue = moduleRef.get(getQueueToken(HISTORY_QUEUE))

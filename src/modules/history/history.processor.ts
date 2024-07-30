@@ -30,7 +30,7 @@ export class HistoryProcessor extends WorkerHost {
     const { items: playHistory } =
       await this.spotifyService.player.getRecentlyPlayedTracks(
         accessToken,
-        5,
+        50,
         {},
         false
       )
