@@ -6,11 +6,11 @@ import {
   forwardRef,
 } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { InjectQueue } from '@nestjs/bull'
-import { Queue } from 'bull'
+import { Queue } from 'bullmq'
 
-import { HISTORY_QUEUE, SYNCHRONIZE_JOB } from './constants'
+import { SYNCHRONIZE_JOB } from './constants'
 import { synchronizeJobIdFactory } from './utils'
+import { InjectHistoryQueue } from './decorators'
 
 import { User } from '@modules/users/user.entity'
 import { UsersRepository } from '@modules/users/users.repository'
@@ -26,7 +26,7 @@ export class HistoryScheduler implements OnApplicationBootstrap {
   constructor(
     @Inject(forwardRef(() => UsersRepository))
     private readonly usersRepository: UsersRepository,
-    @InjectQueue(HISTORY_QUEUE) private readonly historyQueue: Queue<User>,
+    @InjectHistoryQueue() private readonly historyQueue: Queue<User>,
     private readonly configService: ConfigService
   ) {}
 
@@ -64,7 +64,9 @@ export class HistoryScheduler implements OnApplicationBootstrap {
     await this.historyQueue.add(SYNCHRONIZE_JOB, user, {
       priority: 1,
       repeat: {
-        cron: this.configService.get<string>(HISTORY_SYNCHRONIZATION_CRONTIME)!,
+        pattern: this.configService.get<string>(
+          HISTORY_SYNCHRONIZATION_CRONTIME
+        )!,
       },
       attempts: 3,
       jobId,

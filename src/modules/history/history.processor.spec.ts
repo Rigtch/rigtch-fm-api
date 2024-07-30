@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { Job } from 'bull'
+import { Job } from 'bullmq'
 import { AccessToken, MaxInt, PlayHistory } from '@spotify/web-api-ts-sdk'
 import { MockInstance } from 'vitest'
 import { DeepMockProxy, MockProxy, mock, mockDeep } from 'vitest-mock-extended'
@@ -114,7 +114,7 @@ describe('HistoryProcessor', () => {
 
       findLastHistoryTrackByUserSpy.mockResolvedValue(null)
 
-      await historyProcessor.synchronize(jobMock)
+      await historyProcessor.process(jobMock)
 
       expect(createSpy).toHaveBeenCalledWith(playHistoryMock, userMock)
       expect(tokenSpy).toHaveBeenCalledWith({
@@ -148,7 +148,7 @@ describe('HistoryProcessor', () => {
         })
       )
 
-      await historyProcessor.synchronize(jobMock)
+      await historyProcessor.process(jobMock)
 
       expect(createSpy).toHaveBeenCalledWith([playHistory[0]], userMock)
       expect(tokenSpy).toHaveBeenCalledWith({
@@ -177,7 +177,7 @@ describe('HistoryProcessor', () => {
         items: playHistory,
       } as SdkRecentlyPlayedTracksPage)
 
-      await historyProcessor.synchronize(jobMock)
+      await historyProcessor.process(jobMock)
 
       expect(createSpy).not.toHaveBeenCalled()
       expect(tokenSpy).toHaveBeenCalledWith({

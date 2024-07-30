@@ -1,7 +1,6 @@
 import { Controller, Get, UseGuards } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
-import { InjectQueue } from '@nestjs/bull'
-import { Queue } from 'bull'
+import { Queue } from 'bullmq'
 import {
   Paginate,
   PaginateConfig,
@@ -10,12 +9,15 @@ import {
   paginate,
 } from 'nestjs-paginate'
 
+import { HistoryQueueEvents } from '../history.queue-events'
+import { InjectHistoryQueue } from '../decorators'
+
 import { ApiUser, RequestUser } from '@modules/users/decorators'
 import { User } from '@modules/users/user.entity'
 import { ValidateUserIdGuard } from '@modules/users/guards'
 import { ApiAuth, RequestToken } from '@common/decorators'
 import { HistoryTrack, HistoryTracksRepository } from '@modules/history/tracks'
-import { HISTORY_QUEUE, SYNCHRONIZE_JOB } from '@modules/history/constants'
+import { SYNCHRONIZE_JOB } from '@modules/history/constants'
 import { synchronizeJobIdFactory } from '@modules/history/utils'
 
 export const historyTracksPaginateConfig: PaginateConfig<HistoryTrack> = {
@@ -32,7 +34,8 @@ export const historyTracksPaginateConfig: PaginateConfig<HistoryTrack> = {
 export class HistoryController {
   constructor(
     private readonly historyTracksRepository: HistoryTracksRepository,
-    @InjectQueue(HISTORY_QUEUE) private readonly historyQueue: Queue<User>
+    @InjectHistoryQueue() private readonly historyQueue: Queue<User>,
+    private readonly historyQueueEvents: HistoryQueueEvents
   ) {}
 
   @Get()
@@ -57,7 +60,9 @@ export class HistoryController {
         }
       )
 
-      await synchronizeJob.finished()
+      await synchronizeJob.waitUntilFinished(
+        this.historyQueueEvents.queueEvents
+      )
     }
 
     const queryBuilder = this.historyTracksRepository

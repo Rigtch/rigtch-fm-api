@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm'
-import { BullModule } from '@nestjs/bull'
+import { BullModule } from '@nestjs/bullmq'
 import { BullBoardModule } from '@bull-board/nestjs'
 import { ExpressAdapter } from '@bull-board/express'
 import { CacheModule } from '@nestjs/cache-manager'
@@ -48,10 +48,7 @@ import { StatsRouterModule } from '@modules/stats/router'
     }),
     BullModule.forRootAsync({
       useFactory: (configService: ConfigService) => ({
-        redis: configService.get('redis'),
-        settings: {
-          maxStalledCount: 1,
-        },
+        connection: configService.get('redis')!,
       }),
       imports: [ConfigModule],
       inject: [ConfigService],
