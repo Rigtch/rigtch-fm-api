@@ -1,9 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { Job, Queue } from 'bull'
-import { getQueueToken } from '@nestjs/bull'
+import { Job, Queue } from 'bullmq'
+import { getQueueToken } from '@nestjs/bullmq'
 import { DeepMockProxy, mockDeep } from 'vitest-mock-extended'
 import { PaginateQuery } from 'nestjs-paginate'
 import { MockInstance } from 'vitest'
+
+import { HistoryQueueEvents } from '../history.queue-events'
 
 import { HistoryController } from './history.controller'
 
@@ -23,6 +25,7 @@ describe('HistoryController', () => {
   let moduleRef: TestingModule
   let historyController: HistoryController
   let historyQueue: Queue<User>
+  let historyQueueEvents: HistoryQueueEvents
 
   let historyTrackMock: HistoryTrack
   let synchronizeJobMock: DeepMockProxy<Job<User>>
@@ -35,7 +38,7 @@ describe('HistoryController', () => {
       playedAt: new Date(),
     }
     synchronizeJobMock = mockDeep<Job<User>>({
-      finished: vi.fn(),
+      waitUntilFinished: vi.fn(),
     })
 
     moduleRef = await Test.createTestingModule({
@@ -59,11 +62,20 @@ describe('HistoryController', () => {
             add: vi.fn().mockResolvedValue(synchronizeJobMock),
           },
         },
+        {
+          provide: HistoryQueueEvents,
+          useValue: {
+            queueEvents: {
+              on: vi.fn(),
+            },
+          },
+        },
       ],
     }).compile()
 
     historyController = moduleRef.get(HistoryController)
     historyQueue = moduleRef.get(getQueueToken(HISTORY_QUEUE))
+    historyQueueEvents = moduleRef.get(HistoryQueueEvents)
   })
 
   afterEach(() => {
@@ -129,11 +141,11 @@ describe('HistoryController', () => {
 
     describe('synchronize', () => {
       let synchronizeSpy: MockInstance
-      let finishedSpy: MockInstance
+      let waitUntilFinishedSpy: MockInstance
 
       beforeEach(() => {
         synchronizeSpy = vi.spyOn(historyQueue, 'add')
-        finishedSpy = vi.spyOn(synchronizeJobMock, 'finished')
+        waitUntilFinishedSpy = vi.spyOn(synchronizeJobMock, 'waitUntilFinished')
       })
 
       test('should synchronize history on first page', async () => {
@@ -142,7 +154,9 @@ describe('HistoryController', () => {
         expect(synchronizeSpy).toHaveBeenCalledWith(SYNCHRONIZE_JOB, userMock, {
           jobId: expect.any(String),
         })
-        expect(finishedSpy).toHaveBeenCalled()
+        expect(waitUntilFinishedSpy).toHaveBeenCalledWith(
+          historyQueueEvents.queueEvents
+        )
       })
 
       test('should not synchronize history on other pages', async () => {
@@ -151,7 +165,7 @@ describe('HistoryController', () => {
         await historyController.getHistory(userMock, '', paginateQueryMock)
 
         expect(synchronizeSpy).not.toHaveBeenCalled()
-        expect(finishedSpy).not.toHaveBeenCalled()
+        expect(waitUntilFinishedSpy).not.toHaveBeenCalled()
       })
     })
   })

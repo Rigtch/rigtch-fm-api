@@ -1,20 +1,19 @@
 import { Module, forwardRef } from '@nestjs/common'
-import { ScheduleModule } from '@nestjs/schedule'
-import { BullModule } from '@nestjs/bull'
+import { BullModule } from '@nestjs/bullmq'
 import { BullBoardModule } from '@bull-board/nestjs'
-import { BullAdapter } from '@bull-board/api/bullAdapter'
+import { BullMQAdapter } from '@bull-board/api/bullMQAdapter'
 
 import { HistoryScheduler } from './history.scheduler'
 import { HistoryTracksModule } from './tracks'
 import { HISTORY_QUEUE } from './constants'
 import { HistoryProcessor } from './history.processor'
+import { HistoryQueueEvents } from './history.queue-events'
 
 import { UsersModule } from '@modules/users'
 import { SpotifyModule } from '@modules/spotify'
 
 @Module({
   imports: [
-    ScheduleModule.forRoot(),
     BullModule.registerQueue({
       name: HISTORY_QUEUE,
       defaultJobOptions: {
@@ -24,13 +23,13 @@ import { SpotifyModule } from '@modules/spotify'
     }),
     BullBoardModule.forFeature({
       name: HISTORY_QUEUE,
-      adapter: BullAdapter,
+      adapter: BullMQAdapter,
     }),
     forwardRef(() => UsersModule),
     SpotifyModule,
     HistoryTracksModule,
   ],
-  providers: [HistoryScheduler, HistoryProcessor],
-  exports: [HistoryScheduler, BullModule],
+  providers: [HistoryScheduler, HistoryProcessor, HistoryQueueEvents],
+  exports: [HistoryScheduler, BullModule, HistoryProcessor, HistoryQueueEvents],
 })
 export class HistoryModule {}

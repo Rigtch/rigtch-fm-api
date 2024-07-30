@@ -1,8 +1,8 @@
-import { Queue } from 'bull'
+import { Queue } from 'bullmq'
 import { MockInstance } from 'vitest'
 import { Test, TestingModule } from '@nestjs/testing'
 import { ConfigService } from '@nestjs/config'
-import { getQueueToken } from '@nestjs/bull'
+import { getQueueToken } from '@nestjs/bullmq'
 import { mock } from 'vitest-mock-extended'
 
 import { HistoryScheduler } from './history.scheduler'
@@ -185,7 +185,7 @@ describe('HistoryScheduler', () => {
       expect(addSpy).toHaveBeenCalledWith(SYNCHRONIZE_JOB, customUserMock, {
         priority: 1,
         repeat: {
-          cron: expect.any(String),
+          pattern: expect.any(String),
         },
         attempts: 3,
         jobId: synchronizeJobIdFactory(userId, true),
