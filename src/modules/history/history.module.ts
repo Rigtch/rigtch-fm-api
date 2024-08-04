@@ -8,6 +8,7 @@ import { HistoryTracksModule } from './tracks'
 import { HISTORY_QUEUE } from './constants'
 import { HistoryProcessor } from './history.processor'
 import { HistoryQueueEvents } from './history.queue-events'
+import { HistoryService } from './history.service'
 
 import { UsersModule } from '@modules/users'
 import { SpotifyModule } from '@modules/spotify'
@@ -29,7 +30,18 @@ import { SpotifyModule } from '@modules/spotify'
     SpotifyModule,
     HistoryTracksModule,
   ],
-  providers: [HistoryScheduler, HistoryProcessor, HistoryQueueEvents],
-  exports: [HistoryScheduler, BullModule, HistoryProcessor, HistoryQueueEvents],
+  providers: [
+    HistoryScheduler,
+    HistoryProcessor,
+    HistoryQueueEvents,
+    HistoryService,
+  ],
+  exports: [
+    HistoryScheduler,
+    BullModule,
+    HistoryProcessor,
+    HistoryQueueEvents,
+    HistoryService,
+  ],
 })
 export class HistoryModule {}
