@@ -82,7 +82,7 @@ describe('HistoryTracksRepository', () => {
           id: userId,
         },
       },
-      relations: historyTracksRelations,
+      relationLoadStrategy: 'query',
       order: historyTracksOrder,
     })
   })

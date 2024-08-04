@@ -44,7 +44,7 @@ export class HistoryTracksRepository extends Repository<HistoryTrack> {
           id: userId,
         },
       },
-      relations: historyTracksRelations,
+      relationLoadStrategy: 'query',
       order: historyTracksOrder,
     })
   }
