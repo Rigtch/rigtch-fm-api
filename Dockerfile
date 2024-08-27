@@ -23,10 +23,11 @@ COPY package.json ./
 COPY bun.lockb ./
 
 RUN bun install --production --ignore-scripts
+RUN npm install pm2 -g
 
 COPY . .
 
 COPY --from=development /usr/src/app/dist ./dist
 
-CMD ["bun", "dist/main.js"]
+CMD ["pm2-runtime", "dist/main.js", "--max-memory-restart", "400M"]
 
