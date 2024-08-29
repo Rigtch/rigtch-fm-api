@@ -116,6 +116,32 @@ describe('HistoryTracksRepository', () => {
     })
   })
 
+  test('should count history tracks by user and between dates', async () => {
+    const count = 10
+    const after = new Date()
+    const before = new Date()
+
+    const countSpy = vi
+      .spyOn(historyTracksRepository, 'count')
+      .mockResolvedValue(count)
+
+    expect(
+      await historyTracksRepository.countByUserAndBetweenDates(
+        userId,
+        after,
+        before
+      )
+    ).toEqual(count)
+    expect(countSpy).toHaveBeenCalledWith({
+      where: {
+        user: {
+          id: userId,
+        },
+        playedAt: And(MoreThanOrEqual(after), LessThanOrEqual(before)),
+      },
+    })
+  })
+
   test('should create a history track', async () => {
     const createHistoryTrackMock = mock<CreateHistoryTrack>()
 
