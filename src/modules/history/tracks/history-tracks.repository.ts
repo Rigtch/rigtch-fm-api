@@ -67,6 +67,17 @@ export class HistoryTracksRepository extends Repository<HistoryTrack> {
     })
   }
 
+  countByUserAndBetweenDates(userId: string, after: Date, before: Date) {
+    return this.count({
+      where: {
+        user: {
+          id: userId,
+        },
+        playedAt: And(MoreThanOrEqual(after), LessThanOrEqual(before)),
+      },
+    })
+  }
+
   createHistoryTrack(newHistoryTrack: CreateHistoryTrack) {
     const historyTrack = this.create(newHistoryTrack)
 
