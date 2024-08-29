@@ -137,6 +137,11 @@ describe('ReportsService', () => {
           })
         )
 
+        const getCount = (index: number) =>
+          historyTracksMock.filter(
+            ({ playedAt }) => playedAt.getHours() === index
+          ).length
+
         const findByUserAndBetweenDatesSpy = vi
           .spyOn(historyTracksRepository, 'findByUserAndBetweenDates')
           .mockResolvedValue(historyTracksMock)
@@ -151,30 +156,30 @@ describe('ReportsService', () => {
             userMock
           )
         ).toEqual({
-          1: 1,
-          2: 1,
-          3: 1,
-          4: 1,
-          5: 1,
-          6: 1,
-          7: 1,
-          8: 1,
-          9: 1,
-          10: 0,
-          11: 0,
-          12: 0,
-          13: 0,
-          14: 0,
-          15: 0,
-          16: 0,
-          17: 0,
-          18: 0,
-          19: 0,
-          20: 0,
-          21: 0,
-          22: 0,
-          23: 0,
-          24: 0,
+          1: getCount(1),
+          2: getCount(2),
+          3: getCount(3),
+          4: getCount(4),
+          5: getCount(5),
+          6: getCount(6),
+          7: getCount(7),
+          8: getCount(8),
+          9: getCount(9),
+          10: getCount(10),
+          11: getCount(11),
+          12: getCount(12),
+          13: getCount(13),
+          14: getCount(14),
+          15: getCount(15),
+          16: getCount(16),
+          17: getCount(17),
+          18: getCount(18),
+          19: getCount(19),
+          20: getCount(20),
+          21: getCount(21),
+          22: getCount(22),
+          23: getCount(23),
+          24: getCount(24),
         })
 
         expect(findByUserAndBetweenDatesSpy).toHaveBeenCalledWith(
@@ -206,6 +211,16 @@ describe('ReportsService', () => {
           .spyOn(historyTracksRepository, 'findByUserAndBetweenDates')
           .mockResolvedValue(historyTracksMock)
 
+        const getTotalDuration = (index: number) =>
+          historyTracksMock
+            .filter(({ playedAt }) => playedAt.getHours() === index)
+            .map(({ track }) => track.duration)
+            .reduce(
+              (previousDuration, currentDuration) =>
+                previousDuration + currentDuration,
+              0
+            )
+
         expect(
           await reportsService.getListeningHours(
             {
@@ -216,30 +231,30 @@ describe('ReportsService', () => {
             userMock
           )
         ).toEqual({
-          1: DURATION,
-          2: DURATION,
-          3: DURATION,
-          4: DURATION,
-          5: DURATION,
-          6: DURATION,
-          7: DURATION,
-          8: DURATION,
-          9: DURATION,
-          10: 0,
-          11: 0,
-          12: 0,
-          13: 0,
-          14: 0,
-          15: 0,
-          16: 0,
-          17: 0,
-          18: 0,
-          19: 0,
-          20: 0,
-          21: 0,
-          22: 0,
-          23: 0,
-          24: 0,
+          1: getTotalDuration(1),
+          2: getTotalDuration(2),
+          3: getTotalDuration(3),
+          4: getTotalDuration(4),
+          5: getTotalDuration(5),
+          6: getTotalDuration(6),
+          7: getTotalDuration(7),
+          8: getTotalDuration(8),
+          9: getTotalDuration(9),
+          10: getTotalDuration(10),
+          11: getTotalDuration(11),
+          12: getTotalDuration(12),
+          13: getTotalDuration(13),
+          14: getTotalDuration(14),
+          15: getTotalDuration(15),
+          16: getTotalDuration(16),
+          17: getTotalDuration(17),
+          18: getTotalDuration(18),
+          19: getTotalDuration(19),
+          20: getTotalDuration(20),
+          21: getTotalDuration(21),
+          22: getTotalDuration(22),
+          23: getTotalDuration(23),
+          24: getTotalDuration(24),
         })
 
         expect(findByUserAndBetweenDatesSpy).toHaveBeenCalledWith(

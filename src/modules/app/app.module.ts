@@ -20,6 +20,7 @@ import { HistoryModule } from '@modules/history'
 import { ArtistsRouterModule } from '@modules/items/artists/router'
 import { HistoryRouterModule } from '@modules/history/router'
 import { StatsRouterModule } from '@modules/stats/router'
+import { ReportsRouterModule } from '@modules/reports/router'
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { StatsRouterModule } from '@modules/stats/router'
     HistoryModule,
     HistoryRouterModule,
     StatsRouterModule,
+    ReportsRouterModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: './.env',
