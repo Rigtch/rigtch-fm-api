@@ -4,6 +4,7 @@ import { Test, type TestingModule } from '@nestjs/testing'
 import type { Job, Queue } from 'bullmq'
 import type { MockInstance } from 'vitest'
 import { type MockProxy, mock, mockDeep } from 'vitest-mock-extended'
+import { ConfigService } from '@nestjs/config'
 
 import { HISTORY_QUEUE } from './constants'
 import { HistoryProcessor } from './history.processor'
@@ -33,6 +34,12 @@ describe('HistoryProcessor', () => {
           useValue: {
             remove: vi.fn(),
             removeRepeatableByKey: vi.fn(),
+          },
+        },
+        {
+          provide: ConfigService,
+          useValue: {
+            get: vi.fn().mockReturnValue(true),
           },
         },
       ],
