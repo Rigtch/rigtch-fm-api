@@ -25,16 +25,12 @@ export class ReportsService {
 
     const listeningDaysObject: Record<number, number> = {}
 
-    for (let index = 1; index <= timeRangeDays; index++) {
-      const afterParam = new Date(
-        before.getTime() - 1000 * 60 * 60 * 24 * index
-      )
-      const beforeParam = new Date(
-        before.getTime() - 1000 * 60 * 60 * 24 * (index - 1)
-      )
+    for (let index = 0; index < timeRangeDays; index++) {
+      const afterParam = new Date(after.getTime() + 1000 * 60 * 60 * 24 * index)
+      const beforeParam = new Date(afterParam.getTime() + 1000 * 60 * 60 * 24)
 
       if (measurement === StatsMeasurement.PLAYS) {
-        listeningDaysObject[index] =
+        listeningDaysObject[index + 1] =
           await this.historyTracksRepository.countByUserAndBetweenDates(
             user.id,
             afterParam,
@@ -53,7 +49,7 @@ export class ReportsService {
 
         const tracksDurations = historyTracks.map(({ track }) => track.duration)
 
-        listeningDaysObject[index] = tracksDurations.reduce(
+        listeningDaysObject[index + 1] = tracksDurations.reduce(
           (previousDuration, currentDuration) =>
             previousDuration + currentDuration,
           0
