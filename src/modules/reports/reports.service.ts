@@ -82,7 +82,7 @@ export class ReportsService {
 
     const DAY_HOURS = 24
 
-    for (let index = 1; index <= DAY_HOURS; index++) {
+    for (let index = 0; index < DAY_HOURS; index++) {
       const historyTracksWithinSearchedHour = historyTracks.filter(
         ({ playedAt }) => playedAt.getHours() === index
       )
@@ -105,7 +105,7 @@ export class ReportsService {
     return listeningHoursObject
   }
 
-  async getTotalTracks(
+  getTotalTracks(
     { before, after }: Required<ReportsTotalItemsQuery>,
     user: User
   ) {
