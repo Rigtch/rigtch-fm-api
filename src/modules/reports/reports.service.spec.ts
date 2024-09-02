@@ -156,6 +156,7 @@ describe('ReportsService', () => {
             userMock
           )
         ).toEqual({
+          0: getCount(0),
           1: getCount(1),
           2: getCount(2),
           3: getCount(3),
@@ -179,7 +180,6 @@ describe('ReportsService', () => {
           21: getCount(21),
           22: getCount(22),
           23: getCount(23),
-          24: getCount(24),
         })
 
         expect(findByUserAndBetweenDatesSpy).toHaveBeenCalledWith(
@@ -231,6 +231,7 @@ describe('ReportsService', () => {
             userMock
           )
         ).toEqual({
+          0: getTotalDuration(0),
           1: getTotalDuration(1),
           2: getTotalDuration(2),
           3: getTotalDuration(3),
@@ -254,7 +255,6 @@ describe('ReportsService', () => {
           21: getTotalDuration(21),
           22: getTotalDuration(22),
           23: getTotalDuration(23),
-          24: getTotalDuration(24),
         })
 
         expect(findByUserAndBetweenDatesSpy).toHaveBeenCalledWith(
