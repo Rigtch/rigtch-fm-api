@@ -29,7 +29,7 @@ services:
       - 'postgresql_data:/bitnami/postgresql'
 
   redis:
-    image: bitnami/redis:7.2
+    image: bitnami/redis:7.4
     env_file:
       - .env
     environment:
