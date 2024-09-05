@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing'
 
-import { UsersRepository } from '../users.repository'
+import { CheckIsCurrentUserGuard, ValidateUserIdGuard } from '../guards'
 
 import { UsersPlaybackController } from './users-playback.controller'
 
@@ -17,12 +17,6 @@ describe('UsersPlaybackController', () => {
       controllers: [UsersPlaybackController],
       providers: [
         {
-          provide: UsersRepository,
-          useValue: {
-            findOneBy: vi.fn(),
-          },
-        },
-        {
           provide: SpotifyService,
           useValue: {
             player: {
@@ -33,7 +27,16 @@ describe('UsersPlaybackController', () => {
           },
         },
       ],
-    }).compile()
+    })
+      .overrideGuard(CheckIsCurrentUserGuard)
+      .useValue({
+        canActivate: vi.fn().mockResolvedValue(true),
+      })
+      .overrideGuard(ValidateUserIdGuard)
+      .useValue({
+        canActivate: vi.fn().mockResolvedValue(true),
+      })
+      .compile()
 
     usersPlaybackController = moduleRef.get(UsersPlaybackController)
     spotifyService = moduleRef.get(SpotifyService)
