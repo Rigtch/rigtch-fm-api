@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { ExecutionContext, ForbiddenException } from '@nestjs/common'
 import { DeepMockProxy } from 'vitest-mock-extended'
 import { MockInstance } from 'vitest'
+import { ConfigService } from '@nestjs/config'
 
 import { CheckIsCurrentUserGuard } from './check-is-current-user.guard'
 
@@ -11,6 +12,7 @@ describe('CheckIsCurrentUserGuard', () => {
   let moduleRef: TestingModule
   let checkIsCurrentUserGuard: CheckIsCurrentUserGuard
   let spotifyService: SpotifyService
+  let configService: ConfigService
 
   beforeEach(async () => {
     moduleRef = await Test.createTestingModule({
@@ -24,11 +26,18 @@ describe('CheckIsCurrentUserGuard', () => {
             },
           },
         },
+        {
+          provide: ConfigService,
+          useValue: {
+            get: vi.fn(),
+          },
+        },
       ],
     }).compile()
 
     checkIsCurrentUserGuard = moduleRef.get(CheckIsCurrentUserGuard)
     spotifyService = moduleRef.get(SpotifyService)
+    configService = moduleRef.get(ConfigService)
   })
 
   afterEach(() => {
@@ -53,6 +62,16 @@ describe('CheckIsCurrentUserGuard', () => {
           authorization: `Bearer ${accessToken}`,
         },
       })
+    })
+
+    test('should return true if user is public user', async () => {
+      const getSpy = vi.spyOn(configService, 'get').mockReturnValue(userMock.id)
+
+      expect(
+        await checkIsCurrentUserGuard.canActivate(contextMock)
+      ).toBeTruthy()
+
+      expect(getSpy).toHaveBeenCalled()
     })
 
     test('should return true if user is current user', async () => {

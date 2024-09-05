@@ -6,7 +6,12 @@ import { mock } from 'vitest-mock-extended'
 export function contextFactoryMock(request: DeepPartial<Request>) {
   return mock<ExecutionContext>({
     switchToHttp: vi.fn().mockReturnValue({
-      getRequest: vi.fn().mockReturnValue(request),
+      getRequest: vi.fn().mockReturnValue({
+        params: {
+          id: undefined,
+        },
+        ...request,
+      }),
     }),
     getType: vi.fn().mockReturnValue('http'),
   })
