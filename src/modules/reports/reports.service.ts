@@ -128,8 +128,6 @@ export class ReportsService {
         }
       )
 
-    console.log(historyTracks.length)
-
     const artistsExternalIds = historyTracks.flatMap(({ track }) =>
       track.artists.map(({ externalId }) => externalId)
     )
