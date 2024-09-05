@@ -16,7 +16,7 @@ export function getRequestToken(data: unknown, context: ExecutionContext) {
   const configService = new ConfigService()
 
   if (params.id === configService.get<string>(Environment.PUBLIC_USER_ID))
-    return ''
+    return token!
 
   const accessToken = headers.authorization?.slice(7)
 

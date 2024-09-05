@@ -36,9 +36,10 @@ describe('RequestTokenDecorator', () => {
             params: {
               id: id,
             },
+            token: accessTokenMock,
           })
         )
-      ).toEqual('')
+      ).toEqual(accessTokenMock)
       expect(getSpy).toHaveBeenCalled()
     })
 
