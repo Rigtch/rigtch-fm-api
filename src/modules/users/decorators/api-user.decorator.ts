@@ -11,7 +11,7 @@ import { NOT_BEEN_FOUND, ONE_IS_INVALID } from '@common/constants'
 
 export const ApiUser = () =>
   applyDecorators(
-    ApiParam({ name: 'id', example: '2a348ca4-7a80-4f0f-b42a-c6c62a1145c6' }),
+    ApiParam({ name: 'id', example: '88b381b3-5dd8-4ccf-b962-72cb5b24d591' }),
     ApiNotFoundResponse({
       description: NOT_BEEN_FOUND(USER),
     }),
