@@ -1,6 +1,3 @@
-import { ExpressAdapter } from '@bull-board/express'
-import { BullBoardModule } from '@bull-board/nestjs'
-import { BullModule } from '@nestjs/bullmq'
 import { CacheModule } from '@nestjs/cache-manager'
 import { Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
@@ -20,6 +17,7 @@ import { ProfilesModule } from '@modules/profiles'
 import { ReportsRouterModule } from '@modules/reports/router'
 import { StatsRouterModule } from '@modules/stats/router'
 import { UsersModule } from '@modules/users'
+import { QueuesModule } from '@config/queues'
 
 @Module({
   imports: [
@@ -37,22 +35,12 @@ import { UsersModule } from '@modules/users'
     ReportsRouterModule,
     EnvModule,
     DatabaseModule,
+    QueuesModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: './.env',
       validate: config => envSchema.parse(config),
       load: [typeorm, redis],
-    }),
-    BullModule.forRootAsync({
-      useFactory: (configService: ConfigService) => ({
-        connection: configService.get('redis')!,
-      }),
-      imports: [ConfigModule],
-      inject: [ConfigService],
-    }),
-    BullBoardModule.forRoot({
-      route: '/queues',
-      adapter: ExpressAdapter,
     }),
     CacheModule.registerAsync({
       isGlobal: true,
