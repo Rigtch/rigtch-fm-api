@@ -1,17 +1,17 @@
 import { UnauthorizedException } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
 
 import { RequestToken, getRequestToken } from './request-token.decorator'
 
 import { accessTokenMock, contextFactoryMock } from '@common/mocks'
+import { EnvService } from '@config/env'
 
-vi.mock('@nestjs/config', () => {
-  const ConfigService = vi.fn()
+vi.mock('@config/env', () => {
+  const EnvService = vi.fn()
 
-  ConfigService.prototype.get = vi.fn()
+  EnvService.prototype.get = vi.fn()
 
   return {
-    ConfigService,
+    EnvService,
   }
 })
 
@@ -25,9 +25,7 @@ describe('RequestTokenDecorator', () => {
     test('should return empty string if user is public user', () => {
       const id = 'public-user-id'
 
-      const getSpy = vi
-        .spyOn(ConfigService.prototype, 'get')
-        .mockReturnValue(id)
+      const getSpy = vi.spyOn(EnvService.prototype, 'get').mockReturnValue(id)
 
       expect(
         getRequestToken(

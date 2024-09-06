@@ -3,20 +3,19 @@ import {
   ExecutionContext,
   UnauthorizedException,
 } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
 import { Request } from 'express'
+import { ConfigService } from '@nestjs/config'
 
-import { Environment } from '@config/environment'
+import { EnvService } from '@config/env'
 
 export function getRequestToken(data: unknown, context: ExecutionContext) {
   const { headers, token, params } = context
     .switchToHttp()
     .getRequest<Request>()
 
-  const configService = new ConfigService()
+  const envService = new EnvService(new ConfigService())
 
-  if (params.id === configService.get<string>(Environment.PUBLIC_USER_ID))
-    return token!
+  if (params.id === envService.get('PUBLIC_USER_ID')) return token!
 
   const accessToken = headers.authorization?.slice(7)
 

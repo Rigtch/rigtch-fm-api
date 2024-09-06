@@ -5,19 +5,15 @@ import {
   OnApplicationBootstrap,
   forwardRef,
 } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
 import { Queue } from 'bullmq'
 
 import { SYNCHRONIZE_JOB } from './constants'
 import { synchronizeJobIdFactory } from './utils'
 import { InjectHistoryQueue } from './decorators'
 
+import { EnvService } from '@config/env'
 import { User } from '@modules/users/user.entity'
 import { UsersRepository } from '@modules/users/users.repository'
-import { Environment } from '@config/environment'
-
-const { HISTORY_SYNCHRONIZATION_CRONTIME, ENABLE_HISTORY_SYNCHRONIZATION } =
-  Environment
 
 @Injectable()
 export class HistoryScheduler implements OnApplicationBootstrap {
@@ -27,13 +23,11 @@ export class HistoryScheduler implements OnApplicationBootstrap {
     @Inject(forwardRef(() => UsersRepository))
     private readonly usersRepository: UsersRepository,
     @InjectHistoryQueue() private readonly historyQueue: Queue<User>,
-    private readonly configService: ConfigService
+    private readonly envService: EnvService
   ) {}
 
   onApplicationBootstrap() {
-    if (
-      this.configService.get<boolean>(ENABLE_HISTORY_SYNCHRONIZATION) === true
-    )
+    if (this.envService.get('ENABLE_HISTORY_SYNCHRONIZATION'))
       return this.scheduleHistorySynchronization()
 
     this.logger.log('History synchronization is disabled')
@@ -64,9 +58,7 @@ export class HistoryScheduler implements OnApplicationBootstrap {
     await this.historyQueue.add(SYNCHRONIZE_JOB, user, {
       priority: 1,
       repeat: {
-        pattern: this.configService.get<string>(
-          HISTORY_SYNCHRONIZATION_CRONTIME
-        )!,
+        pattern: this.envService.get('HISTORY_SYNCHRONIZATION_CRONTIME'),
       },
       attempts: 3,
       jobId,

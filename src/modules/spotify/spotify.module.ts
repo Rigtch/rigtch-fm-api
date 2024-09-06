@@ -1,6 +1,5 @@
 import { HttpModule } from '@nestjs/axios'
 import { Module } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
 
 import { SpotifyAuthService } from './auth'
 import { SpotifyUsersService } from './users'
@@ -10,19 +9,19 @@ import { SpotifyTracksService } from './tracks'
 import { SpotifyAlbumsService } from './albums'
 import { SpotifyService } from './spotify.service'
 
-import { Environment } from '@config/environment'
+import { EnvService } from '@config/env'
 
 @Module({
   imports: [
     HttpModule.registerAsync({
-      useFactory: (configService: ConfigService) => ({
-        baseURL: configService.get(Environment.SPOTIFY_BASE_URL),
+      useFactory: (envService: EnvService) => ({
+        baseURL: envService.get('SPOTIFY_BASE_URL'),
         headers: {
           'Content-Type': 'application/json',
           Accept: 'application/json',
         },
       }),
-      inject: [ConfigService],
+      inject: [EnvService],
     }),
   ],
   providers: [

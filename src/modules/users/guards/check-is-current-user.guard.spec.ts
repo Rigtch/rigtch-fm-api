@@ -2,17 +2,18 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { ExecutionContext, ForbiddenException } from '@nestjs/common'
 import { DeepMockProxy } from 'vitest-mock-extended'
 import { MockInstance } from 'vitest'
-import { ConfigService } from '@nestjs/config'
 
 import { CheckIsCurrentUserGuard } from './check-is-current-user.guard'
 
+import { EnvService } from '@config/env'
 import { SpotifyService } from '@modules/spotify'
 import { contextFactoryMock, profileMock, userMock } from '@common/mocks'
+
 describe('CheckIsCurrentUserGuard', () => {
   let moduleRef: TestingModule
   let checkIsCurrentUserGuard: CheckIsCurrentUserGuard
   let spotifyService: SpotifyService
-  let configService: ConfigService
+  let envService: EnvService
 
   beforeEach(async () => {
     moduleRef = await Test.createTestingModule({
@@ -27,7 +28,7 @@ describe('CheckIsCurrentUserGuard', () => {
           },
         },
         {
-          provide: ConfigService,
+          provide: EnvService,
           useValue: {
             get: vi.fn(),
           },
@@ -37,7 +38,7 @@ describe('CheckIsCurrentUserGuard', () => {
 
     checkIsCurrentUserGuard = moduleRef.get(CheckIsCurrentUserGuard)
     spotifyService = moduleRef.get(SpotifyService)
-    configService = moduleRef.get(ConfigService)
+    envService = moduleRef.get(EnvService)
   })
 
   afterEach(() => {
@@ -65,7 +66,7 @@ describe('CheckIsCurrentUserGuard', () => {
     })
 
     test('should return true if user is public user', async () => {
-      const getSpy = vi.spyOn(configService, 'get').mockReturnValue(userMock.id)
+      const getSpy = vi.spyOn(envService, 'get').mockReturnValue(userMock.id)
 
       expect(
         await checkIsCurrentUserGuard.canActivate(contextMock)

@@ -1,10 +1,10 @@
-import { ConfigService } from '@nestjs/config'
 import { Test, TestingModule } from '@nestjs/testing'
 import { MockInstance } from 'vitest'
 import { Market, SpotifyApi } from '@spotify/web-api-ts-sdk'
 
 import { SpotifyArtistsService } from './spotify-artists.service'
 
+import { EnvService } from '@config/env'
 import { AdaptersModule } from '@common/adapters'
 import {
   artistMock,
@@ -40,7 +40,7 @@ describe('SpotifyArtistsService', () => {
       providers: [
         SpotifyArtistsService,
         {
-          provide: ConfigService,
+          provide: EnvService,
           useValue: {
             get: vi.fn().mockReturnValue('clientId'),
           },

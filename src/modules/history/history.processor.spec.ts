@@ -4,12 +4,12 @@ import { Test, type TestingModule } from '@nestjs/testing'
 import type { Job, Queue } from 'bullmq'
 import type { MockInstance } from 'vitest'
 import { type MockProxy, mock, mockDeep } from 'vitest-mock-extended'
-import { ConfigService } from '@nestjs/config'
 
 import { HISTORY_QUEUE } from './constants'
 import { HistoryProcessor } from './history.processor'
 import { HistoryService } from './history.service'
 
+import { EnvService } from '@config/env'
 import { trackEntityMock } from '@common/mocks'
 import type { User } from '@modules/users'
 
@@ -37,7 +37,7 @@ describe('HistoryProcessor', () => {
           },
         },
         {
-          provide: ConfigService,
+          provide: EnvService,
           useValue: {
             get: vi.fn().mockReturnValue(true),
           },

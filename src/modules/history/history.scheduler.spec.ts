@@ -1,7 +1,6 @@
 import { Queue } from 'bullmq'
 import { MockInstance } from 'vitest'
 import { Test, TestingModule } from '@nestjs/testing'
-import { ConfigService } from '@nestjs/config'
 import { getQueueToken } from '@nestjs/bullmq'
 import { mock } from 'vitest-mock-extended'
 
@@ -9,6 +8,7 @@ import { HistoryScheduler } from './history.scheduler'
 import { HISTORY_QUEUE, SYNCHRONIZE_JOB } from './constants'
 import { synchronizeJobIdFactory } from './utils'
 
+import { EnvService } from '@config/env'
 import { User, UsersRepository } from '@modules/users'
 import { userMock } from '@common/mocks'
 
@@ -17,7 +17,7 @@ describe('HistoryScheduler', () => {
   let historyScheduler: HistoryScheduler
   let usersRepository: UsersRepository
   let historyQueue: Queue<User>
-  let configService: ConfigService
+  let envService: EnvService
 
   beforeEach(async () => {
     moduleRef = await Test.createTestingModule({
@@ -38,7 +38,7 @@ describe('HistoryScheduler', () => {
         },
 
         {
-          provide: ConfigService,
+          provide: EnvService,
           useValue: {
             get: vi.fn().mockReturnValue('0 */1 * * *'),
           },
@@ -50,7 +50,7 @@ describe('HistoryScheduler', () => {
     historyScheduler = moduleRef.get(HistoryScheduler)
     usersRepository = moduleRef.get(UsersRepository)
     historyQueue = moduleRef.get(getQueueToken(HISTORY_QUEUE))
-    configService = moduleRef.get(ConfigService)
+    envService = moduleRef.get(EnvService)
   })
 
   afterEach(() => {
@@ -66,7 +66,7 @@ describe('HistoryScheduler', () => {
     let scheduleHistorySynchronizationSpy: MockInstance
 
     beforeEach(() => {
-      getConfigSpy = vi.spyOn(configService, 'get')
+      getConfigSpy = vi.spyOn(envService, 'get')
       scheduleHistorySynchronizationSpy = vi
         .spyOn(historyScheduler, 'scheduleHistorySynchronization')
         .mockResolvedValue()

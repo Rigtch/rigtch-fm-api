@@ -1,26 +1,26 @@
+import { ExpressAdapter } from '@bull-board/express'
+import { BullBoardModule } from '@bull-board/nestjs'
+import { BullModule } from '@nestjs/bullmq'
+import { CacheModule } from '@nestjs/cache-manager'
 import { Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm'
-import { BullModule } from '@nestjs/bullmq'
-import { BullBoardModule } from '@bull-board/nestjs'
-import { ExpressAdapter } from '@bull-board/express'
-import { CacheModule } from '@nestjs/cache-manager'
 import { redisStore } from 'cache-manager-ioredis-yet'
 
-import { environmentSchema } from '@config/environment'
-import { redis, typeorm } from '@config/database'
-import { ImagesModule } from '@modules/items/images'
-import { ProfilesModule } from '@modules/profiles'
-import { UsersModule } from '@modules/users'
 import { AdaptersModule } from '@common/adapters'
-import { ArtistsModule } from '@modules/items/artists'
-import { AlbumsModule } from '@modules/items/albums'
-import { TracksModule } from '@modules/items/tracks'
+import { redis, typeorm } from '@config/database'
+import { EnvModule, envSchema } from '@config/env'
 import { HistoryModule } from '@modules/history'
-import { ArtistsRouterModule } from '@modules/items/artists/router'
 import { HistoryRouterModule } from '@modules/history/router'
-import { StatsRouterModule } from '@modules/stats/router'
+import { AlbumsModule } from '@modules/items/albums'
+import { ArtistsModule } from '@modules/items/artists'
+import { ArtistsRouterModule } from '@modules/items/artists/router'
+import { ImagesModule } from '@modules/items/images'
+import { TracksModule } from '@modules/items/tracks'
+import { ProfilesModule } from '@modules/profiles'
 import { ReportsRouterModule } from '@modules/reports/router'
+import { StatsRouterModule } from '@modules/stats/router'
+import { UsersModule } from '@modules/users'
 
 @Module({
   imports: [
@@ -36,10 +36,11 @@ import { ReportsRouterModule } from '@modules/reports/router'
     HistoryRouterModule,
     StatsRouterModule,
     ReportsRouterModule,
+    EnvModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: './.env',
-      validationSchema: environmentSchema,
+      validate: config => envSchema.parse(config),
       load: [typeorm, redis],
     }),
     TypeOrmModule.forRootAsync({

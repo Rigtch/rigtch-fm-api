@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { ConfigService } from '@nestjs/config'
 import { MockInstance } from 'vitest'
 import { Context, PlayHistory, SpotifyApi } from '@spotify/web-api-ts-sdk'
 import { mock } from 'vitest-mock-extended'
 
 import { SpotifyPlayerService } from './spotify-player.service'
 
+import { EnvService } from '@config/env'
 import { AdaptersModule } from '@common/adapters'
 import {
   accessTokenMock,
@@ -47,7 +47,7 @@ describe('SpotifyPlayerService', () => {
       providers: [
         SpotifyPlayerService,
         {
-          provide: ConfigService,
+          provide: EnvService,
           useValue: {
             get: vi.fn().mockReturnValue('clientId'),
           },
