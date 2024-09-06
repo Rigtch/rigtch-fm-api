@@ -4,11 +4,10 @@ import { BullModule } from '@nestjs/bullmq'
 import { CacheModule } from '@nestjs/cache-manager'
 import { Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
-import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm'
 import { redisStore } from 'cache-manager-ioredis-yet'
 
 import { AdaptersModule } from '@common/adapters'
-import { redis, typeorm } from '@config/database'
+import { DatabaseModule, redis, typeorm } from '@config/database'
 import { EnvModule, envSchema } from '@config/env'
 import { HistoryModule } from '@modules/history'
 import { HistoryRouterModule } from '@modules/history/router'
@@ -37,17 +36,12 @@ import { UsersModule } from '@modules/users'
     StatsRouterModule,
     ReportsRouterModule,
     EnvModule,
+    DatabaseModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: './.env',
       validate: config => envSchema.parse(config),
       load: [typeorm, redis],
-    }),
-    TypeOrmModule.forRootAsync({
-      useFactory: (configService: ConfigService) =>
-        configService.get<TypeOrmModuleOptions>('typeorm')!,
-      imports: [ConfigModule],
-      inject: [ConfigService],
     }),
     BullModule.forRootAsync({
       useFactory: (configService: ConfigService) => ({
