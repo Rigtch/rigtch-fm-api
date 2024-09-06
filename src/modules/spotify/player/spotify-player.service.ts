@@ -1,11 +1,10 @@
 import { Injectable } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
 import { AccessToken, MaxInt, SpotifyApi } from '@spotify/web-api-ts-sdk'
 import { backOff } from 'exponential-backoff'
 
 import { QueryRange } from './types'
 
-import { Environment } from '@config/environment'
+import { EnvService } from '@config/env'
 import { AdaptersService } from '@common/adapters'
 import {
   RecentlyPlayedTracksPage,
@@ -17,7 +16,7 @@ export class SpotifyPlayerService {
   private spotifySdk: SpotifyApi | undefined
 
   constructor(
-    private readonly configService: ConfigService,
+    private readonly envService: EnvService,
     private readonly adaptersService: AdaptersService
   ) {}
 
@@ -41,7 +40,7 @@ export class SpotifyPlayerService {
     adapt = true
   ) {
     this.spotifySdk = SpotifyApi.withAccessToken(
-      this.configService.get<string>(Environment.SPOTIFY_CLIENT_ID)!,
+      this.envService.get('SPOTIFY_CLIENT_ID'),
       token
     )
 
@@ -67,7 +66,7 @@ export class SpotifyPlayerService {
 
   async getPlaybackState(token: AccessToken) {
     this.spotifySdk = SpotifyApi.withAccessToken(
-      this.configService.get<string>(Environment.SPOTIFY_CLIENT_ID)!,
+      this.envService.get('SPOTIFY_CLIENT_ID'),
       token
     )
 
@@ -80,7 +79,7 @@ export class SpotifyPlayerService {
 
   async pausePlayback(token: AccessToken) {
     this.spotifySdk = SpotifyApi.withAccessToken(
-      this.configService.get<string>(Environment.SPOTIFY_CLIENT_ID)!,
+      this.envService.get('SPOTIFY_CLIENT_ID'),
       token
     )
 
@@ -99,7 +98,7 @@ export class SpotifyPlayerService {
 
   async resumePlayback(token: AccessToken) {
     this.spotifySdk = SpotifyApi.withAccessToken(
-      this.configService.get<string>(Environment.SPOTIFY_CLIENT_ID)!,
+      this.envService.get('SPOTIFY_CLIENT_ID'),
       token
     )
 

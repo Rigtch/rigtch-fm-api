@@ -1,16 +1,13 @@
 import { OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq'
 import { Job, Queue } from 'bullmq'
 import { Logger, UnauthorizedException } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
 
 import { HISTORY_QUEUE } from './constants'
 import { InjectHistoryQueue } from './decorators'
 import { HistoryService } from './history.service'
 
+import { EnvService } from '@config/env'
 import { User } from '@modules/users/user.entity'
-import { Environment } from '@config/environment'
-
-const { ENABLE_HISTORY_SYNCHRONIZATION } = Environment
 
 @Processor(HISTORY_QUEUE)
 export class HistoryProcessor extends WorkerHost {
@@ -18,17 +15,14 @@ export class HistoryProcessor extends WorkerHost {
 
   constructor(
     private readonly historyService: HistoryService,
-    private readonly configService: ConfigService,
+    private readonly envService: EnvService,
     @InjectHistoryQueue() private readonly historyQueue: Queue<User>
   ) {
     super()
   }
 
   async process({ data: user }: Job<User>) {
-    if (
-      this.configService.get<boolean>(ENABLE_HISTORY_SYNCHRONIZATION) === false
-    )
-      return
+    if (!this.envService.get('ENABLE_HISTORY_SYNCHRONIZATION')) return
 
     const synchronizedTracks = await this.historyService.synchronize(user)
 

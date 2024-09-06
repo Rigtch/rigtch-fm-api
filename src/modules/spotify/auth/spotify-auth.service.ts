@@ -1,13 +1,12 @@
 import { HttpService } from '@nestjs/axios'
 import { Injectable } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
 import { map, catchError, firstValueFrom } from 'rxjs'
 import { AccessToken } from '@spotify/web-api-ts-sdk'
 import { backOff } from 'exponential-backoff'
 
 import { TokenOptions } from './types'
 
-import { Environment } from '@config/environment'
+import { EnvService } from '@config/env'
 import { catchSpotifyError } from '@common/utils'
 import { Profile, SdkProfile } from '@common/types/spotify'
 import { AdaptersService } from '@common/adapters'
@@ -17,20 +16,14 @@ import { defaultBackoffOptions } from '@common/options'
 export class SpotifyAuthService {
   constructor(
     private readonly httpService: HttpService,
-    private readonly configService: ConfigService,
+    private readonly envService: EnvService,
     private readonly adaptersService: AdaptersService
   ) {}
 
   token({ refreshToken }: TokenOptions) {
-    const url = `${this.configService.get<string>(
-      Environment.SPOTIFY_ACCOUNTS_URL
-    )!}/api/token`
-    const clientId = this.configService.get<string>(
-      Environment.SPOTIFY_CLIENT_ID
-    )!
-    const clientSecret = this.configService.get<string>(
-      Environment.SPOTIFY_CLIENT_SECRET
-    )!
+    const url = `${this.envService.get('SPOTIFY_ACCOUNTS_URL')}/api/token`
+    const clientId = this.envService.get('SPOTIFY_CLIENT_ID')
+    const clientSecret = this.envService.get('SPOTIFY_CLIENT_SECRET')
     const bufferedCredentials = Buffer.from(
       `${clientId}:${clientSecret}`
     ).toString('base64')

@@ -1,11 +1,11 @@
 import { HttpService, HttpModule } from '@nestjs/axios'
-import { ConfigService } from '@nestjs/config'
 import { Test, TestingModule } from '@nestjs/testing'
 import { of } from 'rxjs'
 
 import { spotifyTokenMock } from './mocks'
 import { SpotifyAuthService } from './spotify-auth.service'
 
+import { EnvService } from '@config/env'
 import {
   axiosResponseMockFactory,
   profileMock,
@@ -18,7 +18,7 @@ describe('SpotifyAuthService', () => {
   let moduleRef: TestingModule
   let spotifyAuthService: SpotifyAuthService
   let httpService: HttpService
-  let configService: ConfigService
+  let envService: EnvService
 
   beforeEach(async () => {
     moduleRef = await Test.createTestingModule({
@@ -32,7 +32,7 @@ describe('SpotifyAuthService', () => {
           },
         },
         {
-          provide: ConfigService,
+          provide: EnvService,
           useValue: {
             get: vi.fn(),
           },
@@ -42,7 +42,7 @@ describe('SpotifyAuthService', () => {
 
     spotifyAuthService = moduleRef.get(SpotifyAuthService)
     httpService = moduleRef.get(HttpService)
-    configService = moduleRef.get(ConfigService)
+    envService = moduleRef.get(EnvService)
   })
 
   afterEach(() => {
@@ -60,7 +60,7 @@ describe('SpotifyAuthService', () => {
 
       spotifyTokenMock.refresh_token = undefined
 
-      const getSpy = vi.spyOn(configService, 'get').mockReturnValue(clientId)
+      const getSpy = vi.spyOn(envService, 'get').mockReturnValue(clientId)
       const postSpy = vi
         .spyOn(httpService, 'post')
         .mockReturnValue(of(axiosResponseMockFactory(spotifyTokenMock)))

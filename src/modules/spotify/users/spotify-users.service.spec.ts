@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { ConfigService } from '@nestjs/config'
 import { MockInstance } from 'vitest'
 import { SpotifyApi } from '@spotify/web-api-ts-sdk'
 
 import { SpotifyUsersService } from './spotify-users.service'
 import { TimeRange } from './enums'
 
+import { EnvService } from '@config/env'
 import { AdaptersModule } from '@common/adapters'
 import {
   accessTokenMock,
@@ -49,7 +49,7 @@ describe('SpotifyUsersService', () => {
       providers: [
         SpotifyUsersService,
         {
-          provide: ConfigService,
+          provide: EnvService,
           useValue: {
             get: vi.fn().mockReturnValue('clientId'),
           },

@@ -1,17 +1,15 @@
 import { ConfigService, registerAs } from '@nestjs/config'
 import type { RedisOptions } from 'ioredis'
 
-import { Environment } from '@config/environment'
+import { EnvService } from '@config/env'
 
-const configService = new ConfigService()
-
-const { REDIS_HOST, REDIS_PORT, REDIS_USER, REDIS_PASSWORD } = Environment
+const envService = new EnvService(new ConfigService())
 
 export const redisConfig: RedisOptions = {
-  host: configService.get(REDIS_HOST),
-  port: configService.get(REDIS_PORT),
-  username: configService.get(REDIS_USER),
-  password: configService.get(REDIS_PASSWORD),
+  host: envService.get('REDIS_HOST'),
+  port: envService.get('REDIS_PORT'),
+  username: envService.get('REDIS_USER') ?? '',
+  password: envService.get('REDIS_PASSWORD') ?? '',
 }
 
 export const redis = registerAs('redis', () => redisConfig)

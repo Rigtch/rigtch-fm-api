@@ -1,18 +1,17 @@
 import { NestFactory, Reflector } from '@nestjs/core'
-import { ConfigService } from '@nestjs/config'
 import cookieParser from 'cookie-parser'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common'
 
-import { Environment } from '@config/environment'
 import { AppModule } from '@modules/app'
 import { BEARER } from '@common/constants'
 import { QueryExceptionFilter } from '@common/filters'
+import { EnvService } from '@config/env'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
   const reflector = app.get(Reflector)
-  const configService = app.get(ConfigService)
+  const envService = app.get(EnvService)
 
   const documentConfig = new DocumentBuilder()
     .setTitle('rigtch.fm API')
@@ -48,6 +47,6 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ClassSerializerInterceptor(reflector))
   app.useGlobalFilters(new QueryExceptionFilter())
 
-  await app.listen(+configService.get(Environment.PORT) || 4000)
+  await app.listen(+envService.get('PORT') || 4000)
 }
 bootstrap()

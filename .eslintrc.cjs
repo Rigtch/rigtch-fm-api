@@ -130,6 +130,7 @@ module.exports = {
           Params: true,
           args: true,
           env: true,
+          Env: true,
           doc: true,
         },
       },

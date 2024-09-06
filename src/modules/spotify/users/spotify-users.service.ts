@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
 import { AccessToken, MaxInt, Page, SpotifyApi } from '@spotify/web-api-ts-sdk'
 import { backOff } from 'exponential-backoff'
 
@@ -7,7 +6,7 @@ import { analysisFactory } from './utils'
 import { TimeRange } from './enums'
 import { GetTopItemsParams } from './types'
 
-import { Environment } from '@config/environment'
+import { EnvService } from '@config/env'
 import { AdaptersService } from '@common/adapters'
 import { Artist, SdkArtist, SdkTrack, Track } from '@common/types/spotify'
 
@@ -16,13 +15,13 @@ export class SpotifyUsersService {
   private spotifySdk: SpotifyApi | undefined
 
   constructor(
-    private readonly configService: ConfigService,
+    private readonly envService: EnvService,
     private readonly adaptersService: AdaptersService
   ) {}
 
   async profile(token: AccessToken) {
     this.spotifySdk = SpotifyApi.withAccessToken(
-      this.configService.get<string>(Environment.SPOTIFY_CLIENT_ID)!,
+      this.envService.get('SPOTIFY_CLIENT_ID'),
       token
     )
 
@@ -55,7 +54,7 @@ export class SpotifyUsersService {
     adapt = true
   ) {
     this.spotifySdk = SpotifyApi.withAccessToken(
-      this.configService.get<string>(Environment.SPOTIFY_CLIENT_ID)!,
+      this.envService.get('SPOTIFY_CLIENT_ID'),
       token
     )
 
@@ -88,7 +87,7 @@ export class SpotifyUsersService {
     adapt = true
   ) {
     this.spotifySdk = SpotifyApi.withAccessToken(
-      this.configService.get<string>(Environment.SPOTIFY_CLIENT_ID)!,
+      this.envService.get('SPOTIFY_CLIENT_ID'),
       token
     )
 
@@ -106,7 +105,7 @@ export class SpotifyUsersService {
     offset = 0
   ) {
     this.spotifySdk = SpotifyApi.withAccessToken(
-      this.configService.get<string>(Environment.SPOTIFY_CLIENT_ID)!,
+      this.envService.get('SPOTIFY_CLIENT_ID'),
       token
     )
 
@@ -122,7 +121,7 @@ export class SpotifyUsersService {
 
   async getAnalysis(token: AccessToken, timeRange = TimeRange.LONG_TERM) {
     this.spotifySdk = SpotifyApi.withAccessToken(
-      this.configService.get<string>(Environment.SPOTIFY_CLIENT_ID)!,
+      this.envService.get('SPOTIFY_CLIENT_ID'),
       token
     )
 

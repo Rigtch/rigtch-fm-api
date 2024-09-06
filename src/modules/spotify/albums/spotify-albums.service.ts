@@ -1,12 +1,11 @@
 import { Injectable } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
 import { SpotifyApi } from '@spotify/web-api-ts-sdk'
 import { backOff } from 'exponential-backoff'
 
 import { CHUNK_SIZE } from '../constants'
 import { splitIntoChunks } from '../utils'
 
-import { Environment } from '@config/environment'
+import { EnvService } from '@config/env'
 import { AdaptersService } from '@common/adapters'
 import { Album, SdkAlbum } from '@common/types/spotify'
 
@@ -15,7 +14,7 @@ export class SpotifyAlbumsService {
   private spotifySdk: SpotifyApi | undefined
 
   constructor(
-    private readonly configService: ConfigService,
+    private readonly envService: EnvService,
     private readonly adaptersService: AdaptersService
   ) {}
 
@@ -38,8 +37,8 @@ export class SpotifyAlbumsService {
 
   private async getOne(id: string) {
     this.spotifySdk = SpotifyApi.withClientCredentials(
-      this.configService.get<string>(Environment.SPOTIFY_CLIENT_ID)!,
-      this.configService.get<string>(Environment.SPOTIFY_CLIENT_SECRET)!
+      this.envService.get('SPOTIFY_CLIENT_ID'),
+      this.envService.get('SPOTIFY_CLIENT_SECRET')
     )
 
     return this.getAlbumMissingTracks(
@@ -49,8 +48,8 @@ export class SpotifyAlbumsService {
 
   private async getMany(ids: string[]) {
     this.spotifySdk = SpotifyApi.withClientCredentials(
-      this.configService.get<string>(Environment.SPOTIFY_CLIENT_ID)!,
-      this.configService.get<string>(Environment.SPOTIFY_CLIENT_SECRET)!
+      this.envService.get('SPOTIFY_CLIENT_ID'),
+      this.envService.get('SPOTIFY_CLIENT_SECRET')
     )
 
     const chunks = splitIntoChunks(ids, CHUNK_SIZE)
