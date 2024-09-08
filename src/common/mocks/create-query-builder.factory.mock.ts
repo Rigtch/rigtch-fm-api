@@ -1,8 +1,8 @@
-export function createQueryBuilderFactoryMock<T>(entity?: T) {
+export function createQueryBuilderFactoryMock(entity?: unknown) {
   return vi.fn().mockReturnValue(createQueryBuilderMockImplementation(entity))
 }
 
-export function createQueryBuilderMockImplementation<T>(entity?: T) {
+export function createQueryBuilderMockImplementation(entity?: unknown) {
   return {
     orderBy: vi.fn().mockReturnThis(),
     connection: {
