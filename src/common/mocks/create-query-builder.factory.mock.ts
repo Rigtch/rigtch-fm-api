@@ -12,6 +12,9 @@ export function createQueryBuilderMockImplementation(entity?: unknown) {
       cache: vi.fn().mockReturnThis(),
       getRawOne: vi.fn().mockReturnThis(),
       setParameters: vi.fn().mockReturnThis(),
+      options: vi.fn().mockReturnValue({
+        type: vi.fn(),
+      }),
     },
     getParameters: vi.fn().mockReturnThis(),
     getQuery: vi.fn().mockReturnThis(),

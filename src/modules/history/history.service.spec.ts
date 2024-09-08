@@ -16,13 +16,11 @@ import type { QueryRange } from '@modules/spotify/player/types'
 import type { User } from '@modules/users'
 
 type GetRecentlyPlayedMockInstance = MockInstance<
-  [
+  (
     token: AccessToken,
     limit: MaxInt<50>,
-    queryRange?: QueryRange,
-    adapt?: false,
-  ],
-  Promise<SdkRecentlyPlayedTracksPage>
+    queryRange?: QueryRange
+  ) => Promise<SdkRecentlyPlayedTracksPage>
 >
 
 describe('HistoryService', () => {

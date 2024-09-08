@@ -1,39 +1,31 @@
+import { CacheInterceptor } from '@nestjs/cache-manager'
 import { Test, TestingModule } from '@nestjs/testing'
 import { MockInstance } from 'vitest'
-import { CacheInterceptor } from '@nestjs/cache-manager'
 
 import { UsersRepository } from '../users.repository'
 
 import { UsersProfileController } from './users-profile.controller'
 
-import { TimeRange } from '@modules/spotify/users/enums'
 import {
-  recentlyPlayedTracksPageMockFactory,
-  tracksMock,
-  topGenresMock,
-  pageMockFactory,
-  analysisMock,
   accessTokenMock,
-  userMock,
-  sdkArtistsMock,
+  analysisMock,
   artistEntitiesMock,
+  pageMockFactory,
+  recentlyPlayedTracksPageMockFactory,
+  sdkArtistsMock,
   sdkTracksMock,
+  topGenresMock,
   trackEntitiesMock,
+  tracksMock,
+  userMock,
 } from '@common/mocks'
-import { SpotifyService } from '@modules/spotify'
+import {
+  FindOrCreateArtistsSpy,
+  FindOrCreateTracksSpy,
+} from '@common/types/mocks'
 import { ItemsService } from '@modules/items'
-import { Track } from '@modules/items/tracks'
-import { SdkArtist, SdkTrack } from '@common/types/spotify'
-import { Artist } from '@modules/items/artists'
-
-type FindOrCreateTracksSpy = MockInstance<
-  [tracks: SdkTrack[]],
-  Promise<Track[]>
->
-type FindOrCreateArtistsSpy = MockInstance<
-  [artists: SdkArtist[]],
-  Promise<Artist[]>
->
+import { SpotifyService } from '@modules/spotify'
+import { TimeRange } from '@modules/spotify/users/enums'
 
 describe('UsersProfileController', () => {
   const limit = 10
