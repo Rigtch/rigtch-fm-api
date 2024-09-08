@@ -6,30 +6,22 @@ import { StatsSpotifyController } from './stats-spotify.controller'
 
 import {
   accessTokenMock,
+  analysisMock,
+  artistEntitiesMock,
   pageMockFactory,
   sdkArtistsMock,
-  artistEntitiesMock,
   sdkTracksMock,
-  trackEntitiesMock,
   topGenresMock,
-  analysisMock,
+  trackEntitiesMock,
 } from '@common/mocks'
-import type { SdkTrack, SdkArtist } from '@common/types/spotify'
+import {
+  FindOrCreateArtistsSpy,
+  FindOrCreateTracksSpy,
+} from '@common/types/mocks'
 import { ItemsService } from '@modules/items'
-import type { Artist } from '@modules/items/artists'
-import type { Track } from '@modules/items/tracks'
 import { SpotifyService } from '@modules/spotify'
 import { TimeRange } from '@modules/spotify/users/enums'
 import { UsersRepository } from '@modules/users'
-
-type FindOrCreateTracksSpy = MockInstance<
-  [tracks: SdkTrack[]],
-  Promise<Track[]>
->
-type FindOrCreateArtistsSpy = MockInstance<
-  [artists: SdkArtist[]],
-  Promise<Artist[]>
->
 
 describe('UsersProfileController', () => {
   const limit = 10
