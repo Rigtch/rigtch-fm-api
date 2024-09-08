@@ -23,8 +23,8 @@ export class AlbumsAdapter {
   public adapt(data: SdkSimplifiedAlbum[]): SimplifiedAlbum[]
 
   adapt(
-    data: SdkAlbum | SdkSimplifiedAlbum | (SdkAlbum | SdkSimplifiedAlbum)[]
-  ): Album | SimplifiedAlbum | (Album | SimplifiedAlbum)[] {
+    data: SdkAlbum | SdkSimplifiedAlbum | SdkAlbum[] | SdkSimplifiedAlbum[]
+  ): Album | SimplifiedAlbum | Album[] | SimplifiedAlbum[] {
     if (Array.isArray(data)) {
       return this.adaptAlbums(data)
     }

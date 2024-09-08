@@ -6,11 +6,11 @@ export const analysisFactory = (audioFeatures: AudioFeatures[]): Analysis => ({
   danceability:
     audioFeatures
       .map(({ danceability }) => danceability)
-      .reduce(audioFeaturesReducer) / audioFeatures.length,
+      .reduce(audioFeaturesReducer, 0) / audioFeatures.length,
   acousticness:
     audioFeatures
       .map(({ acousticness }) => acousticness)
-      .reduce(audioFeaturesReducer) / audioFeatures.length,
+      .reduce(audioFeaturesReducer, 0) / audioFeatures.length,
   instrumentalness:
     audioFeatures
       .map(({ instrumentalness }) => instrumentalness)
@@ -18,26 +18,29 @@ export const analysisFactory = (audioFeatures: AudioFeatures[]): Analysis => ({
   speechiness:
     audioFeatures
       .map(({ speechiness }) => speechiness)
-      .reduce(audioFeaturesReducer) / audioFeatures.length,
+      .reduce(audioFeaturesReducer, 0) / audioFeatures.length,
   liveness:
-    audioFeatures.map(({ liveness }) => liveness).reduce(audioFeaturesReducer) /
-    audioFeatures.length,
+    audioFeatures
+      .map(({ liveness }) => liveness)
+      .reduce(audioFeaturesReducer, 0) / audioFeatures.length,
   loudness:
-    audioFeatures.map(({ loudness }) => loudness).reduce(audioFeaturesReducer) /
-    audioFeatures.length,
+    audioFeatures
+      .map(({ loudness }) => loudness)
+      .reduce(audioFeaturesReducer, 0) / audioFeatures.length,
   energy:
-    audioFeatures.map(({ energy }) => energy).reduce(audioFeaturesReducer) /
+    audioFeatures.map(({ energy }) => energy).reduce(audioFeaturesReducer, 0) /
     audioFeatures.length,
   tempo:
-    audioFeatures.map(({ tempo }) => tempo).reduce(audioFeaturesReducer) /
+    audioFeatures.map(({ tempo }) => tempo).reduce(audioFeaturesReducer, 0) /
     audioFeatures.length,
   mode:
-    audioFeatures.map(({ mode }) => mode).reduce(audioFeaturesReducer) /
+    audioFeatures.map(({ mode }) => mode).reduce(audioFeaturesReducer, 0) /
     audioFeatures.length,
   key:
-    audioFeatures.map(({ key }) => key).reduce(audioFeaturesReducer) /
+    audioFeatures.map(({ key }) => key).reduce(audioFeaturesReducer, 0) /
     audioFeatures.length,
   valence:
-    audioFeatures.map(({ valence }) => valence).reduce(audioFeaturesReducer) /
-    audioFeatures.length,
+    audioFeatures
+      .map(({ valence }) => valence)
+      .reduce(audioFeaturesReducer, 0) / audioFeatures.length,
 })
