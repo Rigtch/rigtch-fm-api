@@ -41,8 +41,8 @@ export class ImagesService {
     })
   }
 
-  private findOrCreateMany(images: CreateImage[]) {
-    if (images.length === 0) return []
+  private async findOrCreateMany(images: CreateImage[]) {
+    if (images.length === 0) return [] as Image[]
 
     return Promise.all(images.map(image => this.findOrCreateOne(image)))
   }

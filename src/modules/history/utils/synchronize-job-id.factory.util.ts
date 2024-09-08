@@ -1,8 +1,7 @@
 import type { UserId } from '../types'
 
-export type Timestamp = number
 export type RepeatableJobId = `synchronize-history-${UserId}-repeatable`
-export type TimestampJobId = `synchronize-history-${UserId}-${Timestamp}`
+export type TimestampJobId = `synchronize-history-${UserId}-${number}`
 
 export function synchronizeJobIdFactory(
   id: UserId,

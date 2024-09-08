@@ -32,7 +32,8 @@ export class TracksAdapter {
     data:
       | SdkTrack
       | SdkSimplifiedTrack
-      | (SdkTrack | SdkSimplifiedTrack)[]
+      | SdkTrack[]
+      | SdkSimplifiedTrack[]
       | Page<SdkTrack>
       | Page<SdkSimplifiedTrack>
       | SdkRecentlyPlayedTracksPage

@@ -41,6 +41,7 @@ module.exports = {
     '@trilon/eslint-plugin',
     'import',
     'nestjs',
+    'sonarjs',
     'eslint-plugin-import-helpers',
     'prettier',
   ],
@@ -48,7 +49,7 @@ module.exports = {
     'plugin:@typescript-eslint/strict-type-checked',
     'plugin:@typescript-eslint/stylistic-type-checked',
     'plugin:@trilon/recommended',
-    'plugin:sonarjs/recommended',
+    'plugin:sonarjs/recommended-legacy',
     'plugin:import/recommended',
     'plugin:import/typescript',
     'plugin:unicorn/recommended',
@@ -62,6 +63,7 @@ module.exports = {
       extends: ['plugin:vitest/recommended'],
       rules: {
         'sonarjs/no-duplicate-string': 'off',
+        'sonarjs/no-nested-functions': 'off',
       },
     },
   ],
@@ -94,12 +96,6 @@ module.exports = {
         allowNumber: true,
       },
     ],
-    '@typescript-eslint/no-unnecessary-type-assertion': [
-      'error',
-      {
-        typesToIgnore: ['const'],
-      },
-    ],
     '@trilon/detect-circular-reference': 'off',
     'nestjs/use-validation-pipe': 'off',
     'import/order': [
@@ -109,6 +105,8 @@ module.exports = {
       },
     ],
     'import/no-cycle': 'warn',
+    'sonarjs/function-return-type': 'off',
+    'sonarjs/no-nested-conditional': 'off',
     'unicorn/no-array-reduce': 'off',
     'unicorn/no-null': 'off',
     'unicorn/no-array-callback-reference': 'off',

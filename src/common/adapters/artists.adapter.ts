@@ -24,7 +24,8 @@ export class ArtistsAdapter {
     data:
       | SdkArtist
       | SdkSimplifiedArtist
-      | (SdkArtist | SdkSimplifiedArtist)[]
+      | SdkArtist[]
+      | SdkSimplifiedArtist[]
       | Page<SdkArtist>
   ) {
     if (Array.isArray(data)) return this.adaptArtists(data)
