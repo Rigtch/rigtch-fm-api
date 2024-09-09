@@ -65,24 +65,20 @@ describe('ReportsService', () => {
           .spyOn(historyTracksRepository, 'countByUserAndBetweenDates')
           .mockResolvedValue(COUNT)
 
-        expect(
-          await reportsService.getListeningDays(
-            {
-              before,
-              after,
-              measurement: StatsMeasurement.PLAYS,
-            },
-            userMock
-          )
-        ).toEqual({
-          1: COUNT,
-          2: COUNT,
-          3: COUNT,
-          4: COUNT,
-          5: COUNT,
-          6: COUNT,
-          7: COUNT,
-        })
+        const result = await reportsService.getListeningDays(
+          {
+            before,
+            after,
+            measurement: StatsMeasurement.PLAYS,
+          },
+          userMock
+        )
+
+        for (const [index, { date, value, dayIndex }] of result.entries()) {
+          expect(date).toBeInstanceOf(Date)
+          expect(value).toBe(COUNT)
+          expect(dayIndex).toBe(index + 1)
+        }
 
         expect(countByUserAndBetweenDatesSpy).toHaveBeenCalledTimes(DAYS)
       })
@@ -103,24 +99,20 @@ describe('ReportsService', () => {
           .spyOn(historyTracksRepository, 'findByUserAndBetweenDates')
           .mockResolvedValue(historyTracksMock)
 
-        expect(
-          await reportsService.getListeningDays(
-            {
-              before,
-              after,
-              measurement: StatsMeasurement.PLAY_TIME,
-            },
-            userMock
-          )
-        ).toEqual({
-          1: TOTAL_DURATION,
-          2: TOTAL_DURATION,
-          3: TOTAL_DURATION,
-          4: TOTAL_DURATION,
-          5: TOTAL_DURATION,
-          6: TOTAL_DURATION,
-          7: TOTAL_DURATION,
-        })
+        const result = await reportsService.getListeningDays(
+          {
+            before,
+            after,
+            measurement: StatsMeasurement.PLAY_TIME,
+          },
+          userMock
+        )
+
+        for (const [index, { date, value, dayIndex }] of result.entries()) {
+          expect(date).toBeInstanceOf(Date)
+          expect(value).toBe(TOTAL_DURATION)
+          expect(dayIndex).toBe(index + 1)
+        }
 
         expect(findByUserAndBetweenDatesSpy).toHaveBeenCalledTimes(DAYS)
       })

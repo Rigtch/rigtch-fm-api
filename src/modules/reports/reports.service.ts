@@ -4,6 +4,7 @@ import type {
   ReportsTotalItemsQuery,
   ReportsListeningQuery,
 } from './router/dtos'
+import { ListeningDaysDocument } from './router/docs'
 
 import { HistoryTracksRepository } from '@modules/history/tracks'
 import type { User } from '@modules/users'
@@ -23,19 +24,22 @@ export class ReportsService {
     const timeRangeTimestamp = before.getTime() - after.getTime()
     const timeRangeDays = Math.floor(timeRangeTimestamp / (1000 * 60 * 60 * 24))
 
-    const listeningDaysObject: Record<number, number> = {}
+    const listeningDaysArray: ListeningDaysDocument[] = []
 
     for (let index = 0; index < timeRangeDays; index++) {
       const afterParam = new Date(after.getTime() + 1000 * 60 * 60 * 24 * index)
       const beforeParam = new Date(afterParam.getTime() + 1000 * 60 * 60 * 24)
 
       if (measurement === StatsMeasurement.PLAYS) {
-        listeningDaysObject[index + 1] =
-          await this.historyTracksRepository.countByUserAndBetweenDates(
+        listeningDaysArray.push({
+          date: afterParam,
+          dayIndex: index + 1,
+          value: await this.historyTracksRepository.countByUserAndBetweenDates(
             user.id,
             afterParam,
             beforeParam
-          )
+          ),
+        })
       } else {
         const historyTracks =
           await this.historyTracksRepository.findByUserAndBetweenDates(
@@ -49,15 +53,19 @@ export class ReportsService {
 
         const tracksDurations = historyTracks.map(({ track }) => track.duration)
 
-        listeningDaysObject[index + 1] = tracksDurations.reduce(
-          (previousDuration, currentDuration) =>
-            previousDuration + currentDuration,
-          0
-        )
+        listeningDaysArray.push({
+          date: afterParam,
+          dayIndex: index + 1,
+          value: tracksDurations.reduce(
+            (previousDuration, currentDuration) =>
+              previousDuration + currentDuration,
+            0
+          ),
+        })
       }
     }
 
-    return listeningDaysObject
+    return listeningDaysArray
   }
 
   async getListeningHours(
