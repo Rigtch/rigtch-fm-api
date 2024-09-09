@@ -11,7 +11,7 @@ import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { ReportsService } from '../reports.service'
 
 import { ReportsListeningQuery, ReportsTotalItemsQuery } from './dtos'
-import { TotalItemsDocument } from './docs'
+import { ListeningDaysDocument, TotalItemsDocument } from './docs'
 import {
   ApiReportsListeningQuery,
   ApiReportsTotalItemsQuery,
@@ -39,6 +39,10 @@ export class ReportsController {
     summary: "Getting user's listening days (cached).",
     description:
       "Getting user's listening days, used for creating charts (cached).",
+  })
+  @ApiOkResponse({
+    description: MANY_SUCCESSFULLY_RETRIEVED('listening days'),
+    type: [ListeningDaysDocument],
   })
   @ApiReportsListeningQuery()
   getListeningDays(

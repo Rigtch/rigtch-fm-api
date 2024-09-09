@@ -59,27 +59,55 @@ describe('ReportsController', () => {
 
   describe('ListeningCharts', () => {
     describe('getListeningDays', () => {
-      const listeningDaysObject = {
-        1: 10,
-        2: 10,
-        3: 10,
-        4: 10,
-        5: 10,
-        6: 10,
-        7: 10,
-      }
+      const listeningDaysArray = [
+        {
+          date: new Date('2024-08-22T08:59:38.340Z'),
+          dayIndex: 1,
+          value: 10,
+        },
+        {
+          date: new Date('2024-08-23T08:59:38.340Z'),
+          dayIndex: 2,
+          value: 10,
+        },
+        {
+          date: new Date('2024-08-24T08:59:38.340Z'),
+          dayIndex: 3,
+          value: 10,
+        },
+        {
+          date: new Date('2024-08-25T08:59:38.340Z'),
+          dayIndex: 4,
+          value: 10,
+        },
+        {
+          date: new Date('2024-08-26T08:59:38.340Z'),
+          dayIndex: 5,
+          value: 10,
+        },
+        {
+          date: new Date('2024-08-27T08:59:38.340Z'),
+          dayIndex: 6,
+          value: 10,
+        },
+        {
+          date: new Date('2024-08-28T08:59:38.340Z'),
+          dayIndex: 7,
+          value: 10,
+        },
+      ]
 
       test('should get listening days with plays measurement', async () => {
         const getListeningDaysSpy = vi
           .spyOn(reportsService, 'getListeningDays')
-          .mockResolvedValue(listeningDaysObject)
+          .mockResolvedValue(listeningDaysArray)
 
         expect(
           await reportsController.getListeningDays(userMock, {
             before,
             after,
           })
-        ).toEqual(listeningDaysObject)
+        ).toEqual(listeningDaysArray)
 
         expect(getListeningDaysSpy).toHaveBeenCalledWith(
           {
@@ -94,7 +122,7 @@ describe('ReportsController', () => {
       test('should get listening days with play time measurement', async () => {
         const getListeningDaysSpy = vi
           .spyOn(reportsService, 'getListeningDays')
-          .mockResolvedValue(listeningDaysObject)
+          .mockResolvedValue(listeningDaysArray)
 
         expect(
           await reportsController.getListeningDays(userMock, {
@@ -102,7 +130,7 @@ describe('ReportsController', () => {
             after,
             measurement: StatsMeasurement.PLAY_TIME,
           })
-        ).toEqual(listeningDaysObject)
+        ).toEqual(listeningDaysArray)
 
         expect(getListeningDaysSpy).toHaveBeenCalledWith(
           {
