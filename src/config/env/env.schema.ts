@@ -7,7 +7,9 @@ export const envSchema = z.object({
   SPOTIFY_BASE_URL: z.coerce.string(),
   SPOTIFY_ACCOUNTS_URL: z.coerce.string(),
   HISTORY_SYNCHRONIZATION_CRONTIME: z.coerce.string().default('0 */1 * * *'),
-  ENABLE_HISTORY_SYNCHRONIZATION: z.coerce.boolean().default(true),
+  ENABLE_HISTORY_SYNCHRONIZATION: z
+    .preprocess(value => value === 'true', z.boolean())
+    .default(false),
   DATABASE_HOST: z.coerce.string(),
   DATABASE_PORT: z.coerce.number().optional().default(5432),
   DATABASE_USERNAME: z.coerce.string(),
