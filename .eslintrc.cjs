@@ -113,6 +113,7 @@ module.exports = {
     'unicorn/prefer-top-level-await': 'off',
     'unicorn/no-useless-undefined': 'off',
     'unicorn/throw-new-error': 'off',
+    'unicorn/no-array-method-this-argument': 'off',
     'unicorn/prevent-abbreviations': [
       'error',
       {
