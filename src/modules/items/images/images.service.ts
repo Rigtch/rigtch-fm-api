@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { DataSource } from 'typeorm'
+import { DataSource, EntityManager, In } from 'typeorm'
 
 import { ImagesRepository } from './images.repository'
 import { CreateImage } from './dtos'
@@ -17,12 +17,20 @@ export class ImagesService {
   }
 
   public findOrCreate(data: CreateImage): Promise<Image>
-  public findOrCreate(data: CreateImage[]): Promise<Image[]>
+  public findOrCreate(
+    data: CreateImage[],
+    manager?: EntityManager
+  ): Promise<Image[]>
 
   async findOrCreate(
-    data: CreateImage | CreateImage[]
+    data: CreateImage | CreateImage[],
+    manager?: EntityManager
   ): Promise<Image | Image[]> {
-    if (Array.isArray(data)) return this.findOrCreateMany(data)
+    if (Array.isArray(data)) {
+      if (manager) return this.findOrCreateManyInTransaction(data, manager)
+
+      return this.findOrCreateMany(data)
+    }
 
     return this.findOrCreateOne(data)
   }
@@ -45,5 +53,30 @@ export class ImagesService {
     if (images.length === 0) return [] as Image[]
 
     return Promise.all(images.map(image => this.findOrCreateOne(image)))
+  }
+
+  private async findOrCreateManyInTransaction(
+    sdkImages: CreateImage[],
+    manager: EntityManager
+  ) {
+    if (sdkImages.length === 0) return [] as Image[]
+
+    const foundImages = await manager.findBy(Image, {
+      url: In(sdkImages.map(image => image.url)),
+    })
+    const imagesToCreate = sdkImages.filter(
+      ({ url }) => !foundImages.some(image => url === image.url)
+    )
+
+    const images = [...foundImages]
+
+    if (imagesToCreate.length > 0) {
+      const imagesEntities = manager.create(Image, imagesToCreate)
+      const savedImages = await manager.save(imagesEntities)
+
+      images.push(...savedImages)
+    }
+
+    return images
   }
 }
