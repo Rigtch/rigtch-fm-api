@@ -15,7 +15,7 @@ export class TracksService {
     private readonly spotifyService: SpotifyService
   ) {}
 
-  async updateOrCreate(
+  async findOrCreate(
     sdkTracks: Omit<SdkCreateTrack, 'album'>[],
     manager: EntityManager,
     album: Album
@@ -63,7 +63,7 @@ export class TracksService {
           false
         )
 
-        const createdArtists = await this.artistsService.updateOrCreate(
+        const createdArtists = await this.artistsService.findOrCreate(
           sdkArtistsToCreate,
           manager
         )
