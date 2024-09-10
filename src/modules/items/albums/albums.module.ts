@@ -1,6 +1,9 @@
 import { Module, forwardRef } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
+import { ArtistsModule } from '../artists'
+import { ImagesModule } from '../images'
+
 import { Album } from './album.entity'
 import { AlbumsRepository } from './albums.repository'
 import { AlbumsController } from './albums.controller'
@@ -14,6 +17,8 @@ import { SpotifyModule } from '@modules/spotify'
     TypeOrmModule.forFeature([Album]),
     forwardRef(() => TracksModule),
     SpotifyModule,
+    ArtistsModule,
+    ImagesModule,
   ],
   providers: [AlbumsRepository, AlbumsService],
   controllers: [AlbumsController],
