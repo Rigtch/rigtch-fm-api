@@ -1,12 +1,11 @@
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { Module } from '@nestjs/common'
 
-import { ImagesModule } from '../images'
-
 import { Artist } from './artist.entity'
 import { ArtistsRepository } from './artists.repository'
 import { ArtistsService } from './artists.service'
 
+import { ImagesModule } from '@modules/items/images'
 import { SpotifyModule } from '@modules/spotify'
 
 @Module({
