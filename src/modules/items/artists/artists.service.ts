@@ -11,7 +11,7 @@ import { ImagesService } from '@modules/items/images'
 export class ArtistsService {
   constructor(private readonly imagesService: ImagesService) {}
 
-  async updateOrCreate(sdkArtists: SdkCreateArtist[], manager: EntityManager) {
+  async findOrCreate(sdkArtists: SdkCreateArtist[], manager: EntityManager) {
     const artistsExternalIds = removeDuplicates(sdkArtists.map(({ id }) => id))
 
     const foundArtists = await manager.findBy(Artist, {

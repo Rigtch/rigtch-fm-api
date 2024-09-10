@@ -18,7 +18,7 @@ export class AlbumsService {
     private readonly imagesService: ImagesService
   ) {}
 
-  async updateOrCreate(sdkAlbums: SdkCreateAlbum[], manager: EntityManager) {
+  async findOrCreate(sdkAlbums: SdkCreateAlbum[], manager: EntityManager) {
     const albumsExternalIds = removeDuplicates(sdkAlbums.map(({ id }) => id))
 
     const foundAlbums = await manager.findBy(Album, {
@@ -47,7 +47,7 @@ export class AlbumsService {
       artists: sdkAlbumArtists,
       tracks: { items: sdkAlbumTracks },
     } of albumsToCreate) {
-      const createdArtists = await this.artistsService.updateOrCreate(
+      const createdArtists = await this.artistsService.findOrCreate(
         sdkAlbumArtists,
         manager
       )
@@ -77,7 +77,7 @@ export class AlbumsService {
       })
 
       const createdAlbum = await manager.save(albumEntity)
-      const tracks = await this.tracksService.updateOrCreate(
+      const tracks = await this.tracksService.findOrCreate(
         sdkAlbumTracks,
         manager,
         createdAlbum

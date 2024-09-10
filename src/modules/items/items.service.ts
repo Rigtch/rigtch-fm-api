@@ -35,7 +35,7 @@ export class ItemsService {
 
   private findOrCreateArtists(sdkArtists: SdkArtist[]) {
     return this.dataSource.transaction(async manager => {
-      return this.artistsService.updateOrCreate(sdkArtists, manager)
+      return this.artistsService.findOrCreate(sdkArtists, manager)
     })
   }
 
@@ -66,7 +66,7 @@ export class ItemsService {
         false
       )
 
-      await this.albumsService.updateOrCreate(fetchedAlbums, manager)
+      await this.albumsService.findOrCreate(fetchedAlbums, manager)
 
       return manager.find(Track, {
         where: {
@@ -95,7 +95,7 @@ export class ItemsService {
         false
       )
 
-      const createdAlbums = await this.albumsService.updateOrCreate(
+      const createdAlbums = await this.albumsService.findOrCreate(
         fetchedAlbums,
         manager
       )

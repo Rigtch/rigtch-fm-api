@@ -35,7 +35,7 @@ describe('TracksService', () => {
         {
           provide: ArtistsService,
           useValue: {
-            updateOrCreate: vi.fn(),
+            findOrCreate: vi.fn(),
           },
         },
         {
@@ -62,7 +62,7 @@ describe('TracksService', () => {
     expect(tracksService).toBeDefined()
   })
 
-  describe('updateOrCreate', () => {
+  describe('findOrCreate', () => {
     const tracksExternalIds = ['id1', 'id2', 'id3']
     const customSdkSimplifiedArtistsMock = sdkSimplifiedArtistsMock
       .slice(0, 3)
@@ -87,7 +87,7 @@ describe('TracksService', () => {
     let findBySpy: MockInstance
     let createSpy: MockInstance
     let saveSpy: MockInstance
-    let artistsUpdateOrCreateSpy: MockInstance
+    let artistsFindOrCreateSpy: MockInstance
     let getSpotifyArtistsSpy: GetItemsMockInstance<SdkArtist>
 
     beforeEach(() => {
@@ -114,7 +114,7 @@ describe('TracksService', () => {
       findBySpy = vi.spyOn(entityManagerMock, 'findBy')
       createSpy = vi.spyOn(entityManagerMock, 'create')
       saveSpy = vi.spyOn(entityManagerMock, 'save')
-      artistsUpdateOrCreateSpy = vi.spyOn(artistsService, 'updateOrCreate')
+      artistsFindOrCreateSpy = vi.spyOn(artistsService, 'findOrCreate')
       getSpotifyArtistsSpy = vi.spyOn(spotifyService.artists, 'get')
     })
 
@@ -122,7 +122,7 @@ describe('TracksService', () => {
       findBySpy.mockResolvedValue(tracksMock)
 
       expect(
-        await tracksService.updateOrCreate(
+        await tracksService.findOrCreate(
           sdkTracksMock,
           entityManagerMock,
           albumEntityMock
@@ -135,7 +135,7 @@ describe('TracksService', () => {
       expect(findBySpy).toHaveBeenCalledTimes(1)
       expect(createSpy).not.toHaveBeenCalled()
       expect(saveSpy).not.toHaveBeenCalled()
-      expect(artistsUpdateOrCreateSpy).not.toHaveBeenCalled()
+      expect(artistsFindOrCreateSpy).not.toHaveBeenCalled()
     })
 
     test('should not find any tracks and create all', async () => {
@@ -146,7 +146,7 @@ describe('TracksService', () => {
       saveSpy.mockResolvedValue(tracksMock)
 
       expect(
-        await tracksService.updateOrCreate(
+        await tracksService.findOrCreate(
           sdkTracksMock,
           entityManagerMock,
           albumEntityMock
@@ -162,7 +162,7 @@ describe('TracksService', () => {
       expect(createSpy).toHaveBeenCalledWith(Track, expect.anything())
       expect(createSpy).toHaveBeenCalledTimes(3)
       expect(saveSpy).toHaveBeenCalledWith(tracksMock)
-      expect(artistsUpdateOrCreateSpy).not.toHaveBeenCalled()
+      expect(artistsFindOrCreateSpy).not.toHaveBeenCalled()
     })
 
     test('should not find any tracks and create all with some artists', async () => {
@@ -170,14 +170,14 @@ describe('TracksService', () => {
         .mockResolvedValueOnce([])
         .mockResolvedValue([customArtistsMock[0], customArtistsMock[1]])
       getSpotifyArtistsSpy.mockResolvedValue([customSdkArtistsMock[2]])
-      artistsUpdateOrCreateSpy.mockResolvedValue([customArtistsMock[2]])
+      artistsFindOrCreateSpy.mockResolvedValue([customArtistsMock[2]])
       createSpy.mockImplementation((_, { externalId }) =>
         tracksMock.find(track => track.externalId === externalId)
       )
       saveSpy.mockResolvedValue(tracksMock)
 
       expect(
-        await tracksService.updateOrCreate(
+        await tracksService.findOrCreate(
           sdkTracksMock,
           entityManagerMock,
           albumEntityMock
@@ -194,7 +194,7 @@ describe('TracksService', () => {
         tracksExternalIds.slice(2, 3),
         false
       )
-      expect(artistsUpdateOrCreateSpy).toHaveBeenCalledWith(
+      expect(artistsFindOrCreateSpy).toHaveBeenCalledWith(
         customSdkArtistsMock.slice(2, 3),
         entityManagerMock
       )
@@ -213,7 +213,7 @@ describe('TracksService', () => {
       saveSpy.mockResolvedValue([tracksMock[2]])
 
       expect(
-        await tracksService.updateOrCreate(
+        await tracksService.findOrCreate(
           sdkTracksMock,
           entityManagerMock,
           albumEntityMock
@@ -227,7 +227,7 @@ describe('TracksService', () => {
         externalId: In(tracksExternalIds),
       })
       expect(getSpotifyArtistsSpy).not.toHaveBeenCalled()
-      expect(artistsUpdateOrCreateSpy).not.toHaveBeenCalled()
+      expect(artistsFindOrCreateSpy).not.toHaveBeenCalled()
       expect(createSpy).toHaveBeenCalledWith(Track, expect.anything())
       expect(createSpy).toHaveBeenCalledTimes(1)
       expect(saveSpy).toHaveBeenCalledWith([tracksMock[2]])

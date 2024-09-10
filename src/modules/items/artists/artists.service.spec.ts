@@ -47,7 +47,7 @@ describe('ArtistsService', () => {
     expect(artistsService).toBeDefined()
   })
 
-  describe('updateOrCreate', () => {
+  describe('findOrCreate', () => {
     const artistsExternalIds = ['id1', 'id2', 'id3']
 
     let sdkArtistsMock: MockProxy<SdkArtist>[]
@@ -83,7 +83,7 @@ describe('ArtistsService', () => {
       findBySpy.mockResolvedValue(artistsMock)
 
       expect(
-        await artistsService.updateOrCreate(sdkArtistsMock, entityManagerMock)
+        await artistsService.findOrCreate(sdkArtistsMock, entityManagerMock)
       ).toEqual(artistsMock)
 
       expect(findBySpy).toHaveBeenCalledWith(Artist, {
@@ -104,7 +104,7 @@ describe('ArtistsService', () => {
       imagesFindOrCreateSpy.mockResolvedValue(imagesMock)
 
       expect(
-        await artistsService.updateOrCreate(sdkArtistsMock, entityManagerMock)
+        await artistsService.findOrCreate(sdkArtistsMock, entityManagerMock)
       ).toEqual(artistsMock)
 
       expect(findBySpy).toHaveBeenCalledWith(Artist, {
@@ -130,7 +130,7 @@ describe('ArtistsService', () => {
       saveSpy.mockResolvedValue([artistsMock[2]])
 
       expect(
-        await artistsService.updateOrCreate(sdkArtistsMock, entityManagerMock)
+        await artistsService.findOrCreate(sdkArtistsMock, entityManagerMock)
       ).toEqual(artistsMock)
 
       expect(findBySpy).toHaveBeenCalledWith(Artist, {
