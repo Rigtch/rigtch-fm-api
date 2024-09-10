@@ -6,7 +6,7 @@ export default defineConfig({
   test: {
     globals: true,
     root: './',
-    pool: 'forks',
+    pool: 'threads',
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html', 'lcov'],
@@ -35,6 +35,13 @@ export default defineConfig({
         '**/*.mjs',
       ],
       all: true,
+    },
+    deps: {
+      optimizer: {
+        ssr: {
+          enabled: true,
+        },
+      },
     },
   },
   plugins: [
