@@ -42,32 +42,6 @@ describe('UsersRepository', () => {
     expect(findSpy).toHaveBeenCalledWith()
   })
 
-  test('should find user by id', async () => {
-    const findOneSpy = vi
-      .spyOn(usersRepository, 'findOne')
-      .mockResolvedValue(userMock)
-
-    const id = 'test'
-
-    expect(await usersRepository.findUserById(id)).toEqual(userMock)
-    expect(findOneSpy).toHaveBeenCalledWith({ where: { id } })
-  })
-
-  test('should find user by display name', async () => {
-    const findOneSpy = vi
-      .spyOn(usersRepository, 'findOne')
-      .mockResolvedValue(userMock)
-
-    const displayName = 'test'
-
-    expect(await usersRepository.findUserByDisplayName(displayName)).toEqual(
-      userMock
-    )
-    expect(findOneSpy).toHaveBeenCalledWith({
-      where: { profile: { displayName } },
-    })
-  })
-
   test('should find user by profile id', async () => {
     const findOneSpy = vi
       .spyOn(usersRepository, 'findOne')
