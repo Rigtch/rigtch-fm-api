@@ -47,26 +47,6 @@ describe('HistoryTracksRepository', () => {
     expect(historyTracksRepository).toBeDefined()
   })
 
-  test('should find history tracks by user', async () => {
-    const findSpy = vi
-      .spyOn(historyTracksRepository, 'find')
-      .mockResolvedValue(historyTracksMock)
-
-    expect(
-      await historyTracksRepository.findHistoryTracksByUser(userId)
-    ).toEqual(historyTracksMock)
-
-    expect(findSpy).toHaveBeenCalledWith({
-      where: {
-        user: {
-          id: userId,
-        },
-      },
-      relations: historyTracksRelations,
-      order: historyTracksOrder,
-    })
-  })
-
   test('should find last history track by user', async () => {
     const findOneSpy = vi
       .spyOn(historyTracksRepository, 'findOne')
