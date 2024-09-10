@@ -34,7 +34,6 @@ services:
       - .env
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
-      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
     ports:
       - '${REDIS_PORT}:6379'
     volumes:
