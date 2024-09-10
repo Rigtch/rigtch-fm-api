@@ -25,18 +25,6 @@ export class HistoryTracksRepository extends Repository<HistoryTrack> {
     super(HistoryTrack, dataSource.createEntityManager())
   }
 
-  findHistoryTracksByUser(userId: string) {
-    return this.find({
-      where: {
-        user: {
-          id: userId,
-        },
-      },
-      relations: historyTracksRelations,
-      order: historyTracksOrder,
-    })
-  }
-
   findLastHistoryTrackByUser(userId: string) {
     return this.findOne({
       where: {
