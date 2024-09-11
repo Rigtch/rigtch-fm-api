@@ -21,7 +21,7 @@ export class StatsRigtchService {
   ) {}
 
   async getTopTracks(
-    { before, after, limit, measurement }: Required<StatsRigtchQuery>,
+    { before, after, limit, measurement, offset }: Required<StatsRigtchQuery>,
     user: User
   ): Promise<TopItem<Track>[]> {
     const historyTracks =
@@ -41,8 +41,8 @@ export class StatsRigtchService {
     if (measurement === StatsMeasurement.PLAYS) {
       const mostFrequentItems = getMostFrequentItems(
         tracks.map(track => track.id),
-        limit
-      )
+        limit + offset
+      ).slice(offset)
 
       return mostFrequentItems.map(({ item: id, count }) => ({
         item: tracks.find(track => track.id === id)!,
@@ -52,8 +52,8 @@ export class StatsRigtchService {
 
     const mostListenedTrackByDuration = getMostListenedItemsByDuration(
       tracks,
-      limit
-    )
+      limit + offset
+    ).slice(offset)
 
     return mostListenedTrackByDuration.map(({ id, totalDuration }) => ({
       item: tracks.find(track => track.id === id)!,
@@ -62,7 +62,7 @@ export class StatsRigtchService {
   }
 
   async getTopArtists(
-    { before, after, limit, measurement }: Required<StatsRigtchQuery>,
+    { before, after, limit, measurement, offset }: Required<StatsRigtchQuery>,
     user: User
   ): Promise<TopItem<Artist>[]> {
     const historyTracks =
@@ -82,8 +82,8 @@ export class StatsRigtchService {
     if (measurement === StatsMeasurement.PLAYS) {
       const mostFrequentItems = getMostFrequentItems(
         artists.map(artist => artist.id),
-        limit
-      )
+        limit + offset
+      ).slice(offset)
 
       return mostFrequentItems.map(({ item: id, count }) => ({
         item: artists.find(artist => artist.id === id)!,
@@ -95,8 +95,8 @@ export class StatsRigtchService {
       tracks.flatMap(({ artists, duration }) =>
         artists.map(({ id }) => ({ id, duration }))
       ),
-      limit
-    )
+      limit + offset
+    ).slice(offset)
 
     return mostListenedArtistByDuration.map(({ id, totalDuration }) => ({
       item: artists.find(artist => artist.id === id)!,
@@ -105,7 +105,7 @@ export class StatsRigtchService {
   }
 
   async getTopAlbums(
-    { before, after, limit, measurement }: Required<StatsRigtchQuery>,
+    { before, after, limit, measurement, offset }: Required<StatsRigtchQuery>,
     user: User
   ): Promise<TopItem<Album>[]> {
     const historyTracks =
@@ -127,8 +127,8 @@ export class StatsRigtchService {
     if (measurement === StatsMeasurement.PLAYS) {
       const mostFrequentItems = getMostFrequentItems(
         albums.map(album => album!.id),
-        limit
-      )
+        limit + offset
+      ).slice(offset)
 
       return mostFrequentItems.map(({ item: id, count }) => ({
         item: albums.find(album => album!.id === id)!,
@@ -141,8 +141,8 @@ export class StatsRigtchService {
         id: album!.id,
         duration,
       })),
-      limit
-    )
+      limit + offset
+    ).slice(offset)
 
     return mostListenedAlbumByDuration.map(({ id, totalDuration }) => ({
       item: albums.find(album => album!.id === id)!,
@@ -151,7 +151,7 @@ export class StatsRigtchService {
   }
 
   async getTopGenres(
-    { before, after, limit, measurement }: Required<StatsRigtchQuery>,
+    { before, after, limit, measurement, offset }: Required<StatsRigtchQuery>,
     user: User
   ): Promise<TopItem<string>[]> {
     const historyTracks =
@@ -170,7 +170,10 @@ export class StatsRigtchService {
     const genres = artists.flatMap(({ genres }) => genres)
 
     if (measurement === StatsMeasurement.PLAYS) {
-      const mostFrequentItems = getMostFrequentItems(genres, limit)
+      const mostFrequentItems = getMostFrequentItems(
+        genres,
+        limit + offset
+      ).slice(offset)
 
       return mostFrequentItems.map(({ item, count }) => ({
         item,
@@ -184,8 +187,8 @@ export class StatsRigtchService {
           .flatMap(({ genres }) => genres)
           .map(genre => ({ id: genre, duration }))
       ),
-      limit
-    )
+      limit + offset
+    ).slice(offset)
 
     return mostListenedGenreByDuration.map(({ id, totalDuration }) => ({
       item: id,

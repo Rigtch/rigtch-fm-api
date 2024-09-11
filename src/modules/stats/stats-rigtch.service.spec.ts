@@ -21,6 +21,8 @@ import type { Track } from '@modules/items/tracks'
 vi.mock('@common/utils')
 
 describe('StatsRigtchService', () => {
+  const limit = 10
+  const offset = 0
   const date = new Date()
 
   let moduleRef: TestingModule
@@ -109,7 +111,8 @@ describe('StatsRigtchService', () => {
           {
             before: date,
             after: date,
-            limit: 10,
+            limit,
+            offset,
             measurement: StatsMeasurement.PLAYS,
           },
           userMock
@@ -127,7 +130,10 @@ describe('StatsRigtchService', () => {
         date,
         relations
       )
-      expect(getMostFrequentItemsSpy).toHaveBeenCalled()
+      expect(getMostFrequentItemsSpy).toHaveBeenCalledWith(
+        expect.anything(),
+        limit + offset
+      )
       expect(getMostListenedItemsByDurationSpy).not.toHaveBeenCalled()
     })
 
@@ -145,7 +151,8 @@ describe('StatsRigtchService', () => {
           {
             before: date,
             after: date,
-            limit: 10,
+            limit,
+            offset,
             measurement: StatsMeasurement.PLAY_TIME,
           },
           userMock
@@ -163,7 +170,10 @@ describe('StatsRigtchService', () => {
         date,
         relations
       )
-      expect(getMostListenedItemsByDurationSpy).toHaveBeenCalled()
+      expect(getMostListenedItemsByDurationSpy).toHaveBeenCalledWith(
+        expect.anything(),
+        limit + offset
+      )
     })
   })
 
@@ -196,7 +206,8 @@ describe('StatsRigtchService', () => {
           {
             before: date,
             after: date,
-            limit: 10,
+            limit,
+            offset,
             measurement: StatsMeasurement.PLAYS,
           },
           userMock
@@ -214,7 +225,10 @@ describe('StatsRigtchService', () => {
         date,
         relations
       )
-      expect(getMostFrequentItemsSpy).toHaveBeenCalled()
+      expect(getMostFrequentItemsSpy).toHaveBeenCalledWith(
+        expect.anything(),
+        limit + offset
+      )
     })
 
     test('should get top artists with play time measurement', async () => {
@@ -232,7 +246,8 @@ describe('StatsRigtchService', () => {
           {
             before: date,
             after: date,
-            limit: 10,
+            limit,
+            offset,
             measurement: StatsMeasurement.PLAY_TIME,
           },
           userMock
@@ -250,7 +265,10 @@ describe('StatsRigtchService', () => {
         date,
         relations
       )
-      expect(getMostListenedItemsByDurationSpy).toHaveBeenCalled()
+      expect(getMostListenedItemsByDurationSpy).toHaveBeenCalledWith(
+        expect.anything(),
+        limit + offset
+      )
     })
   })
 
@@ -285,7 +303,8 @@ describe('StatsRigtchService', () => {
           {
             before: date,
             after: date,
-            limit: 10,
+            limit,
+            offset,
             measurement: StatsMeasurement.PLAYS,
           },
           userMock
@@ -303,7 +322,10 @@ describe('StatsRigtchService', () => {
         date,
         relations
       )
-      expect(getMostFrequentItemsSpy).toHaveBeenCalled()
+      expect(getMostFrequentItemsSpy).toHaveBeenCalledWith(
+        expect.anything(),
+        limit + offset
+      )
     })
 
     test('should get top albums with play time measurement', async () => {
@@ -320,7 +342,8 @@ describe('StatsRigtchService', () => {
           {
             before: date,
             after: date,
-            limit: 10,
+            limit,
+            offset,
             measurement: StatsMeasurement.PLAY_TIME,
           },
           userMock
@@ -338,7 +361,10 @@ describe('StatsRigtchService', () => {
         date,
         relations
       )
-      expect(getMostListenedItemsByDurationSpy).toHaveBeenCalled()
+      expect(getMostListenedItemsByDurationSpy).toHaveBeenCalledWith(
+        expect.anything(),
+        limit + offset
+      )
     })
   })
 
@@ -372,7 +398,8 @@ describe('StatsRigtchService', () => {
           {
             before: date,
             after: date,
-            limit: 10,
+            limit,
+            offset,
             measurement: StatsMeasurement.PLAYS,
           },
           userMock
@@ -390,7 +417,10 @@ describe('StatsRigtchService', () => {
         date,
         relations
       )
-      expect(getMostFrequentItemsSpy).toHaveBeenCalled()
+      expect(getMostFrequentItemsSpy).toHaveBeenCalledWith(
+        expect.anything(),
+        limit + offset
+      )
     })
 
     test('should get top genres with play time measurement', async () => {
@@ -407,7 +437,8 @@ describe('StatsRigtchService', () => {
           {
             before: date,
             after: date,
-            limit: 10,
+            limit,
+            offset,
             measurement: StatsMeasurement.PLAY_TIME,
           },
           userMock
@@ -425,7 +456,10 @@ describe('StatsRigtchService', () => {
         date,
         relations
       )
-      expect(getMostListenedItemsByDurationSpy).toHaveBeenCalled()
+      expect(getMostListenedItemsByDurationSpy).toHaveBeenCalledWith(
+        expect.anything(),
+        limit + offset
+      )
     })
   })
 })

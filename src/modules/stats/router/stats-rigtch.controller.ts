@@ -54,6 +54,7 @@ export class StatsRigtchController {
       before = new Date(),
       after,
       limit = 10,
+      offset = 0,
       measurement = StatsMeasurement.PLAYS,
     }: StatsRigtchQuery
   ) {
@@ -63,6 +64,7 @@ export class StatsRigtchController {
         after,
         limit,
         measurement,
+        offset,
       },
       user
     )
@@ -85,6 +87,7 @@ export class StatsRigtchController {
       before = new Date(),
       after,
       limit = 10,
+      offset = 0,
       measurement = StatsMeasurement.PLAYS,
     }: StatsRigtchQuery
   ) {
@@ -94,6 +97,7 @@ export class StatsRigtchController {
         after,
         limit,
         measurement,
+        offset,
       },
       user
     )
@@ -116,6 +120,7 @@ export class StatsRigtchController {
       before = new Date(),
       after,
       limit = 10,
+      offset = 0,
       measurement = StatsMeasurement.PLAYS,
     }: StatsRigtchQuery
   ) {
@@ -125,6 +130,7 @@ export class StatsRigtchController {
         after,
         limit,
         measurement,
+        offset,
       },
       user
     )
@@ -147,6 +153,7 @@ export class StatsRigtchController {
       before = new Date(),
       after,
       limit = 10,
+      offset = 0,
       measurement = StatsMeasurement.PLAYS,
     }: StatsRigtchQuery
   ) {
@@ -156,6 +163,7 @@ export class StatsRigtchController {
         after,
         limit,
         measurement,
+        offset,
       },
       user
     )
