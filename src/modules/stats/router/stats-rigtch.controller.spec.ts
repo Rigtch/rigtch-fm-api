@@ -11,6 +11,8 @@ import { albumMock, artistMock, trackMock, userMock } from '@common/mocks'
 import { UsersRepository } from '@modules/users'
 
 describe('StatsRigtchController', () => {
+  const limit = 10
+  const offset = 0
   const date = new Date()
 
   let moduleRef: TestingModule
@@ -64,7 +66,6 @@ describe('StatsRigtchController', () => {
     })
 
     test('should get top tracks', async () => {
-      const limit = 10
       const result = Array.from({ length: limit }, () => trackMock)
 
       getTopTracksSpy.mockResolvedValue(result)
@@ -73,8 +74,9 @@ describe('StatsRigtchController', () => {
         await statsRigtchController.getTopTracks(userMock, {
           before: date,
           after: date,
-          limit: 10,
+          limit,
           measurement: StatsMeasurement.PLAYS,
+          offset,
         })
       ).toEqual(result)
 
@@ -84,6 +86,7 @@ describe('StatsRigtchController', () => {
           after: date,
           limit,
           measurement: StatsMeasurement.PLAYS,
+          offset,
         },
         userMock
       )
@@ -98,7 +101,6 @@ describe('StatsRigtchController', () => {
     })
 
     test('should get top artists', async () => {
-      const limit = 10
       const result = Array.from({ length: limit }, () => artistMock)
 
       getTopArtistsSpy.mockResolvedValue(result)
@@ -107,8 +109,9 @@ describe('StatsRigtchController', () => {
         await statsRigtchController.getTopArtists(userMock, {
           before: date,
           after: date,
-          limit: 10,
+          limit,
           measurement: StatsMeasurement.PLAYS,
+          offset,
         })
       ).toEqual(result)
 
@@ -117,6 +120,7 @@ describe('StatsRigtchController', () => {
           before: date,
           after: date,
           limit,
+          offset,
           measurement: StatsMeasurement.PLAYS,
         },
         userMock
@@ -132,7 +136,6 @@ describe('StatsRigtchController', () => {
     })
 
     test('should get top albums', async () => {
-      const limit = 10
       const result = Array.from({ length: limit }, () => albumMock)
 
       getTopAlbumsSpy.mockResolvedValue(result)
@@ -141,7 +144,8 @@ describe('StatsRigtchController', () => {
         await statsRigtchController.getTopAlbums(userMock, {
           before: date,
           after: date,
-          limit: 10,
+          limit,
+          offset,
           measurement: StatsMeasurement.PLAYS,
         })
       ).toEqual(result)
@@ -151,6 +155,7 @@ describe('StatsRigtchController', () => {
           before: date,
           after: date,
           limit,
+          offset,
           measurement: StatsMeasurement.PLAYS,
         },
         userMock
@@ -175,7 +180,8 @@ describe('StatsRigtchController', () => {
         await statsRigtchController.getTopGenres(userMock, {
           before: date,
           after: date,
-          limit: 10,
+          limit,
+          offset,
           measurement: StatsMeasurement.PLAYS,
         })
       ).toEqual(result)
@@ -185,6 +191,7 @@ describe('StatsRigtchController', () => {
           before: date,
           after: date,
           limit,
+          offset,
           measurement: StatsMeasurement.PLAYS,
         },
         userMock

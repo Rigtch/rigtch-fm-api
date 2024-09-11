@@ -23,6 +23,12 @@ export class StatsRigtchQuery {
   readonly limit?: number
 
   @IsOptional()
+  @IsNumber()
+  @Max(100)
+  @Transform(({ value }: { value: number }) => (value > 100 ? 100 : value))
+  readonly offset?: number
+
+  @IsOptional()
   @IsEnum(StatsMeasurement)
   readonly measurement?: StatsMeasurement
 }

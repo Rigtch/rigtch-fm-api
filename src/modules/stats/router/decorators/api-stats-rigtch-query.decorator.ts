@@ -23,6 +23,12 @@ export const ApiStatsRigtchQuery = () =>
       description: 'The amount of tracks to be returned.',
     }),
     ApiQuery({
+      name: 'offset',
+      type: Number,
+      required: false,
+      description: 'The offset of the items returned.',
+    }),
+    ApiQuery({
       name: 'measurement',
       type: String,
       required: false,
