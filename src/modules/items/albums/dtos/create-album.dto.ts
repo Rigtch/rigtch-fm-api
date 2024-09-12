@@ -1,3 +1,4 @@
+import type { Page } from '@spotify/web-api-ts-sdk'
 import {
   IsArray,
   IsDate,
@@ -8,18 +9,17 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator'
-import type { Page } from '@spotify/web-api-ts-sdk'
 
 import type { Album } from '../album.entity'
 import { ReleaseDatePrecision } from '../enums'
 
-import type { Artist } from '@modules/items/artists'
 import type {
   SdkAlbum,
-  SdkArtist,
   SdkImage,
+  SdkSimplifiedArtist,
   SdkSimplifiedTrack,
 } from '@common/types/spotify'
+import type { Artist } from '@modules/items/artists'
 import type { Image } from '@modules/items/images'
 
 export abstract class CreateAlbum implements Omit<Album, 'id' | 'type'> {
@@ -121,7 +121,7 @@ export abstract class SdkCreateAlbum
   readonly images: SdkImage[]
 
   @IsArray()
-  readonly artists: SdkArtist[]
+  readonly artists: SdkSimplifiedArtist[]
 
   readonly tracks: Page<SdkSimplifiedTrack>
 }

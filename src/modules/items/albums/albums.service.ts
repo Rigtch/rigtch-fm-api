@@ -9,13 +9,15 @@ import { removeDuplicates } from '@common/utils'
 import { ArtistsService } from '@modules/items/artists'
 import { ImagesService } from '@modules/items/images'
 import { TracksService } from '@modules/items/tracks/tracks.service'
+import { SpotifyService } from '@modules/spotify'
 
 @Injectable()
 export class AlbumsService {
   constructor(
     private readonly tracksService: TracksService,
     private readonly artistsService: ArtistsService,
-    private readonly imagesService: ImagesService
+    private readonly imagesService: ImagesService,
+    private readonly spotifyService: SpotifyService
   ) {}
 
   async findOrCreate(sdkAlbums: SdkCreateAlbum[], manager: EntityManager) {
@@ -47,8 +49,13 @@ export class AlbumsService {
       artists: sdkAlbumArtists,
       tracks: { items: sdkAlbumTracks },
     } of albumsToCreate) {
+      const fetchedArtists = await this.spotifyService.artists.get(
+        sdkAlbumArtists.map(({ id }) => id),
+        false
+      )
+
       const createdArtists = await this.artistsService.findOrCreate(
-        sdkAlbumArtists,
+        fetchedArtists,
         manager
       )
       const createdImages = await this.imagesService.findOrCreate(
