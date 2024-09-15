@@ -54,8 +54,8 @@ module.exports = {
     'plugin:import/typescript',
     'plugin:unicorn/recommended',
     'plugin:nestjs/recommended',
-    'plugin:eslint-comments/recommended',
     'prettier',
+    'plugin:@eslint-community/eslint-comments/recommended',
   ],
   overrides: [
     {
