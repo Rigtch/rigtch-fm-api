@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { MockProxy, mock } from 'vitest-mock-extended'
 import { MockInstance } from 'vitest'
-import { DataSource, EntityManager, Equal } from 'typeorm'
+import { DataSource, EntityManager } from 'typeorm'
 import { Context, PlayHistory } from '@spotify/web-api-ts-sdk'
 
 import { HistoryTracksService } from './history-tracks.service'
@@ -65,26 +65,24 @@ describe('HistoryTracksService', () => {
 
   describe('create', () => {
     describe('findOrCreateOne', () => {
-      let findOneSpy: MockInstance
+      let findBySpy: MockInstance
       let createSpy: MockInstance
       let saveSpy: MockInstance
 
       beforeEach(() => {
-        findOneSpy = vi.spyOn(entityManagerMock, 'findOne')
+        findBySpy = vi.spyOn(entityManagerMock, 'findBy')
         createSpy = vi.spyOn(entityManagerMock, 'create')
         saveSpy = vi.spyOn(entityManagerMock, 'save')
       })
 
       test('should create history track', async () => {
-        const playedAt = new Date()
-
         const createHistoryTrackMock: CreateHistoryTrack = {
           track: trackEntityMock,
-          playedAt,
+          playedAt: new Date(),
           user: userMock,
         }
 
-        findOneSpy.mockResolvedValue(null)
+        findBySpy.mockResolvedValue([])
         createSpy.mockReturnValue(historyTrackMock)
         saveSpy.mockResolvedValue(historyTrackMock)
 
@@ -92,18 +90,12 @@ describe('HistoryTracksService', () => {
           await historyTracksService.create(createHistoryTrackMock)
         ).toEqual(historyTrackMock)
 
-        expect(findOneSpy).toHaveBeenCalledWith(HistoryTrack, {
-          where: {
-            track: {
-              id: trackEntityMock.id,
-            },
-            user: {
-              id: userMock.id,
-            },
-            playedAt: Equal(playedAt),
+        expect(findBySpy).toHaveBeenCalledWith(HistoryTrack, {
+          track: {
+            id: trackEntityMock.id,
           },
-          relations: {
-            track: true,
+          user: {
+            id: userMock.id,
           },
         })
         expect(createSpy).toHaveBeenCalledWith(
@@ -118,7 +110,7 @@ describe('HistoryTracksService', () => {
 
         historyTrackMock.playedAt = playedAt
 
-        findOneSpy.mockResolvedValue(historyTrackMock)
+        findBySpy.mockResolvedValue([historyTrackMock])
 
         expect(
           await historyTracksService.create({
@@ -128,18 +120,12 @@ describe('HistoryTracksService', () => {
           })
         ).toEqual(historyTrackMock)
 
-        expect(findOneSpy).toHaveBeenCalledWith(HistoryTrack, {
-          where: {
-            track: {
-              id: trackEntityMock.id,
-            },
-            user: {
-              id: userMock.id,
-            },
-            playedAt: Equal(playedAt),
+        expect(findBySpy).toHaveBeenCalledWith(HistoryTrack, {
+          track: {
+            id: trackEntityMock.id,
           },
-          relations: {
-            track: true,
+          user: {
+            id: userMock.id,
           },
         })
         expect(createSpy).not.toHaveBeenCalled()
