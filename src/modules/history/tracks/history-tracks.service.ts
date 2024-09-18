@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { PlayHistory } from '@spotify/web-api-ts-sdk'
-import { DataSource } from 'typeorm'
+import { DataSource, Equal } from 'typeorm'
 
 import { HistoryTrack } from './history-track.entity'
 import { CreateHistoryTrack } from './dtos'
@@ -70,18 +70,22 @@ export class HistoryTracksService {
     playedAt,
   }: CreateHistoryTrack): Promise<HistoryTrack> {
     return this.dataSource.transaction(async manager => {
-      const foundHistoryTracks = await manager.findBy(HistoryTrack, {
-        user: {
-          id: user.id,
+      const foundHistoryTrack = await manager.findOne(HistoryTrack, {
+        where: {
+          user: {
+            id: user.id,
+          },
+          track: {
+            id: track.id,
+          },
+          playedAt: Equal(playedAt),
         },
-        track: {
-          id: track.id,
+        relations: {
+          track: true,
         },
       })
 
-      for (const foundHistoryTrack of foundHistoryTracks)
-        if (foundHistoryTrack.playedAt.getTime() === playedAt.getTime())
-          return foundHistoryTrack
+      if (foundHistoryTrack) return foundHistoryTrack
 
       const newHistoryTrack = manager.create(HistoryTrack, {
         user,

@@ -3,6 +3,7 @@ import { EntityManager } from 'typeorm'
 export const entityManagerFactoryMock = () =>
   ({
     findOneBy: vi.fn(),
+    findOne: vi.fn(),
     findBy: vi.fn(),
     find: vi.fn(),
     update: vi.fn(),
