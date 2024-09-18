@@ -26,6 +26,18 @@ export class HistoryTracksRepository extends Repository<HistoryTrack> {
     super(HistoryTrack, dataSource.createEntityManager())
   }
 
+  findLastHistoryTrackByUser(userId: string) {
+    return this.findOne({
+      where: {
+        user: {
+          id: userId,
+        },
+      },
+      relationLoadStrategy: 'query',
+      order: historyTracksOrder,
+    })
+  }
+
   findByUserAndBetweenDates<T = HistoryTrack>(
     userId: string,
     after: Date,
