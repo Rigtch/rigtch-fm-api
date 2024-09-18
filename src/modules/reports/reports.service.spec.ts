@@ -179,7 +179,16 @@ describe('ReportsService', () => {
           after,
           before,
           {
-            track: true,
+            track: {
+              album: false,
+              artists: false,
+            },
+          },
+          {
+            playedAt: true,
+            track: {
+              duration: true,
+            },
           }
         )
       })
@@ -254,7 +263,16 @@ describe('ReportsService', () => {
           after,
           before,
           {
-            track: true,
+            track: {
+              album: false,
+              artists: false,
+            },
+          },
+          {
+            playedAt: true,
+            track: {
+              duration: true,
+            },
           }
         )
       })
@@ -312,7 +330,17 @@ describe('ReportsService', () => {
         before,
         {
           track: {
-            artists: true,
+            artists: {
+              images: false,
+            },
+            album: false,
+          },
+        },
+        {
+          track: {
+            artists: {
+              externalId: true,
+            },
           },
         }
       )
@@ -332,7 +360,18 @@ describe('ReportsService', () => {
         before,
         {
           track: {
-            album: true,
+            album: {
+              images: false,
+              artists: false,
+              tracks: false,
+            },
+          },
+        },
+        {
+          track: {
+            album: {
+              externalId: true,
+            },
           },
         }
       )

@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common'
+import { Simplify } from 'type-fest'
 
 import type {
   ReportsTotalItemsQuery,
@@ -6,10 +7,34 @@ import type {
 } from './router/dtos'
 import { ListeningDaysDocument } from './router/docs'
 
-import { HistoryTracksRepository } from '@modules/history/tracks'
+import {
+  type HistoryTrack,
+  HistoryTracksRepository,
+} from '@modules/history/tracks'
 import type { User } from '@modules/users'
 import { removeDuplicates } from '@common/utils'
 import { StatsMeasurement } from '@modules/stats/enums'
+import type { Track } from '@modules/items/tracks'
+import type { Album } from '@modules/items/albums'
+import type { Artist } from '@modules/items/artists'
+
+type PickedHistoryTrackWithTrackDuration = Simplify<
+  Pick<HistoryTrack, 'playedAt'> & {
+    track: Pick<Track, 'duration'>
+  }
+>
+
+type PickedHistoryTrackWithTrackArtists = Simplify<{
+  track: {
+    artists: Pick<Artist, 'externalId'>[]
+  }
+}>
+
+type PickedHistoryTrackWithTrackAlbum = Simplify<{
+  track: {
+    album: Pick<Album, 'externalId'>
+  }
+}>
 
 @Injectable()
 export class ReportsService {
@@ -42,12 +67,21 @@ export class ReportsService {
         })
       } else {
         const historyTracks =
-          await this.historyTracksRepository.findByUserAndBetweenDates(
+          await this.historyTracksRepository.findByUserAndBetweenDates<PickedHistoryTrackWithTrackDuration>(
             user.id,
             afterParam,
             beforeParam,
             {
-              track: true,
+              track: {
+                album: false,
+                artists: false,
+              },
+            },
+            {
+              playedAt: true,
+              track: {
+                duration: true,
+              },
             }
           )
 
@@ -57,8 +91,7 @@ export class ReportsService {
           date: afterParam,
           dayIndex: index + 1,
           value: tracksDurations.reduce(
-            (previousDuration, currentDuration) =>
-              previousDuration + currentDuration,
+            (previousValue, currentValue) => previousValue + currentValue,
             0
           ),
         })
@@ -73,12 +106,21 @@ export class ReportsService {
     user: User
   ) {
     const historyTracks =
-      await this.historyTracksRepository.findByUserAndBetweenDates(
+      await this.historyTracksRepository.findByUserAndBetweenDates<PickedHistoryTrackWithTrackDuration>(
         user.id,
         after,
         before,
         {
-          track: true,
+          track: {
+            album: false,
+            artists: false,
+          },
+        },
+        {
+          playedAt: true,
+          track: {
+            duration: true,
+          },
         }
       )
 
@@ -125,13 +167,23 @@ export class ReportsService {
     user: User
   ) {
     const historyTracks =
-      await this.historyTracksRepository.findByUserAndBetweenDates(
+      await this.historyTracksRepository.findByUserAndBetweenDates<PickedHistoryTrackWithTrackArtists>(
         user.id,
         after,
         before,
         {
           track: {
-            artists: true,
+            artists: {
+              images: false,
+            },
+            album: false,
+          },
+        },
+        {
+          track: {
+            artists: {
+              externalId: true,
+            },
           },
         }
       )
@@ -148,19 +200,30 @@ export class ReportsService {
     user: User
   ) {
     const historyTracks =
-      await this.historyTracksRepository.findByUserAndBetweenDates(
+      await this.historyTracksRepository.findByUserAndBetweenDates<PickedHistoryTrackWithTrackAlbum>(
         user.id,
         after,
         before,
         {
           track: {
-            album: true,
+            album: {
+              images: false,
+              artists: false,
+              tracks: false,
+            },
+          },
+        },
+        {
+          track: {
+            album: {
+              externalId: true,
+            },
           },
         }
       )
 
     const albumsExternalIds = historyTracks.flatMap(
-      ({ track }) => track.album?.externalId
+      ({ track }) => track.album.externalId
     )
 
     return removeDuplicates(albumsExternalIds).length
