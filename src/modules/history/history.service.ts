@@ -1,21 +1,9 @@
 import { Injectable } from '@nestjs/common'
-import type { Simplify } from 'type-fest'
 
-import {
-  type HistoryTrack,
-  HistoryTracksRepository,
-  HistoryTracksService,
-} from './tracks'
+import { HistoryTracksRepository, HistoryTracksService } from './tracks'
 
 import { SpotifyService } from '@modules/spotify'
 import type { User } from '@modules/users'
-import type { Track } from '@modules/items/tracks'
-
-type PickedHistoryTrack = Simplify<
-  Pick<HistoryTrack, 'playedAt'> & {
-    track: Pick<Track, 'externalId'>
-  }
->
 
 @Injectable()
 export class HistoryService {
@@ -30,23 +18,8 @@ export class HistoryService {
       refreshToken: user.refreshToken,
     })
 
-    const lastHistoryTrack: PickedHistoryTrack | null =
-      await this.historyTracksRepository.findOne({
-        where: {
-          user: {
-            id: user.id,
-          },
-        },
-        relations: {
-          user: true,
-        },
-        select: {
-          playedAt: true,
-          track: {
-            externalId: true,
-          },
-        },
-      })
+    const lastHistoryTrack =
+      await this.historyTracksRepository.findLastHistoryTrackByUser(user.id)
 
     if (!lastHistoryTrack) {
       const { items: playHistory } =
