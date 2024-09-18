@@ -51,6 +51,10 @@ describe('HistoryTracksRepository', () => {
     const after = new Date()
     const before = new Date()
 
+    const select = {
+      playedAt: true,
+    }
+
     const findSpy = vi
       .spyOn(historyTracksRepository, 'find')
       .mockResolvedValue(historyTracksMock)
@@ -60,7 +64,8 @@ describe('HistoryTracksRepository', () => {
         userId,
         after,
         before,
-        historyTracksRelations
+        historyTracksRelations,
+        select
       )
     ).toEqual(historyTracksMock)
 
@@ -72,6 +77,7 @@ describe('HistoryTracksRepository', () => {
         playedAt: And(MoreThanOrEqual(after), LessThanOrEqual(before)),
       },
       relations: historyTracksRelations,
+      select,
       order: historyTracksOrder,
     })
   })
