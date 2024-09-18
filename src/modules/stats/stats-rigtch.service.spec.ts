@@ -183,6 +183,11 @@ describe('StatsRigtchService', () => {
         artists: true,
       },
     }
+    const select = {
+      track: {
+        artists: true,
+      },
+    }
 
     let result: Artist[]
 
@@ -223,7 +228,8 @@ describe('StatsRigtchService', () => {
         userMock.id,
         date,
         date,
-        relations
+        relations,
+        select
       )
       expect(getMostFrequentItemsSpy).toHaveBeenCalledWith(
         expect.anything(),
@@ -263,7 +269,8 @@ describe('StatsRigtchService', () => {
         userMock.id,
         date,
         date,
-        relations
+        relations,
+        select
       )
       expect(getMostListenedItemsByDurationSpy).toHaveBeenCalledWith(
         expect.anything(),
@@ -371,7 +378,17 @@ describe('StatsRigtchService', () => {
   describe('getTopGenres', () => {
     const relations = {
       track: {
-        artists: true,
+        artists: {
+          images: false,
+        },
+      },
+    }
+    const select = {
+      track: {
+        artists: {
+          genres: true,
+        },
+        duration: true,
       },
     }
 
@@ -415,7 +432,8 @@ describe('StatsRigtchService', () => {
         userMock.id,
         date,
         date,
-        relations
+        relations,
+        select
       )
       expect(getMostFrequentItemsSpy).toHaveBeenCalledWith(
         expect.anything(),
@@ -454,7 +472,8 @@ describe('StatsRigtchService', () => {
         userMock.id,
         date,
         date,
-        relations
+        relations,
+        select
       )
       expect(getMostListenedItemsByDurationSpy).toHaveBeenCalledWith(
         expect.anything(),

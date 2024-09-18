@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common'
+import type { Simplify } from 'type-fest'
 
 import { StatsMeasurement } from './enums'
 import type { StatsRigtchQuery } from './router/dtos'
@@ -13,6 +14,16 @@ import type { Album } from '@modules/items/albums'
 import type { Artist } from '@modules/items/artists'
 import type { Track } from '@modules/items/tracks'
 import type { User } from '@modules/users'
+
+type PickedHistoryTrackWithTrackArtistsAndDuration = Simplify<{
+  track: Pick<Track, 'artists' | 'duration'>
+}>
+
+type PickedHistoryTrackWithTrackArtistsGenresAndDuration = Simplify<{
+  track: Pick<Track, 'duration'> & {
+    artists: Pick<Artist, 'genres'>[]
+  }
+}>
 
 @Injectable()
 export class StatsRigtchService {
@@ -66,10 +77,15 @@ export class StatsRigtchService {
     user: User
   ): Promise<TopItem<Artist>[]> {
     const historyTracks =
-      await this.historyTracksRepository.findByUserAndBetweenDates(
+      await this.historyTracksRepository.findByUserAndBetweenDates<PickedHistoryTrackWithTrackArtistsAndDuration>(
         user.id,
         after,
         before,
+        {
+          track: {
+            artists: true,
+          },
+        },
         {
           track: {
             artists: true,
@@ -155,13 +171,23 @@ export class StatsRigtchService {
     user: User
   ): Promise<TopItem<string>[]> {
     const historyTracks =
-      await this.historyTracksRepository.findByUserAndBetweenDates(
+      await this.historyTracksRepository.findByUserAndBetweenDates<PickedHistoryTrackWithTrackArtistsGenresAndDuration>(
         user.id,
         after,
         before,
         {
           track: {
-            artists: true,
+            artists: {
+              images: false,
+            },
+          },
+        },
+        {
+          track: {
+            artists: {
+              genres: true,
+            },
+            duration: true,
           },
         }
       )
