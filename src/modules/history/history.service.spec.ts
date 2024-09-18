@@ -37,7 +37,7 @@ describe('HistoryService', () => {
         {
           provide: HistoryTracksRepository,
           useValue: {
-            findLastHistoryTrackByUser: vi.fn(),
+            findOne: vi.fn(),
           },
         },
         {
@@ -76,7 +76,7 @@ describe('HistoryService', () => {
 
   describe('synchronize', () => {
     let tokenSpy: MockInstance
-    let findLastHistoryTrackByUserSpy: MockInstance
+    let findOne: MockInstance
     let getRecentlyPlayedTracksSpy: MockInstance
     let createSpy: MockInstance
 
@@ -89,10 +89,7 @@ describe('HistoryService', () => {
 
     beforeEach(() => {
       tokenSpy = vi.spyOn(spotifyService.auth, 'token')
-      findLastHistoryTrackByUserSpy = vi.spyOn(
-        historyTracksRepository,
-        'findLastHistoryTrackByUser'
-      )
+      findOne = vi.spyOn(historyTracksRepository, 'findOne')
       getRecentlyPlayedTracksSpy = vi.spyOn(
         spotifyService.player,
         'getRecentlyPlayedTracks'
@@ -110,7 +107,7 @@ describe('HistoryService', () => {
 
     test('should synchronize whole history if lastHistoryTrack has not been found', async () => {
       tokenSpy.mockResolvedValue(accessTokenMock)
-      findLastHistoryTrackByUserSpy.mockResolvedValue(null)
+      findOne.mockResolvedValue(null)
       getRecentlyPlayedTracksSpy.mockResolvedValue({
         items: Array.from({ length: 50 }, () => playHistoryMock),
       } as SdkRecentlyPlayedTracksPage)
@@ -146,7 +143,7 @@ describe('HistoryService', () => {
         },
       })
       tokenSpy.mockResolvedValue(accessTokenMock)
-      findLastHistoryTrackByUserSpy.mockResolvedValue(historyTrackMock)
+      findOne.mockResolvedValue(historyTrackMock)
       getRecentlyPlayedTracksSpy.mockResolvedValue({
         items: Array.from({ length: 50 }, () => playHistoryMock),
       } as SdkRecentlyPlayedTracksPage)
@@ -195,7 +192,7 @@ describe('HistoryService', () => {
       }
 
       tokenSpy.mockResolvedValue(accessTokenMock)
-      findLastHistoryTrackByUserSpy.mockResolvedValue(historyTrackMock)
+      findOne.mockResolvedValue(historyTrackMock)
       getRecentlyPlayedTracksSpy
         .mockResolvedValueOnce({
           items: [differentPlayHistoryItem],
