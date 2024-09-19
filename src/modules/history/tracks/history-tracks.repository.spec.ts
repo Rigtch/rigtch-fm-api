@@ -68,6 +68,9 @@ describe('HistoryTracksRepository', () => {
   })
 
   test('should find history tracks by user and between dates', async () => {
+    const select = {
+      id: true,
+    }
     const after = new Date()
     const before = new Date()
 
@@ -80,7 +83,8 @@ describe('HistoryTracksRepository', () => {
         userId,
         after,
         before,
-        historyTracksRelations
+        historyTracksRelations,
+        select
       )
     ).toEqual(historyTracksMock)
 
@@ -92,6 +96,7 @@ describe('HistoryTracksRepository', () => {
         playedAt: And(MoreThanOrEqual(after), LessThanOrEqual(before)),
       },
       relations: historyTracksRelations,
+      select,
       order: historyTracksOrder,
     })
   })
