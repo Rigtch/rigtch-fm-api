@@ -81,6 +81,11 @@ describe('ReportsService', () => {
         }
 
         expect(countByUserAndBetweenDatesSpy).toHaveBeenCalledTimes(DAYS)
+        expect(countByUserAndBetweenDatesSpy).toHaveBeenCalledWith(
+          userMock.id,
+          expect.any(Date),
+          expect.any(Date)
+        )
       })
 
       test('should get listening days with play time measurement', async () => {
@@ -115,6 +120,19 @@ describe('ReportsService', () => {
         }
 
         expect(findByUserAndBetweenDatesSpy).toHaveBeenCalledTimes(DAYS)
+        expect(findByUserAndBetweenDatesSpy).toHaveBeenCalledWith(
+          userMock.id,
+          expect.any(Date),
+          expect.any(Date),
+          {
+            track: true,
+          },
+          {
+            track: {
+              duration: true,
+            },
+          }
+        )
       })
     })
 
@@ -180,6 +198,12 @@ describe('ReportsService', () => {
           before,
           {
             track: true,
+          },
+          {
+            playedAt: true,
+            track: {
+              duration: true,
+            },
           }
         )
       })
@@ -255,6 +279,12 @@ describe('ReportsService', () => {
           before,
           {
             track: true,
+          },
+          {
+            playedAt: true,
+            track: {
+              duration: true,
+            },
           }
         )
       })
@@ -314,6 +344,13 @@ describe('ReportsService', () => {
           track: {
             artists: true,
           },
+        },
+        {
+          track: {
+            artists: {
+              externalId: true,
+            },
+          },
         }
       )
     })
@@ -333,6 +370,13 @@ describe('ReportsService', () => {
         {
           track: {
             album: true,
+          },
+        },
+        {
+          track: {
+            album: {
+              externalId: true,
+            },
           },
         }
       )
