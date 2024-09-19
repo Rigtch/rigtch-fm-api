@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common'
 
-import { ListeningDaysDocument } from './router/docs'
+import {
+  GenresListeningDaysDocument,
+  ListeningDaysDocument,
+} from './router/docs'
 import type {
   ReportsListeningQuery,
   ReportsTotalItemsQuery,
@@ -10,9 +13,10 @@ import type {
   PickedHistoryTrackWithTrackDurationAndPlayedAt,
   PickedHistoryTrackWithArtistsExternalIds,
   PickedHistoryTrackWithAlbumExternalId,
+  PickedHistoryTrackWithArtistsGenresDurationAndPlayedAt,
 } from './types'
 
-import { removeDuplicates } from '@common/utils'
+import { getMostFrequentItems, removeDuplicates } from '@common/utils'
 import { HistoryTracksRepository } from '@modules/history/tracks'
 import { StatsMeasurement } from '@modules/stats/enums'
 import type { User } from '@modules/users'
@@ -77,6 +81,97 @@ export class ReportsService {
     }
 
     return listeningDaysArray
+  }
+
+  async getGenresListeningDays(
+    { before, after, measurement }: Required<ReportsListeningQuery>,
+    user: User
+  ) {
+    const timeRangeTimestamp = before.getTime() - after.getTime()
+    const timeRangeDays = Math.floor(timeRangeTimestamp / (1000 * 60 * 60 * 24))
+
+    const genresListeningDaysArray: GenresListeningDaysDocument[] = []
+
+    const historyTracks =
+      await this.historyTracksRepository.findByUserAndBetweenDates<PickedHistoryTrackWithArtistsGenresDurationAndPlayedAt>(
+        user.id,
+        after,
+        before,
+        {
+          track: {
+            artists: true,
+          },
+        },
+        {
+          playedAt: true,
+          track: {
+            duration: true,
+            artists: {
+              genres: true,
+            },
+          },
+        }
+      )
+
+    const genres = historyTracks
+      .flatMap(({ track }) => track.artists)
+      .flatMap(({ genres }) => genres)
+
+    const mostFrequentGenres = getMostFrequentItems(genres, 5).map(
+      ({ item }) => item
+    )
+
+    for (let index = 0; index < timeRangeDays; index++) {
+      const afterParam = new Date(after.getTime() + 1000 * 60 * 60 * 24 * index)
+      const beforeParam = new Date(afterParam.getTime() + 1000 * 60 * 60 * 24)
+
+      const genresValues: Record<string, number> = {}
+
+      const thisDayHistoryTracks = historyTracks.filter(
+        ({ playedAt }) =>
+          playedAt.getTime() >= afterParam.getTime() &&
+          playedAt.getTime() <= beforeParam.getTime()
+      )
+
+      if (measurement === StatsMeasurement.PLAYS) {
+        for (const genre of mostFrequentGenres) {
+          const historyTracksWithThisGenre = thisDayHistoryTracks.filter(
+            ({ track }) =>
+              track.artists.some(({ genres }) => genres.includes(genre))
+          )
+
+          genresValues[genre] = historyTracksWithThisGenre.length
+        }
+
+        genresListeningDaysArray.push({
+          date: afterParam,
+          dayIndex: index + 1,
+          data: genresValues,
+        })
+      } else {
+        for (const genre of mostFrequentGenres) {
+          const historyTracksWithThisGenre = thisDayHistoryTracks.filter(
+            ({ track }) =>
+              track.artists.some(({ genres }) => genres.includes(genre))
+          )
+          genresValues[genre] = historyTracksWithThisGenre
+            .map(({ track }) => track.duration)
+            .reduce(
+              (previousDuration, currentDuration) =>
+                previousDuration + currentDuration,
+              0
+            )
+        }
+
+        genresListeningDaysArray.push({
+          date: afterParam,
+          dayIndex: index + 1,
+          data: genresValues,
+        })
+      }
+    }
+
+    return genresListeningDaysArray
   }
 
   async getListeningHours(

@@ -136,6 +136,110 @@ describe('ReportsService', () => {
       })
     })
 
+    describe('getGenresListeningDays', () => {
+      const relations = {
+        track: {
+          artists: true,
+        },
+      }
+      const select = {
+        playedAt: true,
+        track: {
+          artists: {
+            genres: true,
+          },
+          duration: true,
+        },
+      }
+
+      test('should get genres listening days with plays measurement', async () => {
+        const DAYS = 7
+        const before = new Date()
+        const after = new Date(Date.now() - 1000 * 60 * 60 * 24 * DAYS)
+
+        const historyTracksMock = Array.from({ length: COUNT }, () =>
+          mock<HistoryTrack>({
+            playedAt: new Date(),
+            track: {
+              artists: [
+                {
+                  genres: ['Pop', 'Rock'],
+                },
+              ],
+            },
+          })
+        )
+
+        const findByUserAndBetweenDatesSpy = vi
+          .spyOn(historyTracksRepository, 'findByUserAndBetweenDates')
+          .mockResolvedValue(historyTracksMock)
+
+        const result = await reportsService.getGenresListeningDays(
+          { before, after, measurement: StatsMeasurement.PLAYS },
+          userMock
+        )
+
+        for (const [index, { date, dayIndex, data }] of result.entries()) {
+          expect(date).toBeInstanceOf(Date)
+          expect(dayIndex).toBe(index + 1)
+          expect(data).toHaveProperty('Pop') // Assuming 'Pop' is a genre in the mock data
+          expect(data).toHaveProperty('Rock') // Assuming 'Rock' is a genre in the mock data
+        }
+
+        expect(findByUserAndBetweenDatesSpy).toHaveBeenCalledWith(
+          userMock.id,
+          after,
+          before,
+          relations,
+          select
+        )
+      })
+
+      test('should get genres listening days with play time measurement', async () => {
+        const DAYS = 7
+        const before = new Date()
+        const after = new Date(Date.now() - 1000 * 60 * 60 * 24 * DAYS)
+
+        const historyTracksMock = Array.from({ length: COUNT }, () =>
+          mock<HistoryTrack>({
+            playedAt: new Date(),
+            track: {
+              duration: 300,
+              artists: [
+                {
+                  genres: ['Pop', 'Rock'],
+                },
+              ],
+            },
+          })
+        )
+
+        const findByUserAndBetweenDatesSpy = vi
+          .spyOn(historyTracksRepository, 'findByUserAndBetweenDates')
+          .mockResolvedValue(historyTracksMock)
+
+        const result = await reportsService.getGenresListeningDays(
+          { before, after, measurement: StatsMeasurement.PLAY_TIME },
+          userMock
+        )
+
+        for (const [index, { date, dayIndex, data }] of result.entries()) {
+          expect(date).toBeInstanceOf(Date)
+          expect(dayIndex).toBe(index + 1)
+          expect(data).toHaveProperty('Pop') // Assuming 'Pop' is a genre in the mock data
+          expect(data).toHaveProperty('Rock') // Assuming 'Rock' is a genre in the mock data
+        }
+
+        expect(findByUserAndBetweenDatesSpy).toHaveBeenCalledWith(
+          userMock.id,
+          after,
+          before,
+          relations,
+          select
+        )
+      })
+    })
+
     describe('getListeningHours', () => {
       test('should get listening hours with plays measurement', async () => {
         historyTracksMock = Array.from({ length: COUNT }, (_, index) =>
