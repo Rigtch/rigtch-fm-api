@@ -13,6 +13,13 @@ export type PickedHistoryTrackWithTrackDurationAndPlayedAt = Pick<
 > &
   PickedHistoryTrackWithTrackDuration
 
+export type PickedHistoryTrackWithArtistsGenresDurationAndPlayedAt =
+  PickedHistoryTrackWithTrackDurationAndPlayedAt & {
+    track: {
+      artists: Pick<Artist, 'genres'>[]
+    }
+  }
+
 export interface PickedHistoryTrackWithArtistsExternalIds {
   track: {
     artists: Pick<Artist, 'externalId'>[]
