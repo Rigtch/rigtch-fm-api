@@ -11,7 +11,11 @@ import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { ReportsService } from '../reports.service'
 
 import { ReportsListeningQuery, ReportsTotalItemsQuery } from './dtos'
-import { ListeningDaysDocument, TotalItemsDocument } from './docs'
+import {
+  GenresListeningDaysDocument,
+  ListeningDaysDocument,
+  TotalItemsDocument,
+} from './docs'
 import {
   ApiReportsListeningQuery,
   ApiReportsTotalItemsQuery,
@@ -55,6 +59,36 @@ export class ReportsController {
     }: ReportsListeningQuery
   ) {
     return this.reportsService.getListeningDays(
+      {
+        before,
+        after,
+        measurement,
+      },
+      user
+    )
+  }
+
+  @Get('genres-listening-days')
+  @ApiOperation({
+    summary: "Getting user's genres listening days (cached).",
+    description:
+      "Getting user's genres listening days, used for creating charts (cached).",
+  })
+  @ApiOkResponse({
+    description: MANY_SUCCESSFULLY_RETRIEVED('genres listening days'),
+    type: [GenresListeningDaysDocument],
+  })
+  @ApiReportsListeningQuery()
+  getGenresListeningDays(
+    @RequestUser() user: User,
+    @Query()
+    {
+      before = new Date(),
+      after,
+      measurement = StatsMeasurement.PLAYS,
+    }: ReportsListeningQuery
+  ) {
+    return this.reportsService.getGenresListeningDays(
       {
         before,
         after,
