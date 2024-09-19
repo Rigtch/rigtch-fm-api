@@ -4,6 +4,7 @@ import { CacheInterceptor } from '@nestjs/cache-manager'
 import { ReportsService } from '../reports.service'
 
 import { ReportsController } from './reports.controller'
+import { GenresListeningDaysDocument } from './docs'
 
 import { UsersRepository } from '@modules/users'
 import { userMock } from '@common/mocks'
@@ -25,6 +26,7 @@ describe('ReportsController', () => {
           provide: ReportsService,
           useValue: {
             getListeningDays: vi.fn(),
+            getGenresListeningDays: vi.fn(),
             getListeningHours: vi.fn(),
             getTotalTracks: vi.fn(),
             getTotalArtists: vi.fn(),
@@ -133,6 +135,77 @@ describe('ReportsController', () => {
         ).toEqual(listeningDaysArray)
 
         expect(getListeningDaysSpy).toHaveBeenCalledWith(
+          {
+            before,
+            after,
+            measurement: StatsMeasurement.PLAY_TIME,
+          },
+          userMock
+        )
+      })
+    })
+
+    describe('GenresListeningDays', () => {
+      const genresListeningDaysArray: GenresListeningDaysDocument[] = [
+        {
+          dayIndex: 1,
+          data: {
+            Pop: 30,
+          },
+          date: new Date('2024-08-22T08:59:38.340Z'),
+        },
+        {
+          dayIndex: 2,
+          data: {
+            Rock: 20,
+          },
+          date: new Date('2024-08-23T08:59:38.340Z'),
+        },
+        {
+          dayIndex: 3,
+          data: {
+            Jazz: 10,
+          },
+          date: new Date('2024-08-24T08:59:38.340Z'),
+        },
+      ]
+
+      test('should get genres listening days with plays measurement', async () => {
+        const getGenresListeningDaysSpy = vi
+          .spyOn(reportsService, 'getGenresListeningDays')
+          .mockResolvedValue(genresListeningDaysArray)
+
+        expect(
+          await reportsController.getGenresListeningDays(userMock, {
+            before,
+            after,
+          })
+        ).toEqual(genresListeningDaysArray)
+
+        expect(getGenresListeningDaysSpy).toHaveBeenCalledWith(
+          {
+            before,
+            after,
+            measurement: StatsMeasurement.PLAYS,
+          },
+          userMock
+        )
+      })
+
+      test('should get genres listening days with play time measurement', async () => {
+        const getGenresListeningDaysSpy = vi
+          .spyOn(reportsService, 'getGenresListeningDays')
+          .mockResolvedValue(genresListeningDaysArray)
+
+        expect(
+          await reportsController.getGenresListeningDays(userMock, {
+            before,
+            after,
+            measurement: StatsMeasurement.PLAY_TIME,
+          })
+        ).toEqual(genresListeningDaysArray)
+
+        expect(getGenresListeningDaysSpy).toHaveBeenCalledWith(
           {
             before,
             after,
