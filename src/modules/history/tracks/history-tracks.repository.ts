@@ -4,6 +4,7 @@ import {
   DataSource,
   FindOptionsOrder,
   FindOptionsRelations,
+  FindOptionsSelect,
   LessThanOrEqual,
   MoreThanOrEqual,
   Repository,
@@ -37,11 +38,12 @@ export class HistoryTracksRepository extends Repository<HistoryTrack> {
     })
   }
 
-  findByUserAndBetweenDates(
+  findByUserAndBetweenDates<TResult = HistoryTrack>(
     userId: string,
     after: Date,
     before: Date,
-    relations: FindOptionsRelations<HistoryTrack>
+    relations: FindOptionsRelations<HistoryTrack>,
+    select?: FindOptionsSelect<HistoryTrack>
   ) {
     return this.find({
       where: {
@@ -51,8 +53,9 @@ export class HistoryTracksRepository extends Repository<HistoryTrack> {
         playedAt: And(MoreThanOrEqual(after), LessThanOrEqual(before)),
       },
       relations,
+      select,
       order: historyTracksOrder,
-    })
+    }) as Promise<TResult[]>
   }
 
   countByUserAndBetweenDates(userId: string, after: Date, before: Date) {
