@@ -310,7 +310,7 @@ describe('ItemsService', () => {
       let sdkAlbumsMock: SdkAlbum[]
       let albumsMock: Album[]
 
-      let findBySpy: MockInstance
+      let findSpy: MockInstance
       let getAlbumsSpy: GetItemsMockInstance<SdkAlbum>
       let albumsFindOrCreateSpy: MockInstance
 
@@ -332,13 +332,13 @@ describe('ItemsService', () => {
           tracks: trackEntitiesMock,
         }))
 
-        findBySpy = vi.spyOn(entityManagerMock, 'findBy')
+        findSpy = vi.spyOn(entityManagerMock, 'find')
         getAlbumsSpy = vi.spyOn(spotifyService.albums, 'get')
         albumsFindOrCreateSpy = vi.spyOn(albumsService, 'findOrCreate')
       })
 
       test('should find all albums and does not create any', async () => {
-        findBySpy.mockResolvedValue(albumsMock)
+        findSpy.mockResolvedValue(albumsMock)
 
         expect(
           await itemsService.findOrCreate(
@@ -346,15 +346,29 @@ describe('ItemsService', () => {
           )
         ).toEqual(albumsMock)
 
-        expect(findBySpy).toHaveBeenCalledWith(Album, {
-          externalId: In(albumsExternalIds),
+        expect(findSpy).toHaveBeenCalledWith(Album, {
+          where: {
+            externalId: In(albumsExternalIds),
+          },
+          select: {
+            externalId: true,
+          },
         })
+        expect(findSpy).toHaveBeenCalledWith(Album, {
+          where: {
+            externalId: In(albumsExternalIds),
+          },
+          relations: {
+            artists: true,
+          },
+        })
+        expect(findSpy).toHaveBeenCalledTimes(2)
         expect(getAlbumsSpy).not.toHaveBeenCalled()
         expect(albumsFindOrCreateSpy).not.toHaveBeenCalled()
       })
 
       test('should not find any albums and create all', async () => {
-        findBySpy.mockResolvedValueOnce([])
+        findSpy.mockResolvedValueOnce([]).mockResolvedValue(albumsMock)
         getAlbumsSpy.mockResolvedValue(sdkAlbumsMock)
         albumsFindOrCreateSpy.mockResolvedValue(albumsMock)
 
@@ -364,9 +378,23 @@ describe('ItemsService', () => {
           )
         ).toEqual(albumsMock)
 
-        expect(findBySpy).toHaveBeenCalledWith(Album, {
-          externalId: In(albumsExternalIds),
+        expect(findSpy).toHaveBeenCalledWith(Album, {
+          where: {
+            externalId: In(albumsExternalIds),
+          },
+          select: {
+            externalId: true,
+          },
         })
+        expect(findSpy).toHaveBeenCalledWith(Album, {
+          where: {
+            externalId: In(albumsExternalIds),
+          },
+          relations: {
+            artists: true,
+          },
+        })
+        expect(findSpy).toHaveBeenCalledTimes(2)
         expect(getAlbumsSpy).toHaveBeenCalledWith(albumsExternalIds, false)
         expect(albumsFindOrCreateSpy).toHaveBeenCalledWith(
           sdkAlbumsMock,
@@ -378,7 +406,9 @@ describe('ItemsService', () => {
       test('should find some albums and create the rest', async () => {
         const foundAlbumsMock = [albumsMock[0], albumsMock[1]]
 
-        findBySpy.mockResolvedValueOnce(foundAlbumsMock)
+        findSpy
+          .mockResolvedValueOnce(foundAlbumsMock)
+          .mockResolvedValue(albumsMock)
         getAlbumsSpy.mockResolvedValue(sdkAlbumsMock.slice(2))
         albumsFindOrCreateSpy.mockResolvedValue(albumsMock.slice(2))
 
@@ -388,9 +418,23 @@ describe('ItemsService', () => {
           )
         ).toEqual(albumsMock)
 
-        expect(findBySpy).toHaveBeenCalledWith(Album, {
-          externalId: In(albumsExternalIds),
+        expect(findSpy).toHaveBeenCalledWith(Album, {
+          where: {
+            externalId: In(albumsExternalIds),
+          },
+          select: {
+            externalId: true,
+          },
         })
+        expect(findSpy).toHaveBeenCalledWith(Album, {
+          where: {
+            externalId: In(albumsExternalIds),
+          },
+          relations: {
+            artists: true,
+          },
+        })
+        expect(findSpy).toHaveBeenCalledTimes(2)
         expect(getAlbumsSpy).toHaveBeenCalledWith(
           albumsExternalIds.slice(2),
           false

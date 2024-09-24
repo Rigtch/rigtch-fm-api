@@ -81,26 +81,43 @@ export class ItemsService {
     return this.dataSource.transaction(async manager => {
       const albumsExternalIds = removeDuplicates(sdkAlbums.map(({ id }) => id))
 
-      const foundAlbums = await manager.findBy(Album, {
-        externalId: In(albumsExternalIds),
+      const foundAlbums: { externalId: string }[] = await manager.find(Album, {
+        where: {
+          externalId: In(albumsExternalIds),
+        },
+        select: {
+          externalId: true,
+        },
       })
       const albumsToCreateExternalIds = albumsExternalIds.filter(
         id => !foundAlbums.some(({ externalId }) => id === externalId)
       )
 
-      if (albumsToCreateExternalIds.length === 0) return foundAlbums
+      if (albumsToCreateExternalIds.length === 0)
+        return manager.find(Album, {
+          where: {
+            externalId: In(albumsExternalIds),
+          },
+          relations: {
+            artists: true,
+          },
+        })
 
       const fetchedAlbums = await this.spotifyService.albums.get(
         albumsToCreateExternalIds,
         false
       )
 
-      const createdAlbums = await this.albumsService.findOrCreate(
-        fetchedAlbums,
-        manager
-      )
+      await this.albumsService.findOrCreate(fetchedAlbums, manager)
 
-      return [...foundAlbums, ...createdAlbums]
+      return manager.find(Album, {
+        where: {
+          externalId: In(albumsExternalIds),
+        },
+        relations: {
+          artists: true,
+        },
+      })
     })
   }
 }
