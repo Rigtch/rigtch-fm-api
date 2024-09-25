@@ -1,10 +1,24 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common'
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
+import {
+  Body,
+  Controller,
+  Get,
+  ParseUUIDPipe,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common'
+import {
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger'
 
 import { UsersRepository } from '../users.repository'
 import { User } from '../user.entity'
 import { USERS, USER } from '../constants'
-import { ValidateUserIdGuard } from '../guards'
+import { FollowUserGuard, ValidateUserIdGuard } from '../guards'
 import { ApiUser, RequestUser } from '../decorators'
 import { MeBody } from '../dtos'
 
@@ -94,5 +108,37 @@ export class UsersController {
   @ApiUser()
   getOneById(@RequestUser() user: User, @RequestToken() _token?: string) {
     return user
+  }
+
+  @Put(':id/follow')
+  @UseGuards(ValidateUserIdGuard, FollowUserGuard)
+  @ApiOperation({
+    summary: 'Following user.',
+    description: 'Following user specified by the id.',
+  })
+  @ApiUser()
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        followerId: {
+          type: 'string',
+          format: 'uuid',
+        },
+      },
+    },
+  })
+  @ApiOkResponse({
+    description: 'User has been successfully followed.',
+  })
+  @ApiBadRequestResponse({
+    description: 'User has already been followed.',
+  })
+  follow(
+    @RequestUser() { id }: User,
+    @Body('followerId', ParseUUIDPipe) followerId: string,
+    @RequestToken() _token?: string
+  ) {
+    return this.usersRepository.follow(id, followerId)
   }
 }

@@ -37,6 +37,7 @@ describe('UsersController', () => {
             findUserByProfileId: vi.fn(),
             createUser: vi.fn(),
             update: vi.fn(),
+            follow: vi.fn(),
           },
         },
         {
@@ -166,6 +167,19 @@ describe('UsersController', () => {
   describe('getOneById', () => {
     test('should get one user by id', () => {
       expect(usersController.getOneById(userMock)).toEqual(userMock)
+    })
+  })
+
+  describe('follow', () => {
+    test('should follow user', async () => {
+      const followerId = 'followerId'
+
+      const followSpy = vi
+        .spyOn(usersRepository, 'follow')
+        .mockResolvedValue(true)
+
+      expect(await usersController.follow(userMock, followerId)).toBeTruthy()
+      expect(followSpy).toHaveBeenCalledWith(userMock.id, 'followerId')
     })
   })
 })
