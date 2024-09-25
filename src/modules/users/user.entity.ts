@@ -3,6 +3,8 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   Relation,
@@ -38,4 +40,31 @@ export class User {
     description: 'The date and time the user was created.',
   })
   createdAt: Date
+
+  @ManyToMany('User', 'following')
+  @JoinTable()
+  @ApiProperty({
+    description: "The user's followers.",
+  })
+  followers: Relation<User[]>
+
+  @ManyToMany('User', 'followers')
+  @ApiProperty({
+    description: "The user's following.",
+  })
+  following: Relation<User[]>
+
+  @Column({ default: 0 })
+  @ApiProperty({
+    description: "Count of the user's followers.",
+    default: 0,
+  })
+  followersCount: number
+
+  @Column({ default: 0 })
+  @ApiProperty({
+    description: 'Count of the users that the user is following.',
+    default: 0,
+  })
+  followingCount: number
 }

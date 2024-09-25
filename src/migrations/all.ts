@@ -13,6 +13,8 @@ import { MakeItemsColumnsRequired1717699326064 } from './1717699326064-make-item
 import { EnableCache1717744803994 } from './1717744803994-enable-cache'
 import { DisableCache1717771878472 } from './1717771878472-disable-cache'
 import { AddCreatedAtColumnToUserEntity1721641599620 } from './1721641599620-add-created-at-column-to-user-entity'
+import { AddUserFollowersAndFollowing1727274883625 } from './1727274883625-add-user-followers-and-following'
+import { AddFollowersAndFollowingCountToUser1727277320574 } from './1727277320574-add-followers-and-following-count-to-user'
 
 export const migrations = [
   Migration1697539455661,
@@ -30,4 +32,6 @@ export const migrations = [
   EnableCache1717744803994,
   DisableCache1717771878472,
   AddCreatedAtColumnToUserEntity1721641599620,
+  AddUserFollowersAndFollowing1727274883625,
+  AddFollowersAndFollowingCountToUser1727277320574,
 ]
