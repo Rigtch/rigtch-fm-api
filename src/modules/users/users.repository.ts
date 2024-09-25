@@ -20,9 +20,44 @@ export class UsersRepository extends Repository<User> {
     })
   }
 
-  createUser(user: CreateUser) {
-    const userEntity = this.create(user)
+  createUser(createUser: CreateUser) {
+    const userEntity = this.create({
+      ...createUser,
+      followers: [],
+      following: [],
+    })
 
     return this.save(userEntity)
+  }
+
+  async follow(userId: string, followerId: string) {
+    const user = await this.findOne({
+      where: { id: userId },
+      relations: {
+        followers: true,
+        following: true,
+      },
+    })
+    const follower = await this.findOne({
+      where: { id: followerId },
+      relations: {
+        followers: true,
+        following: true,
+      },
+    })
+
+    if (!user || !follower) return
+
+    if (user.followers.some(({ id }) => id === followerId)) return
+
+    user.followers.push(follower)
+    user.followersCount++
+    await this.save(user)
+
+    follower.following.push(user)
+    follower.followingCount++
+    await this.save(follower)
+
+    return true
   }
 }
