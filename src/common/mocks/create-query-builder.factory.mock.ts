@@ -30,5 +30,6 @@ export function createQueryBuilderMockImplementation(entity?: unknown) {
     getMany: vi.fn().mockResolvedValue([entity, entity]),
     getManyAndCount: vi.fn().mockResolvedValue([entity, entity]),
     getOne: vi.fn().mockResolvedValue(entity),
+    select: vi.fn().mockReturnThis(),
   }
 }

@@ -21,6 +21,7 @@ import { USERS, USER } from '../constants'
 import { FollowUserGuard, ValidateUserIdGuard } from '../guards'
 import { ApiUser, RequestUser } from '../decorators'
 import { MeBody } from '../dtos'
+import { UserFollowersDocument, UserFollowingDocument } from '../docs'
 
 import {
   MANY_SUCCESSFULLY_RETRIEVED,
@@ -140,5 +141,71 @@ export class UsersController {
     @RequestToken() _token?: string
   ) {
     return this.usersRepository.follow(id, followerId)
+  }
+
+  @Get(':id/followers')
+  @UseGuards(ValidateUserIdGuard)
+  @ApiOperation({
+    summary: 'Getting user followers.',
+    description: 'Getting user followers specified by the id.',
+  })
+  @ApiOkResponse({
+    description: MANY_SUCCESSFULLY_RETRIEVED('followers'),
+    type: UserFollowersDocument,
+  })
+  @ApiUser()
+  getFollowers(@RequestUser() user: User, @RequestToken() _token?: string) {
+    return this.usersRepository
+      .createQueryBuilder('user')
+      .where({
+        id: user.id,
+      })
+      .leftJoinAndSelect('user.followers', 'followers')
+      .leftJoinAndSelect('followers.profile', 'profile')
+      .leftJoinAndSelect('profile.images', 'images')
+      .select([
+        'user.id',
+        'followers.id',
+        'profile.href',
+        'profile.displayName',
+        'images.height',
+        'images.width',
+        'images.url',
+      ])
+      .getOne()
+  }
+
+  @Get(':id/following')
+  @UseGuards(ValidateUserIdGuard)
+  @ApiOperation({
+    summary: 'Getting user following.',
+    description: 'Getting user following specified by the id.',
+  })
+  @ApiOkResponse({
+    description: MANY_SUCCESSFULLY_RETRIEVED('following'),
+    type: UserFollowingDocument,
+  })
+  @ApiUser()
+  getFollowing(@RequestUser() user: User, @RequestToken() _token?: string) {
+    return this.usersRepository
+      .createQueryBuilder('user')
+      .where({
+        id: user.id,
+      })
+      .leftJoinAndSelect('user.following', 'following')
+      .leftJoinAndSelect('following.profile', 'profile')
+      .leftJoinAndSelect('following.followers', 'followingFollowers')
+      .leftJoinAndSelect('profile.images', 'images')
+      .select([
+        'user.id',
+        'following.id',
+        'followingFollowers.id',
+        'profile.href',
+        'profile.displayName',
+        'images.height',
+        'images.width',
+        'images.url',
+      ])
+      .getOne()
   }
 }
