@@ -1,21 +1,22 @@
+import { CacheInterceptor } from '@nestjs/cache-manager'
 import { Test, TestingModule } from '@nestjs/testing'
 import { MockInstance } from 'vitest'
-import { CacheInterceptor } from '@nestjs/cache-manager'
 
-import { UsersRepository } from '../users.repository'
 import { MeBody } from '../dtos'
+import { UsersRepository } from '../users.repository'
 
 import { UsersController } from './users.controller'
 
 import {
   accessTokenMock,
+  createQueryBuilderFactoryMock,
   profileMock,
   userMock,
   usersMock,
 } from '@common/mocks'
+import { HistoryScheduler } from '@modules/history'
 import { ProfilesRepository } from '@modules/profiles'
 import { SpotifyService } from '@modules/spotify'
-import { HistoryScheduler } from '@modules/history'
 
 describe('UsersController', () => {
   let moduleRef: TestingModule
@@ -38,6 +39,7 @@ describe('UsersController', () => {
             createUser: vi.fn(),
             update: vi.fn(),
             follow: vi.fn(),
+            createQueryBuilder: createQueryBuilderFactoryMock(userMock),
           },
         },
         {
@@ -180,6 +182,24 @@ describe('UsersController', () => {
 
       expect(await usersController.follow(userMock, followerId)).toBeTruthy()
       expect(followSpy).toHaveBeenCalledWith(userMock.id, 'followerId')
+    })
+  })
+
+  describe('followers/following', () => {
+    let createQueryBuilderSpy: MockInstance
+
+    beforeEach(() => {
+      createQueryBuilderSpy = vi.spyOn(usersRepository, 'createQueryBuilder')
+    })
+
+    test('should get followers', async () => {
+      expect(await usersController.getFollowers(userMock)).toEqual(userMock)
+      expect(createQueryBuilderSpy).toHaveBeenCalledWith('user')
+    })
+
+    test('should get following', async () => {
+      expect(await usersController.getFollowing(userMock)).toEqual(userMock)
+      expect(createQueryBuilderSpy).toHaveBeenCalledWith('user')
     })
   })
 })
