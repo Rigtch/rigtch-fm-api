@@ -39,6 +39,7 @@ describe('UsersController', () => {
             createUser: vi.fn(),
             update: vi.fn(),
             follow: vi.fn(),
+            unFollow: vi.fn(),
             createQueryBuilder: createQueryBuilderFactoryMock(userMock),
           },
         },
@@ -182,6 +183,19 @@ describe('UsersController', () => {
 
       expect(await usersController.follow(userMock, followerId)).toBeTruthy()
       expect(followSpy).toHaveBeenCalledWith(userMock.id, 'followerId')
+    })
+  })
+
+  describe('unFollow', () => {
+    test('should unFollow user', async () => {
+      const followerId = 'followerId'
+
+      const unFollowSpy = vi
+        .spyOn(usersRepository, 'unFollow')
+        .mockResolvedValue(true)
+
+      expect(await usersController.unFollow(userMock, followerId)).toBeTruthy()
+      expect(unFollowSpy).toHaveBeenCalledWith(userMock.id, 'followerId')
     })
   })
 

@@ -60,4 +60,39 @@ export class UsersRepository extends Repository<User> {
 
     return true
   }
+
+  async unFollow(userId: string, followerId: string) {
+    const user = await this.findOne({
+      where: { id: userId },
+      relations: {
+        followers: true,
+        following: true,
+      },
+    })
+    const follower = await this.findOne({
+      where: { id: followerId },
+      relations: {
+        followers: true,
+        following: true,
+      },
+    })
+
+    if (!user || !follower) return
+
+    console.log(user.followers)
+
+    console.log(user.followers.some(({ id }) => id === followerId))
+
+    if (!user.followers.some(({ id }) => id === followerId)) return
+
+    user.followers = user.followers.filter(({ id }) => id !== followerId)
+    user.followersCount--
+    await this.save(user)
+
+    follower.following = follower.following.filter(({ id }) => id !== userId)
+    follower.followingCount--
+    await this.save(follower)
+
+    return true
+  }
 }

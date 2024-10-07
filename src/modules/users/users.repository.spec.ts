@@ -72,7 +72,7 @@ describe('UsersRepository', () => {
     expect(saveSpy).toHaveBeenCalledWith(userMock)
   })
 
-  describe('follow', () => {
+  describe('follow/unFollow', () => {
     const userId = 'userId'
     const followerId = 'followerId'
     const relations = {
@@ -100,78 +100,156 @@ describe('UsersRepository', () => {
       }
     })
 
-    test('should follow user', async () => {
-      findOneSpy.mockResolvedValue(followedMock)
-      findOneSpy.mockResolvedValue(followerMock)
-      saveSpy.mockResolvedValue(followedMock)
+    describe('follow', () => {
+      test('should follow user', async () => {
+        findOneSpy.mockResolvedValue(followedMock)
+        findOneSpy.mockResolvedValue(followerMock)
+        saveSpy.mockResolvedValue(followedMock)
 
-      expect(await usersRepository.follow(userId, followerId)).toBeTruthy()
+        expect(await usersRepository.follow(userId, followerId)).toBeTruthy()
 
-      expect(findOneSpy).toHaveBeenCalledWith({
-        where: { id: userId },
-        relations,
+        expect(findOneSpy).toHaveBeenCalledWith({
+          where: { id: userId },
+          relations,
+        })
+        expect(findOneSpy).toHaveBeenCalledWith({
+          where: { id: followerId },
+          relations,
+        })
+        expect(saveSpy).toHaveBeenCalledTimes(2)
       })
-      expect(findOneSpy).toHaveBeenCalledWith({
-        where: { id: followerId },
-        relations,
+
+      test('should not follow user if user does not exist', async () => {
+        findOneSpy.mockResolvedValueOnce(null)
+        findOneSpy.mockResolvedValue(followerMock)
+        saveSpy.mockResolvedValue(followedMock)
+
+        expect(await usersRepository.follow(userId, followerId)).toBeFalsy()
+
+        expect(findOneSpy).toHaveBeenCalledWith({
+          where: { id: userId },
+          relations,
+        })
+        expect(findOneSpy).toHaveBeenCalledWith({
+          where: { id: followerId },
+          relations,
+        })
+        expect(saveSpy).not.toHaveBeenCalled()
       })
-      expect(saveSpy).toHaveBeenCalledTimes(2)
+
+      test('should not follow user if follower does not exist', async () => {
+        findOneSpy.mockResolvedValue(followedMock)
+        findOneSpy.mockResolvedValueOnce(null)
+        saveSpy.mockResolvedValue(followedMock)
+
+        expect(await usersRepository.follow(userId, followerId)).toBeFalsy()
+
+        expect(findOneSpy).toHaveBeenCalledWith({
+          where: { id: userId },
+          relations,
+        })
+        expect(findOneSpy).toHaveBeenCalledWith({
+          where: { id: followerId },
+          relations,
+        })
+        expect(saveSpy).not.toHaveBeenCalled()
+      })
+
+      test('should not follow user if user is already following', async () => {
+        followedMock.followers.push(followerMock)
+        followedMock.followersCount++
+        findOneSpy.mockResolvedValue(followedMock)
+        findOneSpy.mockResolvedValue(followerMock)
+        saveSpy.mockResolvedValue(followedMock)
+
+        expect(await usersRepository.follow(userId, followerId)).toBeFalsy()
+
+        expect(findOneSpy).toHaveBeenCalledWith({
+          where: { id: userId },
+          relations,
+        })
+        expect(findOneSpy).toHaveBeenCalledWith({
+          where: { id: followerId },
+          relations,
+        })
+        expect(saveSpy).not.toHaveBeenCalled()
+      })
     })
 
-    test('should not follow user if user does not exist', async () => {
-      findOneSpy.mockResolvedValueOnce(null)
-      findOneSpy.mockResolvedValue(followerMock)
-      saveSpy.mockResolvedValue(followedMock)
+    describe('unFollow', () => {
+      test('should unFollow user', async () => {
+        findOneSpy.mockResolvedValue(followedMock)
+        findOneSpy.mockResolvedValue(followerMock)
+        saveSpy.mockResolvedValue(followedMock)
 
-      expect(await usersRepository.follow(userId, followerId)).toBeFalsy()
+        expect(await usersRepository.unFollow(userId, followerId)).toBeTruthy()
 
-      expect(findOneSpy).toHaveBeenCalledWith({
-        where: { id: userId },
-        relations,
+        expect(findOneSpy).toHaveBeenCalledWith({
+          where: { id: userId },
+          relations,
+        })
+        expect(findOneSpy).toHaveBeenCalledWith({
+          where: { id: followerId },
+          relations,
+        })
+        expect(saveSpy).toHaveBeenCalledTimes(2)
       })
-      expect(findOneSpy).toHaveBeenCalledWith({
-        where: { id: followerId },
-        relations,
+
+      test('should not unFollow user if user does not exist', async () => {
+        findOneSpy.mockResolvedValueOnce(null)
+        findOneSpy.mockResolvedValue(followerMock)
+        saveSpy.mockResolvedValue(followedMock)
+
+        expect(await usersRepository.unFollow(userId, followerId)).toBeFalsy()
+
+        expect(findOneSpy).toHaveBeenCalledWith({
+          where: { id: userId },
+          relations,
+        })
+        expect(findOneSpy).toHaveBeenCalledWith({
+          where: { id: followerId },
+          relations,
+        })
+        expect(saveSpy).not.toHaveBeenCalled()
       })
-      expect(saveSpy).not.toHaveBeenCalled()
-    })
 
-    test('should not follow user if follower does not exist', async () => {
-      findOneSpy.mockResolvedValue(followedMock)
-      findOneSpy.mockResolvedValueOnce(null)
-      saveSpy.mockResolvedValue(followedMock)
+      test('should not unFollow user if follower does not exist', async () => {
+        findOneSpy.mockResolvedValue(followedMock)
+        findOneSpy.mockResolvedValueOnce(null)
+        saveSpy.mockResolvedValue(followedMock)
 
-      expect(await usersRepository.follow(userId, followerId)).toBeFalsy()
+        expect(await usersRepository.unFollow(userId, followerId)).toBeFalsy()
 
-      expect(findOneSpy).toHaveBeenCalledWith({
-        where: { id: userId },
-        relations,
+        expect(findOneSpy).toHaveBeenCalledWith({
+          where: { id: userId },
+          relations,
+        })
+        expect(findOneSpy).toHaveBeenCalledWith({
+          where: { id: followerId },
+          relations,
+        })
+        expect(saveSpy).not.toHaveBeenCalled()
       })
-      expect(findOneSpy).toHaveBeenCalledWith({
-        where: { id: followerId },
-        relations,
-      })
-      expect(saveSpy).not.toHaveBeenCalled()
-    })
 
-    test('should not follow user if user is already following', async () => {
-      followedMock.followers.push(followerMock)
-      followedMock.followersCount++
-      findOneSpy.mockResolvedValue(followedMock)
-      findOneSpy.mockResolvedValue(followerMock)
-      saveSpy.mockResolvedValue(followedMock)
+      test('should not unFollow user if user is not following', async () => {
+        followedMock.followers = []
 
-      expect(await usersRepository.follow(userId, followerId)).toBeFalsy()
+        findOneSpy.mockResolvedValueOnce(followedMock)
+        findOneSpy.mockResolvedValueOnce(followerMock)
+        saveSpy.mockResolvedValue(followedMock)
 
-      expect(findOneSpy).toHaveBeenCalledWith({
-        where: { id: userId },
-        relations,
+        expect(await usersRepository.unFollow(userId, followerId)).toBeFalsy()
+
+        expect(findOneSpy).toHaveBeenCalledWith({
+          where: { id: userId },
+          relations,
+        })
+        expect(findOneSpy).toHaveBeenCalledWith({
+          where: { id: followerId },
+          relations,
+        })
+        expect(saveSpy).not.toHaveBeenCalled()
       })
-      expect(findOneSpy).toHaveBeenCalledWith({
-        where: { id: followerId },
-        relations,
-      })
-      expect(saveSpy).not.toHaveBeenCalled()
     })
   })
 })
