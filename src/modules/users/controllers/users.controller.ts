@@ -143,6 +143,38 @@ export class UsersController {
     return this.usersRepository.follow(id, followerId)
   }
 
+  @Put(':id/unfollow')
+  @UseGuards(ValidateUserIdGuard, FollowUserGuard)
+  @ApiOperation({
+    summary: 'Unfollowing user.',
+    description: 'Unfollowing user specified by the id.',
+  })
+  @ApiUser()
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        followerId: {
+          type: 'string',
+          format: 'uuid',
+        },
+      },
+    },
+  })
+  @ApiOkResponse({
+    description: 'User has been successfully unfollowed.',
+  })
+  @ApiBadRequestResponse({
+    description: 'User has not been followed.',
+  })
+  unFollow(
+    @RequestUser() { id }: User,
+    @Body('followerId', ParseUUIDPipe) followerId: string,
+    @RequestToken() _token?: string
+  ) {
+    return this.usersRepository.unFollow(id, followerId)
+  }
+
   @Get(':id/followers')
   @UseGuards(ValidateUserIdGuard)
   @ApiOperation({
@@ -150,7 +182,7 @@ export class UsersController {
     description: 'Getting user followers specified by the id.',
   })
   @ApiOkResponse({
-    description: MANY_SUCCESSFULLY_RETRIEVED('followers'),
+    description: MANY_SUCCESSFULLY_RETRIEVED('follower'),
     type: UserFollowersDocument,
   })
   @ApiUser()
