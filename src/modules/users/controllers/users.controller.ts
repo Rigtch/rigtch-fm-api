@@ -18,7 +18,11 @@ import {
 import { UsersRepository } from '../users.repository'
 import { User } from '../user.entity'
 import { USERS, USER } from '../constants'
-import { FollowUserGuard, ValidateUserIdGuard } from '../guards'
+import {
+  FollowUserGuard,
+  UnFollowUserGuard,
+  ValidateUserIdGuard,
+} from '../guards'
 import { ApiUser, RequestUser } from '../decorators'
 import { MeBody } from '../dtos'
 import { UserFollowersDocument, UserFollowingDocument } from '../docs'
@@ -144,7 +148,7 @@ export class UsersController {
   }
 
   @Put(':id/unfollow')
-  @UseGuards(ValidateUserIdGuard, FollowUserGuard)
+  @UseGuards(ValidateUserIdGuard, UnFollowUserGuard)
   @ApiOperation({
     summary: 'Unfollowing user.',
     description: 'Unfollowing user specified by the id.',
