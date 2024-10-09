@@ -79,10 +79,6 @@ export class UsersRepository extends Repository<User> {
 
     if (!user || !follower) return
 
-    console.log(user.followers)
-
-    console.log(user.followers.some(({ id }) => id === followerId))
-
     if (!user.followers.some(({ id }) => id === followerId)) return
 
     user.followers = user.followers.filter(({ id }) => id !== followerId)
