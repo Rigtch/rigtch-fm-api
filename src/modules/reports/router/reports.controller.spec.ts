@@ -28,6 +28,7 @@ describe('ReportsController', () => {
             getListeningDays: vi.fn(),
             getGenresListeningDays: vi.fn(),
             getListeningHours: vi.fn(),
+            getTotalPlaytime: vi.fn(),
             getTotalTracks: vi.fn(),
             getTotalArtists: vi.fn(),
             getTotalAlbums: vi.fn(),
@@ -292,6 +293,31 @@ describe('ReportsController', () => {
 
     describe('TotalItems', () => {
       const COUNT = 10
+
+      describe('getTotalPlaytime', () => {
+        test('should get total playtime', async () => {
+          const getTotalPlaytimeSpy = vi
+            .spyOn(reportsService, 'getTotalPlaytime')
+            .mockResolvedValue(COUNT)
+
+          expect(
+            await reportsController.getTotalPlaytime(userMock, {
+              before,
+              after,
+            })
+          ).toEqual({
+            total: COUNT,
+          })
+
+          expect(getTotalPlaytimeSpy).toHaveBeenCalledWith(
+            {
+              before,
+              after,
+            },
+            userMock
+          )
+        })
+      })
 
       describe('getTotalTracks', () => {
         test('should get total tracks', async () => {

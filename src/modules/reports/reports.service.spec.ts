@@ -182,8 +182,8 @@ describe('ReportsService', () => {
         for (const [index, { date, dayIndex, data }] of result.entries()) {
           expect(date).toBeInstanceOf(Date)
           expect(dayIndex).toBe(index + 1)
-          expect(data).toHaveProperty('Pop') // Assuming 'Pop' is a genre in the mock data
-          expect(data).toHaveProperty('Rock') // Assuming 'Rock' is a genre in the mock data
+          expect(data).toHaveProperty('Pop')
+          expect(data).toHaveProperty('Rock')
         }
 
         expect(findByUserAndBetweenDatesSpy).toHaveBeenCalledWith(
@@ -226,8 +226,8 @@ describe('ReportsService', () => {
         for (const [index, { date, dayIndex, data }] of result.entries()) {
           expect(date).toBeInstanceOf(Date)
           expect(dayIndex).toBe(index + 1)
-          expect(data).toHaveProperty('Pop') // Assuming 'Pop' is a genre in the mock data
-          expect(data).toHaveProperty('Rock') // Assuming 'Rock' is a genre in the mock data
+          expect(data).toHaveProperty('Pop')
+          expect(data).toHaveProperty('Rock')
         }
 
         expect(findByUserAndBetweenDatesSpy).toHaveBeenCalledWith(
@@ -404,6 +404,47 @@ describe('ReportsService', () => {
             album: mock<Album>(),
           },
         })
+      )
+    })
+
+    test('should get total playtime', async () => {
+      const after = new Date()
+      const before = new Date()
+
+      const findByUserAndBetweenDatesSpy = vi
+        .spyOn(historyTracksRepository, 'findByUserAndBetweenDates')
+        .mockResolvedValue(historyTracksMock)
+
+      expect(
+        await reportsService.getTotalPlaytime(
+          {
+            before,
+            after,
+          },
+          userMock
+        )
+      ).toEqual(
+        historyTracksMock
+          .map(({ track }) => track.duration)
+          .reduce(
+            (previousDuration, currentDuration) =>
+              previousDuration + currentDuration,
+            0
+          )
+      )
+
+      expect(findByUserAndBetweenDatesSpy).toHaveBeenCalledWith(
+        userMock.id,
+        after,
+        before,
+        {
+          track: true,
+        },
+        {
+          track: {
+            duration: true,
+          },
+        }
       )
     })
 
