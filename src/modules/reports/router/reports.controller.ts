@@ -26,7 +26,10 @@ import { TimeRangeGuard } from '@modules/stats/router/guards'
 import { ApiUser, RequestUser } from '@modules/users/decorators'
 import { ValidateUserIdGuard } from '@modules/users/guards'
 import { User } from '@modules/users'
-import { MANY_SUCCESSFULLY_RETRIEVED } from '@common/constants'
+import {
+  MANY_SUCCESSFULLY_RETRIEVED,
+  ONE_SUCCESSFULLY_RETRIEVED,
+} from '@common/constants'
 import { StatsMeasurement } from '@modules/stats/enums'
 
 @Controller('/users/:id/reports')
@@ -124,6 +127,32 @@ export class ReportsController {
     )
   }
 
+  @Get('total-playtime')
+  @ApiOperation({
+    summary: "Getting user's total listened playtime (cached).",
+    description:
+      "Getting user's total listened playtime, used for creating charts (cached).",
+  })
+  @ApiOkResponse({
+    description: ONE_SUCCESSFULLY_RETRIEVED('total playtime'),
+    type: TotalItemsDocument,
+  })
+  @ApiReportsTotalItemsQuery()
+  async getTotalPlaytime(
+    @RequestUser() user: User,
+    @Query() { before = new Date(), after }: ReportsTotalItemsQuery
+  ) {
+    return {
+      total: await this.reportsService.getTotalPlaytime(
+        {
+          before,
+          after,
+        },
+        user
+      ),
+    }
+  }
+
   @Get('total-tracks')
   @ApiOperation({
     summary: "Getting user's total listened tracks (cached).",
@@ -131,7 +160,7 @@ export class ReportsController {
       "Getting user's total listened tracks, used for creating charts (cached).",
   })
   @ApiOkResponse({
-    description: MANY_SUCCESSFULLY_RETRIEVED('total tracks'),
+    description: MANY_SUCCESSFULLY_RETRIEVED('total track'),
     type: TotalItemsDocument,
   })
   @ApiReportsTotalItemsQuery()
@@ -157,7 +186,7 @@ export class ReportsController {
       "Getting user's total listened artists, used for creating charts (cached).",
   })
   @ApiOkResponse({
-    description: MANY_SUCCESSFULLY_RETRIEVED('total artists'),
+    description: MANY_SUCCESSFULLY_RETRIEVED('total artist'),
     type: TotalItemsDocument,
   })
   @ApiReportsTotalItemsQuery()
@@ -183,7 +212,7 @@ export class ReportsController {
       "Getting user's total listened albums, used for creating charts (cached).",
   })
   @ApiOkResponse({
-    description: MANY_SUCCESSFULLY_RETRIEVED('total albums'),
+    description: MANY_SUCCESSFULLY_RETRIEVED('total album'),
     type: TotalItemsDocument,
   })
   @ApiReportsTotalItemsQuery()

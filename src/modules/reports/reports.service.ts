@@ -221,6 +221,36 @@ export class ReportsService {
     return listeningHoursObject
   }
 
+  async getTotalPlaytime(
+    { before, after }: Required<ReportsTotalItemsQuery>,
+    user: User
+  ) {
+    const historyTracks =
+      await this.historyTracksRepository.findByUserAndBetweenDates<{
+        track: { duration: number }
+      }>(
+        user.id,
+        after,
+        before,
+        {
+          track: true,
+        },
+        {
+          track: {
+            duration: true,
+          },
+        }
+      )
+
+    return historyTracks
+      .map(({ track }) => track.duration)
+      .reduce(
+        (previousDuration, currentDuration) =>
+          previousDuration + currentDuration,
+        0
+      )
+  }
+
   getTotalTracks(
     { before, after }: Required<ReportsTotalItemsQuery>,
     user: User
