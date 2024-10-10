@@ -127,6 +127,32 @@ export class ReportsController {
     )
   }
 
+  @Get('total-genres')
+  @ApiOperation({
+    summary: "Getting user's total listened genres (cached).",
+    description:
+      "Getting user's total listened genres, used for creating charts (cached).",
+  })
+  @ApiOkResponse({
+    description: ONE_SUCCESSFULLY_RETRIEVED('total genre'),
+    type: TotalItemsDocument,
+  })
+  @ApiReportsTotalItemsQuery()
+  async getTotalGenres(
+    @RequestUser() user: User,
+    @Query() { before = new Date(), after }: ReportsTotalItemsQuery
+  ) {
+    return {
+      total: await this.reportsService.getTotalGenres(
+        {
+          before,
+          after,
+        },
+        user
+      ),
+    }
+  }
+
   @Get('total-playtime')
   @ApiOperation({
     summary: "Getting user's total listened playtime (cached).",

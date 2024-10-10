@@ -448,6 +448,55 @@ describe('ReportsService', () => {
       )
     })
 
+    test('should get total genres', async () => {
+      const after = new Date()
+      const before = new Date()
+
+      const historyTracksMock = Array.from({ length: COUNT }, () =>
+        mock<HistoryTrack>({
+          track: {
+            artists: [
+              {
+                genres: ['Pop', 'Rock'],
+              },
+            ],
+          },
+        })
+      )
+
+      const findByUserAndBetweenDatesSpy = vi
+        .spyOn(historyTracksRepository, 'findByUserAndBetweenDates')
+        .mockResolvedValue(historyTracksMock)
+
+      expect(
+        await reportsService.getTotalGenres(
+          {
+            before,
+            after,
+          },
+          userMock
+        )
+      ).toEqual(2)
+
+      expect(findByUserAndBetweenDatesSpy).toHaveBeenCalledWith(
+        userMock.id,
+        after,
+        before,
+        {
+          track: {
+            artists: true,
+          },
+        },
+        {
+          track: {
+            artists: {
+              genres: true,
+            },
+          },
+        }
+      )
+    })
+
     test('should get total tracks', async () => {
       const after = new Date()
       const before = new Date()
