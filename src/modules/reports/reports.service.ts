@@ -20,6 +20,7 @@ import { getMostFrequentItems, removeDuplicates } from '@common/utils'
 import { HistoryTracksRepository } from '@modules/history/tracks'
 import { StatsMeasurement } from '@modules/stats/enums'
 import type { User } from '@modules/users'
+import { Artist } from '@modules/items/artists'
 
 @Injectable()
 export class ReportsService {
@@ -260,6 +261,38 @@ export class ReportsService {
       after,
       before
     )
+  }
+
+  async getTotalGenres(
+    { before, after }: Required<ReportsTotalItemsQuery>,
+    user: User
+  ) {
+    const historyTracks =
+      await this.historyTracksRepository.findByUserAndBetweenDates<{
+        track: { artists: Pick<Artist, 'genres'>[] }
+      }>(
+        user.id,
+        after,
+        before,
+        {
+          track: {
+            artists: true,
+          },
+        },
+        {
+          track: {
+            artists: {
+              genres: true,
+            },
+          },
+        }
+      )
+
+    const genres = historyTracks
+      .flatMap(({ track }) => track.artists)
+      .flatMap(({ genres }) => genres)
+
+    return removeDuplicates(genres).length
   }
 
   async getTotalArtists(
