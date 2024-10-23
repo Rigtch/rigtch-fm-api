@@ -252,7 +252,7 @@ export class ReportsService {
       )
   }
 
-  getTotalTracks(
+  async getTotalPlays(
     { before, after }: Required<ReportsTotalItemsQuery>,
     user: User
   ) {
@@ -261,6 +261,32 @@ export class ReportsService {
       after,
       before
     )
+  }
+
+  async getTotalTracks(
+    { before, after }: Required<ReportsTotalItemsQuery>,
+    user: User
+  ) {
+    const historyTracks =
+      await this.historyTracksRepository.findByUserAndBetweenDates<{
+        track: { id: number }
+      }>(
+        user.id,
+        after,
+        before,
+        {
+          track: true,
+        },
+        {
+          track: {
+            id: true,
+          },
+        }
+      )
+
+    const tracksIds = historyTracks.map(({ track }) => track.id)
+
+    return removeDuplicates(tracksIds).length
   }
 
   async getTotalGenres(

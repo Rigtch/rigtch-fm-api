@@ -179,6 +179,32 @@ export class ReportsController {
     }
   }
 
+  @Get('total-plays')
+  @ApiOperation({
+    summary: "Getting user's total listened plays (cached).",
+    description:
+      "Getting user's total listened plays, used for creating charts (cached).",
+  })
+  @ApiOkResponse({
+    description: MANY_SUCCESSFULLY_RETRIEVED('total play'),
+    type: TotalItemsDocument,
+  })
+  @ApiReportsTotalItemsQuery()
+  async getTotalPlays(
+    @RequestUser() user: User,
+    @Query() { before = new Date(), after }: ReportsTotalItemsQuery
+  ) {
+    return {
+      total: await this.reportsService.getTotalPlays(
+        {
+          before,
+          after,
+        },
+        user
+      ),
+    }
+  }
+
   @Get('total-tracks')
   @ApiOperation({
     summary: "Getting user's total listened tracks (cached).",
