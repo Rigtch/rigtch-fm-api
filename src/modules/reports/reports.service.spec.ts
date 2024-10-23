@@ -396,6 +396,9 @@ describe('ReportsService', () => {
   })
 
   describe('TotalItems', () => {
+    const after = new Date()
+    const before = new Date()
+
     beforeEach(() => {
       historyTracksMock = Array.from({ length: COUNT }, () =>
         mock<HistoryTrack>({
@@ -408,9 +411,6 @@ describe('ReportsService', () => {
     })
 
     test('should get total playtime', async () => {
-      const after = new Date()
-      const before = new Date()
-
       const findByUserAndBetweenDatesSpy = vi
         .spyOn(historyTracksRepository, 'findByUserAndBetweenDates')
         .mockResolvedValue(historyTracksMock)
@@ -448,10 +448,61 @@ describe('ReportsService', () => {
       )
     })
 
-    test('should get total genres', async () => {
-      const after = new Date()
-      const before = new Date()
+    test('should get total plays', async () => {
+      const countByUserAndBetweenDatesSpy = vi
+        .spyOn(historyTracksRepository, 'countByUserAndBetweenDates')
+        .mockResolvedValue(COUNT)
 
+      expect(
+        await reportsService.getTotalPlays(
+          {
+            before,
+            after,
+          },
+          userMock
+        )
+      ).toEqual(COUNT)
+
+      expect(countByUserAndBetweenDatesSpy).toHaveBeenCalledWith(
+        userMock.id,
+        after,
+        before
+      )
+    })
+
+    test('should get total tracks', async () => {
+      const historyTracksMock = Array.from({ length: COUNT }, (_, index) =>
+        mock<HistoryTrack>({
+          track: {
+            id: index + '',
+          },
+        })
+      )
+
+      const findByUserAndBetweenDatesSpy = vi
+        .spyOn(historyTracksRepository, 'findByUserAndBetweenDates')
+        .mockResolvedValue(historyTracksMock)
+
+      expect(
+        await reportsService.getTotalTracks({ before, after }, userMock)
+      ).toEqual(COUNT)
+
+      expect(findByUserAndBetweenDatesSpy).toHaveBeenCalledWith(
+        userMock.id,
+        after,
+        before,
+        {
+          track: true,
+        },
+        {
+          track: {
+            id: true,
+          },
+        }
+      )
+    })
+
+    test('should get total genres', async () => {
       const historyTracksMock = Array.from({ length: COUNT }, () =>
         mock<HistoryTrack>({
           track: {
@@ -497,35 +548,7 @@ describe('ReportsService', () => {
       )
     })
 
-    test('should get total tracks', async () => {
-      const after = new Date()
-      const before = new Date()
-
-      const countByUserAndBetweenDatesSpy = vi
-        .spyOn(historyTracksRepository, 'countByUserAndBetweenDates')
-        .mockResolvedValue(COUNT)
-
-      expect(
-        await reportsService.getTotalTracks(
-          {
-            before,
-            after,
-          },
-          userMock
-        )
-      ).toEqual(COUNT)
-
-      expect(countByUserAndBetweenDatesSpy).toHaveBeenCalledWith(
-        userMock.id,
-        after,
-        before
-      )
-    })
-
     test('should get total artists', async () => {
-      const after = new Date()
-      const before = new Date()
-
       expect(
         await reportsService.getTotalArtists({ before, after }, userMock)
       ).toEqual(historyTracksMock.flatMap(({ track }) => track.artists).length)
@@ -550,9 +573,6 @@ describe('ReportsService', () => {
     })
 
     test('should get total albums', async () => {
-      const after = new Date()
-      const before = new Date()
-
       expect(
         await reportsService.getTotalAlbums({ before, after }, userMock)
       ).toEqual(historyTracksMock.flatMap(({ track }) => track.album).length)
