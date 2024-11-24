@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
       target: development
-    command: bun run start:dev
+    command: pnpm run start:dev
     ports:
       - ${PORT}:${PORT}
     env_file:
