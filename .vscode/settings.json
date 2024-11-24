@@ -8,7 +8,7 @@
     "tsconfig.json": "tsconfig.*.json",
     "Dockerfile": "docker-compose.yml, .dockerignore",
     ".env": "*.env",
-    "package.json": "yarn.lock, .nvmrc, .yarnrc.yml, bun.lockb",
+    "package.json": "yarn.lock, .nvmrc, .yarnrc.yml, pnpm-lock.yaml",
     ".eslintrc.*": ".eslintignore, .eslintcache",
     ".prettierrc": ".prettierignore",
     ".gitignore": ".gitattributes"

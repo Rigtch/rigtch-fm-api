@@ -1,17 +1,17 @@
-FROM imbios/bun-node:latest-20.12.2-debian as development
+FROM node:20.12.2-debian as development
 
 WORKDIR /usr/src/app
 
 COPY package.json ./
-COPY bun.lockb ./
+COPY pnpm-lock.yaml ./
 
-RUN bun install
+RUN pnpm install
 
 COPY . .
 
-RUN bun run build
+RUN pnpm run build
 
-FROM imbios/bun-node:latest-20.12.2-debian as production
+FROM node:20.12.2-debian as production
 
 ARG NODE_ENV=production
 ARG EnvironmentVariable
@@ -20,9 +20,9 @@ ENV NODE_ENV=${NODE_ENV}
 WORKDIR /usr/src/app
 
 COPY package.json ./
-COPY bun.lockb ./
+COPY pnpm-lock.yaml ./
 
-RUN bun install --production --ignore-scripts
+RUN pnpm install --production --ignore-scripts
 RUN npm install pm2 -g
 
 COPY . .
