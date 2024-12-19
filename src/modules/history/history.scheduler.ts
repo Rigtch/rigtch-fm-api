@@ -45,10 +45,12 @@ export class HistoryScheduler implements OnApplicationBootstrap {
 
   async scheduleHistorySynchronizationForUser(user: User) {
     const jobId = synchronizeJobIdFactory(user.id, true)
+    // eslint-disable-next-line @typescript-eslint/no-deprecated, sonarjs/deprecation
     const repeatableJobs = await this.historyQueue.getRepeatableJobs()
 
     for (const synchronizeJob of repeatableJobs)
       if (synchronizeJob.id === jobId)
+        // eslint-disable-next-line @typescript-eslint/no-deprecated, sonarjs/deprecation
         await this.historyQueue.removeRepeatableByKey(synchronizeJob.key)
 
     this.logger.log(

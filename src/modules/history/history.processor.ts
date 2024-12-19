@@ -54,6 +54,7 @@ export class HistoryProcessor extends WorkerHost {
       this.logger.warn(`Job has been removed from the queue`)
 
       if (repeatJobKey) {
+        // eslint-disable-next-line @typescript-eslint/no-deprecated, sonarjs/deprecation
         this.historyQueue.removeRepeatableByKey(repeatJobKey)
 
         this.logger.warn(
