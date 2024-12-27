@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { MockInstance } from 'vitest'
-import { CacheInterceptor } from '@nestjs/cache-manager'
 
 import { StatsRigtchService } from '../stats-rigtch.service'
 import { StatsMeasurement } from '../enums'
@@ -39,12 +38,7 @@ describe('StatsRigtchController', () => {
           },
         },
       ],
-    })
-      .overrideInterceptor(CacheInterceptor)
-      .useValue({
-        intercept: vi.fn(),
-      })
-      .compile()
+    }).compile()
 
     statsRigtchController = moduleRef.get(StatsRigtchController)
     statsRigtchService = moduleRef.get(StatsRigtchService)

@@ -5,7 +5,6 @@ import {
   Param,
   ParseUUIDPipe,
   Query,
-  UseInterceptors,
 } from '@nestjs/common'
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 import {
@@ -15,7 +14,6 @@ import {
   PaginatedSwaggerDocs,
   paginate,
 } from 'nestjs-paginate'
-import { CacheInterceptor } from '@nestjs/cache-manager'
 
 import { ArtistsRepository } from '../artists.repository'
 import { Artist } from '../artist.entity'
@@ -38,7 +36,6 @@ export const artistsPaginateConfig: PaginateConfig<Artist> = {
 }
 
 @Controller('artists')
-@UseInterceptors(CacheInterceptor)
 @ApiTags('artists')
 export class ArtistsController {
   constructor(

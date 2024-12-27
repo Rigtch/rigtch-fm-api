@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { NotFoundException } from '@nestjs/common'
 import { PaginateQuery } from 'nestjs-paginate'
 import { MockInstance } from 'vitest'
-import { CacheInterceptor } from '@nestjs/cache-manager'
 
 import { ArtistsRepository } from '../artists.repository'
 
@@ -54,12 +53,7 @@ describe('ArtistsController', () => {
           },
         },
       ],
-    })
-      .overrideInterceptor(CacheInterceptor)
-      .useValue({
-        intercept: vi.fn(),
-      })
-      .compile()
+    }).compile()
 
     artistsController = moduleRef.get(ArtistsController)
     artistsRepository = moduleRef.get(ArtistsRepository)

@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards, UseInterceptors } from '@nestjs/common'
+import { Controller, Get, UseGuards } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { Queue } from 'bullmq'
 import {
@@ -8,7 +8,6 @@ import {
   PaginatedSwaggerDocs,
   paginate,
 } from 'nestjs-paginate'
-import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager'
 
 import { HistoryQueueEvents } from '../history.queue-events'
 import { InjectHistoryQueue } from '../decorators'
@@ -31,8 +30,6 @@ export const historyTracksPaginateConfig: PaginateConfig<HistoryTrack> = {
 @Controller('users/:id/history')
 @ApiTags('users/{id}/history')
 @UseGuards(ValidateUserIdGuard)
-@UseInterceptors(CacheInterceptor)
-@CacheTTL(30)
 @ApiAuth()
 export class HistoryController {
   constructor(
