@@ -1,4 +1,4 @@
-FROM node:20.12.2-debian as development
+FROM bitnami/node:20.12.2 as development
 
 WORKDIR /usr/src/app
 
@@ -11,7 +11,7 @@ COPY . .
 
 RUN pnpm run build
 
-FROM node:20.12.2-debian as production
+FROM bitnami/node:20.12.2 as production
 
 ARG NODE_ENV=production
 ARG EnvironmentVariable
