@@ -1,17 +1,18 @@
-FROM node:20.12.2-debian as development
+FROM bitnami/node:20.12.2 AS development
 
 WORKDIR /usr/src/app
 
 COPY package.json ./
 COPY pnpm-lock.yaml ./
 
+RUN npm install -g pnpm
 RUN pnpm install
 
 COPY . .
 
 RUN pnpm run build
 
-FROM node:20.12.2-debian as production
+FROM bitnami/node:20.12.2 AS production
 
 ARG NODE_ENV=production
 ARG EnvironmentVariable
@@ -22,7 +23,8 @@ WORKDIR /usr/src/app
 COPY package.json ./
 COPY pnpm-lock.yaml ./
 
-RUN pnpm install --production --ignore-scripts
+RUN npm install -g pnpm
+RUN pnpm install --production  --ignore-scripts
 RUN npm install pm2 -g
 
 COPY . .
