@@ -4,7 +4,6 @@ import {
   NotFoundException,
   Param,
   ParseUUIDPipe,
-  UseInterceptors,
 } from '@nestjs/common'
 import {
   ApiBadRequestResponse,
@@ -21,7 +20,6 @@ import {
   PaginatedSwaggerDocs,
   paginate,
 } from 'nestjs-paginate'
-import { CacheInterceptor } from '@nestjs/cache-manager'
 
 import { TracksRepository } from './tracks.repository'
 import { TrackBaseDocument, TrackDocument } from './docs'
@@ -43,7 +41,6 @@ export const tracksPaginateConfig: PaginateConfig<Track> = {
 }
 
 @Controller('tracks')
-@UseInterceptors(CacheInterceptor)
 @ApiTags('tracks')
 export class TracksController {
   constructor(private readonly tracksRepository: TracksRepository) {}

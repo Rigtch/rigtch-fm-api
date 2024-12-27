@@ -1,4 +1,3 @@
-import { CacheInterceptor } from '@nestjs/cache-manager'
 import { Test, TestingModule } from '@nestjs/testing'
 import { MockInstance } from 'vitest'
 
@@ -67,12 +66,7 @@ describe('UsersController', () => {
           },
         },
       ],
-    })
-      .overrideInterceptor(CacheInterceptor)
-      .useValue({
-        intercept: vi.fn(),
-      })
-      .compile()
+    }).compile()
 
     usersController = moduleRef.get(UsersController)
     usersRepository = moduleRef.get(UsersRepository)

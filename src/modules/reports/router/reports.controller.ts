@@ -1,11 +1,4 @@
-import { CacheInterceptor } from '@nestjs/cache-manager'
-import {
-  Controller,
-  Get,
-  Query,
-  UseGuards,
-  UseInterceptors,
-} from '@nestjs/common'
+import { Controller, Get, Query, UseGuards } from '@nestjs/common'
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { ReportsService } from '../reports.service'
@@ -35,7 +28,6 @@ import { StatsMeasurement } from '@modules/stats/enums'
 @Controller('/users/:id/reports')
 @ApiTags('users/{id}/reports')
 @UseGuards(ValidateUserIdGuard, TimeRangeGuard)
-@UseInterceptors(CacheInterceptor)
 @ApiAuth()
 @ApiUser()
 export class ReportsController {

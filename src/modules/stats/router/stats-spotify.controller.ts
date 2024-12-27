@@ -1,12 +1,5 @@
-import {
-  Controller,
-  Get,
-  Query,
-  UseGuards,
-  UseInterceptors,
-} from '@nestjs/common'
+import { Controller, Get, Query, UseGuards } from '@nestjs/common'
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
-import { CacheInterceptor } from '@nestjs/cache-manager'
 import { AccessToken } from '@spotify/web-api-ts-sdk'
 
 import { ApiAuth, RequestToken } from '@common/decorators'
@@ -25,7 +18,6 @@ import { TopItemQuery } from '@modules/users/dtos'
 @Controller('/users/:id/stats/spotify')
 @ApiTags('users/{id}/stats/spotify')
 @UseGuards(ValidateUserIdGuard, TokenGuard)
-@UseInterceptors(CacheInterceptor)
 @ApiAuth()
 @ApiUser()
 export class StatsSpotifyController {

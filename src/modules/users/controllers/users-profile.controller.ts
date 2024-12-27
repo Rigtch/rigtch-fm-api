@@ -1,13 +1,6 @@
-import {
-  Controller,
-  Get,
-  Query,
-  UseGuards,
-  UseInterceptors,
-} from '@nestjs/common'
+import { Controller, Get, Query, UseGuards } from '@nestjs/common'
 import { ApiOperation, ApiOkResponse, ApiTags } from '@nestjs/swagger'
 import { AccessToken } from '@spotify/web-api-ts-sdk'
-import { CacheInterceptor } from '@nestjs/cache-manager'
 
 import { ApiItemQuery, ApiUser, RequestUser } from '../decorators'
 import { LastItemQuery, TopItemQuery } from '../dtos'
@@ -66,7 +59,6 @@ export class UsersProfileController {
   }
 
   @Get('top/artists')
-  @UseInterceptors(CacheInterceptor)
   @ApiOperation({
     summary: "Getting user's top artists (cached).",
     deprecated: true,
@@ -101,7 +93,6 @@ export class UsersProfileController {
   }
 
   @Get('top/tracks')
-  @UseInterceptors(CacheInterceptor)
   @ApiOperation({
     summary: "Getting user's top tracks (cached).",
     deprecated: true,
@@ -136,7 +127,6 @@ export class UsersProfileController {
   }
 
   @Get('top/genres')
-  @UseInterceptors(CacheInterceptor)
   @ApiOperation({
     summary: "Getting user's top genres (cached).",
     deprecated: true,
@@ -159,7 +149,6 @@ export class UsersProfileController {
   }
 
   @Get('analysis')
-  @UseInterceptors(CacheInterceptor)
   @ApiOperation({
     summary: "Getting user's analysis (cached).",
     deprecated: true,
