@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { MockInstance } from 'vitest'
+import { CacheInterceptor } from '@nestjs/cache-manager'
 
 import { UsersRepository } from '../users.repository'
 
@@ -71,7 +72,12 @@ describe('UsersProfileController', () => {
           },
         },
       ],
-    }).compile()
+    })
+      .overrideInterceptor(CacheInterceptor)
+      .useValue({
+        intercept: vi.fn(),
+      })
+      .compile()
 
     usersProfileController = moduleRef.get(UsersProfileController)
     spotifyService = moduleRef.get(SpotifyService)

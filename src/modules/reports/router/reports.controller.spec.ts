@@ -1,4 +1,5 @@
 import { Test, type TestingModule } from '@nestjs/testing'
+import { CacheInterceptor } from '@nestjs/cache-manager'
 
 import { ReportsService } from '../reports.service'
 
@@ -42,7 +43,12 @@ describe('ReportsController', () => {
           },
         },
       ],
-    }).compile()
+    })
+      .overrideInterceptor(CacheInterceptor)
+      .useValue({
+        intercept: vi.fn(),
+      })
+      .compile()
 
     reportsController = moduleRef.get(ReportsController)
     reportsService = moduleRef.get(ReportsService)
