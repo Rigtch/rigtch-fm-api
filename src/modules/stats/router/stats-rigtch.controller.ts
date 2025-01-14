@@ -1,5 +1,12 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  Query,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common'
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { CacheInterceptor } from '@nestjs/cache-manager'
 
 import { StatsMeasurement } from '../enums'
 import { StatsRigtchService } from '../stats-rigtch.service'
@@ -23,6 +30,7 @@ import { ValidateUserIdGuard } from '@modules/users/guards'
 @Controller('/users/:id/stats/rigtch')
 @ApiTags('users/{id}/stats/rigtch')
 @UseGuards(ValidateUserIdGuard, TimeRangeGuard)
+@UseInterceptors(CacheInterceptor)
 @ApiAuth()
 @ApiStatsRigtchQuery()
 @ApiUser()
