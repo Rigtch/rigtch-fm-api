@@ -15,8 +15,8 @@ importers:
         specifier: ^5.21.1
         version: 5.23.0
       '@bull-board/nestjs':
-        specifier: ^5.21.1
-        version: 5.23.0(@bull-board/api@5.23.0(@bull-board/ui@5.23.0))(@bull-board/express@5.23.0)(@nestjs/common@10.4.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.8(@nestjs/common@10.4.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@10.4.8)(reflect-metadata@0.2.2)(rxjs@7.8.1))(reflect-metadata@0.2.2)(rxjs@7.8.1)
+        specifier: ^6.0.0
+        version: 6.6.1(@bull-board/api@5.23.0(@bull-board/ui@5.23.0))(@bull-board/express@5.23.0)(@nestjs/common@10.4.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.8(@nestjs/common@10.4.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@10.4.8)(reflect-metadata@0.2.2)(rxjs@7.8.1))(reflect-metadata@0.2.2)(rxjs@7.8.1)
       '@nestjs/axios':
         specifier: 3.0.3
         version: 3.0.3(@nestjs/common@10.4.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(axios@1.7.7)(rxjs@7.8.1)
@@ -908,11 +908,11 @@ packages:
   '@bull-board/express@5.23.0':
     resolution: {integrity: sha512-t/mHzJMlZBtSKD8v81kbZoexOmtQxKVnHZfHJ0um5vrkHNJJuzKuwbR+n9nf1u89AGdyXoWxqDhBDslxv3zrrQ==}
 
-  '@bull-board/nestjs@5.23.0':
-    resolution: {integrity: sha512-eRJCz6PqKzrlZfd7akc+6/1eXwNO7Fp468TmSo8avlPcKhStZH3fUmCF6xxfRQpm9kn/eDOp+H18CTnSafmwmw==}
+  '@bull-board/nestjs@6.6.1':
+    resolution: {integrity: sha512-ghDhV4zBz/PgW6F1xoruO93qhiUWKsV05wkpvAN6kbR/FmDhqzxt+1Rw6uXoCSM4lFqcEa0rrz2R6fHlUX227g==}
     peerDependencies:
-      '@bull-board/api': ^5.23.0
-      '@bull-board/express': ^5.23.0
+      '@bull-board/api': ^6.6.1
+      '@bull-board/express': ^6.6.1
       '@nestjs/common': ^9.0.0 || ^10.0.0
       '@nestjs/core': ^9.0.0 || ^10.0.0
       reflect-metadata: ^0.1.13 || ^0.2.0
@@ -6515,7 +6515,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@bull-board/nestjs@5.23.0(@bull-board/api@5.23.0(@bull-board/ui@5.23.0))(@bull-board/express@5.23.0)(@nestjs/common@10.4.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.8(@nestjs/common@10.4.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@10.4.8)(reflect-metadata@0.2.2)(rxjs@7.8.1))(reflect-metadata@0.2.2)(rxjs@7.8.1)':
+  '@bull-board/nestjs@6.6.1(@bull-board/api@5.23.0(@bull-board/ui@5.23.0))(@bull-board/express@5.23.0)(@nestjs/common@10.4.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.8(@nestjs/common@10.4.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@10.4.8)(reflect-metadata@0.2.2)(rxjs@7.8.1))(reflect-metadata@0.2.2)(rxjs@7.8.1)':
     dependencies:
       '@bull-board/api': 5.23.0(@bull-board/ui@5.23.0)
       '@bull-board/express': 5.23.0
